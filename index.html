@@ -50,11 +50,18 @@
   }
   .masthead-inner{
     max-width:1040px; margin:0 auto; padding:34px 24px 26px;
-    display:flex; align-items:center; gap:22px;
+    display:flex; align-items:center; gap:22px; flex-wrap:wrap;
   }
+  .logos-cabecera{ display:flex; align-items:center; gap:16px; flex-shrink:0; }
   .masthead-inner img.crest{
     width:76px; height:76px; object-fit:contain; flex-shrink:0;
     filter: drop-shadow(0 3px 6px rgba(0,0,0,0.18));
+  }
+  .divisor-logos{ width:1px; height:50px; background:var(--linea); flex-shrink:0; }
+  .logo-facimate-cabecera{ width:58px; height:58px; object-fit:contain; flex-shrink:0; }
+  @media (max-width:560px){
+    .masthead-inner img.crest, .logo-facimate-cabecera{ width:56px; height:56px; }
+    .divisor-logos{ height:40px; }
   }
   .masthead-text h1{ font-size:26px; color:var(--rojo); letter-spacing:.2px; }
   .masthead-text p{ margin:6px 0 0; color:var(--gris); font-size:15px; }
@@ -180,10 +187,10 @@
     padding:28px 24px 34px; margin-top:10px;
   }
   .footer-inner{
-    max-width:1040px; margin:0 auto; display:flex; align-items:center;
-    justify-content:space-between; gap:20px; flex-wrap:wrap;
+    max-width:1040px; margin:0 auto; display:flex; flex-direction:column;
+    align-items:center; text-align:center; gap:14px;
   }
-  .footer-inner img.banner-facimate{ width:100%; max-width:300px; height:auto; border-radius:8px; }
+  .footer-inner img.banner-facimate{ width:100%; max-width:360px; height:auto; border-radius:8px; }
   footer p{ margin:0; font-size:12.5px; color:var(--gris); }
 </style>
 </head>
@@ -193,7 +200,11 @@
 
   <header class="masthead">
     <div class="masthead-inner">
-      <img class="crest" src="assets/logo-slg.png" alt="Escudo Institución Educativa San Luis Gonzaga">
+      <div class="logos-cabecera">
+        <img class="crest" src="assets/logo-slg.png" alt="Escudo Institución Educativa San Luis Gonzaga">
+        <span class="divisor-logos" aria-hidden="true"></span>
+        <img class="logo-facimate-cabecera" src="assets/logo-facimate.png" alt="Facimate Lleto">
+      </div>
       <div class="masthead-text">
         <span class="eyebrow">Sistema de Resultados Educativos · Lleto</span>
         <h1>Institución Educativa San Luis Gonzaga</h1>
