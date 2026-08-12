@@ -59,6 +59,10 @@
   }
   .divisor-logos{ width:1px; height:50px; background:var(--linea); flex-shrink:0; }
   .logo-facimate-cabecera{ width:58px; height:58px; object-fit:contain; flex-shrink:0; }
+  .logos-cabecera a{ display:flex; transition:opacity .15s ease; }
+  .logos-cabecera a:hover{ opacity:.8; }
+  .footer-inner a{ display:inline-block; transition:opacity .15s ease; }
+  .footer-inner a:hover{ opacity:.85; }
   @media (max-width:560px){
     .masthead-inner img.crest, .logo-facimate-cabecera{ width:56px; height:56px; }
     .divisor-logos{ height:40px; }
@@ -201,9 +205,13 @@
   <header class="masthead">
     <div class="masthead-inner">
       <div class="logos-cabecera">
-        <img class="crest" src="assets/logo-slg.png" alt="Escudo Institución Educativa San Luis Gonzaga">
+        <a href="https://sanluisgonzaga.educa.city/#" target="_blank" rel="noopener noreferrer" aria-label="Sitio web de la Institución Educativa San Luis Gonzaga">
+          <img class="crest" src="assets/logo-slg.png" alt="Escudo Institución Educativa San Luis Gonzaga">
+        </a>
         <span class="divisor-logos" aria-hidden="true"></span>
-        <img class="logo-facimate-cabecera" src="assets/logo-facimate.png" alt="Facimate Lleto">
+        <a href="https://facimate.blogspot.com/" target="_blank" rel="noopener noreferrer" aria-label="Sitio web de Facimate Lleto">
+          <img class="logo-facimate-cabecera" src="assets/logo-facimate.png" alt="Facimate Lleto">
+        </a>
       </div>
       <div class="masthead-text">
         <span class="eyebrow">Sistema de Resultados Educativos · Lleto</span>
@@ -346,7 +354,9 @@
 
   <footer>
     <div class="footer-inner">
-      <img src="assets/banner-facimate.png" alt="Facimate Lleto" class="banner-facimate">
+      <a href="https://facimate.blogspot.com/" target="_blank" rel="noopener noreferrer" aria-label="Sitio web de Facimate Lleto">
+        <img src="assets/banner-facimate.png" alt="Facimate Lleto" class="banner-facimate">
+      </a>
       <p>Generado automáticamente — Sistema de Resultados Educativos de Lleto · Institución Educativa San Luis Gonzaga</p>
     </div>
   </footer>
