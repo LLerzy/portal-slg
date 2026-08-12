@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Consulta · Institución Educativa San Luis Gonzaga</title>
+<meta name="description" content="Consulta de reportes académicos: notas parciales, simulacros, boletines por periodo y boletines SENA.">
+<link rel="icon" href="assets/logo-slg.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rojo: #c40016;
+    --rojo-oscuro: #9f0012;
+    --dorado: #c9a24b;
+    --crema: #faf7f1;
+    --crema-2: #fff8e8;
+    --azul: #2f5faa;
+    --tinta: #241c14;
+    --gris: #6b675f;
+    --linea: #e4dfd3;
+    --blanco: #ffffff;
+    --radio: 14px;
+    --sombra: 0 10px 30px rgba(36,28,20,0.10);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 500px at 50% -120px, #fff 0%, var(--crema) 60%, var(--crema) 100%);
+    color:var(--tinta);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    min-height:100vh;
+  }
+  h1,h2,h3{ font-family:'Lora', Georgia, serif; font-weight:600; margin:0; }
+  a{ color:inherit; }
+  .oculto{ display:none !important; }
+
+  /* ---------- Ribbon (marca de fábrica del sistema) ---------- */
+  .ribbon{ height:10px; background:linear-gradient(90deg, var(--dorado), #e6c887 45%, var(--dorado)); }
+
+  /* ---------- Header ---------- */
+  header.masthead{
+    background: linear-gradient(180deg, #ffffff 0%, var(--crema) 100%);
+    border-bottom:1px solid var(--linea);
+  }
+  .masthead-inner{
+    max-width:1040px; margin:0 auto; padding:34px 24px 26px;
+    display:flex; align-items:center; gap:22px;
+  }
+  .masthead-inner img.crest{
+    width:76px; height:76px; object-fit:contain; flex-shrink:0;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.18));
+  }
+  .masthead-text h1{ font-size:26px; color:var(--rojo); letter-spacing:.2px; }
+  .masthead-text p{ margin:6px 0 0; color:var(--gris); font-size:15px; }
+  .masthead-text .eyebrow{
+    display:inline-block; font-size:11.5px; letter-spacing:1.6px; text-transform:uppercase;
+    color:var(--dorado); font-weight:700; margin-bottom:6px;
+  }
+
+  /* ---------- Barra de sesión (solo visible en el dashboard) ---------- */
+  .barra-sesion{
+    background:var(--crema-2); border-bottom:1px solid #ecdcae;
+  }
+  .barra-sesion-inner{
+    max-width:1040px; margin:0 auto; padding:12px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  }
+  .barra-sesion-inner p{ margin:0; font-size:14.5px; }
+  .barra-sesion-inner strong{ color:var(--rojo); }
+  .barra-sesion-inner .detalle-sesion{ margin-top:2px !important; font-size:12.5px !important; color:var(--gris); }
+  .barra-sesion-inner .grupo-tag{
+    display:inline-block; margin-left:8px; font-size:12px; color:var(--gris);
+    background:#fff; border:1px solid #ecdcae; border-radius:20px; padding:2px 10px;
+  }
+  .btn-salir{
+    background:none; border:1.5px solid var(--rojo); color:var(--rojo);
+    font-family:inherit; font-weight:700; font-size:13px; padding:8px 14px;
+    border-radius:8px; cursor:pointer;
+  }
+  .btn-salir:hover{ background:var(--rojo); color:#fff; }
+
+  main{ max-width:1040px; margin:0 auto; padding:34px 24px 70px; }
+
+  /* ---------- Tarjeta base con listón dorado (motivo repetido) ---------- */
+  .tarjeta{
+    background:var(--blanco); border:1px solid var(--linea); border-radius:var(--radio);
+    overflow:hidden; box-shadow:var(--sombra);
+  }
+  .tarjeta > .listón{ height:8px; background:var(--dorado); }
+  .tarjeta .contenido{ padding:22px 24px; }
+
+  /* ---------- Bienvenida (pantalla de acceso) ---------- */
+  .bienvenida{ margin-bottom:26px; }
+  .bienvenida .contenido{ background:var(--crema); }
+  .bienvenida p{ margin:0 0 10px; color:#4a4238; }
+  .bienvenida p:last-child{ margin-bottom:0; }
+  .bienvenida strong{ color:var(--rojo); }
+
+  #pantalla-login{ max-width:640px; margin:0 auto; }
+
+  /* ---------- Panel de documento ---------- */
+  .panel-doc{ border-color:#f0cdd2; }
+  .panel-doc > .listón{ background:var(--rojo); }
+  .panel-doc .contenido{ background:#fffaf9; }
+  .panel-doc label{ display:block; font-weight:700; margin-bottom:8px; font-size:14.5px; }
+  .fila-doc{ display:flex; gap:12px; flex-wrap:wrap; }
+  .fila-doc input{
+    flex:1 1 220px; padding:13px 14px; border:1.5px solid #d8cfc2; border-radius:10px;
+    font-size:16px; font-family:inherit; background:#fff;
+  }
+  .fila-doc input:focus{ outline:2px solid var(--dorado); outline-offset:1px; border-color:var(--dorado); }
+  .fila-doc .btn{ flex:0 0 auto; width:auto; padding:13px 22px; }
+  .estado-doc{ margin-top:12px; font-size:13.5px; color:var(--gris); min-height:18px; }
+  .estado-doc.ok{ color:#1a7f37; font-weight:700; }
+  .estado-doc.error{ color:var(--rojo); font-weight:700; }
+
+  /* ---------- Rejilla de reportes ---------- */
+  .rejilla{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
+  @media (max-width:700px){ .rejilla{ grid-template-columns:1fr; } }
+
+  .reporte{ display:flex; flex-direction:column; }
+  .reporte > .listón{ background:var(--dorado); }
+  .reporte.activo > .listón{ background:var(--rojo); }
+  .reporte .contenido{ flex:1; display:flex; flex-direction:column; }
+
+  .reporte .icono{
+    width:42px; height:42px; border-radius:10px; background:var(--crema-2);
+    display:flex; align-items:center; justify-content:center; font-size:21px;
+    margin-bottom:12px; border:1px solid #ecdcae;
+  }
+  .reporte h3{ font-size:17.5px; color:var(--rojo); margin-bottom:6px; }
+  .reporte p.desc{ color:var(--gris); font-size:14px; margin:0 0 16px; flex:1; }
+
+  .reporte select{
+    width:100%; padding:10px 12px; border:1.5px solid #d8cfc2; border-radius:9px;
+    font-size:14.5px; font-family:inherit; background:#fff; margin-bottom:12px;
+  }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--rojo); color:#fff; border:none; padding:12px 16px;
+    border-radius:9px; font-size:14.5px; font-weight:700; cursor:pointer;
+    font-family:inherit; transition:background .15s ease, transform .1s ease;
+    width:100%;
+  }
+  .btn:hover{ background:var(--rojo-oscuro); }
+  .btn:active{ transform:translateY(1px); }
+  .btn:disabled{ background:#d9c6c6; cursor:not-allowed; }
+  .btn:focus-visible{ outline:3px solid var(--dorado); outline-offset:2px; }
+
+  .nota-config{
+    font-size:12px; color:#b98a00; background:#fff8e0; border:1px dashed #e3c264;
+    padding:6px 9px; border-radius:7px; margin-top:10px; display:none;
+  }
+  .nota-config.mostrar{ display:block; }
+
+  /* ---------- Resultado ---------- */
+  #zona-resultado{ margin-top:32px; scroll-margin-top:24px; }
+  #zona-resultado h2{ font-size:19px; color:var(--rojo); margin-bottom:14px; }
+  #resultado-caja{ min-height:10px; }
+  .cargando{
+    background:var(--crema); border-left:6px solid var(--dorado); padding:18px;
+    border-radius:8px; color:#4a4238; display:flex; align-items:center; gap:12px;
+  }
+  .cargando .spinner{
+    width:18px; height:18px; border-radius:50%; border:3px solid #e6c887;
+    border-top-color:var(--rojo); animation:girar .8s linear infinite; flex-shrink:0;
+  }
+  @keyframes girar{ to{ transform:rotate(360deg); } }
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--linea); background:var(--crema);
+    padding:28px 24px 34px; margin-top:10px;
+  }
+  .footer-inner{
+    max-width:1040px; margin:0 auto; display:flex; align-items:center;
+    justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .footer-inner img{ height:44px; width:auto; opacity:.92; }
+  footer p{ margin:0; font-size:12.5px; color:var(--gris); }
+</style>
+</head>
+<body>
+
+  <div class="ribbon"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <img class="crest" src="assets/logo-slg.png" alt="Escudo Institución Educativa San Luis Gonzaga">
+      <div class="masthead-text">
+        <span class="eyebrow">Sistema de Resultados Educativos · Lleto</span>
+        <h1>Institución Educativa San Luis Gonzaga</h1>
+        <p>Portal de consulta de reportes académicos e institucionales</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de sesión: solo se muestra cuando ya se identificó al estudiante -->
+  <div class="barra-sesion oculto" id="barra-sesion">
+    <div class="barra-sesion-inner">
+      <div>
+        <p>Consultando como <strong id="saludo-nombre">—</strong><span class="grupo-tag" id="saludo-grupo"></span></p>
+        <p class="detalle-sesion" id="saludo-detalle"></p>
+      </div>
+      <button type="button" class="btn-salir" id="btn-salir">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ============================================================
+         PANTALLA 1: acceso — solo se pide el documento
+         ============================================================ -->
+    <section id="pantalla-login">
+
+      <section class="tarjeta bienvenida">
+        <div class="listón"></div>
+        <div class="contenido">
+          <p><strong>Bienvenidos.</strong></p>
+          <p>Desde este portal, estudiantes y acudientes pueden consultar los reportes académicos e institucionales disponibles: notas parciales, resultados de simulacros, boletines por periodo y boletines del SENA.</p>
+          <p>Ingresa el número de documento del estudiante para comenzar.</p>
+        </div>
+      </section>
+
+      <section class="tarjeta panel-doc">
+        <div class="listón"></div>
+        <div class="contenido">
+          <label for="documento">Número de documento del estudiante</label>
+          <div class="fila-doc">
+            <input id="documento" type="text" inputmode="numeric" placeholder="Ejemplo: 1234567890" autocomplete="off">
+            <button type="button" class="btn" id="btn-ingresar" style="max-width:160px;">Ingresar</button>
+          </div>
+          <p id="estado-doc" class="estado-doc">Con este documento se verifica al estudiante y se habilitan los reportes disponibles.</p>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ============================================================
+         PANTALLA 2: panel de reportes — solo tras verificar el documento
+         ============================================================ -->
+    <section id="pantalla-dashboard" class="oculto">
+
+      <section class="rejilla" id="rejilla-reportes">
+
+        <!-- 1. Notas parciales -->
+        <article class="reporte tarjeta" data-endpoint="notasParciales">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📝</div>
+            <h3>Reporte de notas parciales</h3>
+            <p class="desc">Consulta las asignaturas reportadas y las observaciones registradas por los docentes en cada corte del periodo.</p>
+
+            <select class="selector-hoja" aria-label="Seleccione el reporte">
+              <option value="PrimerReporte">Primer Reporte</option>
+              <option value="SegundoReporte">Segundo Reporte</option>
+              <option value="TercerReporte">Tercer Reporte</option>
+              <option value="Reporte Final Periodo 1">Reporte Final Periodo 1</option>
+            </select>
+
+            <button type="button" class="btn btn-consultar">Consultar</button>
+            <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
+          </div>
+        </article>
+
+        <!-- 2. Resultados de simulacros -->
+        <article class="reporte tarjeta" data-endpoint="simulacros">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📊</div>
+            <h3>Resultados de simulacros</h3>
+            <p class="desc">Revisa el reporte de un simulacro puntual, con imagen, PDF y notas por área, o el comparativo entre el primer y segundo simulacro.</p>
+
+            <select class="selector-hoja" aria-label="Seleccione el simulacro">
+              <option value="PrimerSimulacro">Primer simulacro</option>
+              <option value="SegundoSimulacro">Segundo simulacro</option>
+              <option value="Comparativo">Comparativo Simulacros</option>
+            </select>
+
+            <button type="button" class="btn btn-consultar">Consultar</button>
+            <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
+          </div>
+        </article>
+
+        <!-- 3. Boletines por periodo -->
+        <article class="reporte tarjeta" data-endpoint="boletinesPeriodo">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📄</div>
+            <h3>Boletines académicos por periodo</h3>
+            <p class="desc">Consulta y descarga el boletín académico oficial del estudiante correspondiente a cada periodo.</p>
+
+            <select class="selector-hoja" aria-label="Seleccione el periodo">
+              <option value="Periodo1">Periodo 1</option>
+              <option value="Periodo2">Periodo 2</option>
+              <option value="Periodo3">Periodo 3</option>
+              <option value="Periodo4">Periodo 4</option>
+            </select>
+
+            <button type="button" class="btn btn-consultar">Consultar</button>
+            <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
+          </div>
+        </article>
+
+        <!-- 4. Boletines SENA -->
+        <article class="reporte tarjeta" data-endpoint="boletinSena">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">🎓</div>
+            <h3>Boletines SENA</h3>
+            <p class="desc">Consulta el boletín de seguimiento del programa de articulación con el SENA.</p>
+
+            <button type="button" class="btn btn-consultar">Consultar</button>
+            <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
+          </div>
+        </article>
+
+      </section>
+
+      <section id="zona-resultado" class="oculto">
+        <h2>Resultado de la consulta</h2>
+        <div id="resultado-caja"></div>
+      </section>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <img src="assets/logo-facimate.png" alt="Facimate Lleto">
+      <p>Generado automáticamente — Sistema de Resultados Educativos de Lleto · Institución Educativa San Luis Gonzaga</p>
+    </div>
+  </footer>
+
+<script>
+/* ============================================================
+ * CONFIGURACIÓN DE REPORTES
+ * ------------------------------------------------------------
+ * Un registro por cada tarjeta del panel. scriptUrl = URL de
+ * implementación ("/exec") del Apps Script publicado para esa
+ * hoja de cálculo. Reemplaza "PEGA_AQUI_LA_URL_DEL_DEPLOY" por
+ * la URL real cuando la tengas; mientras tanto, la tarjeta avisa
+ * que falta configurarse en vez de fallar en silencio.
+ *
+ * necesitaHoja = true cuando el Apps Script espera el parámetro
+ * "hoja" además de "doc".
+ * ============================================================ */
+const CONFIG_REPORTES = {
+  notasParciales: {
+    scriptUrl: "PEGA_AQUI_LA_URL_DEL_DEPLOY",
+    necesitaHoja: true
+  },
+  simulacros: {
+    scriptUrl: "https://script.google.com/macros/s/AKfycbwZ3KwIQv8CuTTnx1W55zSaavzk5GbJ634sVSTBNII34gGxJuPLj7oFMBc0pntc2OqZ/exec",
+    necesitaHoja: true
+  },
+  boletinesPeriodo: {
+    scriptUrl: "PEGA_AQUI_LA_URL_DEL_DEPLOY",
+    necesitaHoja: true
+  },
+  boletinSena: {
+    scriptUrl: "PEGA_AQUI_LA_URL_DEL_DEPLOY",
+    necesitaHoja: false
+  }
+};
+
+/* ------------------------------------------------------------
+ * Verificación / identificación del estudiante (pantalla de
+ * acceso). Apunta al Apps Script propio del spreadsheet "Lista
+ * Estudiantes SLG 2026" (hojas Estudiantes + Grupos), NO al de
+ * simulacros — así cualquier estudiante puede entrar al portal
+ * aunque todavía no tenga resultados de simulacro cargados.
+ * ------------------------------------------------------------ */
+const CONFIG_VERIFICACION = {
+  scriptUrl: "https://script.google.com/macros/s/AKfycbwvhq2nNtq9Qh3Ps_m4MoZDEm7bdS0HBkot-dPrJoAdCctQlaEiNW0jHokz72_1YjlW/exec"
+};
+
+const ORIGEN_CONSULTA = "GitHub";
+const CLAVE_SESION = "slg_sesion";
+
+const pantallaLogin = document.getElementById("pantalla-login");
+const pantallaDashboard = document.getElementById("pantalla-dashboard");
+const barraSesion = document.getElementById("barra-sesion");
+const saludoNombre = document.getElementById("saludo-nombre");
+const saludoGrupo = document.getElementById("saludo-grupo");
+const btnSalir = document.getElementById("btn-salir");
+
+const campoDocumento = document.getElementById("documento");
+const btnIngresar = document.getElementById("btn-ingresar");
+const estadoDoc = document.getElementById("estado-doc");
+const zonaResultado = document.getElementById("zona-resultado");
+const resultadoCaja = document.getElementById("resultado-caja");
+
+// Marca en el HTML qué tarjetas aún no tienen URL configurada.
+document.querySelectorAll(".reporte").forEach(function (tarjeta) {
+  const clave = tarjeta.dataset.endpoint;
+  const cfg = CONFIG_REPORTES[clave];
+  const aviso = tarjeta.querySelector(".nota-config");
+  if (!cfg || !cfg.scriptUrl || cfg.scriptUrl.indexOf("PEGA_AQUI") === 0) {
+    aviso.classList.add("mostrar");
+  }
+});
+
+function formatoDocumentoValido(doc) {
+  return /^\d+$/.test(doc);
+}
+
+function mostrarPantallaLogin() {
+  pantallaDashboard.classList.add("oculto");
+  barraSesion.classList.add("oculto");
+  pantallaLogin.classList.remove("oculto");
+  zonaResultado.classList.add("oculto");
+  resultadoCaja.innerHTML = "";
+  campoDocumento.focus();
+}
+
+function mostrarPantallaDashboard(sesion) {
+  pantallaLogin.classList.add("oculto");
+  pantallaDashboard.classList.remove("oculto");
+  barraSesion.classList.remove("oculto");
+  saludoNombre.textContent = sesion.nombre || "Estudiante";
+  saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
+  saludoGrupo.style.display = sesion.grupo ? "inline-block" : "none";
+
+  const detalles = [];
+  if (sesion.grado) detalles.push(sesion.grado);
+  if (sesion.director) detalles.push("Director de grupo: " + sesion.director);
+  document.getElementById("saludo-detalle").textContent = detalles.join(" · ");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Si ya había una sesión activa en esta pestaña, entra directo al panel.
+(function restaurarSesion() {
+  const guardada = sessionStorage.getItem(CLAVE_SESION);
+  if (guardada) {
+    try {
+      const sesion = JSON.parse(guardada);
+      if (sesion && sesion.documento && sesion.nombre) {
+        mostrarPantallaDashboard(sesion);
+        return;
+      }
+    } catch (err) { /* sesión corrupta, se ignora */ }
+  }
+  mostrarPantallaLogin();
+})();
+
+btnSalir.addEventListener("click", function () {
+  sessionStorage.removeItem(CLAVE_SESION);
+  campoDocumento.value = "";
+  estadoDoc.textContent = "Con este documento se verifica al estudiante y se habilitan los reportes disponibles.";
+  estadoDoc.className = "estado-doc";
+  mostrarPantallaLogin();
+});
+
+campoDocumento.addEventListener("keydown", function (ev) {
+  if (ev.key === "Enter") { ev.preventDefault(); intentarIngresar(); }
+});
+btnIngresar.addEventListener("click", intentarIngresar);
+
+function intentarIngresar() {
+  const doc = campoDocumento.value.trim();
+
+  if (!doc) {
+    estadoDoc.textContent = "Ingresa el número de documento del estudiante.";
+    estadoDoc.className = "estado-doc error";
+    campoDocumento.focus();
+    return;
+  }
+  if (!formatoDocumentoValido(doc)) {
+    estadoDoc.textContent = "El número de documento solo debe contener dígitos.";
+    estadoDoc.className = "estado-doc error";
+    campoDocumento.focus();
+    return;
+  }
+
+  if (!CONFIG_VERIFICACION.scriptUrl || CONFIG_VERIFICACION.scriptUrl.indexOf("PEGA_AQUI") === 0) {
+    estadoDoc.textContent = "Falta configurar la URL de verificación en CONFIG_VERIFICACION.";
+    estadoDoc.className = "estado-doc error";
+    return;
+  }
+
+  btnIngresar.disabled = true;
+  btnIngresar.textContent = "Verificando...";
+  estadoDoc.textContent = "Verificando el documento, por favor espera...";
+  estadoDoc.className = "estado-doc";
+
+  const params = new URLSearchParams();
+  params.set("doc", doc);
+  params.set("origen", ORIGEN_CONSULTA);
+
+  fetch(CONFIG_VERIFICACION.scriptUrl + "?" + params.toString())
+    .then(function (res) { return res.text(); })
+    .then(function (texto) {
+      let datos;
+      try { datos = JSON.parse(texto); }
+      catch (err) {
+        var fragmento = texto.replace(/\s+/g, " ").trim().slice(0, 160);
+        console.error("Respuesta cruda recibida (no es JSON):", texto);
+        throw new Error(
+          "El Apps Script no respondió en formato de identificación. Verifica que la URL en " +
+          "CONFIG_REPORTES coincida con la implementación que actualizaste. Se recibió: \u201c" +
+          fragmento + (texto.length > 160 ? "…" : "") + "\u201d"
+        );
+      }
+
+      if (!datos.encontrado) {
+        estadoDoc.textContent = "No encontramos un estudiante con ese número de documento.";
+        estadoDoc.className = "estado-doc error";
+        return;
+      }
+
+      const sesion = {
+        documento: doc,
+        nombre: datos.nombre || "Estudiante",
+        grupo: datos.grupo || "",
+        grado: datos.grado || "",
+        director: datos.director || ""
+      };
+      sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
+      estadoDoc.textContent = "Documento verificado.";
+      estadoDoc.className = "estado-doc ok";
+      mostrarPantallaDashboard(sesion);
+    })
+    .catch(function (err) {
+      estadoDoc.textContent = err.message || "No fue posible verificar el documento. Intenta nuevamente en unos minutos.";
+      estadoDoc.className = "estado-doc error";
+    })
+    .finally(function () {
+      btnIngresar.disabled = false;
+      btnIngresar.textContent = "Ingresar";
+    });
+}
+
+document.querySelectorAll(".btn-consultar").forEach(function (boton) {
+  boton.addEventListener("click", function () {
+    const tarjeta = boton.closest(".reporte");
+    const clave = tarjeta.dataset.endpoint;
+    const cfg = CONFIG_REPORTES[clave];
+    const selector = tarjeta.querySelector(".selector-hoja");
+
+    const guardada = sessionStorage.getItem(CLAVE_SESION);
+    const sesion = guardada ? JSON.parse(guardada) : null;
+    if (!sesion) { mostrarPantallaLogin(); return; }
+
+    if (!cfg || !cfg.scriptUrl || cfg.scriptUrl.indexOf("PEGA_AQUI") === 0) {
+      mostrarError(
+        "Este reporte todavía no tiene configurada la URL de su Apps Script. " +
+        "Publica el deploy correspondiente y actualiza CONFIG_REPORTES en el código de la página."
+      );
+      return;
+    }
+
+    document.querySelectorAll(".reporte").forEach(function (t) { t.classList.remove("activo"); });
+    tarjeta.classList.add("activo");
+
+    const params = new URLSearchParams();
+    params.set("doc", sesion.documento);
+    params.set("origen", ORIGEN_CONSULTA);
+    if (cfg.necesitaHoja && selector) params.set("hoja", selector.value);
+
+    consultar(cfg.scriptUrl + "?" + params.toString());
+  });
+});
+
+function consultar(url) {
+  zonaResultado.classList.remove("oculto");
+  resultadoCaja.innerHTML =
+    '<div class="cargando"><span class="spinner"></span> Consultando información, por favor espera un momento...</div>';
+  zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  fetch(url)
+    .then(function (res) { return res.text(); })
+    .then(function (html) { resultadoCaja.innerHTML = html; })
+    .catch(function () { mostrarError("No fue posible realizar la consulta. Intenta nuevamente en unos minutos."); });
+}
+
+function mostrarError(texto) {
+  zonaResultado.classList.remove("oculto");
+  resultadoCaja.innerHTML =
+    '<div style="background:#fff4f4; border-left:6px solid #c40016; padding:18px; border-radius:8px; color:#333;">' +
+    '<p style="margin:0;"><strong>Atención:</strong> ' + texto + "</p></div>";
+  zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+</script>
+
+</body>
+</html>
