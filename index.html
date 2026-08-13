@@ -365,6 +365,12 @@
             <h3>Boletines SENA</h3>
             <p class="desc">Consulta el boletín de seguimiento del programa de articulación con el SENA.</p>
 
+            <select class="selector-hoja" aria-label="Seleccione el reporte">
+              <option value="Reporte1">Reporte 1</option>
+              <option value="Reporte2">Reporte 2</option>
+              <option value="Reporte3">Reporte 3</option>
+            </select>
+
             <button type="button" class="btn btn-consultar">Consultar</button>
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
@@ -421,7 +427,7 @@ const CONFIG_REPORTES = {
   },
   boletinSena: {
     scriptUrl: "PEGA_AQUI_LA_URL_DEL_DEPLOY",
-    necesitaHoja: false
+    necesitaHoja: true
   }
 };
 
