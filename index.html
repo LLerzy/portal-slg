@@ -132,8 +132,34 @@
   .estado-doc.error{ color:var(--rojo); font-weight:700; }
 
   /* ---------- Rejilla de reportes ---------- */
-  .rejilla{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
-  @media (max-width:700px){ .rejilla{ grid-template-columns:1fr; } }
+  .carrusel-wrap{ position:relative; }
+  .carrusel{
+    display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory;
+    padding:4px 4px 14px; scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin; scrollbar-color:var(--dorado) transparent;
+  }
+  .carrusel::-webkit-scrollbar{ height:6px; }
+  .carrusel::-webkit-scrollbar-track{ background:transparent; }
+  .carrusel::-webkit-scrollbar-thumb{ background:var(--dorado); border-radius:3px; }
+  .carrusel .reporte{ flex:0 0 260px; scroll-snap-align:start; }
+  @media (min-width:560px){ .carrusel .reporte{ flex:0 0 300px; } }
+  .flecha-carrusel{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--linea);
+    background:#fff; box-shadow:var(--sombra); cursor:pointer; font-size:18px;
+    color:var(--rojo); display:flex; align-items:center; justify-content:center;
+    line-height:1; padding:0;
+  }
+  .flecha-carrusel:hover{ background:var(--crema-2); }
+  .flecha-carrusel.izquierda{ left:-6px; }
+  .flecha-carrusel.derecha{ right:-6px; }
+  @media (max-width:640px){ .flecha-carrusel{ display:none; } }
+  .pista-scroll{
+    height:3px; background:var(--linea); border-radius:2px; margin:0 4px 8px; overflow:hidden;
+  }
+  .pista-scroll-relleno{
+    height:100%; width:25%; background:var(--dorado); border-radius:2px; transition:width .15s ease;
+  }
 
   .reporte{ display:flex; flex-direction:column; }
   .reporte > .listón{ background:var(--dorado); }
@@ -267,7 +293,11 @@
          ============================================================ -->
     <section id="pantalla-dashboard" class="oculto">
 
-      <section class="rejilla" id="rejilla-reportes">
+      <div class="carrusel-wrap">
+        <button type="button" class="flecha-carrusel izquierda" id="flecha-izq" aria-label="Reporte anterior">‹</button>
+        <button type="button" class="flecha-carrusel derecha" id="flecha-der" aria-label="Reporte siguiente">›</button>
+
+        <div class="carrusel" id="rejilla-reportes">
 
         <!-- 1. Notas parciales -->
         <article class="reporte tarjeta" data-endpoint="notasParciales">
@@ -278,10 +308,9 @@
             <p class="desc">Consulta las asignaturas reportadas y las observaciones registradas por los docentes en cada corte del periodo.</p>
 
             <select class="selector-hoja" aria-label="Seleccione el reporte">
-              <option value="PrimerReporte">Primer Reporte</option>
-              <option value="SegundoReporte">Segundo Reporte</option>
-              <option value="TercerReporte">Tercer Reporte</option>
-              <option value="Reporte Final Periodo 1">Reporte Final Periodo 1</option>
+              <option value="PrimerReporte">🗓️ Primer Reporte del Primer Periodo (26 de marzo de 2026)</option>
+              <option value="SegundoReporte">🗓️ Segundo Reporte del Primer Periodo (8 de mayo de 2026)</option>
+              <option value="Reporte Final Periodo 1">🗓️ Reporte Final del Primer Periodo (12 de junio de 2026)</option>
             </select>
 
             <button type="button" class="btn btn-consultar">Consultar</button>
@@ -341,7 +370,10 @@
           </div>
         </article>
 
-      </section>
+        </div>
+
+        <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno"></div></div>
+      </div>
 
       <section id="zona-resultado" class="oculto">
         <h2>Resultado de la consulta</h2>
@@ -419,6 +451,34 @@ const btnIngresar = document.getElementById("btn-ingresar");
 const estadoDoc = document.getElementById("estado-doc");
 const zonaResultado = document.getElementById("zona-resultado");
 const resultadoCaja = document.getElementById("resultado-caja");
+
+// --- Carrusel de reportes: flechas + barra de progreso ---
+const carrusel = document.getElementById("rejilla-reportes");
+const flechaIzq = document.getElementById("flecha-izq");
+const flechaDer = document.getElementById("flecha-der");
+const pistaRelleno = document.getElementById("pista-relleno");
+
+function desplazarCarrusel(direccion) {
+  const tarjeta = carrusel.querySelector(".reporte");
+  const ancho = tarjeta ? tarjeta.getBoundingClientRect().width + 20 : 300;
+  carrusel.scrollBy({ left: direccion * ancho * 1, behavior: "smooth" });
+}
+
+function actualizarEstadoCarrusel() {
+  const maximo = carrusel.scrollWidth - carrusel.clientWidth;
+  const progreso = maximo > 0 ? carrusel.scrollLeft / maximo : 0;
+  const anchoVisible = Math.min(100, (carrusel.clientWidth / carrusel.scrollWidth) * 100);
+  pistaRelleno.style.width = anchoVisible + "%";
+  pistaRelleno.style.marginLeft = (progreso * (100 - anchoVisible)) + "%";
+  flechaIzq.style.visibility = carrusel.scrollLeft <= 4 ? "hidden" : "visible";
+  flechaDer.style.visibility = carrusel.scrollLeft >= maximo - 4 ? "hidden" : "visible";
+}
+
+flechaIzq.addEventListener("click", function () { desplazarCarrusel(-1); });
+flechaDer.addEventListener("click", function () { desplazarCarrusel(1); });
+carrusel.addEventListener("scroll", actualizarEstadoCarrusel);
+window.addEventListener("resize", actualizarEstadoCarrusel);
+setTimeout(actualizarEstadoCarrusel, 100);
 
 // Marca en el HTML qué tarjetas aún no tienen URL configurada.
 document.querySelectorAll(".reporte").forEach(function (tarjeta) {
