@@ -346,10 +346,8 @@
             <p class="desc">Consulta y descarga el boletín académico oficial del estudiante correspondiente a cada periodo.</p>
 
             <select class="selector-hoja" aria-label="Seleccione el periodo">
-              <option value="Periodo1">Periodo 1</option>
-              <option value="Periodo2">Periodo 2</option>
-              <option value="Periodo3">Periodo 3</option>
-              <option value="Periodo4">Periodo 4</option>
+              <option value="BoletinPeriodo1">Periodo 1</option>
+              <option value="BoletinPeriodo2">Periodo 2</option>
             </select>
 
             <button type="button" class="btn btn-consultar">Consultar</button>
@@ -366,9 +364,8 @@
             <p class="desc">Consulta el boletín de seguimiento del programa de articulación con el SENA.</p>
 
             <select class="selector-hoja" aria-label="Seleccione el reporte">
-              <option value="Reporte1">Reporte 1</option>
-              <option value="Reporte2">Reporte 2</option>
-              <option value="Reporte3">Reporte 3</option>
+              <option value="BoletinSENA1">Reporte 1</option>
+              <option value="BoletinSENA2">Reporte 2</option>
             </select>
 
             <button type="button" class="btn btn-consultar">Consultar</button>
@@ -421,12 +418,15 @@ const CONFIG_REPORTES = {
     scriptUrl: "https://script.google.com/macros/s/AKfycbwEzpQsbsQ9JrLpY_ItBRljCfNTy1h_fEUxRVIm0vzr0iy98rjKAi4nz9S0owaBZiHg/exec",
     necesitaHoja: true
   },
+  // boletinesPeriodo y boletinSena comparten el MISMO Apps Script (una
+  // sola hoja "Boletines" con columnas separadas por tipo) — pega la
+  // misma URL de despliegue en ambas cuando la tengas.
   boletinesPeriodo: {
-    scriptUrl: "PEGA_AQUI_LA_URL_DEL_DEPLOY",
+    scriptUrl: "https://script.google.com/macros/s/AKfycbzJyQwPGT6owGQ49Aq0TubWXSxgfN-FiZhkz9MoGUcYv8AP0ZH2Wz9J85VtEVv-fws4/exec",
     necesitaHoja: true
   },
   boletinSena: {
-    scriptUrl: "PEGA_AQUI_LA_URL_DEL_DEPLOY",
+    scriptUrl: "https://script.google.com/macros/s/AKfycbzJyQwPGT6owGQ49Aq0TubWXSxgfN-FiZhkz9MoGUcYv8AP0ZH2Wz9J85VtEVv-fws4/exec",
     necesitaHoja: true
   }
 };
