@@ -131,6 +131,25 @@
   .estado-doc.ok{ color:#1a7f37; font-weight:700; }
   .estado-doc.error{ color:var(--rojo); font-weight:700; }
 
+  /* ---------- Panel de docente (reemplaza al carrusel de fichas) ---------- */
+  .panel-docente{ border-color:#cdd9ef; }
+  .panel-docente > .listón{ background:var(--azul); }
+  .panel-docente .contenido{ background:#f8fafd; text-align:center; padding:34px 24px; }
+  .panel-docente .icono-docente{
+    width:56px; height:56px; border-radius:14px; background:#e8eefb;
+    display:flex; align-items:center; justify-content:center; font-size:28px;
+    margin:0 auto 16px; border:1px solid #cdd9ef;
+  }
+  .panel-docente h3{ font-size:19px; color:var(--azul); margin-bottom:8px; }
+  .panel-docente p.desc{ color:var(--gris); font-size:14.5px; margin:0 auto 22px; max-width:420px; }
+  .panel-docente .btn-docente{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--azul); color:#fff; border:none; padding:13px 26px;
+    border-radius:9px; font-size:14.5px; font-weight:700; cursor:pointer;
+    font-family:inherit; text-decoration:none; width:auto;
+  }
+  .panel-docente .btn-docente:hover{ background:#254d8c; }
+
   /* ---------- Rejilla de reportes ---------- */
   .carrusel-wrap{ position:relative; }
   .carrusel{
@@ -293,7 +312,18 @@
          ============================================================ -->
     <section id="pantalla-dashboard" class="oculto">
 
-      <div class="carrusel-wrap">
+      <!-- Panel exclusivo para docentes: reemplaza el carrusel de fichas -->
+      <section class="tarjeta panel-docente oculto" id="panel-docente">
+        <div class="listón"></div>
+        <div class="contenido">
+          <div class="icono-docente">📈</div>
+          <h3>Dashboard de resultados de simulacros</h3>
+          <p class="desc">Consulta el panel comparativo de resultados por grupo, grado y área — promedios, distribución y niveles de desempeño.</p>
+          <a class="btn-docente" id="enlace-dashboard" href="#" target="_blank" rel="noopener noreferrer">Abrir Dashboard de Simulacros ↗</a>
+        </div>
+      </section>
+
+      <div class="carrusel-wrap" id="carrusel-wrap">
         <button type="button" class="flecha-carrusel izquierda" id="flecha-izq" aria-label="Reporte anterior">‹</button>
         <button type="button" class="flecha-carrusel derecha" id="flecha-der" aria-label="Reporte siguiente">›</button>
 
@@ -442,6 +472,11 @@ const CONFIG_VERIFICACION = {
   scriptUrl: "https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec"
 };
 
+// URL del dashboard de simulacros dentro de este mismo repositorio
+// (subcarpeta en GitHub Pages). Reemplaza por la ruta real cuando
+// muevas el dashboard a portal-slg.
+const CONFIG_DASHBOARD_URL = "https://llerzy.github.io/portal-slg/dashboard-simulacros/";
+
 const ORIGEN_CONSULTA = "GitHub";
 const CLAVE_SESION = "slg_sesion";
 
@@ -457,6 +492,10 @@ const btnIngresar = document.getElementById("btn-ingresar");
 const estadoDoc = document.getElementById("estado-doc");
 const zonaResultado = document.getElementById("zona-resultado");
 const resultadoCaja = document.getElementById("resultado-caja");
+
+const panelDocente = document.getElementById("panel-docente");
+const carruselWrap = document.getElementById("carrusel-wrap");
+const enlaceDashboard = document.getElementById("enlace-dashboard");
 
 // --- Carrusel de reportes: flechas + barra de progreso ---
 const carrusel = document.getElementById("rejilla-reportes");
@@ -514,13 +553,38 @@ function mostrarPantallaDashboard(sesion) {
   pantallaDashboard.classList.remove("oculto");
   barraSesion.classList.remove("oculto");
   saludoNombre.textContent = sesion.nombre || "Estudiante";
-  saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
-  saludoGrupo.style.display = sesion.grupo ? "inline-block" : "none";
 
-  const detalles = [];
-  if (sesion.grado) detalles.push(sesion.grado);
-  if (sesion.director) detalles.push("Director de grupo: " + sesion.director);
-  document.getElementById("saludo-detalle").textContent = detalles.join(" · ");
+  const esDocente = sesion.rol === "docente";
+
+  if (esDocente) {
+    // --- Vista docente: se oculta el carrusel de fichas y se muestra el panel del dashboard ---
+    saludoGrupo.textContent = "Docente";
+    saludoGrupo.style.display = "inline-block";
+    document.getElementById("saludo-detalle").textContent =
+      sesion.grupoAsignado ? ("Área/Grupo asignado: " + sesion.grupoAsignado) : "";
+
+    carruselWrap.classList.add("oculto");
+    panelDocente.classList.remove("oculto");
+
+    if (CONFIG_DASHBOARD_URL && CONFIG_DASHBOARD_URL.indexOf("PEGA_AQUI") === -1) {
+      enlaceDashboard.href = CONFIG_DASHBOARD_URL;
+    } else {
+      enlaceDashboard.href = "#";
+      enlaceDashboard.textContent = "Falta configurar CONFIG_DASHBOARD_URL";
+    }
+  } else {
+    // --- Vista estudiante: comportamiento original ---
+    saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
+    saludoGrupo.style.display = sesion.grupo ? "inline-block" : "none";
+
+    const detalles = [];
+    if (sesion.grado) detalles.push(sesion.grado);
+    if (sesion.director) detalles.push("Director de grupo: " + sesion.director);
+    document.getElementById("saludo-detalle").textContent = detalles.join(" · ");
+
+    panelDocente.classList.add("oculto");
+    carruselWrap.classList.remove("oculto");
+  }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -607,10 +671,12 @@ function intentarIngresar() {
 
       const sesion = {
         documento: doc,
+        rol: datos.rol || "estudiante",
         nombre: datos.nombre || "Estudiante",
         grupo: datos.grupo || "",
         grado: datos.grado || "",
-        director: datos.director || ""
+        director: datos.director || "",
+        grupoAsignado: datos.grupoAsignado || ""
       };
       sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
       estadoDoc.textContent = "Documento verificado.";
