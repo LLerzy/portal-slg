@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cuadernillo Matemáticas · Grado 10°</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --paper:#EAE3D3;
+  --paper-dark:#DDD4BE;
+  --card:#F6F1E6;
+  --ink:#232A3B;
+  --ink-soft:#4B5266;
+  --rule:#B9AD8F;
+  --gold:#B8862E;
+  --green:#2E6B4F;
+  --green-bg:#DDEBE1;
+  --red:#A6323E;
+  --red-bg:#F3DEDD;
+  --shadow: 0 10px 30px rgba(35,42,59,0.14);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(35,42,59,0.05) 1px, transparent 0) 0 0/14px 14px,
+    var(--paper);
+  min-height:100vh;
+  padding:28px 16px 60px;
+}
+.wrap{max-width:880px;margin:0 auto;}
+
+/* ---------- ticket header ---------- */
+.ticket{
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:14px;
+  padding:22px 26px;
+  position:relative;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.ticket::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-1px;
+  height:14px;
+  background-image: radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px);
+  background-size:20px 14px;
+  background-repeat:repeat-x;
+}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#C9BFA0; margin:0 0 6px;}
+.ticket h1{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(26px,4.2vw,38px); margin:0; line-height:1.05;}
+.ticket .sub{font-family:'Fraunces',serif; font-style:italic; font-weight:500; color:#D8CFB2; font-size:16px; margin-top:4px;}
+.stamp{
+  border:2px solid var(--gold); color:var(--gold);
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em;
+  padding:6px 10px; border-radius:6px; transform:rotate(4deg);
+  white-space:nowrap;
+}
+.ticket-meta{display:flex; gap:18px; margin-top:18px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#C9BFA0;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+
+/* ---------- navigator (bubble strip) ---------- */
+.nav-strip{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+}
+.nav-strip .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft);
+  padding:8px 14px; border-radius:20px; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.shuffle-again{padding:8px 14px; border-radius:20px; font-size:12px;}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{
+  width:30px; height:30px; border-radius:50%;
+  border:2px solid var(--rule);
+  background:transparent;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px;
+  color:var(--ink-soft); cursor:pointer;
+  transition:transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+.bub:hover{transform:translateY(-2px);}
+.bub.current{border-color:var(--ink); color:var(--ink); box-shadow:0 0 0 3px rgba(184,134,46,0.35);}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+
+/* ---------- question card ---------- */
+.card{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-inner{padding:26px 28px 28px; position:relative;}
+.card-inner::before{
+  content:""; position:absolute; left:52px; top:0; bottom:0; width:1px;
+  background:repeating-linear-gradient(var(--red) 0 6px, transparent 6px 12px);
+  opacity:.25;
+}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+.q-num{
+  width:40px; height:40px; min-width:40px; border-radius:50%;
+  background:var(--ink); color:var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:16px;
+}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap;}
+.tag{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.05em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px;
+  border:1px solid var(--rule); color:var(--ink-soft);
+}
+.tag-comp{border-color:var(--gold); color:var(--gold); background:rgba(184,134,46,0.08);}
+.set-label{
+  font-family:'Fraunces',serif; font-style:italic; color:var(--gold);
+  font-size:14px; margin:2px 0 14px 54px;
+}
+.context{
+  margin:0 0 18px 54px;
+  padding:14px 16px;
+  background:var(--paper-dark);
+  border-radius:8px;
+  font-size:14.5px;
+  line-height:1.5;
+  color:var(--ink-soft);
+}
+.context table{border-collapse:collapse; width:100%; margin-top:8px; font-size:13.5px; background:var(--card);}
+.context table caption{text-align:left; font-weight:600; color:var(--ink); margin-bottom:4px; font-size:13px;}
+.context th,.context td{border:1px solid var(--rule); padding:5px 8px; text-align:center;}
+.context th{background:var(--ink); color:var(--paper); font-weight:600;}
+.context .tbl-pair{display:flex; gap:16px; flex-wrap:wrap;}
+.context .tbl-pair>div{flex:1; min-width:180px;}
+.stmt{
+  margin:0 0 20px 54px;
+  font-size:16.5px; line-height:1.55; font-weight:500;
+}
+.grid-note{font-family:'IBM Plex Mono',monospace; font-size:12px; margin-left:54px; margin-top:-8px; margin-bottom:16px; color:var(--ink-soft);}
+
+.options{margin-left:54px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+@media(max-width:560px){.options{grid-template-columns:1fr;} .context{margin-left:0;} .stmt{margin-left:0;} .set-label{margin-left:0;} .options{margin-left:0;} .card-inner::before{display:none;}}
+.opt{
+  display:flex; align-items:center; gap:12px;
+  border:1.5px solid var(--rule); border-radius:9px;
+  padding:10px 14px; cursor:pointer; background:var(--card);
+  transition:border-color .15s ease, background .15s ease;
+  font-size:14.5px;
+}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{
+  width:26px; height:26px; min-width:26px; border-radius:50%;
+  border:2px solid var(--ink); display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:12.5px;
+  transition:background .2s ease, color .2s ease;
+}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #545f7a, var(--ink) 70%); color:var(--paper);}
+.opt.locked{cursor:default;}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+
+.feedback{
+  margin:16px 0 0 54px; padding:14px 16px; border-radius:9px;
+  font-size:14px; line-height:1.55; display:none; position:relative;
+}
+@media(max-width:560px){.feedback{margin-left:0;}}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback b{display:block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px;}
+
+.mark{position:absolute; left:6px; top:2px; width:34px; height:34px;}
+.mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.mark.ok path{stroke:var(--green);}
+.mark.bad path{stroke:var(--red);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.btn{
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px;
+  border:1.5px solid var(--ink); background:transparent; color:var(--ink);
+  padding:10px 18px; border-radius:8px; cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#3a4360;}
+.score-pill{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+  background:var(--card); border:1.5px solid var(--gold); color:var(--gold);
+  padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);
+}
+
+/* ---------- summary screen ---------- */
+.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:30px 28px; display:none;}
+.summary.show{display:block;}
+.summary h2{font-family:'Fraunces',serif; font-size:28px; margin:0 0 4px;}
+.summary .big{font-family:'Fraunces',serif; font-size:52px; font-weight:700; color:var(--gold); margin:10px 0 2px;}
+.summary .caption{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em;}
+.cat-bar-row{margin-top:22px;}
+.cat-bar-row .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.cat-bar-row .cname{width:150px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.cat-track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden;}
+.cat-fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cat-num{font-family:'IBM Plex Mono',monospace; font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.summary .btn{margin-top:22px;}
+.summary .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:13.5px; color:var(--ink-soft); line-height:1.5; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="ticket">
+    <div class="ticket-top">
+      <div>
+        <p class="eyebrow">Prueba Saber · PS-2526-X-003</p>
+        <h1>Cuadernillo Décimo</h1>
+        <div class="sub">Explorador de preguntas — Matemáticas</div>
+      </div>
+      <div class="stamp">24 preguntas</div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Grado</b> 10°</span>
+      <span><b>Categorías</b> Álgebra y cálculo · Geometría · Estadística</span>
+      <span><b>Modo</b> práctica autocorregida</span>
+    </div>
+  </div>
+
+  <div class="intro-note">
+    Estas son las <b>24 preguntas de Matemáticas</b> tal como aparecen en el Cuadernillo Décimo (páginas 2 a 6). Responde a tu ritmo: cada opción se autocalifica al seleccionarla y verás la explicación del procedimiento. Puedes saltar entre preguntas con la franja de burbujas de abajo.
+  </div>
+
+  <div class="nav-strip">
+    <div class="order-row">
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button class="btn shuffle-again" id="reshuffleBtn" style="display:none;">↻ Mezclar de nuevo</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="card-inner" id="cardInner"></div>
+  </div>
+
+  <div class="footer-nav">
+    <button class="btn" id="prevBtn">← Anterior</button>
+    <span class="score-pill" id="scorePill">0 / 24 correctas</span>
+    <button class="btn primary" id="nextBtn">Siguiente →</button>
+  </div>
+
+  <div class="summary" id="summary">
+    <p class="caption">Resultado final</p>
+    <h2>Así te fue en el simulacro</h2>
+    <div class="big" id="finalScore">0/24</div>
+
+    <p class="label" style="margin-top:24px;">Por categoría matemática</p>
+    <div class="cat-bar-row" id="catBars"></div>
+
+    <p class="label" style="margin-top:22px;">Por competencia evaluada</p>
+    <div class="cat-bar-row" id="compBars"></div>
+
+    <button class="btn primary" id="retryBtn">↺ Reintentar cuadernillo</button>
+  </div>
+
+</div>
+
+<script>
+const Q = [
+{id:1, group:'zapatos', setLabel:'Preguntas 1 y 2', category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿Cuál o cuáles de estas tiendas vende(n) un número de pares de zapatos superior al promedio?',
+ options:{A:'La tienda 6 solamente.',B:'La tienda 6 y la tienda 3, solamente.',C:'La tienda 6, la tienda 3 y la tienda 1, solamente.',D:'La tienda 6, la tienda 3, la tienda 1 y la tienda 5, solamente.'},
+ correct:'C',
+ explain:'El promedio es (125+29+132+36+64+208) ÷ 6 = 594 ÷ 6 = 99 pares. Superan ese valor la tienda 1 (125), la tienda 3 (132) y la tienda 6 (208). La tienda 5 (64) no llega al promedio.'},
+
+{id:2, group:'zapatos', setLabel:'Preguntas 1 y 2', category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿Cuántas tiendas venden por lo menos 64 pares de zapatos?',
+ options:{A:'2 tiendas.',B:'3 tiendas.',C:'4 tiendas.',D:'5 tiendas.'},
+ correct:'C',
+ explain:'“Por lo menos 64” incluye el valor 64. Cumplen: tienda 1 (125), tienda 3 (132), tienda 5 (64) y tienda 6 (208): 4 tiendas.'},
+
+{id:3, group:'periodos', setLabel:null, category:'Estadística', competencia:'Interpretación y representación',
+ text:'En la tabla se registran las calificaciones de 4 estudiantes en cada uno de los 4 periodos académicos del año. Al finalizar el año, el plantel quiere premiar al estudiante con el mejor promedio de notas en los cuatro periodos. ¿Cuál estudiante ganará este premio?',
+ options:{A:'El estudiante 1.',B:'El estudiante 2.',C:'El estudiante 3.',D:'El estudiante 4.'},
+ correct:'C',
+ explain:'Promedios: E1=(3,5+3,0+3,5+3,0)/4=3,25 · E2=(2,5+3,5+3,0+4,5)/4=3,375 · E3=(4,5+2,5+4,5+2,5)/4=3,5 · E4=(2,5+5,0+2,5+3,0)/4=3,25. El mayor promedio es el del estudiante 3.'},
+
+{id:4, group:null, setLabel:null, category:'Álgebra y cálculo', competencia:'Formulación y ejecución',
+ text:'En un simulacro tipo test hay 100 preguntas en total y no se admiten respuestas en blanco (hay que contestarlas todas). Las preguntas correctas suman un punto y las incorrectas restan medio punto. Un estudiante obtiene una nota de 65,5 sobre 100. El número de preguntas que respondió correctamente el estudiante son:',
+ options:{A:'74',B:'75',C:'77',D:'76'},
+ correct:'C',
+ explain:'Sea x el número de aciertos: x − 0,5(100 − x) = 65,5 → 1,5x − 50 = 65,5 → 1,5x = 115,5 → x = 77.'},
+
+{id:5, group:'notas50', setLabel:'Preguntas 5 a 8', category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿Cuál de las siguientes tablas representa la información anterior?',
+ options:{
+   A:'Nota→#Niños: 0:1, 1:2, 2:10, 3:14, 4:10, 5:4',
+   B:'Nota→#Niños: 0:1, 1:2, 2:9, 3:15, 4:10, 5:13',
+   C:'Nota→#Niños: 0:1, 1:2, 2:8, 3:16, 4:10, 5:13',
+   D:'Nota→#Niños: 0:1, 1:2, 2:10, 3:14, 4:10, 5:13'
+ },
+ correct:'B',
+ explain:'Contando uno a uno los 50 datos de la cuadrícula se obtiene: nota 0 → 1 niño, nota 1 → 2, nota 2 → 9, nota 3 → 15, nota 4 → 10, nota 5 → 13 (suma 50). Esa es exactamente la tabla B.'},
+
+{id:6, group:'notas50', setLabel:'Preguntas 5 a 8', category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿Cuántos estudiantes aprobaron matemáticas? (nota mínima aprobatoria: 3)',
+ options:{A:'12',B:'24',C:'40',D:'38'},
+ correct:'D',
+ explain:'Aprueban quienes obtienen 3, 4 o 5: 15 + 10 + 13 = 38 estudiantes.'},
+
+{id:7, group:'notas50', setLabel:'Preguntas 5 a 8', category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿Qué porcentaje de los niños obtuvieron la nota mínima aprobatoria (3)?',
+ options:{A:'15%',B:'20%',C:'25%',D:'30%'},
+ correct:'D',
+ explain:'15 de los 50 niños obtuvieron exactamente nota 3. 15/50 = 0,30 = 30%.'},
+
+{id:8, group:'notas50', setLabel:'Preguntas 5 a 8', category:'Estadística', competencia:'Argumentación',
+ text:'De acuerdo con la información anterior, se puede afirmar que:',
+ options:{
+   A:'El 18% de los estudiantes obtuvieron una nota de 2.',
+   B:'El 10% de los estudiantes obtuvieron una nota de 4.',
+   C:'El 2% de los estudiantes obtuvieron una nota de 1.',
+   D:'El 12% de los estudiantes obtuvieron una nota menor a 3.'
+ },
+ correct:'A',
+ explain:'Nota 2: 9/50 = 18% ✓. Nota 4: 10/50 = 20% (no 10%). Nota 1: 2/50 = 4% (no 2%). Nota menor a 3 (0,1,2): (1+2+9)/50 = 24% (no 12%). Solo la opción A es correcta.'},
+
+{id:9, group:'rutas', setLabel:null, category:'Estadística', competencia:'Argumentación',
+ text:'Una persona quiere saber el promedio de los tiempos de recorrido en minutos de las tres rutas. ¿Cuál de los siguientes datos le ayudaría a calcular este promedio?',
+ options:{A:'La suma de las distancias recorridas en cada ruta.',B:'La suma de las velocidades de los buses de cada ruta.',C:'La suma del número máximo de pasajeros que transporta cada ruta.',D:'La suma de los tiempos de recorrido de cada ruta.'},
+ correct:'D',
+ explain:'Para promediar los tiempos se necesita sumar los tres tiempos (154+180+300) y dividir entre 3; ningún otro dato de la tabla permite calcular ese promedio.'},
+
+{id:10, group:'empleados', setLabel:'Preguntas 10 y 11', category:'Estadística', competencia:'Formulación y ejecución',
+ text:'¿Cuál sería la probabilidad de que el ganador sea un hombre soltero?',
+ options:{A:'1/6',B:'4/11',C:'1/2',D:'7/3'},
+ correct:'A',
+ explain:'De 120 empleados hay 55 hombres (120−65); de ellos 35 son casados, así que 20 son solteros. P = 20/120 = 1/6.'},
+
+{id:11, group:'empleados', setLabel:'Preguntas 10 y 11', category:'Estadística', competencia:'Formulación y ejecución',
+ text:'Si se sabe que el ganador del viaje es casado, ¿cuál sería la probabilidad de que sea una mujer?',
+ options:{A:'7/9',B:'2/3',C:'9/16',D:'7/10'},
+ correct:'C',
+ explain:'Hay 80 personas casadas en total, de las cuales 45 son mujeres. P(mujer | casado) = 45/80 = 9/16.'},
+
+{id:12, group:null, setLabel:null, category:'Geometría', competencia:'Formulación y ejecución',
+ text:'Con un juego de palitos de 5 cm de longitud se desea armar un cuadrado y un triángulo de 10 cm de lado cada uno. ¿Cuántos palitos se requieren para construir las dos figuras?',
+ options:{A:'10',B:'7',C:'14',D:'4'},
+ correct:'C',
+ explain:'Cada lado de 10 cm necesita 2 palitos de 5 cm. Cuadrado: 4 lados × 2 = 8 palitos. Triángulo: 3 lados × 2 = 6 palitos. Total: 8 + 6 = 14.'},
+
+{id:13, group:'votacion', setLabel:null, category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿Cuántos votos obtuvo el candidato 2 en secundaria?',
+ options:{A:'90',B:'140',C:'150',D:'200'},
+ correct:'B',
+ explain:'El colegio tiene 500 estudiantes (200+300). El candidato 2 obtuvo 40% del total = 200 votos. En primaria obtuvo 60 votos, así que en secundaria obtuvo 200 − 60 = 140.'},
+
+{id:14, group:null, setLabel:null, category:'Estadística', competencia:'Argumentación',
+ text:'Un médico quiere saber el rango de las edades del 50% de sus pacientes más jóvenes. ¿Con cuál de la siguiente información podrá calcularlo?',
+ options:{A:'La suma de las edades y el número de pacientes.',B:'La edad del paciente más joven y del paciente más viejo.',C:'Las edades de la mitad de sus pacientes más jóvenes.',D:'Las edades de los tres sextos de pacientes más jóvenes.'},
+ correct:'C',
+ explain:'El rango de un subgrupo requiere conocer el valor mínimo y máximo dentro de ese subgrupo; solo teniendo las edades de la mitad más joven se puede hallar ese rango.'},
+
+{id:15, group:'consumo', setLabel:'Preguntas 15 y 16', category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿A qué porcentaje del consumo máximo posible corresponde el consumo de junio?',
+ options:{A:'7%',B:'15%',C:'45%',D:'60%'},
+ correct:'C',
+ explain:'Junio registra 9 m³ y el máximo permitido es 20 m³. 9/20 = 0,45 = 45%.'},
+
+{id:16, group:'consumo', setLabel:'Preguntas 15 y 16', category:'Estadística', competencia:'Interpretación y representación',
+ text:'¿En cuál mes el consumo mensual de arena es igual a la media del consumo anual?',
+ options:{A:'Enero.',B:'Noviembre.',C:'Septiembre.',D:'Junio.'},
+ correct:'C',
+ explain:'La suma de los 12 meses es 132 m³, por lo que la media anual es 132/12 = 11 m³. Septiembre es el único mes con consumo de 11 m³.'},
+
+{id:17, group:'triangulos', setLabel:'Preguntas 17 y 18', category:'Geometría', competencia:'Formulación y ejecución',
+ text:'El △ABC es semejante al △DEF y el segmento DF tiene el doble de la longitud del segmento AC. La longitud del segmento BC es:',
+ options:{A:'3 cm',B:'3,5 cm',C:'4 cm',D:'6 cm'},
+ correct:'C',
+ explain:'AC = 3 cm, entonces DF = 2 × 3 = 6 cm, así que la razón de semejanza es 2. Como EF = 8 cm corresponde a BC, entonces BC = EF/2 = 8/2 = 4 cm.'},
+
+{id:18, group:'triangulos', setLabel:'Preguntas 17 y 18', category:'Geometría', competencia:'Formulación y ejecución',
+ text:'Se puede concluir que el área del △DEF es el:',
+ options:{A:'doble del △ABC.',B:'triple del △ABC.',C:'séxtuple del △ABC.',D:'cuádruple del △ABC.'},
+ correct:'D',
+ explain:'La razón de semejanza entre los triángulos es 2. El área escala con el cuadrado de la razón de semejanza: 2² = 4, es decir, el área de DEF es el cuádruple del área de ABC.'},
+
+{id:19, group:'edad', setLabel:'Preguntas 19 y 20', category:'Álgebra y cálculo', competencia:'Formulación y ejecución',
+ text:'Si P es la edad de Ricardo, ¿cuál es la forma correcta de expresar esta información?',
+ options:{A:'P + 15 = P − 5',B:'2(P + 15) = P − 5',C:'(P − 15) = 2·(P + 5)',D:'P + 15 = 2·(P − 5)'},
+ correct:'D',
+ explain:'“Dentro de 15 años” es P+15 y “hace 5 años” es P−5. La edad futura es el doble de la edad pasada: P + 15 = 2·(P − 5).'},
+
+{id:20, group:'edad', setLabel:'Preguntas 19 y 20', category:'Álgebra y cálculo', competencia:'Formulación y ejecución',
+ text:'¿Qué edad tiene Ricardo hoy?',
+ options:{A:'15 años.',B:'20 años.',C:'25 años.',D:'30 años.'},
+ correct:'C',
+ explain:'Modelando el enunciado como P + 15 = 2(P − 5): P + 15 = 2P − 10 → 25 = P. Ricardo tiene hoy 25 años.'},
+
+{id:21, group:null, setLabel:null, category:'Estadística', competencia:'Formulación y ejecución',
+ text:'Se tienen 5 libros: uno de aritmética, uno de álgebra, uno de geometría, uno de física y uno de química. Si el libro de geometría siempre está en el medio, el número de modos distintos en que pueden organizarse en un estante es:',
+ options:{A:'120',B:'2',C:'24',D:'35'},
+ correct:'C',
+ explain:'Con geometría fija en la posición central, los otros 4 libros pueden ordenarse libremente en las 4 posiciones restantes: 4! = 24 formas.'},
+
+{id:22, group:'dardos', setLabel:'Preguntas 22 y 23', category:'Estadística', competencia:'Interpretación y representación',
+ text:'La mediana de los puntajes del grupo de amigos es:',
+ options:{A:'19',B:'23',C:'21',D:'22'},
+ correct:'C',
+ explain:'Ordenando los 10 puntajes: 12,13,15,16,19,23,24,25,31,39. La mediana es el promedio de los dos valores centrales: (19+23)/2 = 21.'},
+
+{id:23, group:'dardos', setLabel:'Preguntas 22 y 23', category:'Estadística', competencia:'Interpretación y representación',
+ text:'El promedio de puntos del grupo de amigos es:',
+ options:{A:'23,6',B:'21,7',C:'25,3',D:'22'},
+ correct:'B',
+ explain:'Suma de los 10 puntajes: 25+12+15+23+24+39+13+31+19+16 = 217. Promedio = 217/10 = 21,7.'},
+
+{id:24, group:'cines', setLabel:null, category:'Estadística', competencia:'Argumentación',
+ text:'Si la mediana de la asistencia a las cinco salas de cine es 386 y no hay dos salas con el mismo número de asistencias, ¿cuál es el mayor valor posible para “N”?',
+ options:{A:'380',B:'385',C:'390',D:'386'},
+ correct:'B',
+ explain:'Con B=400 y D=450 ya hay dos valores mayores que 386, así que para que 386 (sala A) sea el valor central, N debe quedar por debajo de 386, junto con C=290. El mayor entero posible, distinto de los demás, es 385.'}
+];
+
+const GROUP_CONTEXT = {
+ zapatos: `<p>La siguiente tabla muestra el número de pares de zapatos vendidos en 6 tiendas de un centro comercial:</p>
+  <table><tr><th>Tienda</th><th># Pares vendidos</th></tr>
+  <tr><td>Tienda 1</td><td>125</td></tr><tr><td>Tienda 2</td><td>29</td></tr>
+  <tr><td>Tienda 3</td><td>132</td></tr><tr><td>Tienda 4</td><td>36</td></tr>
+  <tr><td>Tienda 5</td><td>64</td></tr><tr><td>Tienda 6</td><td>208</td></tr></table>`,
+
+ periodos: `<p>Calificaciones de 4 estudiantes en cada uno de los 4 periodos académicos:</p>
+  <table><tr><th>Estudiante</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th></tr>
+  <tr><td>1</td><td>3,5</td><td>3,0</td><td>3,5</td><td>3,0</td></tr>
+  <tr><td>2</td><td>2,5</td><td>3,5</td><td>3,0</td><td>4,5</td></tr>
+  <tr><td>3</td><td>4,5</td><td>2,5</td><td>4,5</td><td>2,5</td></tr>
+  <tr><td>4</td><td>2,5</td><td>5,0</td><td>2,5</td><td>3,0</td></tr></table>`,
+
+ notas50: `<p>50 niños de una escuela presentaron un examen de matemáticas (escala de 0 a 5, nota mínima aprobatoria de 3):</p>
+  <table>
+  <tr><td>5</td><td>2</td><td>4</td><td>2</td><td>5</td><td>4</td><td>5</td><td>3</td><td>5</td><td>5</td></tr>
+  <tr><td>4</td><td>5</td><td>5</td><td>2</td><td>2</td><td>5</td><td>3</td><td>5</td><td>4</td><td>5</td></tr>
+  <tr><td>2</td><td>2</td><td>4</td><td>0</td><td>1</td><td>4</td><td>2</td><td>3</td><td>3</td><td>3</td></tr>
+  <tr><td>3</td><td>4</td><td>3</td><td>3</td><td>4</td><td>3</td><td>4</td><td>3</td><td>5</td><td>3</td></tr>
+  <tr><td>3</td><td>1</td><td>2</td><td>3</td><td>3</td><td>5</td><td>5</td><td>3</td><td>4</td><td>2</td></tr>
+  </table>`,
+
+ rutas: `<p>Una persona puede escoger tres rutas de buses para transportarse a su trabajo:</p>
+  <table><tr><th></th><th>Ruta 1</th><th>Ruta 2</th><th>Ruta 3</th></tr>
+  <tr><td>Pasajeros que transporta</td><td>30</td><td>20</td><td>60</td></tr>
+  <tr><td>Velocidad del bus (km/h)</td><td>7</td><td>5</td><td>4</td></tr>
+  <tr><td>Tiempo de recorrido (min)</td><td>154</td><td>180</td><td>300</td></tr>
+  <tr><td>Distancia recorrida (km)</td><td>18</td><td>15</td><td>20</td></tr></table>`,
+
+ empleados: `<p>Un almacén de cadena sortea un viaje a Cancún entre 120 empleados. De ellos, 65 son mujeres, 80 están casados y 45 son mujeres casadas:</p>
+  <table><tr><th></th><th>Mujeres</th><th>Hombres</th></tr>
+  <tr><td>Casados(as)</td><td>45</td><td>35</td></tr>
+  <tr><td>Solteros(as)</td><td>20</td><td>20</td></tr></table>`,
+
+ votacion: `<p>200 estudiantes de primaria y 300 de secundaria votaron por el personero estudiantil:</p>
+  <div class="tbl-pair">
+  <div><table><caption>% de votación en todo el colegio</caption><tr><th>Votos</th><th>%</th></tr>
+  <tr><td>Candidato 1</td><td>30%</td></tr><tr><td>Candidato 2</td><td>40%</td></tr>
+  <tr><td>En blanco</td><td>20%</td></tr><tr><td>Nulos</td><td>10%</td></tr></table></div>
+  <div><table><caption>Resultados en primaria</caption><tr><th>Votos</th><th># votantes</th></tr>
+  <tr><td>Candidato 1</td><td>90</td></tr><tr><td>Candidato 2</td><td>60</td></tr>
+  <tr><td>En blanco</td><td>10</td></tr><tr><td>Nulos</td><td>40</td></tr></table></div>
+  </div>`,
+
+ consumo: `<p>Consumo mensual de metros cúbicos de arena en una obra (máximo permitido: 20 m³/mes):</p>
+  <div id="chartHolder"></div>`,
+
+ triangulos: `<p>Área del triángulo = (base × altura) / 2</p><div id="triHolder"></div>`,
+
+ edad: `<p>Dentro de 15 años Ricardo tiene el doble de la edad que la que tenía hace 5 años.</p>`,
+
+ dardos: `<p>10 amigos lanzan dardos a un tiro al blanco, 5 lanzamientos cada uno; puntajes totales:</p>
+  <table><tr>${['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10'].map(a=>'<th>'+a+'</th>').join('')}</tr>
+  <tr>${[25,12,15,23,24,39,13,31,19,16].map(v=>'<td>'+v+'</td>').join('')}</tr></table>`,
+
+ cines: `<p>Puntos medios de asistencia a cinco salas de cine:</p>
+  <table><tr><th>Sala</th><th>Punto medio</th></tr>
+  <tr><td>A</td><td>386</td></tr><tr><td>B</td><td>400</td></tr>
+  <tr><td>C</td><td>290</td></tr><tr><td>D</td><td>450</td></tr>
+  <tr><td>E</td><td>N</td></tr></table>`
+};
+
+const CHART_MONTHS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const CHART_VALUES = [8,10,10,12,14,9,10,14,11,12,10,12];
+
+function buildChartSVG(){
+  const w=520,h=170,padL=26,padB=22,barW=30,gap=(w-padL-14)/12-barW;
+  let bars='';
+  CHART_VALUES.forEach((v,i)=>{
+    const x = padL + i*(barW+gap);
+    const bh = (v/16)*(h-padB-10);
+    const y = h-padB-bh;
+    const fill = CHART_MONTHS[i]==='Jun' ? '#B8862E' : '#4B5266';
+    bars += `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" fill="${fill}" rx="2"></rect>
+      <text x="${x+barW/2}" y="${h-padB+13}" font-size="9" text-anchor="middle" font-family="IBM Plex Mono, monospace" fill="#4B5266">${CHART_MONTHS[i]}</text>
+      <text x="${x+barW/2}" y="${y-4}" font-size="9" text-anchor="middle" font-family="IBM Plex Mono, monospace" fill="#232A3B">${v}</text>`;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;"><line x1="${padL-6}" y1="${h-padB}" x2="${w-4}" y2="${h-padB}" stroke="#B9AD8F"/>${bars}</svg>`;
+}
+
+function buildTriangleSVG(){
+  return `<svg viewBox="0 0 340 160" style="width:100%;max-width:420px;height:auto;">
+   <polygon points="20,140 90,140 20,60" fill="none" stroke="#232A3B" stroke-width="2.5"/>
+   <rect x="20" y="132" width="8" height="8" fill="none" stroke="#232A3B" stroke-width="1.5"/>
+   <text x="14" y="155" font-size="11" font-family="IBM Plex Mono, monospace">A</text>
+   <text x="92" y="155" font-size="11" font-family="IBM Plex Mono, monospace">C</text>
+   <text x="10" y="58" font-size="11" font-family="IBM Plex Mono, monospace">B</text>
+   <text x="48" y="152" font-size="10" font-family="IBM Plex Mono, monospace" fill="#4B5266">3 cm</text>
+
+   <polygon points="160,140 300,140 300,20" fill="none" stroke="#232A3B" stroke-width="2.5"/>
+   <rect x="292" y="132" width="8" height="8" fill="none" stroke="#232A3B" stroke-width="1.5"/>
+   <text x="152" y="155" font-size="11" font-family="IBM Plex Mono, monospace">D</text>
+   <text x="304" y="155" font-size="11" font-family="IBM Plex Mono, monospace">F</text>
+   <text x="304" y="22" font-size="11" font-family="IBM Plex Mono, monospace">E</text>
+   <text x="306" y="82" font-size="10" font-family="IBM Plex Mono, monospace" fill="#4B5266">8 cm</text>
+  </svg>`;
+}
+
+let current = 0;
+const answers = {}; // id -> {choice(original letter), correct(bool)}
+let mode = 'orden'; // 'orden' | 'aleatorio'
+let displayQuestions = []; // ordered array of Q objects for navigation
+let optionOrder = {}; // q.id -> array of ORIGINAL letters in the order they should display
+
+function buildBlocks(){
+  const blocks = [];
+  let i = 0;
+  while(i < Q.length){
+    const g = Q[i].group;
+    if(g){
+      let j = i, arr = [];
+      while(j < Q.length && Q[j].group === g){ arr.push(Q[j]); j++; }
+      blocks.push(arr);
+      i = j;
+    } else {
+      blocks.push([Q[i]]);
+      i++;
+    }
+  }
+  return blocks;
+}
+const BLOCKS = buildBlocks();
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildOrder(randomize){
+  const blocksToUse = randomize ? shuffleArray(BLOCKS) : BLOCKS;
+  displayQuestions = [];
+  blocksToUse.forEach(block => block.forEach(q => displayQuestions.push(q)));
+
+  optionOrder = {};
+  Q.forEach(q => {
+    const letters = Object.keys(q.options);
+    optionOrder[q.id] = randomize ? shuffleArray(letters) : letters;
+  });
+}
+
+function setMode(newMode){
+  mode = newMode;
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('orderBookletBtn').classList.toggle('active', mode === 'orden');
+  document.getElementById('orderRandomBtn').classList.toggle('active', mode === 'aleatorio');
+  document.getElementById('reshuffleBtn').style.display = mode === 'aleatorio' ? 'inline-block' : 'none';
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+function reshuffleNow(){
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(true);
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+document.getElementById('orderBookletBtn').onclick = () => setMode('orden');
+document.getElementById('orderRandomBtn').onclick = () => setMode('aleatorio');
+document.getElementById('reshuffleBtn').onclick = reshuffleNow;
+
+function renderBubbles(){
+  const el = document.getElementById('bubbles');
+  el.innerHTML = '';
+  displayQuestions.forEach((q,i)=>{
+    const b = document.createElement('div');
+    let cls = 'bub';
+    if(i===current) cls += ' current';
+    if(answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
+    b.className = cls;
+    b.textContent = q.id;
+    b.onclick = ()=>{ current = i; render(); };
+    el.appendChild(b);
+  });
+}
+
+function updateScorePill(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('scorePill').textContent = total + ' / 24 correctas';
+}
+
+function markSVG(ok){
+  return ok
+   ? `<svg class="mark ok" viewBox="0 0 34 34"><path d="M6 18 L14 26 L28 8"/></svg>`
+   : `<svg class="mark bad" viewBox="0 0 34 34"><path d="M8 8 L26 26 M26 8 L8 26"/></svg>`;
+}
+
+const DISPLAY_LETTERS = ['A','B','C','D'];
+
+function render(){
+  const q = displayQuestions[current];
+  const answered = answers[q.id];
+  const inner = document.getElementById('cardInner');
+  const order = optionOrder[q.id]; // original letters in display order
+  const correctDisplayLetter = DISPLAY_LETTERS[order.indexOf(q.correct)];
+
+  let ctxHTML = '';
+  if(q.group && GROUP_CONTEXT[q.group]){
+    ctxHTML = `<div class="context">${GROUP_CONTEXT[q.group]}</div>`;
+  }
+
+  let optsHTML = '';
+  order.forEach((origLetter, i)=>{
+    const displayLetter = DISPLAY_LETTERS[i];
+    const text = q.options[origLetter];
+    let cls = 'opt';
+    if(answered){
+      cls += ' locked';
+      if(origLetter===q.correct) cls += ' reveal-correct';
+      else if(origLetter===answered.choice) cls += ' reveal-wrong';
+    }
+    optsHTML += `<div class="${cls}" data-orig="${origLetter}"><span class="letter">${displayLetter}</span><span>${text}</span></div>`;
+  });
+
+  inner.innerHTML = `
+    <div class="q-head">
+      <div class="q-num">${q.id}</div>
+      <div class="q-tags"><span class="tag">${q.category}</span><span class="tag tag-comp">${q.competencia}</span></div>
+    </div>
+    ${q.setLabel ? `<div class="set-label">${q.setLabel}</div>` : ''}
+    ${ctxHTML}
+    <p class="stmt">${q.text}</p>
+    <div class="options">${optsHTML}</div>
+    <div class="feedback ${answered ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
+      ${answered ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
+    </div>
+  `;
+
+  // inject chart / triangle if needed
+  const chartHolder = document.getElementById('chartHolder');
+  if(chartHolder) chartHolder.innerHTML = buildChartSVG();
+  const triHolder = document.getElementById('triHolder');
+  if(triHolder) triHolder.innerHTML = buildTriangleSVG();
+
+  // option click handlers
+  inner.querySelectorAll('.opt').forEach(el=>{
+    el.onclick = ()=>{
+      if(answers[q.id]) return;
+      const origLetter = el.getAttribute('data-orig');
+      answers[q.id] = { choice: origLetter, correct: origLetter===q.correct };
+      render();
+      renderBubbles();
+      updateScorePill();
+    };
+  });
+
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').textContent = current===displayQuestions.length-1 ? 'Ver resultados →' : 'Siguiente →';
+
+  renderBubbles();
+  updateScorePill();
+}
+
+document.getElementById('prevBtn').onclick = ()=>{ if(current>0){ current--; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); } };
+document.getElementById('nextBtn').onclick = ()=>{
+  if(current < displayQuestions.length-1){ current++; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); }
+  else { showSummary(); }
+};
+
+function showSummary(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('finalScore').textContent = total + '/24';
+  const cats = {};
+  const comps = {};
+  Q.forEach(q=>{
+    if(!cats[q.category]) cats[q.category] = {correct:0, total:0};
+    cats[q.category].total++;
+    if(answers[q.id] && answers[q.id].correct) cats[q.category].correct++;
+
+    if(!comps[q.competencia]) comps[q.competencia] = {correct:0, total:0};
+    comps[q.competencia].total++;
+    if(answers[q.id] && answers[q.id].correct) comps[q.competencia].correct++;
+  });
+
+  const renderBarGroup = (containerId, data)=>{
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    Object.entries(data).forEach(([name,v])=>{
+      const pct = Math.round((v.correct/v.total)*100);
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `<div class="cname">${name}</div><div class="cat-track"><div class="cat-fill" style="width:${pct}%"></div></div><div class="cat-num">${v.correct}/${v.total}</div>`;
+      el.appendChild(row);
+    });
+  };
+  renderBarGroup('catBars', cats);
+  renderBarGroup('compBars', comps);
+
+  document.getElementById('summary').classList.add('show');
+  document.getElementById('summary').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('retryBtn').onclick = ()=>{
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('summary').classList.remove('show');
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
+buildOrder(false);
+render();
+</script>
+</body>
+</html>
