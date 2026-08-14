@@ -554,7 +554,7 @@ function mostrarPantallaDashboard(sesion) {
   barraSesion.classList.remove("oculto");
   saludoNombre.textContent = sesion.nombre || "Estudiante";
 
-  const esDocente = sesion.rol === "docente";
+  const esDocente = (sesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
 
   if (esDocente) {
     // --- Vista docente: se oculta el carrusel de fichas y se muestra el panel del dashboard ---
