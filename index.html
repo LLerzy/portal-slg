@@ -403,6 +403,27 @@
           </div>
         </article>
 
+        <!-- 5. Artefactos de práctica FaciMate Lleto -->
+        <article class="reporte tarjeta" id="ficha-artefactos">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">🧩</div>
+            <h3>Practica con FaciMate Lleto</h3>
+            <p class="desc">Explora artefactos interactivos con preguntas de práctica, organizados por área.</p>
+
+            <select class="selector-hoja" id="selector-artefacto" aria-label="Seleccione el área">
+              <option value="matematicas">Matemáticas</option>
+              <option value="lectura_critica">Lectura Crítica</option>
+              <option value="ciencias_naturales">Ciencias Naturales</option>
+              <option value="ingles">Inglés</option>
+              <option value="sociales_ciudadanas">Sociales y Ciudadanas</option>
+            </select>
+
+            <button type="button" class="btn" id="btn-artefacto">Abrir artefacto ↗</button>
+            <p class="estado-doc" id="estado-artefacto"></p>
+          </div>
+        </article>
+
         </div>
 
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno"></div></div>
@@ -477,6 +498,20 @@ const CONFIG_VERIFICACION = {
 // muevas el dashboard a portal-slg.
 const CONFIG_DASHBOARD_URL = "https://llerzy.github.io/portal-slg/dashboard-simulacros/";
 
+/* ------------------------------------------------------------
+ * Artefactos de práctica (cuadernillos HTML autocontenidos) por
+ * área, para la ficha de estudiantes. Ruta relativa dentro del
+ * repo: carpeta "artefactos/". Usa null para áreas que todavía
+ * no tienen artefacto publicado — la ficha avisa en vez de fallar.
+ * ------------------------------------------------------------ */
+const CONFIG_ARTEFACTOS = {
+  matematicas: "artefactos/matematicas.html",
+  lectura_critica: null,
+  ciencias_naturales: null,
+  ingles: null,
+  sociales_ciudadanas: null
+};
+
 const ORIGEN_CONSULTA = "GitHub";
 const CLAVE_SESION = "slg_sesion";
 
@@ -530,6 +565,7 @@ document.querySelectorAll(".reporte").forEach(function (tarjeta) {
   const clave = tarjeta.dataset.endpoint;
   const cfg = CONFIG_REPORTES[clave];
   const aviso = tarjeta.querySelector(".nota-config");
+  if (!aviso) return; // fichas sin este elemento (ej. artefactos) no aplican
   if (!cfg || !cfg.scriptUrl || cfg.scriptUrl.indexOf("PEGA_AQUI") === 0) {
     aviso.classList.add("mostrar");
   }
@@ -722,6 +758,31 @@ document.querySelectorAll(".btn-consultar").forEach(function (boton) {
 
     consultar(cfg.scriptUrl + "?" + params.toString());
   });
+});
+
+// --- Ficha de artefactos de práctica: abre en pestaña nueva, no consulta Apps Script ---
+const selectorArtefacto = document.getElementById("selector-artefacto");
+const btnArtefacto = document.getElementById("btn-artefacto");
+const estadoArtefacto = document.getElementById("estado-artefacto");
+
+btnArtefacto.addEventListener("click", function () {
+  const clave = selectorArtefacto.value;
+  const ruta = CONFIG_ARTEFACTOS[clave];
+
+  if (!ruta) {
+    estadoArtefacto.textContent = "Este artefacto todavía no está disponible para esta área. Muy pronto estará publicado.";
+    estadoArtefacto.className = "estado-doc error";
+    return;
+  }
+
+  estadoArtefacto.textContent = "";
+  estadoArtefacto.className = "estado-doc";
+  window.open(ruta, "_blank", "noopener,noreferrer");
+});
+
+selectorArtefacto.addEventListener("change", function () {
+  estadoArtefacto.textContent = "";
+  estadoArtefacto.className = "estado-doc";
 });
 
 function consultar(url) {
