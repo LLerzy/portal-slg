@@ -175,6 +175,12 @@ body{
 .opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
 .opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
 
+.opt.opt-table{align-items:flex-start;}
+.mini-table{border-collapse:collapse; font-size:12px; margin-top:2px;}
+.mini-table th,.mini-table td{border:1px solid var(--rule); padding:3px 9px; text-align:center;}
+.mini-table th{background:var(--ink); color:var(--paper); font-weight:600; font-size:11px;}
+.mini-table td{background:transparent;}
+
 .feedback{
   margin:16px 0 0 54px; padding:14px 16px; border-radius:9px;
   font-size:14px; line-height:1.55; display:none; position:relative;
@@ -290,6 +296,11 @@ body{
 </div>
 
 <script>
+function miniTable(rows){
+  const body = rows.map(([nota,n]) => `<tr><td>${nota}</td><td>${n}</td></tr>`).join('');
+  return `<table class="mini-table"><tr><th>Nota</th><th># Niños</th></tr>${body}</table>`;
+}
+
 const Q = [
 {id:1, group:'zapatos', setLabel:'Preguntas 1 y 2', category:'Estadística', competencia:'Interpretación y representación',
  text:'¿Cuál o cuáles de estas tiendas vende(n) un número de pares de zapatos superior al promedio?',
@@ -317,11 +328,12 @@ const Q = [
 
 {id:5, group:'notas50', setLabel:'Preguntas 5 a 8', category:'Estadística', competencia:'Interpretación y representación',
  text:'¿Cuál de las siguientes tablas representa la información anterior?',
+ tableOptions:true,
  options:{
-   A:'Nota→#Niños: 0:1, 1:2, 2:10, 3:14, 4:10, 5:4',
-   B:'Nota→#Niños: 0:1, 1:2, 2:9, 3:15, 4:10, 5:13',
-   C:'Nota→#Niños: 0:1, 1:2, 2:8, 3:16, 4:10, 5:13',
-   D:'Nota→#Niños: 0:1, 1:2, 2:10, 3:14, 4:10, 5:13'
+   A: miniTable([['0',1],['1',2],['2',10],['3',14],['4',10],['5',4]]),
+   B: miniTable([['0',1],['1',2],['2',9],['3',15],['4',10],['5',13]]),
+   C: miniTable([['0',1],['1',2],['2',8],['3',16],['4',10],['5',13]]),
+   D: miniTable([['0',1],['1',2],['2',10],['3',14],['4',10],['5',13]])
  },
  correct:'B',
  explain:'Contando uno a uno los 50 datos de la cuadrícula se obtiene: nota 0 → 1 niño, nota 1 → 2, nota 2 → 9, nota 3 → 15, nota 4 → 10, nota 5 → 13 (suma 50). Esa es exactamente la tabla B.'},
@@ -660,6 +672,7 @@ function render(){
     const displayLetter = DISPLAY_LETTERS[i];
     const text = q.options[origLetter];
     let cls = 'opt';
+    if(q.tableOptions) cls += ' opt-table';
     if(answered){
       cls += ' locked';
       if(origLetter===q.correct) cls += ' reveal-correct';
