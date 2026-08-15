@@ -265,6 +265,14 @@
 </style>
 </head>
 <body>
+<script>
+(function () {
+  const sesion = sessionStorage.getItem("slg_sesion");
+  if (!sesion) {
+    window.location.href = "https://llerzy.github.io/portal-slg/";
+  }
+})();
+</script>
 
 <header class="masthead">
   <div class="masthead-inner">
