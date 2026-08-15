@@ -168,6 +168,7 @@ body{
   font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:12.5px;
   transition:background .2s ease, color .2s ease;
 }
+.opt.selected{border-color:var(--ink); background:var(--paper-dark);}
 .opt.selected .letter{background:radial-gradient(circle at 35% 30%, #545f7a, var(--ink) 70%); color:var(--paper);}
 .opt.locked{cursor:default;}
 .opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
@@ -763,6 +764,7 @@ function render(){
     if(q.tableOptions) cls += ' opt-table';
     if(answered){
       cls += ' locked';
+      if(origLetter===answered.choice) cls += ' selected';
       if(window.ES_DOCENTE){
         if(origLetter===q.correct) cls += ' reveal-correct';
         else if(origLetter===answered.choice) cls += ' reveal-wrong';
