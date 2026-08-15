@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cuadernillo Ciencias Naturales · Grado 10°</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --paper:#E4E9E1;
+  --paper-dark:#D6DED1;
+  --card:#F3F6F0;
+  --ink:#20342B;
+  --ink-soft:#4A5C51;
+  --rule:#A9BBA9;
+  --gold:#3E7A5A;
+  --green:#2E6B4F;
+  --green-bg:#DDEBE1;
+  --red:#A6323E;
+  --red-bg:#F3DEDD;
+  --shadow: 0 10px 30px rgba(32,52,43,0.14);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(32,52,43,0.05) 1px, transparent 0) 0 0/14px 14px,
+    var(--paper);
+  min-height:100vh;
+  padding:28px 16px 60px;
+}
+.wrap{max-width:880px;margin:0 auto;}
+
+/* ---------- ticket header ---------- */
+.ticket{
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:14px;
+  padding:22px 26px;
+  position:relative;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.ticket::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-1px;
+  height:14px;
+  background-image: radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px);
+  background-size:20px 14px;
+  background-repeat:repeat-x;
+}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#B9CDB9; margin:0 0 6px;}
+.ticket h1{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(26px,4.2vw,38px); margin:0; line-height:1.05;}
+.ticket .sub{font-family:'Fraunces',serif; font-style:italic; font-weight:500; color:#CBDBC8; font-size:16px; margin-top:4px;}
+.stamp{
+  border:2px solid var(--gold); color:#7FCB9F;
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em;
+  padding:6px 10px; border-radius:6px; transform:rotate(4deg);
+  white-space:nowrap;
+}
+.ticket-meta{display:flex; gap:18px; margin-top:18px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#B9CDB9;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+
+/* ---------- navigator (bubble strip) ---------- */
+.nav-strip{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+}
+.nav-strip .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft);
+  padding:8px 14px; border-radius:20px; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.shuffle-again{padding:8px 14px; border-radius:20px; font-size:12px;}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{
+  width:30px; height:30px; border-radius:50%;
+  border:2px solid var(--rule);
+  background:transparent;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px;
+  color:var(--ink-soft); cursor:pointer;
+  transition:transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+.bub:hover{transform:translateY(-2px);}
+.bub.current{border-color:var(--ink); color:var(--ink); box-shadow:0 0 0 3px rgba(62,122,90,0.35);}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+
+/* ---------- question card ---------- */
+.card{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-inner{padding:26px 28px 28px; position:relative;}
+.card-inner::before{
+  content:""; position:absolute; left:52px; top:0; bottom:0; width:1px;
+  background:repeating-linear-gradient(var(--red) 0 6px, transparent 6px 12px);
+  opacity:.25;
+}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+.q-num{
+  width:40px; height:40px; min-width:40px; border-radius:50%;
+  background:var(--ink); color:var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:16px;
+}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap;}
+.tag{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.05em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px;
+  border:1px solid var(--rule); color:var(--ink-soft);
+}
+.tag-comp{border-color:var(--gold); color:var(--gold); background:rgba(62,122,90,0.08);}
+.set-label{
+  font-family:'Fraunces',serif; font-style:italic; color:var(--gold);
+  font-size:14px; margin:2px 0 14px 54px;
+}
+.context{
+  margin:0 0 18px 54px;
+  padding:14px 16px;
+  background:var(--paper-dark);
+  border-radius:8px;
+  font-size:14.5px;
+  line-height:1.5;
+  color:var(--ink-soft);
+}
+.context p{margin:0 0 10px;}
+.context p:last-child{margin-bottom:0;}
+.context table{border-collapse:collapse; width:100%; margin-top:8px; font-size:13.5px; background:var(--card);}
+.context table caption{text-align:left; font-weight:600; color:var(--ink); margin-bottom:4px; font-size:13px;}
+.context th,.context td{border:1px solid var(--rule); padding:5px 8px; text-align:center;}
+.context th{background:var(--ink); color:var(--paper); font-weight:600;}
+.context .tbl-pair{display:flex; gap:16px; flex-wrap:wrap;}
+.context .tbl-pair>div{flex:1; min-width:180px;}
+.stmt{
+  margin:0 0 20px 54px;
+  font-size:16.5px; line-height:1.55; font-weight:500;
+}
+.grid-note{font-family:'IBM Plex Mono',monospace; font-size:12px; margin-left:54px; margin-top:-8px; margin-bottom:16px; color:var(--ink-soft);}
+
+.options{margin-left:54px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.opt{
+  display:flex; align-items:center; gap:12px;
+  border:1.5px solid var(--rule); border-radius:9px;
+  padding:10px 14px; cursor:pointer; background:var(--card);
+  transition:border-color .15s ease, background .15s ease;
+  font-size:14.5px;
+}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{
+  width:26px; height:26px; min-width:26px; border-radius:50%;
+  border:2px solid var(--ink); display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:12.5px;
+  transition:background .2s ease, color .2s ease;
+}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #3d5548, var(--ink) 70%); color:var(--paper);}
+.opt.locked{cursor:default;}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+
+.opt.opt-table{align-items:flex-start;}
+.mini-table{border-collapse:collapse; font-size:12px; margin-top:2px;}
+.mini-table th,.mini-table td{border:1px solid var(--rule); padding:3px 9px; text-align:center;}
+.mini-table th{background:var(--ink); color:var(--paper); font-weight:600; font-size:11px;}
+.mini-table td{background:transparent;}
+.opt.opt-table svg{display:block;}
+
+.feedback{
+  margin:16px 0 0 54px; padding:14px 16px; border-radius:9px;
+  font-size:14px; line-height:1.55; display:none; position:relative;
+}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback b{display:block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px;}
+
+.mark{position:absolute; left:6px; top:2px; width:34px; height:34px;}
+.mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.mark.ok path{stroke:var(--green);}
+.mark.bad path{stroke:var(--red);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.btn{
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px;
+  border:1.5px solid var(--ink); background:transparent; color:var(--ink);
+  padding:10px 18px; border-radius:8px; cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#32493c;}
+.score-pill{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+  background:var(--card); border:1.5px solid var(--gold); color:var(--gold);
+  padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);
+}
+
+/* ---------- summary screen ---------- */
+.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:30px 28px; display:none;}
+.summary.show{display:block;}
+.summary h2{font-family:'Fraunces',serif; font-size:28px; margin:0 0 4px;}
+.summary .big{font-family:'Fraunces',serif; font-size:52px; font-weight:700; color:var(--gold); margin:10px 0 2px;}
+.summary .caption{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em;}
+.cat-bar-row{margin-top:22px;}
+.cat-bar-row .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.cat-bar-row .cname{width:150px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.cat-track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden;}
+.cat-fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cat-num{font-family:'IBM Plex Mono',monospace; font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.summary .btn{margin-top:22px;}
+.summary .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:13.5px; color:var(--ink-soft); line-height:1.5; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+
+/* ================= RESPONSIVE — pantallas angostas ================= */
+@media(max-width:560px){
+  body{padding:14px 10px 40px;}
+
+  .ticket{padding:16px 16px 20px;}
+  .ticket h1{font-size:23px;}
+  .ticket .sub{font-size:12.5px;}
+  .eyebrow{font-size:9.5px; letter-spacing:.1em;}
+  .stamp{font-size:10px; padding:5px 8px;}
+  .ticket-meta{gap:6px 12px; font-size:10.5px; margin-top:14px;}
+
+  .intro-note{padding:12px 14px; font-size:12.5px; line-height:1.45;}
+
+  .nav-strip{padding:12px;}
+  .order-row{flex-direction:column; align-items:stretch; gap:10px;}
+  .order-toggle{width:100%; gap:6px;}
+  .order-btn{flex:1; text-align:center; padding:8px 6px; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .shuffle-again{width:100%; text-align:center;}
+  .bubbles{gap:5px;}
+  .bub{width:26px; height:26px; font-size:10.5px;}
+
+  .card-inner{padding:16px 14px 18px;}
+  .card-inner::before{display:none;}
+  .q-head{gap:8px;}
+  .q-num{width:32px; height:32px; min-width:32px; font-size:14px;}
+  .q-tags{gap:6px;}
+  .tag{font-size:9px; padding:2px 7px; letter-spacing:.02em;}
+
+  .set-label{margin-left:0; font-size:13px; margin-bottom:10px;}
+  .context{margin-left:0; padding:12px; font-size:13px;}
+  .context table{font-size:12px;}
+  .context th,.context td{padding:4px 6px;}
+  .stmt{margin-left:0; font-size:15px; margin-bottom:14px;}
+  .grid-note{margin-left:0;}
+
+  .options{margin-left:0; grid-template-columns:1fr; gap:8px;}
+  .opt{padding:10px 12px; font-size:13.5px; gap:10px;}
+  .opt .letter{width:23px; height:23px; min-width:23px; font-size:11px;}
+  .mini-table{font-size:11px;}
+  .mini-table th,.mini-table td{padding:2px 7px;}
+
+  .feedback{margin-left:0; padding:12px 14px 12px 40px; font-size:13px;}
+  .mark{width:28px; height:28px;}
+
+  .footer-nav{gap:8px;}
+  .btn{padding:9px 14px; font-size:12px;}
+  .score-pill{font-size:12px; padding:7px 12px;}
+
+  .summary{padding:20px 16px;}
+  .summary h2{font-size:22px;}
+  .summary .big{font-size:38px;}
+  .cat-bar-row .cname{width:120px; font-size:12px;}
+  .cat-num{font-size:11.5px;}
+}
+
+@media(max-width:400px){
+  .ticket h1{font-size:20px;}
+  .ticket-top{gap:10px;}
+  .order-toggle{flex-direction:column;}
+  .order-btn{width:100%;}
+  .bub{width:24px; height:24px; font-size:10px;}
+  .q-num{width:28px; height:28px; font-size:12.5px;}
+  .stmt{font-size:14px;}
+  .opt{font-size:13px; padding:9px 10px;}
+  .footer-nav{flex-wrap:wrap; justify-content:center;}
+  .footer-nav .btn{flex:1; min-width:110px;}
+  .score-pill{order:-1; width:100%; text-align:center;}
+}
+</style>
+</head>
+<body>
+<script>
+(function () {
+  const sesion = sessionStorage.getItem("slg_sesion");
+  if (!sesion) {
+    window.location.href = "https://llerzy.github.io/portal-slg/";
+  }
+})();
+</script>
+<div class="wrap">
+
+  <div class="ticket">
+    <div class="ticket-top">
+      <div>
+        <p class="eyebrow">Prueba Saber · PS-2526-X-003</p>
+        <h1>Cuadernillo Décimo</h1>
+        <div class="sub">Explorador de preguntas — Ciencias Naturales</div>
+      </div>
+      <div class="stamp">24 preguntas</div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Grado</b> 10°</span>
+      <span><b>Componentes</b> Física · Química · Biología</span>
+      <span><b>Modo</b> práctica autocorregida</span>
+    </div>
+  </div>
+
+  <div class="intro-note">
+    Estas son las <b>24 preguntas de Ciencias Naturales</b> tal como aparecen en el Cuadernillo Décimo (preguntas 73 a 96, páginas 18 a 24). Responde a tu ritmo: cada opción se autocalifica al seleccionarla y verás la explicación del razonamiento científico. Puedes saltar entre preguntas con la franja de burbujas de abajo.
+  </div>
+
+  <div class="nav-strip">
+    <div class="order-row">
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button class="btn shuffle-again" id="reshuffleBtn" style="display:none;">↻ Mezclar de nuevo</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="card-inner" id="cardInner"></div>
+  </div>
+
+  <div class="footer-nav">
+    <button class="btn" id="prevBtn">← Anterior</button>
+    <span class="score-pill" id="scorePill">0 / 24 correctas</span>
+    <button class="btn primary" id="nextBtn">Siguiente →</button>
+  </div>
+
+  <div class="summary" id="summary">
+    <p class="caption">Resultado final</p>
+    <h2>Así te fue en el simulacro</h2>
+    <div class="big" id="finalScore">0/24</div>
+
+    <p class="label" style="margin-top:24px;">Por componente científico</p>
+    <div class="cat-bar-row" id="catBars"></div>
+
+    <p class="label" style="margin-top:22px;">Por competencia evaluada</p>
+    <div class="cat-bar-row" id="compBars"></div>
+
+    <button class="btn primary" id="retryBtn">↺ Reintentar cuadernillo</button>
+  </div>
+
+</div>
+
+<script>
+function miniTable(rows){
+  const body = rows.map(([nota,n]) => `<tr><td>${nota}</td><td>${n}</td></tr>`).join('');
+  return `<table class="mini-table"><tr><th>Nota</th><th># Niños</th></tr>${body}</table>`;
+}
+
+function forceArrow(x1,y1,x2,y2,label,lx,ly){
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#20342B" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <text x="${lx}" y="${ly}" font-size="13" font-family="IBM Plex Mono, monospace" font-weight="600" text-anchor="middle" fill="#20342B">${label}</text>`;
+}
+
+function buildForceSVG(variant){
+  const defs = `<defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#20342B"/></marker></defs>`;
+  const box = `<rect x="70" y="70" width="60" height="60" fill="none" stroke="#20342B" stroke-width="2.5"/>`;
+  let arrows = '';
+  if(variant==='A'){
+    arrows += forceArrow(100,70,100,25,'Fn',100,16);
+    arrows += forceArrow(70,100,20,100,'T',12,96);
+    arrows += forceArrow(130,100,180,100,'Fr',188,96);
+    arrows += forceArrow(100,130,100,178,'W',100,192);
+  } else if(variant==='B'){
+    arrows += forceArrow(100,70,100,25,'Fr',100,16);
+    arrows += forceArrow(70,100,20,100,'T',12,96);
+    arrows += forceArrow(130,100,180,100,'Fn',188,96);
+    arrows += forceArrow(100,130,100,178,'W',100,192);
+  } else if(variant==='C'){
+    arrows += forceArrow(100,70,100,25,'Fn',100,16);
+    arrows += forceArrow(70,88,20,88,'Fr',12,84);
+    arrows += forceArrow(70,112,20,112,'T',12,124);
+    arrows += forceArrow(100,130,100,178,'W',100,192);
+  } else if(variant==='D'){
+    arrows += forceArrow(100,70,100,25,'Fn',100,16);
+    arrows += forceArrow(70,100,20,100,'T',12,96);
+    arrows += forceArrow(130,100,180,100,'Fr',188,96);
+    arrows += forceArrow(100,130,100,178,'g',100,192);
+  }
+  return `<svg viewBox="0 0 200 200" style="width:100%;max-width:160px;height:auto;">${defs}${box}${arrows}</svg>`;
+}
+
+function buildBloquesSVG(){
+  return `<svg viewBox="0 0 300 160" style="width:100%;max-width:340px;height:auto;">
+   <defs><marker id="arrowhead2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#20342B"/></marker></defs>
+   <line x1="90" y1="55" x2="270" y2="55" stroke="#20342B" stroke-width="2.5"/>
+   <rect x="180" y="25" width="60" height="30" fill="none" stroke="#20342B" stroke-width="2.5"/>
+   <text x="210" y="45" font-size="13" font-family="IBM Plex Mono, monospace" font-weight="700" text-anchor="middle" fill="#20342B">A</text>
+   <circle cx="90" cy="40" r="10" fill="none" stroke="#20342B" stroke-width="2.5"/>
+   <line x1="90" y1="50" x2="90" y2="55" stroke="#20342B" stroke-width="2.5"/>
+   <line x1="180" y1="40" x2="100" y2="40" stroke="#20342B" stroke-width="2"/>
+   <line x1="90" y1="50" x2="90" y2="90" stroke="#20342B" stroke-width="2"/>
+   <rect x="65" y="90" width="50" height="40" fill="none" stroke="#20342B" stroke-width="2.5"/>
+   <text x="90" y="114" font-size="13" font-family="IBM Plex Mono, monospace" font-weight="700" text-anchor="middle" fill="#20342B">B</text>
+   <text x="180" y="70" font-size="10.5" font-family="IBM Plex Mono, monospace" fill="#4A5C51">mesa (μ)</text>
+  </svg>`;
+}
+
+function buildPatosSVG(){
+  const ducks = [[60,32,'Patos 1'],[180,32,'Patos 2'],[300,32,'Patos 3']];
+  const food = [[60,148,'Algas'],[180,148,'Peces'],[300,148,'Plantas\nacuáticas']];
+  const links = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]; // [foodIndex, duckIndex]
+  let arrows = '';
+  links.forEach(([f,d])=>{
+    const [fx,fy] = food[f]; const [dx,dy] = ducks[d];
+    arrows += `<line x1="${fx}" y1="${fy-14}" x2="${dx}" y2="${dy+16}" stroke="#4A5C51" stroke-width="1.4" marker-end="url(#arrowhead3)" opacity="0.75"/>`;
+  });
+  let nodes = '';
+  ducks.forEach(([x,y,label])=>{
+    nodes += `<circle cx="${x}" cy="${y}" r="16" fill="#DDEBE1" stroke="#20342B" stroke-width="2"/><text x="${x}" y="${y+34}" font-size="11" font-family="IBM Plex Mono, monospace" text-anchor="middle" fill="#20342B">${label}</text>`;
+  });
+  food.forEach(([x,y,label])=>{
+    const lines = label.split('\\n');
+    nodes += `<circle cx="${x}" cy="${y}" r="14" fill="#F3F6F0" stroke="#20342B" stroke-width="2"/>`;
+    lines.forEach((ln,i)=>{ nodes += `<text x="${x}" y="${y+30+i*12}" font-size="11" font-family="IBM Plex Mono, monospace" text-anchor="middle" fill="#20342B">${ln}</text>`; });
+  });
+  return `<svg viewBox="0 0 360 200" style="width:100%;max-width:420px;height:auto;">
+   <defs><marker id="arrowhead3" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#4A5C51"/></marker></defs>
+   ${arrows}${nodes}
+  </svg>`;
+}
+
+function buildCalorSVG(){
+  const pts = "0,-20 20,0 60,0 100,100 140,100 158,118";
+  return `<svg viewBox="-30 -30 220 180" style="width:100%;max-width:420px;height:auto;">
+   <line x1="0" y1="-25" x2="0" y2="130" stroke="#A9BBA9" stroke-width="1.5"/>
+   <line x1="-2" y1="120" x2="175" y2="120" stroke="#A9BBA9" stroke-width="1.5"/>
+   <polyline points="${pts}" fill="none" stroke="#20342B" stroke-width="2.5" transform="translate(0,20) scale(1,-0.85)"/>
+   <line x1="20" y1="20" x2="20" y2="120" stroke="#A9BBA9" stroke-width="1" stroke-dasharray="3,3"/>
+   <line x1="140" y1="-65" x2="140" y2="120" stroke="#A9BBA9" stroke-width="1" stroke-dasharray="3,3"/>
+   <text x="-8" y="24" font-size="10" font-family="IBM Plex Mono, monospace" text-anchor="end" fill="#4A5C51">0</text>
+   <text x="-8" y="-63" font-size="10" font-family="IBM Plex Mono, monospace" text-anchor="end" fill="#4A5C51">100</text>
+   <text x="-8" y="-20" font-size="10" font-family="IBM Plex Mono, monospace" text-anchor="end" fill="#4A5C51">50</text>
+   <text x="-8" y="44" font-size="10" font-family="IBM Plex Mono, monospace" text-anchor="end" fill="#4A5C51">-20</text>
+   <text x="175" y="134" font-size="11" font-family="IBM Plex Mono, monospace" text-anchor="end" fill="#20342B">Calor (J)</text>
+   <text x="-28" y="-70" font-size="11" font-family="IBM Plex Mono, monospace" fill="#20342B">Temperatura (°C)</text>
+  </svg>`;
+}
+
+const Q = [
+{id:73, group:'frutas', setLabel:'Preguntas 73 y 74', category:'Física', competencia:'Indagación',
+ text:'Para responder a las inquietudes anteriores, los estudiantes deben medir la masa y el volumen de cada fruta. ¿Qué unidades de medida deben utilizar para determinar con precisión el volumen del agua y la masa de las frutas?',
+ options:{A:'Tazas para el agua / porciones para las frutas.',B:'Porciones para el agua / tazas para las frutas.',C:'Gramos para el agua / mililitros para las frutas.',D:'Mililitros para el agua / gramos para las frutas.'},
+ correct:'D',
+ explain:'El volumen se mide en unidades de volumen (mililitros) y la masa en unidades de masa (gramos). Tazas y porciones no son unidades estandarizadas ni precisas para un laboratorio.'},
+
+{id:74, group:'frutas', setLabel:'Preguntas 73 y 74', category:'Física', competencia:'Explicación de fenómenos',
+ text:'Un estudiante observó que la manzana no flota y que un banano con cáscara sí. De su observación, se puede concluir que esto ocurre porque la masa',
+ options:{A:'de la manzana es mayor que la masa del volumen de agua desalojada por esta.',B:'del banano es mayor que la masa del volumen de agua desalojada por esta.',C:'de la manzana es igual que la masa del volumen de agua desalojada por esta.',D:'del banano es igual a la masa de la manzana y del volumen de agua desalojada por esta.'},
+ correct:'A',
+ explain:'Un objeto se hunde cuando su masa es mayor que la masa del volumen de agua que desaloja (el empuje no alcanza a sostenerlo). Como la manzana se hunde, su masa supera la del agua desalojada; el banano flota porque ocurre lo contrario.'},
+
+{id:75, group:'sustancias', setLabel:null, category:'Física', competencia:'Uso comprensivo del conocimiento científico',
+ text:'De acuerdo con la información de la tabla, podemos concluir que lo MÁS probable es que:',
+ options:{A:'la esfera quede en el fondo.',B:'la esfera flote sobre A.',C:'la esfera flote sobre B.',D:'la esfera flote sobre C.'},
+ correct:'D',
+ explain:'Un objeto flota sobre una sustancia si su densidad es MENOR que la de esa sustancia. La esfera (1,8 g/cm³) es más densa que A (0,78) y que B (1,004), así que se hunde en ambas; pero es menos densa que C (9,76 g/cm³), así que flota sobre C.'},
+
+{id:76, group:null, setLabel:null, category:'Biología', competencia:'Explicación de fenómenos',
+ text:'Durante la historia de la humanidad se han inventado diversos medios de transporte que, aunque han facilitado la movilidad en grandes distancias, han tenido diferentes efectos en el medio ambiente. Podemos afirmar que el medio que más problemas ambientales genera son',
+ options:{A:'los automóviles porque usan combustibles fósiles que generan gases contaminantes.',B:'los barcos porque liberan residuos de aceite y combustible a la atmósfera.',C:'los de tracción animal porque se maltrata y exige demasiado a los animales.',D:'los aviones porque generan ruido a niveles dañinos para el humano y los animales.'},
+ correct:'A',
+ explain:'Por su enorme volumen de uso a nivel mundial, los automóviles que queman combustibles fósiles son, en conjunto, la fuente de transporte que más gases de efecto invernadero y contaminantes atmosféricos aporta, más allá del impacto puntual de otros medios.'},
+
+{id:77, group:null, setLabel:null, category:'Física', competencia:'Explicación de fenómenos',
+ text:'Un deportista se sostiene de una cuerda y permanece quieto, pues la tensión de la cuerda y su peso se cancelan. ¿Por qué se cancelan la tensión de la cuerda y el peso del deportista?',
+ options:{A:'Porque la tensión de la cuerda va hacia la derecha y el peso del deportista va hacia la izquierda.',B:'Porque la tensión de la cuerda y el peso del deportista van hacia abajo.',C:'Porque la tensión de la cuerda y el peso del deportista van hacia arriba.',D:'Porque la tensión de la cuerda va hacia arriba y el peso del deportista va hacia abajo.'},
+ correct:'D',
+ explain:'Dos fuerzas se cancelan cuando tienen la misma magnitud y sentidos opuestos. La tensión de la cuerda actúa hacia arriba sosteniendo al deportista, mientras su peso actúa hacia abajo por efecto de la gravedad.'},
+
+{id:78, group:null, setLabel:null, category:'Biología', competencia:'Explicación de fenómenos',
+ text:'El cáncer es una enfermedad en la que las células de los tejidos se transforman y ya no son reconocidas por el tejido; estas se dividen más rápidamente y desplazan a las células sanas. En los exámenes para diagnosticar el cáncer se usan rayos X o rayos γ. ¿Cuál sería una consecuencia negativa de diagnosticar el cáncer con rayos X o γ?',
+ options:{A:'La generación de más células cancerígenas, por la posibilidad que tienen de alterar su material genético.',B:'La reducción de las células del tejido canceroso, por la posibilidad de dañar los organelos y membranas celulares.',C:'La generación de muerte celular en los tejidos, por el aluminio que se usa como barrera de protección.',D:'La reducción del tejido canceroso, por la posibilidad de transformar las células cancerosas en células normales.'},
+ correct:'A',
+ explain:'Los rayos X y γ son radiación ionizante: pueden alterar el material genético (ADN) de las células sanas expuestas, lo que constituye un riesgo real de inducir nuevas mutaciones y, por tanto, nuevas células cancerígenas.'},
+
+{id:79, group:null, setLabel:null, category:'Química', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Una sustancia o una mezcla se caracteriza porque las moléculas que la componen se mueven y cohesionan constantemente. Si una sustancia gaseosa que ocupa el volumen de un recipiente de 10 m³ se pasa a otro de 5 m³, es de esperarse que las moléculas del gas',
+ options:{A:'disminuyan su velocidad, porque aumenta la presión.',B:'aumente su velocidad, porque disminuye la presión.',C:'se relacionen entre sí, porque aumenta la presión.',D:'se relacionen entre sí, porque disminuye la presión.'},
+ correct:'C',
+ explain:'Al pasar de un recipiente más grande (10 m³) a uno más pequeño (5 m³), el gas se comprime: sus moléculas quedan más cerca entre sí y chocan con mayor frecuencia ("se relacionan" más), lo que se traduce en un aumento de la presión.'},
+
+{id:80, group:null, setLabel:null, category:'Física', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Nuestro planeta ejerce una fuerza sobre todos los cuerpos que están en su superficie, atrayéndolos. Esta fuerza se conoce con el nombre de peso, y puede ser representada mediante un vector con dirección vertical respecto del lugar donde se encuentra el cuerpo. Su sentido apunta siempre hacia',
+ options:{A:'el cuerpo próximo de mayor masa.',B:'el centro de la Tierra.',C:'la posición del Sol.',D:'el firmamento.'},
+ correct:'B',
+ explain:'El peso es la fuerza de atracción gravitacional que ejerce la Tierra sobre los cuerpos, y su vector siempre apunta hacia el centro de la Tierra, sin importar la posición del cuerpo sobre la superficie.'},
+
+{id:81, group:'bloques', setLabel:'Preguntas 81 a 83', category:'Física', competencia:'Uso comprensivo del conocimiento científico', tableOptions:true,
+ text:'Al analizar el juguete A, el diagrama que mejor representa las fuerzas que actúan sobre él, es:',
+ options:{A:buildForceSVG('A'),B:buildForceSVG('B'),C:buildForceSVG('C'),D:buildForceSVG('D')},
+ correct:'A',
+ explain:'Sobre el bloque A actúan cuatro fuerzas perpendiculares entre sí: el peso W hacia abajo, la normal Fn hacia arriba (ambas verticales, pues la mesa es horizontal), la tensión T horizontal hacia la polea y la fricción Fr horizontal en sentido opuesto a T. Esa es la opción A; en B se intercambian Fn y Fr; en C la fricción no se opone a la tensión; y en D se usa "g" (aceleración) en vez de "W" (peso).'},
+
+{id:82, group:'bloques', setLabel:'Preguntas 81 a 83', category:'Física', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Si el sistema está en equilibrio y la tensión de la cuerda es 30 N, podemos afirmar, con respecto a la magnitud del peso del bloque B, que',
+ options:{A:'la información no es suficiente para saber su valor.',B:'es el doble que el valor de la tensión.',C:'es la diferencia entre la tensión y la fuerza de fricción.',D:'es equivalente a la tensión.'},
+ correct:'D',
+ explain:'Si el bloque B cuelga en equilibrio (sin acelerar), la única fuerza que lo sostiene es la tensión de la cuerda, así que esta debe ser igual en magnitud a su peso: W_B = T = 30 N.'},
+
+{id:83, group:'bloques', setLabel:'Preguntas 81 a 83', category:'Física', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Si los dos bloques permanecen en reposo (quietos), podemos afirmar que la fuerza',
+ options:{A:'de rozamiento es igual a la fuerza normal.',B:'de rozamiento es igual a la tensión de la cuerda.',C:'normal es igual a la tensión.',D:'normal es igual al peso del bloque B.'},
+ correct:'B',
+ explain:'Como el bloque A también está en equilibrio, la suma de fuerzas horizontales debe ser cero: la fricción Fr debe equilibrar exactamente a la tensión T que lo hala hacia la polea, por lo que Fr = T.'},
+
+{id:84, group:'origenvida', setLabel:'Preguntas 84 a 86', category:'Biología', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Según las teorías científicas, ¿cuál de las siguientes afirmaciones es contraria a las ideas del creacionismo?',
+ options:{A:'Ningún ser vivo evolucionó.',B:'El universo fue creado por un ser divino.',C:'Los animales se originaron de procesos biológicos naturales.',D:'Los seres vivos evolucionaron.'},
+ correct:'C',
+ explain:'El creacionismo sostiene que la vida es producto de un acto de creación de uno o varios dioses. Afirmar que los animales se originaron mediante procesos biológicos naturales (sin intervención divina) contradice directamente esa premisa central.'},
+
+{id:85, group:'origenvida', setLabel:'Preguntas 84 a 86', category:'Biología', competencia:'Uso comprensivo del conocimiento científico',
+ text:'¿Qué fenómeno explicaba la teoría de la generación espontánea en la antigüedad?',
+ options:{A:'Que la vida surgió a partir de una mezcla de compuestos químicos simples.',B:'Que los organismos vivos se originaban a partir de materia inorgánica.',C:'Que los seres vivos surgían a partir de esporas provenientes del espacio exterior.',D:'Que los dioses creaban todas las formas de vida.'},
+ correct:'B',
+ explain:'La generación espontánea "sostenía que los seres vivos podían originarse a partir de materia inorgánica", idea aceptada desde la Antigua Grecia hasta que fue refutada experimentalmente siglos después.'},
+
+{id:86, group:'origenvida', setLabel:'Preguntas 84 a 86', category:'Biología', competencia:'Uso comprensivo del conocimiento científico',
+ text:'De acuerdo con el texto, ¿cuál de las siguientes afirmaciones es VERDADERA?',
+ options:{A:'La panspermia propone que la vida en la Tierra provino de esporas y microorganismos transportados desde el espacio exterior.',B:'Las teorías evolutivas ya explican el origen de la vida en el universo.',C:'El primer ser vivo fue producto de una reacción química y era una molécula.',D:'Toda atribución sobre el origen de la vida a dioses se denomina creacionismo.'},
+ correct:'A',
+ explain:'Esa es exactamente la definición de panspermia que da el texto. Las demás opciones distorsionan lo dicho: la evolución no explica el origen de la vida en el universo, y el proceso descrito para las primeras células involucra varios pasos, no una simple reacción que produce "una molécula".'},
+
+{id:87, group:'patos', setLabel:null, category:'Biología', competencia:'Explicación de fenómenos',
+ text:'Teniendo en cuenta la información de la figura, ¿cuál de las siguientes conclusiones es correcta?',
+ options:{A:'El número de patos se va a reducir, porque los peces son sus mayores depredadores.',B:'Las especies de patos del lago pueden coexistir, porque pueden compartir los mismos recursos.',C:'El número de patos va a aumentar, porque tienen muchos recursos disponibles.',D:'Las tres especies de patos del lago se extinguirán, porque compiten por los mismos recursos.'},
+ correct:'B',
+ explain:'La figura muestra que cada fuente de alimento (algas, peces, plantas acuáticas) es aprovechada por más de una especie de pato al mismo tiempo. Esa superposición de dietas no implica competencia excluyente, sino que evidencia que los recursos pueden repartirse, permitiendo la coexistencia de las tres especies.'},
+
+{id:88, group:'calor', setLabel:null, category:'Química', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Un estudiante observa que una vela calienta un cubo de hielo y construye la gráfica que describe la transferencia de calor y la temperatura en el fenómeno. Si los cambios de fase se presentan cuando el calor aumenta pero la temperatura se mantiene constante, ¿cuántos cambios de fase se observan en la gráfica?',
+ options:{A:'0',B:'1',C:'2',D:'3'},
+ correct:'C',
+ explain:'En la gráfica hay dos tramos horizontales (temperatura constante mientras el calor sigue aumentando): uno a 0 °C, que corresponde a la fusión del hielo, y otro a 100 °C, que corresponde a la ebullición del agua. Eso son 2 cambios de fase.'},
+
+{id:89, group:'sal', setLabel:'Preguntas 89 y 90', category:'Química', competencia:'Indagación',
+ text:'Uno de los estudiantes afirma que: "una solución con 15 g de sal tendrá un punto de ebullición aproximadamente de 102,4 °C". De acuerdo con la información de la tabla, la afirmación es',
+ options:{A:'correcta, porque la temperatura de ebullición de la solución con 15 g de sal se encuentra entre las temperaturas de ebullición para las soluciones en los recipientes 1 y 2.',B:'incorrecta, porque el punto de ebullición de la solución con 15 g de sal será menor a 100,8 °C.',C:'correcta, porque la temperatura de ebullición de la solución con 15 g de sal se encuentra entre las temperaturas de ebullición para las soluciones en los recipientes 2 y 3.',D:'incorrecta, porque el punto de ebullición de la solución con 15 g de sal será menor a 103,2 °C.'},
+ correct:'C',
+ explain:'15 g de sal está entre los 5 g del recipiente 2 (100,8 °C) y los 20 g del recipiente 3 (103,2 °C). Por lo tanto, es razonable esperar que su punto de ebullición (102,4 °C) esté entre esos dos valores, como efectivamente ocurre.'},
+
+{id:90, group:'sal', setLabel:'Preguntas 89 y 90', category:'Química', competencia:'Indagación',
+ text:'De acuerdo con los resultados obtenidos, los estudiantes pueden concluir que',
+ options:{A:'el agua ebulle a la misma temperatura sin importar la cantidad de sal.',B:'el punto de ebullición del agua aumenta al aumentar la cantidad de sal.',C:'el agua ebulle más rápidamente cuando tiene mayor cantidad de sal.',D:'el punto de ebullición del agua disminuye al aumentar la cantidad de sal.'},
+ correct:'B',
+ explain:'Los datos muestran una tendencia clara: a mayor cantidad de sal disuelta (0, 5, 20 y 25 g), mayor es la temperatura de ebullición registrada (100,0 · 100,8 · 103,2 · 104,0 °C).'},
+
+{id:91, group:'dieta', setLabel:null, category:'Biología', competencia:'Uso comprensivo del conocimiento científico',
+ text:'La diabetes es una enfermedad caracterizada por el exceso de azúcar en la sangre y en la orina. Una dieta apropiada para su tratamiento debe ser baja en carbohidratos y en grasas. De acuerdo con la tabla, el alimento más apropiado en la dieta de una persona diabética es el',
+ options:{A:'Alimento 1.',B:'Alimento 2.',C:'Alimento 3.',D:'Alimento 4.'},
+ correct:'B',
+ explain:'El alimento 2 combina 0 g de carbohidratos con una de las grasas más bajas (0,25 g), cumpliendo mejor los dos criterios pedidos (bajo en carbohidratos y en grasas) que cualquiera de los otros tres alimentos.'},
+
+{id:92, group:null, setLabel:null, category:'Biología', competencia:'Explicación de fenómenos',
+ text:'La digestión de alimentos vegetales es más compleja que la de alimentos de origen animal. Al observar la longitud del intestino de renacuajos de dos especies se observó que el de la especie 1 es más largo que el de la especie 2. A partir de esta información se podría pensar que posiblemente los renacuajos',
+ options:{A:'de la especie 1 son carnívoros y los de la especie 2 herbívoros.',B:'de ambas especies son carnívoros.',C:'de la especie 1 son herbívoros y los de la especie 2 carnívoros.',D:'de ambas especies son herbívoros.'},
+ correct:'C',
+ explain:'Digerir alimento vegetal es más complejo y requiere un intestino más largo. Como la especie 1 tiene el intestino más largo, es más probable que sea herbívora; la especie 2, con intestino más corto, sería carnívora.'},
+
+{id:93, group:null, setLabel:null, category:'Química', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Cuando se comprime un gas, la variación del volumen es inversamente proporcional a la presión. Juliana comprime 20 litros de un gas en un cilindro a una presión de 2 atmósferas. Si ejerce una presión de 4 atmósferas, es probable que',
+ options:{A:'disminuya el volumen del gas.',B:'aumente el volumen del gas.',C:'disminuya la cantidad de gas.',D:'aumente la cantidad de gas.'},
+ correct:'A',
+ explain:'Por la relación inversamente proporcional entre presión y volumen (ley de Boyle), si la presión se duplica (de 2 a 4 atm), el volumen del gas se reduce aproximadamente a la mitad. La cantidad de gas (moles) no cambia.'},
+
+{id:94, group:null, setLabel:null, category:'Biología', competencia:'Uso comprensivo del conocimiento científico',
+ text:'Muchas de las funciones que realiza nuestro organismo se ejecutan sin que intervenga nuestra voluntad. Son las llamadas funciones de la vida vegetativa. Entre ellas se encuentran las contracciones del corazón, los movimientos del aparato digestivo y',
+ options:{A:'la formación del bolo alimenticio.',B:'la inclinación del dorso.',C:'los cambios de tamaño de las pupilas.',D:'el movimiento de los dedos.'},
+ correct:'C',
+ explain:'Los cambios de tamaño de las pupilas (reflejo pupilar) son controlados por el sistema nervioso autónomo, al igual que el latido cardíaco y los movimientos digestivos: ocurren sin intervención de la voluntad. Formar el bolo alimenticio, inclinar el dorso y mover los dedos son acciones voluntarias.'},
+
+{id:95, group:null, setLabel:null, category:'Biología', competencia:'Explicación de fenómenos',
+ text:'Los glóbulos rojos tienen una proteína llamada hemoglobina encargada de llevar el oxígeno a la sangre. Una persona que vive al nivel del mar (Cartagena) tiene menor cantidad de glóbulos rojos que una persona que vive en zonas montañosas (Bogotá). ¿Cuál de las siguientes opciones explica por qué?',
+ options:{A:'En las zonas altas hay mayor cantidad de oxígeno en el aire.',B:'Al nivel del mar hay igual cantidad de oxígeno en el aire que en las zonas altas.',C:'En las zonas más cercanas al nivel del mar, hay menor cantidad de oxígeno en el aire.',D:'En las zonas más cercanas al nivel del mar, hay mayor cantidad de oxígeno en el aire.'},
+ correct:'D',
+ explain:'A mayor altitud hay menos oxígeno disponible, así que el cuerpo compensa produciendo más glóbulos rojos. Cerca del nivel del mar hay más oxígeno disponible en el aire, por lo que el organismo no necesita producir tantos glóbulos rojos.'},
+
+{id:96, group:null, setLabel:null, category:'Biología', competencia:'Explicación de fenómenos',
+ text:'La mayor parte de los reptiles dependen de la temperatura ambiental para regular su temperatura corporal, por lo que su producción de calor es baja y su metabolismo lento. Los mamíferos, en cambio, no dependen de la temperatura ambiental para regular su temperatura corporal. Teniendo en cuenta esta diferencia, usted pensaría que los',
+ options:{A:'mamíferos presentan una menor cantidad de mitocondrias en sus células en comparación con los reptiles.',B:'reptiles presentan una menor cantidad de mitocondrias en sus células en comparación con los mamíferos.',C:'mamíferos presentan una menor cantidad de ribosomas en sus células en comparación con los reptiles.',D:'reptiles presentan una menor cantidad de ribosomas en comparación con los mamíferos.'},
+ correct:'B',
+ explain:'Producir calor internamente (metabolismo alto de los mamíferos) requiere más energía celular, es decir, más mitocondrias generando ATP. Como los reptiles tienen un metabolismo más lento y no generan su propio calor, es esperable que tengan menos mitocondrias que los mamíferos.'}
+];
+
+const GROUP_CONTEXT = {
+ frutas: `<p>En una práctica de laboratorio del colegio se les pide a los estudiantes investigar sobre algunas propiedades de frutas como manzanas, naranjas y bananos. Se les indaga qué pasaría si se ponen todas estas frutas en recipientes con agua: ¿Flotará la naranja? ¿Se hundirá una manzana? ¿Se hundirá el plátano si se le quita la cáscara?</p>`,
+
+ sustancias: `<p>La siguiente tabla muestra las densidades de tres sustancias: A, B y C. Una esfera con densidad de 1,8 g/cm³ se sumerge en cada una de estas sustancias:</p>
+  <table><tr><th>Sustancia</th><th>Densidad</th></tr>
+  <tr><td>A</td><td>0,78 g/cm³</td></tr><tr><td>B</td><td>1,004 g/cm³</td></tr><tr><td>C</td><td>9,76 g/cm³</td></tr></table>`,
+
+ bloques: `<p>Al colocar el bloque B, el juguete A puede rodar sobre una mesa, cuyo coeficiente de rozamiento es μ:</p>
+  <div id="bloquesHolder"></div>
+  <p><b>Se asumirá para los diagramas de cuerpo libre:</b> T = tensión, W = peso, Fn = fuerza normal y Fr = fuerza de rozamiento.</p>`,
+
+ origenvida: `<p><b>Creacionismo:</b> idea religiosa según la cual la Tierra y cada ser vivo son producto de un acto de creación llevado a cabo por uno o varios dioses.</p>
+  <p><b>Panspermia:</b> plantea el surgimiento de la vida en la Tierra a partir de esporas y microorganismos provenientes del espacio exterior, transportados por meteoritos.</p>
+  <p><b>Generación espontánea:</b> sostenía que los seres vivos podían originarse a partir de materia inorgánica, idea aceptada desde la Antigua Grecia (Tales de Mileto, Aristóteles).</p>
+  <p><b>Quimiosíntesis (síntesis prebiótica):</b> afirma que la vida surgió a partir de reacciones químicas simples entre compuestos inorgánicos que, con el tiempo, formaron las primeras células.</p>
+  <p>Actualmente se cree que las primeras células aparecieron hace cerca de 3.500 millones de años, mediante un proceso de evolución prebiótica.</p>`,
+
+ patos: `<p>La siguiente figura esquematiza las interacciones alimenticias entre tres especies de patos que viven en un lago: cada fuente de alimento (algas, peces y plantas acuáticas) es consumida por más de una especie.</p>
+  <div id="patosHolder"></div>`,
+
+ calor: `<div id="calorHolder"></div>`,
+
+ sal: `<p>En un laboratorio de ciencias, dos estudiantes quieren determinar el efecto de la sal sobre el punto de ebullición del agua. Colocan en cuatro recipientes con agua tres soluciones con diferentes cantidades de sal y las someten a calentamiento hasta ebullición:</p>
+  <table><tr><th>Recipiente</th><th>Volumen (mL)</th><th>Sal disuelta (g)</th><th>Temp. de ebullición (°C)</th></tr>
+  <tr><td>1</td><td>100</td><td>0</td><td>100,0</td></tr>
+  <tr><td>2</td><td>100</td><td>5</td><td>100,8</td></tr>
+  <tr><td>3</td><td>100</td><td>20</td><td>103,2</td></tr>
+  <tr><td>4</td><td>100</td><td>25</td><td>104,0</td></tr></table>`,
+
+ dieta: `<p>La siguiente tabla muestra la información nutricional de cuatro alimentos:</p>
+  <table><tr><th></th><th>Alimento 1</th><th>Alimento 2</th><th>Alimento 3</th><th>Alimento 4</th></tr>
+  <tr><td>Grasa</td><td>1 g</td><td>0,25 g</td><td>0,20 g</td><td>2,3 g</td></tr>
+  <tr><td>Sodio</td><td>0 g</td><td>14 mg</td><td>93 mg</td><td>5 mg</td></tr>
+  <tr><td>Carbohidratos</td><td>25 g</td><td>0 g</td><td>3 g</td><td>18 g</td></tr>
+  <tr><td>Proteínas</td><td>3 g</td><td>7,5 g</td><td>0,8 g</td><td>2 g</td></tr></table>`
+};
+
+let current = 0;
+const answers = {}; // id -> {choice(original letter), correct(bool)}
+let mode = 'orden'; // 'orden' | 'aleatorio'
+let displayQuestions = []; // ordered array of Q objects for navigation
+let optionOrder = {}; // q.id -> array of ORIGINAL letters in the order they should display
+
+function buildBlocks(){
+  const blocks = [];
+  let i = 0;
+  while(i < Q.length){
+    const g = Q[i].group;
+    if(g){
+      let j = i, arr = [];
+      while(j < Q.length && Q[j].group === g){ arr.push(Q[j]); j++; }
+      blocks.push(arr);
+      i = j;
+    } else {
+      blocks.push([Q[i]]);
+      i++;
+    }
+  }
+  return blocks;
+}
+const BLOCKS = buildBlocks();
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildOrder(randomize){
+  const blocksToUse = randomize ? shuffleArray(BLOCKS) : BLOCKS;
+  displayQuestions = [];
+  blocksToUse.forEach(block => block.forEach(q => displayQuestions.push(q)));
+
+  optionOrder = {};
+  Q.forEach(q => {
+    const letters = Object.keys(q.options);
+    optionOrder[q.id] = randomize ? shuffleArray(letters) : letters;
+  });
+}
+
+function setMode(newMode){
+  mode = newMode;
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('orderBookletBtn').classList.toggle('active', mode === 'orden');
+  document.getElementById('orderRandomBtn').classList.toggle('active', mode === 'aleatorio');
+  document.getElementById('reshuffleBtn').style.display = mode === 'aleatorio' ? 'inline-block' : 'none';
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+function reshuffleNow(){
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(true);
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+document.getElementById('orderBookletBtn').onclick = () => setMode('orden');
+document.getElementById('orderRandomBtn').onclick = () => setMode('aleatorio');
+document.getElementById('reshuffleBtn').onclick = reshuffleNow;
+
+function renderBubbles(){
+  const el = document.getElementById('bubbles');
+  el.innerHTML = '';
+  displayQuestions.forEach((q,i)=>{
+    const b = document.createElement('div');
+    let cls = 'bub';
+    if(i===current) cls += ' current';
+    if(answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
+    b.className = cls;
+    b.textContent = q.id;
+    b.onclick = ()=>{ current = i; render(); };
+    el.appendChild(b);
+  });
+}
+
+function updateScorePill(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('scorePill').textContent = total + ' / 24 correctas';
+}
+
+function markSVG(ok){
+  return ok
+   ? `<svg class="mark ok" viewBox="0 0 34 34"><path d="M6 18 L14 26 L28 8"/></svg>`
+   : `<svg class="mark bad" viewBox="0 0 34 34"><path d="M8 8 L26 26 M26 8 L8 26"/></svg>`;
+}
+
+const DISPLAY_LETTERS = ['A','B','C','D'];
+
+function render(){
+  const q = displayQuestions[current];
+  const answered = answers[q.id];
+  const inner = document.getElementById('cardInner');
+  const order = optionOrder[q.id];
+  const correctDisplayLetter = DISPLAY_LETTERS[order.indexOf(q.correct)];
+
+  let ctxHTML = '';
+  if(q.group && GROUP_CONTEXT[q.group]){
+    ctxHTML = `<div class="context">${GROUP_CONTEXT[q.group]}</div>`;
+  }
+
+  let optsHTML = '';
+  order.forEach((origLetter, i)=>{
+    const displayLetter = DISPLAY_LETTERS[i];
+    const text = q.options[origLetter];
+    let cls = 'opt';
+    if(q.tableOptions) cls += ' opt-table';
+    if(answered){
+      cls += ' locked';
+      if(origLetter===q.correct) cls += ' reveal-correct';
+      else if(origLetter===answered.choice) cls += ' reveal-wrong';
+    }
+    optsHTML += `<div class="${cls}" data-orig="${origLetter}"><span class="letter">${displayLetter}</span><span>${text}</span></div>`;
+  });
+
+  inner.innerHTML = `
+    <div class="q-head">
+      <div class="q-num">${q.id}</div>
+      <div class="q-tags"><span class="tag">${q.category}</span><span class="tag tag-comp">${q.competencia}</span></div>
+    </div>
+    ${q.setLabel ? `<div class="set-label">${q.setLabel}</div>` : ''}
+    ${ctxHTML}
+    <p class="stmt">${q.text}</p>
+    <div class="options">${optsHTML}</div>
+    <div class="feedback ${answered ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
+      ${answered ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
+    </div>
+  `;
+
+  // inject diagrams if needed
+  const bloquesHolder = document.getElementById('bloquesHolder');
+  if(bloquesHolder) bloquesHolder.innerHTML = buildBloquesSVG();
+  const patosHolder = document.getElementById('patosHolder');
+  if(patosHolder) patosHolder.innerHTML = buildPatosSVG();
+  const calorHolder = document.getElementById('calorHolder');
+  if(calorHolder) calorHolder.innerHTML = buildCalorSVG();
+
+  // option click handlers
+  inner.querySelectorAll('.opt').forEach(el=>{
+    el.onclick = ()=>{
+      if(answers[q.id]) return;
+      const origLetter = el.getAttribute('data-orig');
+      answers[q.id] = { choice: origLetter, correct: origLetter===q.correct };
+      render();
+      renderBubbles();
+      updateScorePill();
+    };
+  });
+
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').textContent = current===displayQuestions.length-1 ? 'Ver resultados →' : 'Siguiente →';
+
+  renderBubbles();
+  updateScorePill();
+}
+
+document.getElementById('prevBtn').onclick = ()=>{ if(current>0){ current--; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); } };
+document.getElementById('nextBtn').onclick = ()=>{
+  if(current < displayQuestions.length-1){ current++; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); }
+  else { showSummary(); }
+};
+
+function showSummary(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('finalScore').textContent = total + '/24';
+  const cats = {};
+  const comps = {};
+  Q.forEach(q=>{
+    if(!cats[q.category]) cats[q.category] = {correct:0, total:0};
+    cats[q.category].total++;
+    if(answers[q.id] && answers[q.id].correct) cats[q.category].correct++;
+
+    if(!comps[q.competencia]) comps[q.competencia] = {correct:0, total:0};
+    comps[q.competencia].total++;
+    if(answers[q.id] && answers[q.id].correct) comps[q.competencia].correct++;
+  });
+
+  const renderBarGroup = (containerId, data)=>{
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    Object.entries(data).forEach(([name,v])=>{
+      const pct = Math.round((v.correct/v.total)*100);
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `<div class="cname">${name}</div><div class="cat-track"><div class="cat-fill" style="width:${pct}%"></div></div><div class="cat-num">${v.correct}/${v.total}</div>`;
+      el.appendChild(row);
+    });
+  };
+  renderBarGroup('catBars', cats);
+  renderBarGroup('compBars', comps);
+
+  document.getElementById('summary').classList.add('show');
+  document.getElementById('summary').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('retryBtn').onclick = ()=>{
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('summary').classList.remove('show');
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
+buildOrder(false);
+render();
+</script>
+</body>
+</html>
