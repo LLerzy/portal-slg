@@ -1,1 +1,739 @@
-pendiente 
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cuadernillo Sociales y Ciudadanas · Grado 10°</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --paper:#E6E1D3;
+  --paper-dark:#D9D0BB;
+  --card:#F5F1E5;
+  --ink:#1F3A5F;
+  --ink-soft:#4F6178;
+  --rule:#B9C1CB;
+  --gold:#A9762C;
+  --green:#2E6B4F;
+  --green-bg:#DDEBE1;
+  --red:#A6323E;
+  --red-bg:#F3DEDD;
+  --shadow: 0 10px 30px rgba(31,58,95,0.14);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(31,58,95,0.05) 1px, transparent 0) 0 0/14px 14px,
+    var(--paper);
+  min-height:100vh;
+  padding:28px 16px 60px;
+}
+.wrap{max-width:880px;margin:0 auto;}
+
+/* ---------- ticket header ---------- */
+.ticket{
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:14px;
+  padding:22px 26px;
+  position:relative;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.ticket::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-1px;
+  height:14px;
+  background-image: radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px);
+  background-size:20px 14px;
+  background-repeat:repeat-x;
+}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#B9C7D6; margin:0 0 6px;}
+.ticket h1{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(26px,4.2vw,38px); margin:0; line-height:1.05;}
+.ticket .sub{font-family:'Fraunces',serif; font-style:italic; font-weight:500; color:#C9D6E2; font-size:16px; margin-top:4px;}
+.stamp{
+  border:2px solid var(--gold); color:#D9B063;
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em;
+  padding:6px 10px; border-radius:6px; transform:rotate(4deg);
+  white-space:nowrap;
+}
+.ticket-meta{display:flex; gap:18px; margin-top:18px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#B9C7D6;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+
+/* ---------- gap warning ---------- */
+.gap-note{
+  margin-top:14px; background:#FBEFD9; border:1.5px solid var(--gold); border-radius:10px;
+  padding:14px 18px; font-size:13.5px; color:#5C4210; line-height:1.55; box-shadow:var(--shadow);
+}
+.gap-note b{color:#3D2C0B;}
+
+/* ---------- navigator (bubble strip) ---------- */
+.nav-strip{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+}
+.nav-strip .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft);
+  padding:8px 14px; border-radius:20px; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.shuffle-again{padding:8px 14px; border-radius:20px; font-size:12px;}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{
+  width:30px; height:30px; border-radius:50%;
+  border:2px solid var(--rule);
+  background:transparent;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px;
+  color:var(--ink-soft); cursor:pointer;
+  transition:transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+.bub:hover{transform:translateY(-2px);}
+.bub.current{border-color:var(--ink); color:var(--ink); box-shadow:0 0 0 3px rgba(169,118,44,0.35);}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+
+/* ---------- question card ---------- */
+.card{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-inner{padding:26px 28px 28px; position:relative;}
+.card-inner::before{
+  content:""; position:absolute; left:52px; top:0; bottom:0; width:1px;
+  background:repeating-linear-gradient(var(--red) 0 6px, transparent 6px 12px);
+  opacity:.25;
+}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+.q-num{
+  width:40px; height:40px; min-width:40px; border-radius:50%;
+  background:var(--ink); color:var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:16px;
+}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap;}
+.tag{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.05em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px;
+  border:1px solid var(--rule); color:var(--ink-soft);
+}
+.tag-comp{border-color:var(--gold); color:var(--gold); background:rgba(169,118,44,0.08);}
+.set-label{
+  font-family:'Fraunces',serif; font-style:italic; color:var(--gold);
+  font-size:14px; margin:2px 0 14px 54px;
+}
+.context{
+  margin:0 0 18px 54px;
+  padding:14px 16px;
+  background:var(--paper-dark);
+  border-radius:8px;
+  font-size:14px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  max-height:380px;
+  overflow-y:auto;
+}
+.context p{margin:0 0 10px;}
+.context p:last-child{margin-bottom:0;}
+.context ol{margin:8px 0; padding-left:22px;}
+.context ol li{margin-bottom:6px;}
+.context .fuente{font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-align:right; opacity:.75;}
+.context h4{margin:0 0 8px; font-family:'Fraunces',serif; font-size:16px; color:var(--ink);}
+.stmt{
+  margin:0 0 20px 54px;
+  font-size:16.5px; line-height:1.55; font-weight:500;
+}
+
+.options{margin-left:54px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.opt{
+  display:flex; align-items:center; gap:12px;
+  border:1.5px solid var(--rule); border-radius:9px;
+  padding:10px 14px; cursor:pointer; background:var(--card);
+  transition:border-color .15s ease, background .15s ease;
+  font-size:14.5px;
+}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{
+  width:26px; height:26px; min-width:26px; border-radius:50%;
+  border:2px solid var(--ink); display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:12.5px;
+  transition:background .2s ease, color .2s ease;
+}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #35577d, var(--ink) 70%); color:var(--paper);}
+.opt.locked{cursor:default;}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+
+.feedback{
+  margin:16px 0 0 54px; padding:14px 16px; border-radius:9px;
+  font-size:14px; line-height:1.55; display:none; position:relative;
+}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback b{display:block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px;}
+
+.mark{position:absolute; left:6px; top:2px; width:34px; height:34px;}
+.mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.mark.ok path{stroke:var(--green);}
+.mark.bad path{stroke:var(--red);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.btn{
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px;
+  border:1.5px solid var(--ink); background:transparent; color:var(--ink);
+  padding:10px 18px; border-radius:8px; cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#2c507b;}
+.score-pill{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+  background:var(--card); border:1.5px solid var(--gold); color:var(--gold);
+  padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);
+}
+
+/* ---------- summary screen ---------- */
+.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:30px 28px; display:none;}
+.summary.show{display:block;}
+.summary h2{font-family:'Fraunces',serif; font-size:28px; margin:0 0 4px;}
+.summary .big{font-family:'Fraunces',serif; font-size:52px; font-weight:700; color:var(--gold); margin:10px 0 2px;}
+.summary .caption{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em;}
+.cat-bar-row{margin-top:22px;}
+.cat-bar-row .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.cat-bar-row .cname{width:150px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.cat-track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden;}
+.cat-fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cat-num{font-family:'IBM Plex Mono',monospace; font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.summary .btn{margin-top:22px;}
+.summary .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:13.5px; color:var(--ink-soft); line-height:1.5; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+
+/* ================= RESPONSIVE — pantallas angostas ================= */
+@media(max-width:560px){
+  body{padding:14px 10px 40px;}
+
+  .ticket{padding:16px 16px 20px;}
+  .ticket h1{font-size:23px;}
+  .ticket .sub{font-size:12.5px;}
+  .eyebrow{font-size:9.5px; letter-spacing:.1em;}
+  .stamp{font-size:10px; padding:5px 8px;}
+  .ticket-meta{gap:6px 12px; font-size:10.5px; margin-top:14px;}
+
+  .intro-note,.gap-note{padding:12px 14px; font-size:12.5px; line-height:1.45;}
+
+  .nav-strip{padding:12px;}
+  .order-row{flex-direction:column; align-items:stretch; gap:10px;}
+  .order-toggle{width:100%; gap:6px;}
+  .order-btn{flex:1; text-align:center; padding:8px 6px; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .shuffle-again{width:100%; text-align:center;}
+  .bubbles{gap:5px;}
+  .bub{width:26px; height:26px; font-size:10.5px;}
+
+  .card-inner{padding:16px 14px 18px;}
+  .card-inner::before{display:none;}
+  .q-head{gap:8px;}
+  .q-num{width:32px; height:32px; min-width:32px; font-size:14px;}
+  .q-tags{gap:6px;}
+  .tag{font-size:9px; padding:2px 7px; letter-spacing:.02em;}
+
+  .set-label{margin-left:0; font-size:13px; margin-bottom:10px;}
+  .context{margin-left:0; padding:12px; font-size:12.5px; max-height:300px;}
+
+  .stmt{margin-left:0; font-size:15px; margin-bottom:14px;}
+
+  .options{margin-left:0; grid-template-columns:1fr; gap:8px;}
+  .opt{padding:10px 12px; font-size:13.5px; gap:10px;}
+  .opt .letter{width:23px; height:23px; min-width:23px; font-size:11px;}
+
+  .feedback{margin-left:0; padding:12px 14px 12px 40px; font-size:13px;}
+  .mark{width:28px; height:28px;}
+
+  .footer-nav{gap:8px;}
+  .btn{padding:9px 14px; font-size:12px;}
+  .score-pill{font-size:12px; padding:7px 12px;}
+
+  .summary{padding:20px 16px;}
+  .summary h2{font-size:22px;}
+  .summary .big{font-size:38px;}
+  .cat-bar-row .cname{width:120px; font-size:12px;}
+  .cat-num{font-size:11.5px;}
+}
+
+@media(max-width:400px){
+  .ticket h1{font-size:20px;}
+  .ticket-top{gap:10px;}
+  .order-toggle{flex-direction:column;}
+  .order-btn{width:100%;}
+  .bub{width:24px; height:24px; font-size:10px;}
+  .q-num{width:28px; height:28px; font-size:12.5px;}
+  .stmt{font-size:14px;}
+  .opt{font-size:13px; padding:9px 10px;}
+  .footer-nav{flex-wrap:wrap; justify-content:center;}
+  .footer-nav .btn{flex:1; min-width:110px;}
+  .score-pill{order:-1; width:100%; text-align:center;}
+}
+</style>
+</head>
+<body>
+<script>
+(function () {
+  const sesion = sessionStorage.getItem("slg_sesion");
+  if (!sesion) {
+    window.location.href = "https://llerzy.github.io/portal-slg/";
+  }
+})();
+</script>
+<div class="wrap">
+
+  <div class="ticket">
+    <div class="ticket-top">
+      <div>
+        <p class="eyebrow">Prueba Saber · PS-2526-X-003</p>
+        <h1>Cuadernillo Décimo</h1>
+        <div class="sub">Explorador de preguntas — Sociales y Ciudadanas</div>
+      </div>
+      <div class="stamp">19 de 24 preguntas</div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Grado</b> 10°</span>
+      <span><b>Ejes</b> Constitución y participación · Economía y desarrollo · Conflicto y memoria histórica</span>
+      <span><b>Modo</b> práctica autocorregida</span>
+    </div>
+  </div>
+
+  <div class="gap-note">
+    ⚠️ <b>Aviso sobre el material fuente:</b> en el PDF escaneado del cuadernillo, la página impresa <b>17 falta</b> (el escaneo salta de la página 16 a la 18). Esa página contendría las preguntas <b>68 a 72</b> (la sección "Responda las preguntas 64 a 68" quedó incompleta en la 67, y las preguntas 69 a 72 tampoco aparecen). Por eso este simulacro incluye las <b>19 preguntas disponibles (49 a 67)</b>. Si consigues esa página faltante, puedo actualizar el artefacto para completar el set de 24.
+  </div>
+
+  <div class="intro-note">
+    Estas son las preguntas de <b>Sociales y Ciudadanas</b> disponibles del Cuadernillo Décimo (preguntas 49 a 67, páginas 12 a 16). Cada bloque incluye el texto original que da contexto a las preguntas. Cada opción se autocalifica al seleccionarla y verás la explicación del razonamiento. Puedes saltar entre preguntas con la franja de burbujas de abajo.
+  </div>
+
+  <div class="nav-strip">
+    <div class="order-row">
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button class="btn shuffle-again" id="reshuffleBtn" style="display:none;">↻ Mezclar de nuevo</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="card-inner" id="cardInner"></div>
+  </div>
+
+  <div class="footer-nav">
+    <button class="btn" id="prevBtn">← Anterior</button>
+    <span class="score-pill" id="scorePill">0 / 19 correctas</span>
+    <button class="btn primary" id="nextBtn">Siguiente →</button>
+  </div>
+
+  <div class="summary" id="summary">
+    <p class="caption">Resultado final</p>
+    <h2>Así te fue en el simulacro</h2>
+    <div class="big" id="finalScore">0/19</div>
+
+    <p class="label" style="margin-top:24px;">Por eje temático</p>
+    <div class="cat-bar-row" id="catBars"></div>
+
+    <p class="label" style="margin-top:22px;">Por competencia evaluada</p>
+    <div class="cat-bar-row" id="compBars"></div>
+
+    <button class="btn primary" id="retryBtn">↺ Reintentar cuadernillo</button>
+  </div>
+
+</div>
+
+<script>
+const TOTAL_Q = 19;
+
+const Q = [
+{id:49, group:null, setLabel:null, category:'Constitución y participación', competencia:'Pensamiento social',
+ text:'Cuando un ministro comete graves faltas en su labor, se expone a investigaciones y posterior moción de censura por parte del órgano legislativo de Colombia; si es declarado culpable, es retirado de su cargo. ¿Qué institución puede imponer la moción de censura?',
+ options:{A:'El Congreso de la República.',B:'La Corte Constitucional.',C:'La Policía Nacional.',D:'La Registraduría Nacional.'},
+ correct:'A',
+ explain:'En Colombia, la moción de censura contra ministros es una facultad exclusiva del Congreso de la República (Senado y Cámara), como parte de su función de control político sobre el gobierno.'},
+
+{id:50, group:'homicidios', setLabel:null, category:'Conflicto y memoria histórica', competencia:'Interpretación y análisis de perspectivas',
+ text:'De acuerdo al texto, podemos concluir que',
+ options:{A:'existe manipulación de la información por parte de los organismos estatales.',B:'el Estado colombiano no ha ejercido su autoridad sobre la población.',C:'el Estado colombiano pierde legitimidad mientras los criminales asumen legalidad.',D:'el pueblo no sabe a quién creerle: a la prensa, al Estado o a la realidad cercana.'},
+ correct:'A',
+ explain:'El texto describe subregistro, sesgos en la clasificación de las defunciones y desinformación alrededor de las cifras de homicidios: en conjunto, esto apunta a una manipulación o distorsión de la información oficial por parte de los organismos encargados de contabilizarla.'},
+
+{id:51, group:'oxfam', setLabel:'Preguntas 51 y 52', category:'Economía y desarrollo', competencia:'Pensamiento social',
+ text:'La desigualdad provoca que muchas personas en el mundo no puedan acceder a servicios de acueducto, alcantarillado, a una vivienda digna y a una buena salud, es decir, que la desigualdad es un problema que impide que las personas',
+ options:{A:'disfruten de su libre expresión.',B:'puedan reclamar sus derechos.',C:'disfruten de ciertos derechos.',D:'puedan tener un empleo.'},
+ correct:'C',
+ explain:'El acceso al agua, al saneamiento, a la vivienda digna y a la salud son derechos económicos y sociales reconocidos; la desigualdad descrita impide que las personas disfruten de esos derechos.'},
+
+{id:52, group:'oxfam', setLabel:'Preguntas 51 y 52', category:'Economía y desarrollo', competencia:'Pensamiento social',
+ text:'Una de las maneras en la cual un gobierno puede combatir la pobreza extrema es',
+ options:{A:'invirtiendo menos recursos en la población más pobre.',B:'confiscando la riqueza de quienes tienen más dinero.',C:'aumentando los impuestos a las personas ricas.',D:'aplicando programas de inversión social.'},
+ correct:'D',
+ explain:'El texto plantea que los gobiernos deben cooperar y trabajar en beneficio del 99% de la población y acabar con la concentración extrema de la riqueza; la vía institucional habitual para lograrlo es la aplicación de programas de inversión social.'},
+
+{id:53, group:'manuel', setLabel:'Preguntas 53 y 54', category:'Constitución y participación', competencia:'Pensamiento social',
+ text:'Para proteger el uso de sus datos personales, Manuel puede hacer uso del siguiente mecanismo de protección:',
+ options:{A:'El habeas data.',B:'La acción de grupo.',C:'El habeas corpus.',D:'La acción de tutela.'},
+ correct:'A',
+ explain:'El habeas data es el mecanismo constitucional específicamente diseñado para que las personas conozcan, actualicen y rectifiquen la información que se ha recogido sobre ellas, y para controlar el uso de sus datos personales, como en este caso.'},
+
+{id:54, group:'manuel', setLabel:'Preguntas 53 y 54', category:'Constitución y participación', competencia:'Pensamiento social',
+ text:'Al continuar el envío de mensajes, el almacén perturba la privacidad de Manuel, es decir, está vulnerando su derecho',
+ options:{A:'al trabajo.',B:'a la vida.',C:'a la intimidad.',D:'a la libre expresión.'},
+ correct:'C',
+ explain:'El envío insistente de mensajes no solicitados invade el espacio personal de Manuel; eso corresponde a una vulneración del derecho a la intimidad.'},
+
+{id:55, group:'bacrim', setLabel:'Preguntas 55 a 59', category:'Conflicto y memoria histórica', competencia:'Pensamiento reflexivo y sistémico',
+ text:'Del proceso de desmovilización paramilitar salieron muchos combatientes que no lograron reinsertarse de manera satisfactoria en la sociedad y formaron diversas bandas criminales. Lo anterior muestra una debilidad en el proceso de desmonte de los grupos paramilitares porque',
+ options:{A:'hubo cierta voluntad del gobierno para alcanzar la paz.',B:'muchos combatientes lograron reinsertarse a la vida civil.',C:'muchos de sus miembros continuaron delinquiendo.',D:'los bloques paramilitares dejaron de existir en Colombia.'},
+ correct:'C',
+ explain:'El hecho de que combatientes desmovilizados hayan formado bandas criminales (Bacrim) evidencia que muchos de ellos continuaron delinquiendo en lugar de reinsertarse pacíficamente, lo que muestra una debilidad del proceso.'},
+
+{id:56, group:'bacrim', setLabel:'Preguntas 55 a 59', category:'Conflicto y memoria histórica', competencia:'Interpretación y análisis de perspectivas',
+ text:'Muchas Bacrim se dedican al negocio del narcotráfico, lo cual indica que su medio de financiamiento está directamente relacionado con',
+ options:{A:'el sicariato y la extorsión.',B:'el cultivo de cocaína.',C:'la producción de fármacos.',D:'la distribución de drogas.'},
+ correct:'D',
+ explain:'El narcotráfico consiste, ante todo, en el tráfico y distribución de drogas ilícitas; esa es la actividad central que financia a estas organizaciones, más allá de un solo eslabón como el cultivo.'},
+
+{id:57, group:'bacrim', setLabel:'Preguntas 55 a 59', category:'Conflicto y memoria histórica', competencia:'Pensamiento social',
+ text:'Según el texto, son algunas de las actividades económicas desarrolladas por las Bacrim, EXCEPTO:',
+ options:{A:'El narcotráfico.',B:'La minería ilegal.',C:'La extorsión.',D:'El contrabando.'},
+ correct:'D',
+ explain:'El texto menciona explícitamente el narcotráfico, la minería ilegal y la extorsión como actividades de las Bacrim. El contrabando no se menciona en ningún momento.'},
+
+{id:58, group:'bacrim', setLabel:'Preguntas 55 a 59', category:'Conflicto y memoria histórica', competencia:'Interpretación y análisis de perspectivas',
+ text:'De acuerdo con el texto, en muchas zonas, las Bacrim reemplazan algunas funciones del Estado, entre las que se encuentran',
+ options:{A:'la obediencia a la Constitución y las normas.',B:'el recaudo de tributos y el orden social.',C:'la creación de empleo y el cuidado de la moral.',D:'el respeto por la vida y el cobro de impuestos.'},
+ correct:'B',
+ explain:'El texto dice que estas organizaciones "cobran impuestos" y "vigilan como una policía que la población cumpla su ley", es decir, replican el recaudo de tributos y el mantenimiento del orden social, aunque de forma arbitraria e ilegítima.'},
+
+{id:59, group:'bacrim', setLabel:'Preguntas 55 a 59', category:'Conflicto y memoria histórica', competencia:'Pensamiento reflexivo y sistémico',
+ text:'¿Qué implicaciones tiene el hecho de que las bandas criminales desarrollen actividades ilegales?',
+ options:{A:'Que tienen medios altruistas para efectuar sus acciones.',B:'Que procuran acatar algunas normas y leyes nacionales.',C:'Que perpetúan el delito y sean aceptadas por las comunidades.',D:'Que buscan la justicia social por otros medios.'},
+ correct:'C',
+ explain:'El texto muestra una doble cara: estas organizaciones son atractivas para jóvenes excluidos y llegan a ejercer un dominio social amplio, pero sin dejar de ser estructuras criminales; esto implica que perpetúan el delito al mismo tiempo que logran cierta aceptación local.'},
+
+{id:60, group:'voto', setLabel:null, category:'Constitución y participación', competencia:'Interpretación y análisis de perspectivas',
+ text:'Teniendo en cuenta el voto que se emite en Colombia, ¿cuál(es) de las afirmaciones anteriores es (son) correcta(s)?',
+ options:{A:'Solamente 1.',B:'Solamente 2.',C:'Solamente 1 y 3.',D:'1, 2 y 3.'},
+ correct:'C',
+ explain:'La afirmación 1 describe correctamente el voto nulo (doble marcación, tarjetón rasgado o con consignas escritas). La 3 describe correctamente el voto en blanco (marcar expresamente esa opción en el tarjetón). La 2 es incorrecta: en Colombia el voto en blanco debe marcarse explícitamente; un tarjetón sin ninguna marca no equivale automáticamente a un voto en blanco. Por eso son correctas la 1 y la 3.'},
+
+{id:61, group:'gaviria', setLabel:null, category:'Constitución y participación', competencia:'Interpretación y análisis de perspectivas',
+ text:'Basado en la expresión: "¿usted no sabe quién soy yo?", Gaviria pretende',
+ options:{A:'desconocer la autoridad de la policía y rechazar la sanción.',B:'mostrar que es superior a los patrulleros que lo detienen.',C:'evadir el control de la policía indicando su origen social.',D:'contarle a los patrulleros quiénes son sus amigos.'},
+ correct:'B',
+ explain:'Esa frase es una expresión clásica de abuso de poder o "carro pesado": busca intimidar apelando a un supuesto estatus superior frente a la autoridad, para colocarse por encima de los patrulleros que lo estaban deteniendo.'},
+
+{id:62, group:'ambiental', setLabel:null, category:'Economía y desarrollo', competencia:'Pensamiento reflexivo y sistémico',
+ text:'Se podría señalar que esta posición (de Estados Unidos frente al Protocolo de Kyoto) se presenta principalmente porque',
+ options:{A:'su economía no ha salido de la recesión y no puede implementar cambios en su sector productivo.',B:'para este país están primero sus intereses económicos y la rentabilidad de su sector industrial.',C:'no se ha desarrollado la tecnología adecuada para controlar las emisiones de gases de sus empresas.',D:'la contaminación generada por sus industrias es muy poca para afectar a toda la atmósfera y mucho menos alterar el clima del planeta.'},
+ correct:'B',
+ explain:'El incumplimiento de Estados Unidos frente a acuerdos como el de Kyoto suele explicarse porque el país prioriza sus intereses económicos y la rentabilidad de su sector industrial por encima de los compromisos ambientales internacionales.'},
+
+{id:63, group:'izquierda', setLabel:null, category:'Constitución y participación', competencia:'Pensamiento social',
+ text:'Según el texto, ¿qué derechos le son vulnerados a las personas que tienen ideologías de izquierda?',
+ options:{A:'La libre locomoción y la libertad de expresión.',B:'La libertad de conciencia y la seguridad.',C:'La vida y la libertad de cultos.',D:'La seguridad y el derecho al trabajo.'},
+ correct:'B',
+ explain:'Ser violentado o amenazado por sostener una ideología política vulnera, por un lado, la libertad de conciencia (derecho a pensar y creer libremente) y, por otro, la seguridad personal, al quedar expuesto a agresiones y amenazas por esas ideas.'},
+
+{id:64, group:'paramilitarismo', setLabel:'Preguntas 64 a 68 · la pregunta 68 no está disponible en el escaneo', category:'Conflicto y memoria histórica', competencia:'Pensamiento social',
+ text:'Cuando se dice que los grupos paramilitares combatían la subversión, se puede determinar que estos grupos estaban en contra',
+ options:{A:'del Estado.',B:'de las guerrillas.',C:'de los grupos armados.',D:'del gobierno.'},
+ correct:'B',
+ explain:'En el contexto del conflicto armado colombiano, "subversión" se usó para referirse a los grupos guerrilleros. El paramilitarismo surgió, entre otras razones, para combatir a esos grupos.'},
+
+{id:65, group:'paramilitarismo', setLabel:'Preguntas 64 a 68 · la pregunta 68 no está disponible en el escaneo', category:'Conflicto y memoria histórica', competencia:'Interpretación y análisis de perspectivas',
+ text:'Según el texto, es posible afirmar que las relaciones que se tejieron entre los grupos paramilitares y el narcotráfico como actividad económica eran',
+ options:{A:'complementarias.',B:'antagónicas.',C:'contrarias.',D:'incognoscibles.'},
+ correct:'A',
+ explain:'El texto explica que el paramilitarismo se expandió con el dinero del narcotráfico y que sus fundadores fueron narcotraficantes reconocidos, es decir, ambas actividades se reforzaron y complementaron mutuamente.'},
+
+{id:66, group:'paramilitarismo', setLabel:'Preguntas 64 a 68 · la pregunta 68 no está disponible en el escaneo', category:'Conflicto y memoria histórica', competencia:'Pensamiento reflexivo y sistémico',
+ text:'Si los grupos paramilitares raptaron y asesinaron de forma selectiva a miles de personas, señalándolas de pertenecer a estructuras subversivas, esto indica que los paramilitares son directamente responsables de',
+ options:{A:'algunas acciones sicariales.',B:'diversas desapariciones forzadas.',C:'la desaparición de las guerrillas.',D:'exterminar a muchos guerrilleros.'},
+ correct:'B',
+ explain:'Raptar y asesinar selectivamente a personas, a menudo ocultando su paradero, es la definición misma de una desaparición forzada; el texto describe precisamente ese patrón de victimización.'},
+
+{id:67, group:'paramilitarismo', setLabel:'Preguntas 64 a 68 · la pregunta 68 no está disponible en el escaneo', category:'Conflicto y memoria histórica', competencia:'Pensamiento reflexivo y sistémico',
+ text:'Un interés visible de los grupos paramilitares respecto al manejo del Estado, estaba enfocado en',
+ options:{A:'sostener el sistema político sin transformaciones visibles.',B:'crear las condiciones para transformar el gobierno del país.',C:'fomentar el respeto por las normas y los derechos en el país.',D:'combatir a las guerrillas y patrocinar el despojo de tierras.'},
+ correct:'D',
+ explain:'A lo largo del texto, el hilo conductor del paramilitarismo es doble: combatir militarmente a las guerrillas y controlar territorios mediante el despojo de tierras, sin buscar transformar el sistema político ni fomentar el respeto por las normas.'}
+];
+
+const GROUP_CONTEXT = {
+ homicidios: `<p>En Colombia, se ha visto el aumento y altísimo nivel de las tasas de homicidio durante la última década y la alta concentración geográfica; además, aparecen con insistencia: una gran incapacidad de la justicia penal para investigarlas, una creciente desinformación alrededor del fenómeno, síntomas de subregistro al nivel más básico de contabilidad de las muertes, señales de sesgos en la clasificación de las defunciones y evidencia en el sentido que el misterio y la desinformación son proporcionales a los niveles de la violencia.</p>`,
+
+ oxfam: `<p>De acuerdo con Oxfam, en su discurso final ante la Asamblea de las Naciones Unidas en septiembre de 2016, Barack Obama declaró: "Un mundo en el que el 1% de la humanidad controla tanta riqueza como el 99% restante nunca será estable". Así lo demuestran los datos mostrados por la organización.</p>
+  <p>El crecimiento económico tan solo está beneficiando a los que más tienen. El resto, la gran mayoría de ciudadanos de todo el mundo y especialmente los sectores más pobres, se están quedando al margen de la reactivación de la economía. El modelo económico y los principios que rigen su funcionamiento nos han llevado a esta situación que se ha vuelto extrema, insostenible e injusta, refiere la organización.</p>
+  <p>Para lograr reducir la brecha entre los más ricos y los más pobres, e incluso eliminarla, los gobiernos deben trabajar a favor del 99% de la población, no solo deben competir sino que deben cooperar entre sí; las empresas también deben operar en beneficio de toda la población; así como acabar con la concentración extrema de la riqueza para acabar con la pobreza extrema. Una economía humana beneficiará tanto a hombres como a mujeres, indica el estudio.</p>
+  <p class="fuente">Texto tomado de: https://www.eleconomista.com.mx/internacionales/9-datos-sobre-la-desigualdad-en-el-mundo-20170116-0019.html</p>`,
+
+ manuel: `<p>A Manuel le llegan todos los días muchos mensajes a su celular sobre promociones de un almacén en el que hace poco compró unos zapatos; él ya no quiere recibir estos mensajes porque lo interrumpen mucho durante sus jornadas de trabajo. Él fue personalmente al almacén para pedir que no le volvieran a enviar dicha correspondencia, sin embargo, los mensajes continuaron llegando.</p>`,
+
+ bacrim: `<p>La discusión sobre qué son exactamente las Bacrim adquiere una relevancia fundamental porque al día de hoy muchas decisiones políticas van a depender de los consensos que se lleguen al respecto. Desde la forma en que las Farc deberán dejar las armas hasta cómo deberá ser la estrategia del Estado para evitar que sigan repitiéndose los ciclos de combinación de armas con política, van a pasar por la definición que se haga del fenómeno Bacrim. Hay aspectos en los que ya hay consenso. Se sabe que su interés central es la explotación de economías criminales.</p>
+  <p>Son organizaciones interesadas en acumular recursos desde el narcotráfico, la minería ilegal y la extorsión de todas aquellas actividades vulnerables a su control armado. También que son un fenómeno social en dos sentidos. Por un lado, son un atractivo para muchos jóvenes excluidos que encuentran en el crimen una oportunidad de reivindicación social y económica.</p>
+  <p>Por otro lado, son organizaciones que ejercen un extenso dominio social. Incluso equivalente al de un Estado: cobran impuestos —así sea a manera de extorsiones—, administran justicia —así sea sin las garantías y la imparcialidad de unas instituciones democráticas— y vigilan como una policía que la población cumpla su ley —así sea en medio de la más absoluta arbitrariedad—. Muchos de estos grupos, como por ejemplo el Clan del Golfo, surgieron de muchos excombatientes de los grupos paramilitares que abandonaron las armas durante el proceso de desmovilización iniciado en 2003.</p>
+  <p class="fuente">Texto tomado de: https://www.elpais.com.co/opinion/columnistas/gustavo-duncan/que-son-las-bacrim.html (Modificado)</p>`,
+
+ voto: `<p>Uno de los mecanismos de participación política más convencional es el sufragio, es decir, la participación por medio de la emisión de votos frente a la presentación de diversas alternativas. Al respecto, en relación a lo establecido para la emisión de votos en Colombia, es correcto considerar:</p>
+  <ol>
+   <li>Como votos "nulos", a los que se emiten de manera incorrecta, marcando más de una preferencia, o el tarjetón es rasgado o se escriben frases o consignas sobre el material.</li>
+   <li>Como votos "blancos", a aquellos en que no se realiza marca de ningún tipo si no está expreso "voto en blanco".</li>
+   <li>Como votos "blancos", a los que expresan esta preferencia de voto, si el papel tiene esta elección.</li>
+  </ol>`,
+
+ gaviria: `<p>En el hecho, ocurrido en marzo de 2015, Gaviria agrede, insulta y amenaza con "mandar al Chocó" a dos patrulleros de la Policía que atendían una riña en la zona rosa del norte de Bogotá. En su disputa, el joven, en supuesto estado de embriaguez, les dice a los policías: "¿usted no sabe quién soy yo?", "no saben con quién se metieron" y añadió: "Voy a llamar ya a Palomino a decirle que ustedes me están acosando y me acaban de pegar".</p>
+  <p class="fuente">Tomado de: http://www.eltiempo.com/colombia/otras-ciudades/casos-de-usted-no-sabe-quien-soy-yo-en-colombia-88216</p>`,
+
+ ambiental: `<p>Los países altamente desarrollados son en gran medida responsables de la crisis ambiental que actualmente vive el planeta. La realización de varias cumbres para discutir la problemática ha dado como resultado la firma de acuerdos para mitigar las emisiones de gases a la atmósfera. Estados Unidos tiene una posición contradictoria, pues no va a cumplir con los acuerdos de la cumbre de Kyoto de 1997.</p>`,
+
+ izquierda: `<p>En Colombia hay cierto rechazo y apatía hacia las ideologías de izquierda o que se relacionan con el socialismo; las personas que siguen estas ideas en muchas ocasiones son violentadas por otras personas o son amenazadas por grupos armados.</p>`,
+
+ paramilitarismo: `<h4>¿Cuáles fueron los momentos más importantes del paramilitarismo en Colombia?</h4>
+  <p>El paramilitarismo fue un monstruo que tuvo varias cabezas. En los años 80 —su nacimiento— el paramilitarismo fue un fenómeno que, con el dinero del narcotráfico, comenzó a expandirse por todo el territorio colombiano. En ese orden de ideas, dentro de este grupo armado había partidarios que luchaban contra la extradición y otros que luchaban contra aquellos que percibían como subversivos. En efecto, esta máquina de terror apuntaba para ambos lados. Colombia nunca observó que este fenómeno tenía un objetivo político. ¿Cuál? La de asesinar cualquier brote que estuviera enfocado a realizar un cambio sociopolítico en el país.</p>
+  <p>Después, a finales de los 80, Fidel Castaño entra al paramilitarismo en Córdoba. Para ese entonces Castaño era un narcotraficante reconocido, y él puso su ejército al servicio de los paras que —como resultado— desembocó en nuevos asesinatos. Luego viene la Constituyente, en la que se descubren varios acontecimientos: los guerrilleros, luego de su desmovilización, tratan de convencer a los paramilitares para que entreguen todo y se sumen a ese momento de paz que se estaba viviendo en el país. Ariel Otero, y varios paras originarios de este fenómeno, se desmovilizaron, acataron estas palabras. Lastimosamente a todos ellos los terminan matando.</p>
+  <p>Por su parte, Fidel Castaño dice que también quiere hacer la paz. Se va para Córdoba a repartir tierras —con su modo peculiar de repartir tierras—, como diciendo que es hora de apagar los fusiles. A los hechos mencionados anteriormente se le interpone la guerra contra Pablo Escobar, y es el Estado colombiano el que termina reclutando a estas fuerzas durmientes, para que se monten en el bus de la guerra contra Escobar. Estas máquinas de terror, luego de matar a Escobar, se ven tan poderosas que empiezan a copar nuevos escenarios sociales, y ahí es donde comienza una nueva oleada de paramilitarismo en 1997.</p>
+  <p class="fuente">Texto tomado de: https://colombia2020.elespectador.com/pais/la-historia-del-paramilitarismo-en-colombia-segun-ronderos</p>`
+};
+
+let current = 0;
+const answers = {}; // id -> {choice(original letter), correct(bool)}
+let mode = 'orden'; // 'orden' | 'aleatorio'
+let displayQuestions = []; // ordered array of Q objects for navigation
+let optionOrder = {}; // q.id -> array of ORIGINAL letters in the order they should display
+
+function buildBlocks(){
+  const blocks = [];
+  let i = 0;
+  while(i < Q.length){
+    const g = Q[i].group;
+    if(g){
+      let j = i, arr = [];
+      while(j < Q.length && Q[j].group === g){ arr.push(Q[j]); j++; }
+      blocks.push(arr);
+      i = j;
+    } else {
+      blocks.push([Q[i]]);
+      i++;
+    }
+  }
+  return blocks;
+}
+const BLOCKS = buildBlocks();
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildOrder(randomize){
+  const blocksToUse = randomize ? shuffleArray(BLOCKS) : BLOCKS;
+  displayQuestions = [];
+  blocksToUse.forEach(block => block.forEach(q => displayQuestions.push(q)));
+
+  optionOrder = {};
+  Q.forEach(q => {
+    const letters = Object.keys(q.options);
+    optionOrder[q.id] = randomize ? shuffleArray(letters) : letters;
+  });
+}
+
+function setMode(newMode){
+  mode = newMode;
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('orderBookletBtn').classList.toggle('active', mode === 'orden');
+  document.getElementById('orderRandomBtn').classList.toggle('active', mode === 'aleatorio');
+  document.getElementById('reshuffleBtn').style.display = mode === 'aleatorio' ? 'inline-block' : 'none';
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+function reshuffleNow(){
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(true);
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+document.getElementById('orderBookletBtn').onclick = () => setMode('orden');
+document.getElementById('orderRandomBtn').onclick = () => setMode('aleatorio');
+document.getElementById('reshuffleBtn').onclick = reshuffleNow;
+
+function renderBubbles(){
+  const el = document.getElementById('bubbles');
+  el.innerHTML = '';
+  displayQuestions.forEach((q,i)=>{
+    const b = document.createElement('div');
+    let cls = 'bub';
+    if(i===current) cls += ' current';
+    if(answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
+    b.className = cls;
+    b.textContent = q.id;
+    b.onclick = ()=>{ current = i; render(); };
+    el.appendChild(b);
+  });
+}
+
+function updateScorePill(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('scorePill').textContent = total + ' / ' + TOTAL_Q + ' correctas';
+}
+
+function markSVG(ok){
+  return ok
+   ? `<svg class="mark ok" viewBox="0 0 34 34"><path d="M6 18 L14 26 L28 8"/></svg>`
+   : `<svg class="mark bad" viewBox="0 0 34 34"><path d="M8 8 L26 26 M26 8 L8 26"/></svg>`;
+}
+
+const DISPLAY_LETTERS = ['A','B','C','D'];
+
+function render(){
+  const q = displayQuestions[current];
+  const answered = answers[q.id];
+  const inner = document.getElementById('cardInner');
+  const order = optionOrder[q.id];
+  const correctDisplayLetter = DISPLAY_LETTERS[order.indexOf(q.correct)];
+
+  let ctxHTML = '';
+  if(q.group && GROUP_CONTEXT[q.group]){
+    ctxHTML = `<div class="context">${GROUP_CONTEXT[q.group]}</div>`;
+  }
+
+  let optsHTML = '';
+  order.forEach((origLetter, i)=>{
+    const displayLetter = DISPLAY_LETTERS[i];
+    const text = q.options[origLetter];
+    let cls = 'opt';
+    if(answered){
+      cls += ' locked';
+      if(origLetter===q.correct) cls += ' reveal-correct';
+      else if(origLetter===answered.choice) cls += ' reveal-wrong';
+    }
+    optsHTML += `<div class="${cls}" data-orig="${origLetter}"><span class="letter">${displayLetter}</span><span>${text}</span></div>`;
+  });
+
+  inner.innerHTML = `
+    <div class="q-head">
+      <div class="q-num">${q.id}</div>
+      <div class="q-tags"><span class="tag">${q.category}</span><span class="tag tag-comp">${q.competencia}</span></div>
+    </div>
+    ${q.setLabel ? `<div class="set-label">${q.setLabel}</div>` : ''}
+    ${ctxHTML}
+    <p class="stmt">${q.text}</p>
+    <div class="options">${optsHTML}</div>
+    <div class="feedback ${answered ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
+      ${answered ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
+    </div>
+  `;
+
+  // option click handlers
+  inner.querySelectorAll('.opt').forEach(el=>{
+    el.onclick = ()=>{
+      if(answers[q.id]) return;
+      const origLetter = el.getAttribute('data-orig');
+      answers[q.id] = { choice: origLetter, correct: origLetter===q.correct };
+      render();
+      renderBubbles();
+      updateScorePill();
+    };
+  });
+
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').textContent = current===displayQuestions.length-1 ? 'Ver resultados →' : 'Siguiente →';
+
+  renderBubbles();
+  updateScorePill();
+}
+
+document.getElementById('prevBtn').onclick = ()=>{ if(current>0){ current--; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); } };
+document.getElementById('nextBtn').onclick = ()=>{
+  if(current < displayQuestions.length-1){ current++; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); }
+  else { showSummary(); }
+};
+
+function showSummary(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('finalScore').textContent = total + '/' + TOTAL_Q;
+  const cats = {};
+  const comps = {};
+  Q.forEach(q=>{
+    if(!cats[q.category]) cats[q.category] = {correct:0, total:0};
+    cats[q.category].total++;
+    if(answers[q.id] && answers[q.id].correct) cats[q.category].correct++;
+
+    if(!comps[q.competencia]) comps[q.competencia] = {correct:0, total:0};
+    comps[q.competencia].total++;
+    if(answers[q.id] && answers[q.id].correct) comps[q.competencia].correct++;
+  });
+
+  const renderBarGroup = (containerId, data)=>{
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    Object.entries(data).forEach(([name,v])=>{
+      const pct = Math.round((v.correct/v.total)*100);
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `<div class="cname">${name}</div><div class="cat-track"><div class="cat-fill" style="width:${pct}%"></div></div><div class="cat-num">${v.correct}/${v.total}</div>`;
+      el.appendChild(row);
+    });
+  };
+  renderBarGroup('catBars', cats);
+  renderBarGroup('compBars', comps);
+
+  document.getElementById('summary').classList.add('show');
+  document.getElementById('summary').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('retryBtn').onclick = ()=>{
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('summary').classList.remove('show');
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
+buildOrder(false);
+render();
+</script>
+</body>
+</html>
