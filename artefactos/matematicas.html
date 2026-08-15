@@ -310,6 +310,18 @@ body{
   }
 })();
 </script>
+<script>
+(function () {
+  const sesion = sessionStorage.getItem("slg_sesion");
+  if (!sesion) {
+    window.location.href = "https://llerzy.github.io/portal-slg/";
+    return;
+  }
+  let datosSesion = {};
+  try { datosSesion = JSON.parse(sesion); } catch (e) {}
+  window.ES_DOCENTE = (datosSesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
+})();
+</script>
 <div class="wrap">
 
   <div class="ticket">
@@ -710,7 +722,7 @@ function renderBubbles(){
     const b = document.createElement('div');
     let cls = 'bub';
     if(i===current) cls += ' current';
-    if(answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
+    if(window.ES_DOCENTE && answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
     b.className = cls;
     b.textContent = q.id;
     b.onclick = ()=>{ current = i; render(); };
@@ -751,8 +763,10 @@ function render(){
     if(q.tableOptions) cls += ' opt-table';
     if(answered){
       cls += ' locked';
-      if(origLetter===q.correct) cls += ' reveal-correct';
-      else if(origLetter===answered.choice) cls += ' reveal-wrong';
+      if(window.ES_DOCENTE){
+        if(origLetter===q.correct) cls += ' reveal-correct';
+        else if(origLetter===answered.choice) cls += ' reveal-wrong';
+      }
     }
     optsHTML += `<div class="${cls}" data-orig="${origLetter}"><span class="letter">${displayLetter}</span><span>${text}</span></div>`;
   });
@@ -766,8 +780,8 @@ function render(){
     ${ctxHTML}
     <p class="stmt">${q.text}</p>
     <div class="options">${optsHTML}</div>
-    <div class="feedback ${answered ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
-      ${answered ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
+    <div class="feedback ${(window.ES_DOCENTE && answered) ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
+      ${(window.ES_DOCENTE && answered) ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
     </div>
   `;
 
