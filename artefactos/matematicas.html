@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Cuadernillo Matemáticas · Grado 10°</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
@@ -153,7 +154,6 @@ body{
 .grid-note{font-family:'IBM Plex Mono',monospace; font-size:12px; margin-left:54px; margin-top:-8px; margin-bottom:16px; color:var(--ink-soft);}
 
 .options{margin-left:54px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-@media(max-width:560px){.options{grid-template-columns:1fr;} .context{margin-left:0;} .stmt{margin-left:0;} .set-label{margin-left:0;} .options{margin-left:0;} .card-inner::before{display:none;}}
 .opt{
   display:flex; align-items:center; gap:12px;
   border:1.5px solid var(--rule); border-radius:9px;
@@ -185,7 +185,6 @@ body{
   margin:16px 0 0 54px; padding:14px 16px; border-radius:9px;
   font-size:14px; line-height:1.55; display:none; position:relative;
 }
-@media(max-width:560px){.feedback{margin-left:0;}}
 .feedback.show{display:block;}
 .feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
 .feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
@@ -231,9 +230,86 @@ body{
 
 .intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:13.5px; color:var(--ink-soft); line-height:1.5; box-shadow:var(--shadow);}
 .intro-note b{color:var(--ink);}
+
+/* ================= RESPONSIVE — pantallas angostas ================= */
+@media(max-width:560px){
+  body{padding:14px 10px 40px;}
+
+  .ticket{padding:16px 16px 20px;}
+  .ticket h1{font-size:23px;}
+  .ticket .sub{font-size:12.5px;}
+  .eyebrow{font-size:9.5px; letter-spacing:.1em;}
+  .stamp{font-size:10px; padding:5px 8px;}
+  .ticket-meta{gap:6px 12px; font-size:10.5px; margin-top:14px;}
+
+  .intro-note{padding:12px 14px; font-size:12.5px; line-height:1.45;}
+
+  .nav-strip{padding:12px;}
+  .order-row{flex-direction:column; align-items:stretch; gap:10px;}
+  .order-toggle{width:100%; gap:6px;}
+  .order-btn{flex:1; text-align:center; padding:8px 6px; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .shuffle-again{width:100%; text-align:center;}
+  .bubbles{gap:5px;}
+  .bub{width:26px; height:26px; font-size:10.5px;}
+
+  .card-inner{padding:16px 14px 18px;}
+  .card-inner::before{display:none;}
+  .q-head{gap:8px;}
+  .q-num{width:32px; height:32px; min-width:32px; font-size:14px;}
+  .q-tags{gap:6px;}
+  .tag{font-size:9px; padding:2px 7px; letter-spacing:.02em;}
+
+  .set-label{margin-left:0; font-size:13px; margin-bottom:10px;}
+  .context{margin-left:0; padding:12px; font-size:13px;}
+  .context table{font-size:12px;}
+  .context th,.context td{padding:4px 6px;}
+  .stmt{margin-left:0; font-size:15px; margin-bottom:14px;}
+  .grid-note{margin-left:0;}
+
+  .options{margin-left:0; grid-template-columns:1fr; gap:8px;}
+  .opt{padding:10px 12px; font-size:13.5px; gap:10px;}
+  .opt .letter{width:23px; height:23px; min-width:23px; font-size:11px;}
+  .mini-table{font-size:11px;}
+  .mini-table th,.mini-table td{padding:2px 7px;}
+
+  .feedback{margin-left:0; padding:12px 14px 12px 40px; font-size:13px;}
+  .mark{width:28px; height:28px;}
+
+  .footer-nav{gap:8px;}
+  .btn{padding:9px 14px; font-size:12px;}
+  .score-pill{font-size:12px; padding:7px 12px;}
+
+  .summary{padding:20px 16px;}
+  .summary h2{font-size:22px;}
+  .summary .big{font-size:38px;}
+  .cat-bar-row .cname{width:120px; font-size:12px;}
+  .cat-num{font-size:11.5px;}
+}
+
+@media(max-width:400px){
+  .ticket h1{font-size:20px;}
+  .ticket-top{gap:10px;}
+  .order-toggle{flex-direction:column;}
+  .order-btn{width:100%;}
+  .bub{width:24px; height:24px; font-size:10px;}
+  .q-num{width:28px; height:28px; font-size:12.5px;}
+  .stmt{font-size:14px;}
+  .opt{font-size:13px; padding:9px 10px;}
+  .footer-nav{flex-wrap:wrap; justify-content:center;}
+  .footer-nav .btn{flex:1; min-width:110px;}
+  .score-pill{order:-1; width:100%; text-align:center;}
+}
 </style>
 </head>
 <body>
+<script>
+(function () {
+  const sesion = sessionStorage.getItem("slg_sesion");
+  if (!sesion) {
+    window.location.href = "https://llerzy.github.io/portal-slg/";
+  }
+})();
+</script>
 <div class="wrap">
 
   <div class="ticket">
