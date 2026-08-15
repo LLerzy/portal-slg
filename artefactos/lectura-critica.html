@@ -181,8 +181,9 @@ body{
   font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:12.5px;
   transition:background .2s ease, color .2s ease;
 }
+.opt.selected{border-color:var(--ink); background:var(--paper-dark);}
 .opt.selected .letter{background:radial-gradient(circle at 35% 30%, #5a444a, var(--ink) 70%); color:var(--paper);}
-.opt.locked{cursor:default;}
+.opt.locked{cursor:pointer;}
 .opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
 .opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
 .opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
@@ -312,6 +313,18 @@ body{
   if (!sesion) {
     window.location.href = "https://llerzy.github.io/portal-slg/";
   }
+})();
+</script>
+<script>
+(function () {
+  const sesion = sessionStorage.getItem("slg_sesion");
+  if (!sesion) {
+    window.location.href = "https://llerzy.github.io/portal-slg/";
+    return;
+  }
+  let datosSesion = {};
+  try { datosSesion = JSON.parse(sesion); } catch (e) {}
+  window.ES_DOCENTE = (datosSesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
 })();
 </script>
 <div class="wrap">
@@ -640,7 +653,7 @@ function renderBubbles(){
     const b = document.createElement('div');
     let cls = 'bub';
     if(i===current) cls += ' current';
-    if(answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
+    if(window.ES_DOCENTE && answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
     b.className = cls;
     b.textContent = q.id;
     b.onclick = ()=>{ current = i; render(); };
@@ -680,8 +693,11 @@ function render(){
     let cls = 'opt';
     if(answered){
       cls += ' locked';
-      if(origLetter===q.correct) cls += ' reveal-correct';
-      else if(origLetter===answered.choice) cls += ' reveal-wrong';
+      if(origLetter===answered.choice) cls += ' selected';
+      if(window.ES_DOCENTE){
+        if(origLetter===q.correct) cls += ' reveal-correct';
+        else if(origLetter===answered.choice) cls += ' reveal-wrong';
+      }
     }
     optsHTML += `<div class="${cls}" data-orig="${origLetter}"><span class="letter">${displayLetter}</span><span>${text}</span></div>`;
   });
@@ -695,15 +711,14 @@ function render(){
     ${ctxHTML}
     <p class="stmt">${q.text}</p>
     <div class="options">${optsHTML}</div>
-    <div class="feedback ${answered ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
-      ${answered ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
+    <div class="feedback ${(window.ES_DOCENTE && answered) ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
+      ${(window.ES_DOCENTE && answered) ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
     </div>
   `;
 
   // option click handlers
   inner.querySelectorAll('.opt').forEach(el=>{
     el.onclick = ()=>{
-      if(answers[q.id]) return;
       const origLetter = el.getAttribute('data-orig');
       answers[q.id] = { choice: origLetter, correct: origLetter===q.correct };
       render();
