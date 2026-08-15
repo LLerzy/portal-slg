@@ -1,1 +1,762 @@
-pendiente 
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cuadernillo Inglés · Grado 10°</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --paper:#E1EAE7;
+  --paper-dark:#D2E0DC;
+  --card:#F2F8F6;
+  --ink:#173F3F;
+  --ink-soft:#476866;
+  --rule:#AFC9C5;
+  --gold:#C97B2E;
+  --green:#2E6B4F;
+  --green-bg:#DDEBE1;
+  --red:#A6323E;
+  --red-bg:#F3DEDD;
+  --shadow: 0 10px 30px rgba(23,63,63,0.14);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(23,63,63,0.05) 1px, transparent 0) 0 0/14px 14px,
+    var(--paper);
+  min-height:100vh;
+  padding:28px 16px 60px;
+}
+.wrap{max-width:880px;margin:0 auto;}
+
+/* ---------- ticket header ---------- */
+.ticket{
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:14px;
+  padding:22px 26px;
+  position:relative;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.ticket::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-1px;
+  height:14px;
+  background-image: radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px);
+  background-size:20px 14px;
+  background-repeat:repeat-x;
+}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#B9D6D0; margin:0 0 6px;}
+.ticket h1{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(26px,4.2vw,38px); margin:0; line-height:1.05;}
+.ticket .sub{font-family:'Fraunces',serif; font-style:italic; font-weight:500; color:#C6DEDA; font-size:16px; margin-top:4px;}
+.stamp{
+  border:2px solid var(--gold); color:#E3A15C;
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em;
+  padding:6px 10px; border-radius:6px; transform:rotate(4deg);
+  white-space:nowrap;
+}
+.ticket-meta{display:flex; gap:18px; margin-top:18px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#B9D6D0;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+
+/* ---------- navigator (bubble strip) ---------- */
+.nav-strip{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+}
+.nav-strip .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft);
+  padding:8px 14px; border-radius:20px; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.shuffle-again{padding:8px 14px; border-radius:20px; font-size:12px;}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{
+  width:30px; height:30px; border-radius:50%;
+  border:2px solid var(--rule);
+  background:transparent;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px;
+  color:var(--ink-soft); cursor:pointer;
+  transition:transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+.bub:hover{transform:translateY(-2px);}
+.bub.current{border-color:var(--ink); color:var(--ink); box-shadow:0 0 0 3px rgba(201,123,46,0.35);}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+
+/* ---------- question card ---------- */
+.card{
+  background:var(--card);
+  border-radius:12px;
+  margin-top:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-inner{padding:26px 28px 28px; position:relative;}
+.card-inner::before{
+  content:""; position:absolute; left:52px; top:0; bottom:0; width:1px;
+  background:repeating-linear-gradient(var(--red) 0 6px, transparent 6px 12px);
+  opacity:.25;
+}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+.q-num{
+  width:40px; height:40px; min-width:40px; border-radius:50%;
+  background:var(--ink); color:var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:16px;
+}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap;}
+.tag{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.05em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px;
+  border:1px solid var(--rule); color:var(--ink-soft);
+}
+.tag-comp{border-color:var(--gold); color:var(--gold); background:rgba(201,123,46,0.08);}
+.set-label{
+  font-family:'Fraunces',serif; font-style:italic; color:var(--gold);
+  font-size:14px; margin:2px 0 14px 54px;
+}
+.context{
+  margin:0 0 18px 54px;
+  padding:14px 16px;
+  background:var(--paper-dark);
+  border-radius:8px;
+  font-size:14px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  max-height:380px;
+  overflow-y:auto;
+}
+.context p{margin:0 0 10px;}
+.context p:last-child{margin-bottom:0;}
+.context table{border-collapse:collapse; width:100%; margin-top:8px; font-size:13.5px; background:var(--card);}
+.context th,.context td{border:1px solid var(--rule); padding:5px 8px; text-align:center;}
+.context th{background:var(--ink); color:var(--paper); font-weight:600;}
+.context h4{margin:0 0 8px; font-family:'Fraunces',serif; font-size:16px; color:var(--ink);}
+.context b{color:var(--ink);}
+
+.inline-ctx{margin:0 0 16px 54px;}
+.sign-card{
+  border:3px solid var(--ink); border-radius:6px; background:var(--card);
+  padding:16px 18px; text-align:center; font-weight:700; font-size:17px; line-height:1.35;
+  max-width:340px; box-shadow:3px 3px 0 var(--rule);
+}
+.chat-bubble{
+  position:relative; display:inline-block; max-width:400px;
+  background:var(--card); border:1.5px solid var(--ink); border-radius:14px;
+  padding:12px 18px; font-size:15.5px; font-style:italic; font-weight:600;
+}
+.chat-bubble::after{
+  content:""; position:absolute; left:22px; bottom:-9px;
+  border-width:9px 9px 0 0; border-style:solid; border-color:var(--ink) transparent transparent transparent;
+}
+.chat-bubble::before{
+  content:""; position:absolute; left:24px; bottom:-6px;
+  border-width:7px 7px 0 0; border-style:solid; border-color:var(--card) transparent transparent transparent; z-index:1;
+}
+
+.stmt{
+  margin:0 0 20px 54px;
+  font-size:16.5px; line-height:1.55; font-weight:500;
+}
+
+.options{margin-left:54px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.opt{
+  display:flex; align-items:center; gap:12px;
+  border:1.5px solid var(--rule); border-radius:9px;
+  padding:10px 14px; cursor:pointer; background:var(--card);
+  transition:border-color .15s ease, background .15s ease;
+  font-size:14.5px;
+}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{
+  width:26px; height:26px; min-width:26px; border-radius:50%;
+  border:2px solid var(--ink); display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:12.5px;
+  transition:background .2s ease, color .2s ease;
+}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #2c5654, var(--ink) 70%); color:var(--paper);}
+.opt.locked{cursor:default;}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+
+.feedback{
+  margin:16px 0 0 54px; padding:14px 16px; border-radius:9px;
+  font-size:14px; line-height:1.55; display:none; position:relative;
+}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback b{display:block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px;}
+
+.mark{position:absolute; left:6px; top:2px; width:34px; height:34px;}
+.mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.mark.ok path{stroke:var(--green);}
+.mark.bad path{stroke:var(--red);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.btn{
+  font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px;
+  border:1.5px solid var(--ink); background:transparent; color:var(--ink);
+  padding:10px 18px; border-radius:8px; cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#215352;}
+.score-pill{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+  background:var(--card); border:1.5px solid var(--gold); color:var(--gold);
+  padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);
+}
+
+/* ---------- summary screen ---------- */
+.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:30px 28px; display:none;}
+.summary.show{display:block;}
+.summary h2{font-family:'Fraunces',serif; font-size:28px; margin:0 0 4px;}
+.summary .big{font-family:'Fraunces',serif; font-size:52px; font-weight:700; color:var(--gold); margin:10px 0 2px;}
+.summary .caption{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em;}
+.cat-bar-row{margin-top:22px;}
+.cat-bar-row .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.cat-bar-row .cname{width:150px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.cat-track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden;}
+.cat-fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cat-num{font-family:'IBM Plex Mono',monospace; font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.summary .btn{margin-top:22px;}
+.summary .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:13.5px; color:var(--ink-soft); line-height:1.5; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+
+/* ================= RESPONSIVE — pantallas angostas ================= */
+@media(max-width:560px){
+  body{padding:14px 10px 40px;}
+
+  .ticket{padding:16px 16px 20px;}
+  .ticket h1{font-size:23px;}
+  .ticket .sub{font-size:12.5px;}
+  .eyebrow{font-size:9.5px; letter-spacing:.1em;}
+  .stamp{font-size:10px; padding:5px 8px;}
+  .ticket-meta{gap:6px 12px; font-size:10.5px; margin-top:14px;}
+
+  .intro-note{padding:12px 14px; font-size:12.5px; line-height:1.45;}
+
+  .nav-strip{padding:12px;}
+  .order-row{flex-direction:column; align-items:stretch; gap:10px;}
+  .order-toggle{width:100%; gap:6px;}
+  .order-btn{flex:1; text-align:center; padding:8px 6px; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .shuffle-again{width:100%; text-align:center;}
+  .bubbles{gap:5px;}
+  .bub{width:26px; height:26px; font-size:10.5px;}
+
+  .card-inner{padding:16px 14px 18px;}
+  .card-inner::before{display:none;}
+  .q-head{gap:8px;}
+  .q-num{width:32px; height:32px; min-width:32px; font-size:14px;}
+  .q-tags{gap:6px;}
+  .tag{font-size:9px; padding:2px 7px; letter-spacing:.02em;}
+
+  .set-label{margin-left:0; font-size:13px; margin-bottom:10px;}
+  .context{margin-left:0; padding:12px; font-size:12.5px; max-height:300px;}
+  .inline-ctx{margin-left:0;}
+  .sign-card{font-size:15px; padding:13px 14px; max-width:100%;}
+  .chat-bubble{font-size:14px; max-width:100%;}
+  .stmt{margin-left:0; font-size:15px; margin-bottom:14px;}
+
+  .options{margin-left:0; grid-template-columns:1fr; gap:8px;}
+  .opt{padding:10px 12px; font-size:13.5px; gap:10px;}
+  .opt .letter{width:23px; height:23px; min-width:23px; font-size:11px;}
+
+  .feedback{margin-left:0; padding:12px 14px 12px 40px; font-size:13px;}
+  .mark{width:28px; height:28px;}
+
+  .footer-nav{gap:8px;}
+  .btn{padding:9px 14px; font-size:12px;}
+  .score-pill{font-size:12px; padding:7px 12px;}
+
+  .summary{padding:20px 16px;}
+  .summary h2{font-size:22px;}
+  .summary .big{font-size:38px;}
+  .cat-bar-row .cname{width:120px; font-size:12px;}
+  .cat-num{font-size:11.5px;}
+}
+
+@media(max-width:400px){
+  .ticket h1{font-size:20px;}
+  .ticket-top{gap:10px;}
+  .order-toggle{flex-direction:column;}
+  .order-btn{width:100%;}
+  .bub{width:24px; height:24px; font-size:10px;}
+  .q-num{width:28px; height:28px; font-size:12.5px;}
+  .stmt{font-size:14px;}
+  .opt{font-size:13px; padding:9px 10px;}
+  .footer-nav{flex-wrap:wrap; justify-content:center;}
+  .footer-nav .btn{flex:1; min-width:110px;}
+  .score-pill{order:-1; width:100%; text-align:center;}
+}
+</style>
+</head>
+<body>
+<script>
+(function () {
+  const sesion = sessionStorage.getItem("slg_sesion");
+  if (!sesion) {
+    window.location.href = "https://llerzy.github.io/portal-slg/";
+  }
+})();
+</script>
+<div class="wrap">
+
+  <div class="ticket">
+    <div class="ticket-top">
+      <div>
+        <p class="eyebrow">Prueba Saber · PS-2526-X-003</p>
+        <h1>Cuadernillo Décimo</h1>
+        <div class="sub">Explorador de preguntas — Inglés</div>
+      </div>
+      <div class="stamp">24 preguntas</div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Grado</b> 10°</span>
+      <span><b>Partes</b> Vocabulario · Avisos · Diálogos · Texto con espacios</span>
+      <span><b>Modo</b> práctica autocorregida</span>
+    </div>
+  </div>
+
+  <div class="intro-note">
+    Estas son las <b>24 preguntas de Inglés</b> tal como aparecen en el Cuadernillo Décimo (preguntas 97 a 120, páginas 24 a 27), divididas en las 4 partes originales: emparejar colores (Parte 1), identificar dónde se ve cada aviso (Parte 2), completar diálogos (Parte 3) y llenar los espacios de un texto (Parte 4). Cada opción se autocalifica al seleccionarla. Puedes saltar entre preguntas con la franja de burbujas de abajo.
+  </div>
+
+  <div class="nav-strip">
+    <div class="order-row">
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button class="btn shuffle-again" id="reshuffleBtn" style="display:none;">↻ Mezclar de nuevo</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="card-inner" id="cardInner"></div>
+  </div>
+
+  <div class="footer-nav">
+    <button class="btn" id="prevBtn">← Anterior</button>
+    <span class="score-pill" id="scorePill">0 / 24 correctas</span>
+    <button class="btn primary" id="nextBtn">Siguiente →</button>
+  </div>
+
+  <div class="summary" id="summary">
+    <p class="caption">Resultado final</p>
+    <h2>Así te fue en el simulacro</h2>
+    <div class="big" id="finalScore">0/24</div>
+
+    <p class="label" style="margin-top:24px;">Por parte del examen</p>
+    <div class="cat-bar-row" id="catBars"></div>
+
+    <p class="label" style="margin-top:22px;">Por nivel (MCER)</p>
+    <div class="cat-bar-row" id="compBars"></div>
+
+    <button class="btn primary" id="retryBtn">↺ Reintentar cuadernillo</button>
+  </div>
+
+</div>
+
+<script>
+const WORDBANK = {A:'pink',B:'brown',C:'gray',D:'blue',E:'green',F:'orange',G:'white',H:'yellow'};
+
+const Q = [
+{id:97, group:'colors', setLabel:'Questions 97 to 101 · Colors', category:'Vocabulario', competencia:'Nivel A1',
+ text:'This is the color of bananas.',
+ options:WORDBANK, correct:'H',
+ explain:'"Bananas" son de color amarillo → yellow (H).'},
+
+{id:98, group:'colors', setLabel:'Questions 97 to 101 · Colors', category:'Vocabulario', competencia:'Nivel A1',
+ text:'This is the color of milk and the snow.',
+ options:WORDBANK, correct:'G',
+ explain:'La leche y la nieve son de color blanco → white (G).'},
+
+{id:99, group:'colors', setLabel:'Questions 97 to 101 · Colors', category:'Vocabulario', competencia:'Nivel A1',
+ text:'This is the color of the grass.',
+ options:WORDBANK, correct:'E',
+ explain:'El pasto (grass) es de color verde → green (E).'},
+
+{id:100, group:'colors', setLabel:'Questions 97 to 101 · Colors', category:'Vocabulario', competencia:'Nivel A1',
+ text:'This is the color of the sea and sky on clear days.',
+ options:WORDBANK, correct:'D',
+ explain:'El mar y el cielo en días despejados son de color azul → blue (D).'},
+
+{id:101, group:'colors', setLabel:'Questions 97 to 101 · Colors', category:'Vocabulario', competencia:'Nivel A1',
+ text:'This is the color of carrots.',
+ options:WORDBANK, correct:'F',
+ explain:'Las zanahorias son de color naranja → orange (F). Las palabras pink, brown y gray quedan sin usar, como lo indican las instrucciones originales.'},
+
+{id:102, group:'avisos', setLabel:'Questions 102 to 106 · Where can you see it?', category:'Comprensión de lectura', competencia:'Nivel A1',
+ text:'¿Dónde puede ver este aviso?',
+ inlineContext:'PLEASE<br>DO NOT<br>DISTURB',
+ options:{A:'in a hotel.',B:'in a garden.',C:'in a hall.'}, correct:'A',
+ explain:'"Please do not disturb" (por favor no molestar) es el aviso clásico que se cuelga en la puerta de una habitación de hotel.'},
+
+{id:103, group:'avisos', setLabel:'Questions 102 to 106 · Where can you see it?', category:'Comprensión de lectura', competencia:'Nivel A1',
+ text:'¿Dónde puede ver este aviso?',
+ inlineContext:'Please, choose<br>the one you want to read',
+ options:{A:'on a board.',B:'on a computer.',C:'on a bookcase.'}, correct:'C',
+ explain:'"Elige el que quieras leer" tiene sentido frente a una estantería (bookcase) llena de libros para escoger.'},
+
+{id:104, group:'avisos', setLabel:'Questions 102 to 106 · Where can you see it?', category:'Comprensión de lectura', competencia:'Nivel A1',
+ text:'¿Dónde puede ver este aviso?',
+ inlineContext:"Women's clothes<br>Get two for one today",
+ options:{A:'on a train.',B:'in a park.',C:'in a shop.'}, correct:'C',
+ explain:'Una promoción de "ropa de mujer, dos por uno" es un aviso típico de una tienda (shop).'},
+
+{id:105, group:'avisos', setLabel:'Questions 102 to 106 · Where can you see it?', category:'Comprensión de lectura', competencia:'Nivel A1',
+ text:'¿Dónde puede ver este aviso?',
+ inlineContext:'RING BELL<br>FOR SERVICE',
+ options:{A:'in a church.',B:'in a hotel.',C:'in a bus station.'}, correct:'B',
+ explain:'"Toque el timbre para ser atendido" es un aviso común en la recepción de un hotel.'},
+
+{id:106, group:'avisos', setLabel:'Questions 102 to 106 · Where can you see it?', category:'Comprensión de lectura', competencia:'Nivel A1',
+ text:'¿Dónde puede ver este aviso?',
+ inlineContext:'Tennis classes<br>for beginners',
+ options:{A:'at a sports shop.',B:'at a sports center.',C:'at a toy store.'}, correct:'B',
+ explain:'Un aviso de "clases de tenis para principiantes" corresponde a un centro deportivo (sports center), donde se dictan las clases.'},
+
+{id:107, group:'dialogos', setLabel:'Questions 107 to 112 · Complete the conversations', category:'Comunicación funcional', competencia:'Nivel A2',
+ text:'Elige la respuesta más natural.',
+ inlineContext:'Please don\\'t be late!',
+ options:{A:'Oh, not yet.',B:'Don\\'t worry.',C:'I suppose so.'}, correct:'B',
+ explain:'Ante la petición "no llegues tarde", la respuesta natural es tranquilizar a la otra persona: "Don\\'t worry" (no te preocupes).'},
+
+{id:108, group:'dialogos', setLabel:'Questions 107 to 112 · Complete the conversations', category:'Comunicación funcional', competencia:'Nivel A2',
+ text:'Elige la respuesta más natural.',
+ inlineContext:'I am going on vacation to Vancouver!',
+ options:{A:'That\\'s great!',B:'I like swimming!',C:'You are first!'}, correct:'A',
+ explain:'Ante una buena noticia como unas vacaciones, la reacción natural es "That\\'s great!" (¡qué bien!).'},
+
+{id:109, group:'dialogos', setLabel:'Questions 107 to 112 · Complete the conversations', category:'Comunicación funcional', competencia:'Nivel A2',
+ text:'Elige la respuesta más natural.',
+ inlineContext:'Who\\'s that girl?',
+ options:{A:'Yes, she is.',B:'That\\'s right.',C:'She is my sister.'}, correct:'C',
+ explain:'La pregunta "¿Quién es esa chica?" pide una identificación; la respuesta lógica es "She is my sister" (es mi hermana).'},
+
+{id:110, group:'dialogos', setLabel:'Questions 107 to 112 · Complete the conversations', category:'Comunicación funcional', competencia:'Nivel A2',
+ text:'Elige la respuesta más natural.',
+ inlineContext:'What do you think about the teacher?',
+ options:{A:'Great school!',B:'I think so.',C:'I love his class.'}, correct:'C',
+ explain:'Al preguntar una opinión sobre el profesor, la respuesta coherente es "I love his class" (me encanta su clase).'},
+
+{id:111, group:'dialogos', setLabel:'Questions 107 to 112 · Complete the conversations', category:'Comunicación funcional', competencia:'Nivel A2',
+ text:'Elige la respuesta más natural.',
+ inlineContext:'Be careful!',
+ options:{A:'Yes, I did.',B:'I will.',C:'What a pity!'}, correct:'B',
+ explain:'Ante la advertencia "¡ten cuidado!", la respuesta natural es "I will" (lo tendré / lo haré).'},
+
+{id:112, group:'dialogos', setLabel:'Questions 107 to 112 · Complete the conversations', category:'Comunicación funcional', competencia:'Nivel A2',
+ text:'Elige la respuesta más natural.',
+ inlineContext:'How much is that shirt worth?',
+ options:{A:'Anything else?',B:'20 dollars.',C:'Cash only!'}, correct:'B',
+ explain:'La pregunta por el precio ("¿Cuánto vale esa camisa?") se responde directamente con el valor: "20 dollars".'},
+
+{id:113, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (113):',
+ options:{A:'or',B:'so',C:'but'}, correct:'C',
+ explain:'Se necesita un conector de contraste entre "intentaron encontrar algo fácil y barato" y "les tomó 3000 años": but (pero).'},
+
+{id:114, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (114):',
+ options:{A:'uses',B:'used',C:'using'}, correct:'C',
+ explain:'"People were ___ paper" requiere el pasado continuo (were + gerundio): were using.'},
+
+{id:115, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (115):',
+ options:{A:'some',B:'any',C:'much'}, correct:'A',
+ explain:'En una oración afirmativa con un sustantivo contable en plural ("Chinese men"), se usa some, no any (negativas/preguntas) ni much (incontables).'},
+
+{id:116, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (116):',
+ options:{A:'that',B:'these',C:'this'}, correct:'B',
+ explain:'"Many of ___ men" se refiere a los hombres capturados mencionados justo antes (plural, cercanos en el relato): these men.'},
+
+{id:117, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (117):',
+ options:{A:'he',B:'they',C:'it'}, correct:'B',
+ explain:'El sujeto es plural ("these men"), así que el pronombre correcto es they.'},
+
+{id:118, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (118):',
+ options:{A:'their',B:'our',C:'your'}, correct:'A',
+ explain:'El sujeto es "Europeans" (tercera persona plural), así que el posesivo correcto es their (own paper).'},
+
+{id:119, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (119):',
+ options:{A:'find',B:'finding',C:'found'}, correct:'C',
+ explain:'El relato está en pasado simple; el pasado de "find" es found.'},
+
+{id:120, group:'paper', setLabel:'Questions 113 to 120 · History of Paper', category:'Comprensión de lectura', competencia:'Nivel B1',
+ text:'Blank (120):',
+ options:{A:'were',B:'was',C:'are'}, correct:'A',
+ explain:'"The Chinese people" es plural y el relato está en pasado, así que corresponde were (already famous).'}
+];
+
+const GROUP_CONTEXT = {
+ colors: `<h4>Colors</h4>
+  <p><b>Ejemplo:</b> "It is long, and there is meat in it." → <b>H. sausage</b></p>
+  <p>Elige la palabra (A-H) que concuerda con cada descripción. Sobran 3 de las 8 opciones:</p>
+  <table><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th></tr>
+  <tr><td>pink</td><td>brown</td><td>gray</td><td>blue</td><td>green</td><td>orange</td><td>white</td><td>yellow</td></tr></table>`,
+
+ avisos: `<p><b>¿Dónde puede ver estos avisos?</b> Lee cada aviso y elige el lugar donde probablemente se encuentra.</p>`,
+
+ dialogos: `<p>Completa cada conversación eligiendo la respuesta que continúa el diálogo de la forma más natural.</p>`,
+
+ paper: `<h4>History of Paper</h4>
+  <p>Since the beginning of writing, people have tried to <b>(0) think</b> of something easy and cheap to write on, <b>(113) ___</b> it took 3000 years until the Chinese people made paper.</p>
+  <p>Only one thousand years afterwards, people were <b>(114) ___</b> paper all over Europe and Asia. In the 8th century, the Arabs and the Chinese were enemies, and the Arabs captured <b>(115) ___</b> Chinese men. Many of <b>(116) ___</b> men knew how to make paper, and <b>(117) ___</b> explained it to the Arabs as the price to be able to go home.</p>
+  <p>Almost eight centuries later, Europeans began to make <b>(118) ___</b> own paper. At that time, people in the country of the Aztecs <b>(119) ___</b> the way to make paper too, while the Chinese people <b>(120) ___</b> already famous for paper kites and toilet paper!</p>`
+};
+
+let current = 0;
+const answers = {}; // id -> {choice(original letter), correct(bool)}
+let mode = 'orden'; // 'orden' | 'aleatorio'
+let displayQuestions = []; // ordered array of Q objects for navigation
+let optionOrder = {}; // q.id -> array of ORIGINAL letters in the order they should display
+
+function buildBlocks(){
+  const blocks = [];
+  let i = 0;
+  while(i < Q.length){
+    const g = Q[i].group;
+    if(g){
+      let j = i, arr = [];
+      while(j < Q.length && Q[j].group === g){ arr.push(Q[j]); j++; }
+      blocks.push(arr);
+      i = j;
+    } else {
+      blocks.push([Q[i]]);
+      i++;
+    }
+  }
+  return blocks;
+}
+const BLOCKS = buildBlocks();
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildOrder(randomize){
+  const blocksToUse = randomize ? shuffleArray(BLOCKS) : BLOCKS;
+  displayQuestions = [];
+  blocksToUse.forEach(block => block.forEach(q => displayQuestions.push(q)));
+
+  optionOrder = {};
+  Q.forEach(q => {
+    const letters = Object.keys(q.options);
+    optionOrder[q.id] = randomize ? shuffleArray(letters) : letters;
+  });
+}
+
+function setMode(newMode){
+  mode = newMode;
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('orderBookletBtn').classList.toggle('active', mode === 'orden');
+  document.getElementById('orderRandomBtn').classList.toggle('active', mode === 'aleatorio');
+  document.getElementById('reshuffleBtn').style.display = mode === 'aleatorio' ? 'inline-block' : 'none';
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+function reshuffleNow(){
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(true);
+  document.getElementById('summary').classList.remove('show');
+  render();
+}
+
+document.getElementById('orderBookletBtn').onclick = () => setMode('orden');
+document.getElementById('orderRandomBtn').onclick = () => setMode('aleatorio');
+document.getElementById('reshuffleBtn').onclick = reshuffleNow;
+
+function renderBubbles(){
+  const el = document.getElementById('bubbles');
+  el.innerHTML = '';
+  displayQuestions.forEach((q,i)=>{
+    const b = document.createElement('div');
+    let cls = 'bub';
+    if(i===current) cls += ' current';
+    if(answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
+    b.className = cls;
+    b.textContent = q.id;
+    b.onclick = ()=>{ current = i; render(); };
+    el.appendChild(b);
+  });
+}
+
+function updateScorePill(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('scorePill').textContent = total + ' / 24 correctas';
+}
+
+function markSVG(ok){
+  return ok
+   ? `<svg class="mark ok" viewBox="0 0 34 34"><path d="M6 18 L14 26 L28 8"/></svg>`
+   : `<svg class="mark bad" viewBox="0 0 34 34"><path d="M8 8 L26 26 M26 8 L8 26"/></svg>`;
+}
+
+function displayLetterFor(i){
+  return String.fromCharCode(65 + i); // A, B, C, D, E...
+}
+
+function render(){
+  const q = displayQuestions[current];
+  const answered = answers[q.id];
+  const inner = document.getElementById('cardInner');
+  const order = optionOrder[q.id];
+  const correctDisplayLetter = displayLetterFor(order.indexOf(q.correct));
+
+  let ctxHTML = '';
+  if(q.group && GROUP_CONTEXT[q.group]){
+    ctxHTML = `<div class="context">${GROUP_CONTEXT[q.group]}</div>`;
+  }
+
+  let inlineHTML = '';
+  if(q.inlineContext){
+    if(q.category === 'Comunicación funcional'){
+      inlineHTML = `<div class="inline-ctx"><div class="chat-bubble">${q.inlineContext}</div></div>`;
+    } else {
+      inlineHTML = `<div class="inline-ctx"><div class="sign-card">${q.inlineContext}</div></div>`;
+    }
+  }
+
+  let optsHTML = '';
+  order.forEach((origLetter, i)=>{
+    const displayLetter = displayLetterFor(i);
+    const text = q.options[origLetter];
+    let cls = 'opt';
+    if(answered){
+      cls += ' locked';
+      if(origLetter===q.correct) cls += ' reveal-correct';
+      else if(origLetter===answered.choice) cls += ' reveal-wrong';
+    }
+    optsHTML += `<div class="${cls}" data-orig="${origLetter}"><span class="letter">${displayLetter}</span><span>${text}</span></div>`;
+  });
+
+  inner.innerHTML = `
+    <div class="q-head">
+      <div class="q-num">${q.id}</div>
+      <div class="q-tags"><span class="tag">${q.category}</span><span class="tag tag-comp">${q.competencia}</span></div>
+    </div>
+    ${q.setLabel ? `<div class="set-label">${q.setLabel}</div>` : ''}
+    ${ctxHTML}
+    ${inlineHTML}
+    <p class="stmt">${q.text}</p>
+    <div class="options">${optsHTML}</div>
+    <div class="feedback ${answered ? 'show ' + (answered.correct?'ok':'bad') : ''}" id="feedback">
+      ${answered ? `${markSVG(answered.correct)}<b>${answered.correct?'¡Correcto!':'No es la respuesta'} — Opción correcta: ${correctDisplayLetter}</b>${q.explain}` : ''}
+    </div>
+  `;
+
+  // option click handlers
+  inner.querySelectorAll('.opt').forEach(el=>{
+    el.onclick = ()=>{
+      if(answers[q.id]) return;
+      const origLetter = el.getAttribute('data-orig');
+      answers[q.id] = { choice: origLetter, correct: origLetter===q.correct };
+      render();
+      renderBubbles();
+      updateScorePill();
+    };
+  });
+
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').textContent = current===displayQuestions.length-1 ? 'Ver resultados →' : 'Siguiente →';
+
+  renderBubbles();
+  updateScorePill();
+}
+
+document.getElementById('prevBtn').onclick = ()=>{ if(current>0){ current--; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); } };
+document.getElementById('nextBtn').onclick = ()=>{
+  if(current < displayQuestions.length-1){ current++; render(); document.getElementById('card').scrollIntoView({behavior:'smooth', block:'start'}); }
+  else { showSummary(); }
+};
+
+function showSummary(){
+  const total = Object.values(answers).filter(a=>a.correct).length;
+  document.getElementById('finalScore').textContent = total + '/24';
+  const cats = {};
+  const comps = {};
+  Q.forEach(q=>{
+    if(!cats[q.category]) cats[q.category] = {correct:0, total:0};
+    cats[q.category].total++;
+    if(answers[q.id] && answers[q.id].correct) cats[q.category].correct++;
+
+    if(!comps[q.competencia]) comps[q.competencia] = {correct:0, total:0};
+    comps[q.competencia].total++;
+    if(answers[q.id] && answers[q.id].correct) comps[q.competencia].correct++;
+  });
+
+  const renderBarGroup = (containerId, data)=>{
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    Object.entries(data).forEach(([name,v])=>{
+      const pct = Math.round((v.correct/v.total)*100);
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `<div class="cname">${name}</div><div class="cat-track"><div class="cat-fill" style="width:${pct}%"></div></div><div class="cat-num">${v.correct}/${v.total}</div>`;
+      el.appendChild(row);
+    });
+  };
+  renderBarGroup('catBars', cats);
+  renderBarGroup('compBars', comps);
+
+  document.getElementById('summary').classList.add('show');
+  document.getElementById('summary').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('retryBtn').onclick = ()=>{
+  for(const k in answers) delete answers[k];
+  current = 0;
+  buildOrder(mode === 'aleatorio');
+  document.getElementById('summary').classList.remove('show');
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+
+buildOrder(false);
+render();
+</script>
+</body>
+</html>
