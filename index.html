@@ -149,6 +149,7 @@
     font-family:inherit; text-decoration:none; width:auto;
   }
   .panel-docente .btn-docente:hover{ background:#254d8c; }
+  .panel-docente .btn-docente:disabled{ background:#a9b6cc; cursor:not-allowed; }
 
   /* ---------- Rejilla de reportes ---------- */
   .carrusel-wrap{ position:relative; }
@@ -319,7 +320,7 @@
           <div class="icono-docente">📈</div>
           <h3>Dashboard de resultados de simulacros</h3>
           <p class="desc">Consulta el panel comparativo de resultados por grupo, grado y área — promedios, distribución y niveles de desempeño.</p>
-          <a class="btn-docente" id="enlace-dashboard" href="#" target="_blank">Abrir Dashboard de Simulacros ↗</a>
+          <button type="button" class="btn-docente" id="enlace-dashboard">Abrir Dashboard de Simulacros ↗</button>
         </div>
       </section>
 
@@ -603,9 +604,11 @@ function mostrarPantallaDashboard(sesion) {
     panelDocente.classList.remove("oculto");
 
     if (CONFIG_DASHBOARD_URL && CONFIG_DASHBOARD_URL.indexOf("PEGA_AQUI") === -1) {
-      enlaceDashboard.href = CONFIG_DASHBOARD_URL;
+      enlaceDashboard.dataset.url = CONFIG_DASHBOARD_URL;
+      enlaceDashboard.disabled = false;
     } else {
-      enlaceDashboard.href = "#";
+      enlaceDashboard.dataset.url = "";
+      enlaceDashboard.disabled = true;
       enlaceDashboard.textContent = "Falta configurar CONFIG_DASHBOARD_URL";
     }
   } else {
@@ -783,6 +786,14 @@ btnArtefacto.addEventListener("click", function () {
 selectorArtefacto.addEventListener("change", function () {
   estadoArtefacto.textContent = "";
   estadoArtefacto.className = "estado-doc";
+});
+
+// --- Botón del dashboard (docentes): mismo mecanismo window.open() que los artefactos,
+// necesario para que sessionStorage se copie de forma confiable a la pestaña nueva ---
+enlaceDashboard.addEventListener("click", function () {
+  const url = enlaceDashboard.dataset.url;
+  if (!url) return;
+  window.open(url, "_blank");
 });
 
 function consultar(url) {
