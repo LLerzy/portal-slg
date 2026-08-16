@@ -388,6 +388,11 @@ body{
 </div>
 
 <script>
+const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbwEzpQsbsQ9JrLpY_ItBRljCfNTy1h_fEUxRVIm0vzr0iy98rjKAi4nz9S0owaBZiHg/exec";
+const VERSION_ARTEFACTO = "v1"; // súbelo manualmente si algún día cambias las preguntas de este cuadernillo
+const AREA_ARTEFACTO = "Ciencias Naturales";
+let inicioIntento = Date.now(); // se define al cargar la página
+
 function miniTable(rows){
   const body = rows.map(([nota,n]) => `<tr><td>${nota}</td><td>${n}</td></tr>`).join('');
   return `<table class="mini-table"><tr><th>Nota</th><th># Niños</th></tr>${body}</table>`;
@@ -869,6 +874,7 @@ function showSummary(){
   renderBarGroup('compBars', comps);
 
   document.getElementById('summary').classList.add('show');
+  enviarIntentoAlBackend();
   document.getElementById('summary').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
@@ -883,6 +889,58 @@ document.getElementById('retryBtn').onclick = ()=>{
 
 buildOrder(false);
 render();
+
+function enviarIntentoAlBackend() {
+  const sesionRaw = sessionStorage.getItem("slg_sesion");
+  let sesion = {};
+  try { sesion = JSON.parse(sesionRaw); } catch (e) {}
+
+  const totalCorrectas = Object.values(answers).filter(a => a.correct).length;
+  const totalPreguntas = displayQuestions.length;
+
+  // Agrupa por categoría y por competencia usando los mismos datos
+  // que ya usas para pintar "Por categoría" y "Por competencia evaluada".
+  const categorias = agruparPorCampo('category');
+  const competencias = agruparPorCampo('competencia');
+
+  const payload = {
+    documento: sesion.documento || "",
+    nombre: sesion.nombre || "",
+    grupo: sesion.grupo || "",
+    area: AREA_ARTEFACTO,
+    numeroIntento: 1, // por ahora fijo; se puede mejorar más adelante si se guarda historial
+    duracionSegundos: Math.round((Date.now() - inicioIntento) / 1000),
+    origen: "portal",
+    rol: window.ES_DOCENTE ? "docente" : "estudiante",
+    versionArtefacto: VERSION_ARTEFACTO,
+    categorias: categorias,
+    competencias: competencias,
+    totalAciertos: totalCorrectas,
+    totalPreguntas: totalPreguntas
+  };
+
+  fetch(SCRIPT_URL_INTENTOS, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" }, // evita el preflight de CORS con Apps Script
+    body: JSON.stringify(payload)
+  }).catch(function () {
+    // Falla silenciosa: si no hay internet o el registro falla,
+    // el estudiante/docente igual debe ver su resumen con normalidad.
+  });
+}
+
+function agruparPorCampo(campo) {
+  const grupos = {};
+  displayQuestions.forEach(function (q) {
+    const etiqueta = q[campo];
+    if (!etiqueta) return;
+    if (!grupos[etiqueta]) grupos[etiqueta] = { etiqueta: etiqueta, aciertos: 0, total: 0 };
+    grupos[etiqueta].total++;
+    if (answers[q.id] && answers[q.id].correct) grupos[etiqueta].aciertos++;
+  });
+  return Object.values(grupos);
+}
+
 </script>
 </body>
 </html>
