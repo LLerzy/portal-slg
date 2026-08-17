@@ -237,15 +237,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-    const RUTA_CSV = "comparativoartefactos.csv"; 
+    // IMPORTANTE: Cambia esta URL por la URL "Raw" de tu archivo CSV en GitHub.
+    // Ejemplo: "https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/comparativoartefactos.csv"
+    const RUTA_CSV = "https://raw.githubusercontent.com/llerzy/portal-slg/main/comparativoartefactos.csv"; 
 
     // Variables globales
     let filasCSV = [];
     let instanciasCharts = { general: null, intentos: null, categorias: null, competencias: null };
     let modosVista = { general: 'grupo', intentos: 'grupo', categorias: 'grupo', competencias: 'grupo' };
     
-    // Paleta para múltiples grupos/grados
-    const PALETA = ['#9b2226', '#e0aa00', '#1a7f37', '#4a4238', '#2b658b', '#666666', '#d9534f', '#5bc0de'];
+    // Paleta ampliada para soportar múltiples grupos dinámicamente sin repetir pronto
+    const PALETA = ['#9b2226', '#e0aa00', '#1a7f37', '#4a4238', '#2b658b', '#666666', '#d9534f', '#5bc0de', '#f0ad4e', '#5cb85c', '#0275d8', '#8b5a2b'];
 
     const selArea = document.getElementById("selArea");
     const panelFiltros = document.getElementById("panelFiltros");
@@ -285,11 +287,12 @@
         actualizarDashboard();
       },
       error: function () {
-        mensajeEstado.textContent = "Error al descargar el archivo CSV.";
+        mensajeEstado.textContent = "Error al descargar el archivo CSV. Verifica que la URL sea correcta (formato Raw).";
       }
     });
 
     function inicializarFiltros() {
+      // Extrae automáticamente todas las áreas del CSV
       const areas = Array.from(new Set(filasCSV.map(f => f.area))).sort();
       selArea.innerHTML = areas.map(a => `<option value="${a}">${a}</option>`).join("");
       selArea.addEventListener("change", () => {
@@ -371,6 +374,7 @@
       const filas = filasCSV.filter(f => f.tipo === "total");
       
       const etiquetasEjeY = Array.from(new Set(filas.map(f => f.area))).sort();
+      // ¡Esta es la magia! Aquí detecta dinámicamente TODOS los grupos (o grados) que existan en el CSV
       const entidades = Array.from(new Set(filas.map(f => f[modo]))).sort();
 
       const datasets = entidades.map((entidad, index) => {
