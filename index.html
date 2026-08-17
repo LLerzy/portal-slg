@@ -332,6 +332,17 @@
           </div>
         </article>
 
+        <!-- 3. Dashboard de artefactos -->
+        <article class="reporte tarjeta">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📊</div>
+            <h3>Dashboard de artefactos</h3>
+            <p class="desc">Comparativo de aciertos por grupo, área, categoría y competencia, a partir de los intentos registrados.</p>
+            <button type="button" class="btn" id="enlace-dashboard-artefactos">Abrir Dashboard de Artefactos ↗</button>
+          </div>
+        </article>
+
         </div>
 
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno-docente"></div></div>
@@ -511,6 +522,7 @@ const CONFIG_VERIFICACION = {
 // (subcarpeta en GitHub Pages). Reemplaza por la ruta real cuando
 // muevas el dashboard a portal-slg.
 const CONFIG_DASHBOARD_URL = "https://llerzy.github.io/portal-slg/dashboard-simulacros/";
+const CONFIG_DASHBOARD_ARTEFACTOS_URL = "https://llerzy.github.io/portal-slg/dashboard-artefactos/";
 
 /* ------------------------------------------------------------
  * Artefactos de práctica (cuadernillos HTML autocontenidos) por
@@ -545,6 +557,7 @@ const resultadoCaja = document.getElementById("resultado-caja");
 const carruselWrap = document.getElementById("carrusel-wrap");
 const carruselWrapDocente = document.getElementById("carrusel-wrap-docente");
 const enlaceDashboard = document.getElementById("enlace-dashboard");
+const enlaceDashboardArtefactos = document.getElementById("enlace-dashboard-artefactos");
 
 // --- Carrusel de reportes: flechas + barra de progreso (reutilizable) ---
 function inicializarCarrusel(idCarrusel, idFlechaIzq, idFlechaDer, idPistaRelleno) {
@@ -625,14 +638,8 @@ function mostrarPantallaDashboard(sesion) {
     carruselWrapDocente.classList.remove("oculto");
     if (actualizarCarruselDocente) setTimeout(actualizarCarruselDocente, 50);
 
-    if (CONFIG_DASHBOARD_URL && CONFIG_DASHBOARD_URL.indexOf("PEGA_AQUI") === -1) {
-      enlaceDashboard.dataset.url = CONFIG_DASHBOARD_URL;
-      enlaceDashboard.disabled = false;
-    } else {
-      enlaceDashboard.dataset.url = "";
-      enlaceDashboard.disabled = true;
-      enlaceDashboard.textContent = "Falta configurar CONFIG_DASHBOARD_URL";
-    }
+    configurarBotonDashboard(enlaceDashboard, CONFIG_DASHBOARD_URL, "Abrir Dashboard de Simulacros ↗", "CONFIG_DASHBOARD_URL");
+    configurarBotonDashboard(enlaceDashboardArtefactos, CONFIG_DASHBOARD_ARTEFACTOS_URL, "Abrir Dashboard de Artefactos ↗", "CONFIG_DASHBOARD_ARTEFACTOS_URL");
   } else {
     // --- Vista estudiante: comportamiento original ---
     saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
@@ -817,12 +824,26 @@ function conectarSelectorArtefactos(idSelector, idBoton, idEstado) {
 conectarSelectorArtefactos("selector-artefacto", "btn-artefacto", "estado-artefacto");
 conectarSelectorArtefactos("selector-artefacto-docente", "btn-artefacto-docente", "estado-artefacto-docente");
 
-// --- Botón del dashboard (docentes): mismo mecanismo window.open() que los artefactos,
+// --- Botones de dashboard (docentes): mismo mecanismo window.open() que los artefactos,
 // necesario para que sessionStorage se copie de forma confiable a la pestaña nueva ---
-enlaceDashboard.addEventListener("click", function () {
-  const url = enlaceDashboard.dataset.url;
-  if (!url) return;
-  window.open(url, "_blank");
+function configurarBotonDashboard(boton, url, textoHabilitado, nombreConstante) {
+  if (url && url.indexOf("PEGA_AQUI") === -1) {
+    boton.dataset.url = url;
+    boton.disabled = false;
+    boton.textContent = textoHabilitado;
+  } else {
+    boton.dataset.url = "";
+    boton.disabled = true;
+    boton.textContent = "Falta configurar " + nombreConstante;
+  }
+}
+
+[enlaceDashboard, enlaceDashboardArtefactos].forEach(function (boton) {
+  boton.addEventListener("click", function () {
+    const url = boton.dataset.url;
+    if (!url) return;
+    window.open(url, "_blank");
+  });
 });
 
 function consultar(url) {
