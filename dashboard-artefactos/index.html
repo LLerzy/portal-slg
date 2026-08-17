@@ -241,10 +241,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-    // URL estática alojada en tus Github Pages.
+    // URL estática alojada en tus GitHub Pages
     const RUTA_CSV = "https://llerzy.github.io/portal-slg/dashboard-artefactos/comparativoartefactos.csv"; 
     
-    // Generar URL con sello de tiempo para saltarse siempre la memoria caché del navegador
+    // Generar URL con sello de tiempo para evitar el caché
     const urlSinCache = RUTA_CSV + "?v=" + new Date().getTime();
 
     // Variables globales
@@ -252,7 +252,7 @@
     let instanciasCharts = { general: null, intentos: null, categorias: null, competencias: null };
     let modosVista = { general: 'grupo', intentos: 'grupo', categorias: 'grupo', competencias: 'grupo' };
     
-    // Paleta ampliada
+    // Paleta de colores
     const PALETA = ['#9b2226', '#e0aa00', '#1a7f37', '#4a4238', '#2b658b', '#666666', '#d9534f', '#5bc0de', '#f0ad4e', '#5cb85c', '#0275d8', '#8b5a2b'];
 
     const selArea = document.getElementById("selArea");
@@ -299,20 +299,19 @@
     });
 
     function inicializarFiltros() {
-      // 1. Selector de Áreas
+      // Selector de Áreas
       const areas = Array.from(new Set(filasCSV.map(f => f.area))).sort();
       selArea.innerHTML = areas.map(a => `<option value="${a}">${a}</option>`).join("");
       
-      // 2. Selector de Grupos Dinámico
+      // Selector de Grupos Dinámico
       const grupos = Array.from(new Set(filasCSV.map(f => f.grupo))).sort();
       selGrupo.innerHTML = `<option value="todos">Todos los grupos</option>` + 
                            grupos.map(g => `<option value="${g}">${g}</option>`).join("");
 
-      // 3. Eventos de los selectores
+      // Eventos
       selArea.addEventListener("change", actualizarDashboard);
       
       selGrupo.addEventListener("change", () => {
-        // Lógica para mostrar/ocultar los botones de vista "Grupo/Grado"
         const toggles = document.querySelectorAll(".view-toggle");
         if (selGrupo.value === "todos") {
           toggles.forEach(t => t.style.display = "flex");
@@ -354,7 +353,6 @@
       
       let filasTotalArea = filasCSV.filter(f => f.tipo === "total" && f.area === areaSel);
       
-      // Filtramos por grupo si aplica
       if (grupoSel !== "todos") {
         filasTotalArea = filasTotalArea.filter(f => f.grupo === grupoSel);
       }
@@ -399,7 +397,6 @@
     // --- 1. Gráfica General (Todas las áreas) ---
     function renderizarGeneral() {
       const grupoSel = selGrupo.value;
-      // Forzamos "por grupo" si hay un grupo específico seleccionado
       const modo = grupoSel === "todos" ? modosVista.general : "grupo"; 
       
       let filas = filasCSV.filter(f => f.tipo === "total");
@@ -419,7 +416,7 @@
         });
 
         return {
-          label: modo === 'grupo' ? `Grupo ${entidad}` : `Grado ${entidad}`,
+          label: `${entidad}`, // Muestra directamente '1001', '1002', '10°', etc.
           data: data,
           backgroundColor: PALETA[index % PALETA.length],
           borderRadius: 4,
@@ -456,7 +453,7 @@
         const data = etiquetasEjeY.map(eti => sumas[eti] || 0);
 
         return {
-          label: modo === 'grupo' ? `Grupo ${entidad}` : `Grado ${entidad}`,
+          label: `${entidad}`, // Muestra directamente '1001', '1002', '10°', etc.
           data: data,
           backgroundColor: PALETA[index % PALETA.length],
           borderRadius: 4,
@@ -496,7 +493,7 @@
         });
 
         return {
-          label: modo === 'grupo' ? `Grupo ${entidad}` : `Grado ${entidad}`,
+          label: `${entidad}`, // Muestra directamente '1001', '1002', '10°', etc.
           data: data,
           backgroundColor: PALETA[index % PALETA.length],
           borderRadius: 4,
