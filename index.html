@@ -223,6 +223,47 @@
   }
   .footer-inner img.banner-facimate{ width:100%; max-width:360px; height:auto; border-radius:8px; }
   footer p{ margin:0; font-size:12.5px; color:var(--gris); }
+
+  /* ---------- Tarjeta de Horario ---------- */
+  .tarjeta-horario {
+    background: var(--blanco, #ffffff);
+    border: 1px solid var(--linea, #e5d8c1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    overflow: hidden;
+  }
+  .horario-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+  }
+  .horario-titulo h3 { color: var(--rojo, #9b2226); font-size: 18px; margin: 0; }
+  .badge-dia {
+    background: var(--rojo, #9b2226); color: #fff; font-size: 12px;
+    font-weight: bold; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+  }
+  .horario-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tabla-horario {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 13px; text-align: center;
+  }
+  .tabla-horario th, .tabla-horario td {
+    padding: 10px 12px; border-bottom: 1px solid #f0eada; border-right: 1px solid #f0eada; min-width: 110px;
+  }
+  .tabla-horario th { background: #fbf8f2; color: var(--tinta, #222); font-weight: 700; text-transform: uppercase; font-size: 12px; }
+  .col-hora {
+    min-width: 90px !important; font-weight: bold; background: #f4efe4 !important;
+    color: var(--rojo-oscuro, #7a1a1e); position: sticky; left: 0; z-index: 2;
+  }
+  .fila-descanso { background-color: #f9f9f9; font-style: italic; color: #888; }
+  .col-hoy {
+    background-color: #fffdf0 !important; border-left: 2px solid var(--dorado, #e0aa00) !important;
+    border-right: 2px solid var(--dorado, #e0aa00) !important;
+  }
+  th.col-hoy { background-color: var(--dorado, #e0aa00) !important; color: #000 !important; font-weight: 800; }
+  td.col-hoy { font-weight: 600; color: var(--rojo-oscuro, #7a1a1e); }  
 </style>
 </head>
 <body>
@@ -455,6 +496,32 @@
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno"></div></div>
       </div>
 
+      <section id="seccion-horario" class="tarjeta-horario oculto">
+        <div class="horario-header">
+          <div class="horario-titulo">
+            <h3>📅 Mi Horario de Clases</h3>
+            <span id="badge-dia-actual" class="badge-dia">Hoy es ...</span>
+          </div>
+        </div>
+        
+        <div class="horario-wrapper">
+          <table class="tabla-horario" id="tabla-horario">
+            <thead>
+              <tr>
+                <th class="col-hora">Hora</th>
+                <th data-dia="1">Lunes</th>
+                <th data-dia="2">Martes</th>
+                <th data-dia="3">Miércoles</th>
+                <th data-dia="4">Jueves</th>
+                <th data-dia="5">Viernes</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-horario">
+              </tbody>
+          </table>
+        </div>
+      </section>
+      
       <section id="zona-resultado" class="oculto">
         <h2>Resultado de la consulta</h2>
         <div id="resultado-caja"></div>
@@ -639,6 +706,13 @@ function mostrarPantallaDashboard(sesion) {
     carruselWrapDocente.classList.remove("oculto");
     if (actualizarCarruselDocente) setTimeout(actualizarCarruselDocente, 50);
 
+    // --- LÓGICA PARA MOSTRAR HORARIO DOCENTE ---
+    const contenedorHorario = document.getElementById("seccion-horario");
+    if (sesion.horario && sesion.horario.length > 0) {
+      cargarHorarioDocente(sesion.horario);
+    } else {
+      contenedorHorario.classList.add("oculto");
+    }
     configurarBotonDashboard(enlaceDashboard, CONFIG_DASHBOARD_URL, "Abrir Dashboard de Simulacros ↗", "CONFIG_DASHBOARD_URL");
     configurarBotonDashboard(enlaceDashboardArtefactos, CONFIG_DASHBOARD_ARTEFACTOS_URL, "Abrir Dashboard de Artefactos ↗", "CONFIG_DASHBOARD_ARTEFACTOS_URL");
   } else {
@@ -653,6 +727,9 @@ function mostrarPantallaDashboard(sesion) {
 
     carruselWrapDocente.classList.add("oculto");
     carruselWrap.classList.remove("oculto");
+    // Ocultar horario a los estudiantes
+    const contenedorHorario = document.getElementById("seccion-horario");
+    if (contenedorHorario) contenedorHorario.classList.add("oculto");
   }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -745,7 +822,8 @@ function intentarIngresar() {
         grupo: datos.grupo || "",
         grado: datos.grado || "",
         director: datos.director || "",
-        grupoAsignado: datos.grupoAsignado || ""
+        grupoAsignado: datos.grupoAsignado || "",
+        horario: datos.horario || []
       };
       sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
       estadoDoc.textContent = "Documento verificado.";
@@ -865,6 +943,65 @@ function mostrarError(texto) {
     '<div style="background:#fff4f4; border-left:6px solid #c40016; padding:18px; border-radius:8px; color:#333;">' +
     '<p style="margin:0;"><strong>Atención:</strong> ' + texto + "</p></div>";
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+// Función para renderizar el horario resaltando el día de la semana
+function cargarHorarioDocente(matrizHorario) {
+  const tbody = document.getElementById("tbody-horario");
+  const badgeDia = document.getElementById("badge-dia-actual");
+  const contenedor = document.getElementById("seccion-horario");
+  
+  if(!tbody || !contenedor) return;
+  tbody.innerHTML = "";
+  
+  // 1. Obtener el día actual de la semana (1 = Lunes, ..., 5 = Viernes)
+  const fechaActual = new Date();
+  const diaSemana = fechaActual.getDay(); 
+  const nombresDias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  
+  if (diaSemana >= 1 && diaSemana <= 5) {
+    badgeDia.textContent = `Hoy es ${nombresDias[diaSemana]}`;
+  } else {
+    badgeDia.textContent = "Fin de Semana";
+  }
+
+  // 2. Resaltar el encabezado del día actual
+  document.querySelectorAll("#tabla-horario th[data-dia]").forEach(th => {
+    th.classList.remove("col-hoy");
+    if (parseInt(th.dataset.dia) === diaSemana) {
+      th.classList.add("col-hoy");
+    }
+  });
+
+  // 3. Poblar la tabla
+  matrizHorario.forEach(fila => {
+    const tr = document.createElement("tr");
+    
+    const esDescanso = (fila.lunes || "").toUpperCase().includes("DESCANSO");
+    if (esDescanso) tr.classList.add("fila-descanso");
+
+    tr.innerHTML = `
+      <td class="col-hora">${fila.hora || ""}</td>
+      <td class="${diaSemana === 1 ? 'col-hoy' : ''}">${fila.lunes || ""}</td>
+      <td class="${diaSemana === 2 ? 'col-hoy' : ''}">${fila.martes || ""}</td>
+      <td class="${diaSemana === 3 ? 'col-hoy' : ''}">${fila.miercoles || ""}</td>
+      <td class="${diaSemana === 4 ? 'col-hoy' : ''}">${fila.jueves || ""}</td>
+      <td class="${diaSemana === 5 ? 'col-hoy' : ''}">${fila.viernes || ""}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // 4. Mostrar el contenedor
+  contenedor.classList.remove("oculto");
+
+  // 5. En celulares: desplazar automáticamente hacia el día actual
+  if (diaSemana >= 1 && diaSemana <= 5 && window.innerWidth < 768) {
+    setTimeout(() => {
+      const colDestacada = document.querySelector("#tabla-horario th.col-hoy");
+      if (colDestacada) {
+        colDestacada.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }, 300);
+  }
 }
 </script>
 
