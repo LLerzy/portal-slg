@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard de Artefactos - San Luis Gonzaga</title>
   <style>
-    /* ---------- Variables y Base (Heredado de portal-slg) ---------- */
+    /* ---------- Variables y Base ---------- */
     :root {
       --crema: #fbf8f2;
       --crema-2: #f2ede1;
@@ -98,8 +98,8 @@
     }
     .view-toggle button.active { background: var(--blanco); color: var(--rojo); box-shadow: var(--sombra); }
 
-    .chart-container { position: relative; min-height: 300px; width: 100%; }
-    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .chart-container { position: relative; min-height: 320px; width: 100%; }
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
     @media (max-width: 860px) { .chart-grid { grid-template-columns: 1fr; } }
     
     .estado-cargando {
@@ -129,22 +129,22 @@
       <div class="contenido">
         <div class="filterbar">
           <div class="field">
-            <label for="selArea">Área de conocimiento</label>
+            <label for="selArea">Filtro para Detalle (Categorías/Competencias)</label>
             <select id="selArea"></select>
           </div>
         </div>
 
         <div class="kpi-grid">
           <div class="kpi-card">
-            <h4>Total Intentos 10°</h4>
+            <h4>Total Intentos 10° <br><small>(Área Seleccionada)</small></h4>
             <div class="valor" id="kpi-10">0</div>
           </div>
           <div class="kpi-card">
-            <h4>Total Intentos 11°</h4>
+            <h4>Total Intentos 11° <br><small>(Área Seleccionada)</small></h4>
             <div class="valor" id="kpi-11">0</div>
           </div>
           <div class="kpi-card" style="border-color: var(--dorado);">
-            <h4 style="color: var(--tinta);">Total General</h4>
+            <h4 style="color: var(--tinta);">Total General <br><small>(Área Seleccionada)</small></h4>
             <div class="valor" id="kpi-total">0</div>
           </div>
         </div>
@@ -152,20 +152,41 @@
     </div>
 
     <div id="panelGraficas" style="display: none;">
-      <div class="tarjeta">
-        <div class="contenido">
-          <div class="header-grafica">
-            <div>
-              <h3>Desempeño General del Área</h3>
-              <p>Porcentaje total de acierto de los cuadernillos.</p>
+      
+      <div class="chart-grid">
+        <div class="tarjeta" style="margin-bottom: 0;">
+          <div class="contenido">
+            <div class="header-grafica">
+              <div>
+                <h3>Desempeño General</h3>
+                <p>Porcentaje total de acierto por área.</p>
+              </div>
+              <div class="view-toggle" id="toggleGeneral">
+                <button data-modo="grupo" class="active">Por Grupo</button>
+                <button data-modo="grado">Por Total (Grado)</button>
+              </div>
             </div>
-            <div class="view-toggle" id="toggleGeneral">
-              <button data-modo="grupo" class="active">Por Grupo</button>
-              <button data-modo="grado">Por Total (Grado)</button>
+            <div class="chart-container">
+              <canvas id="chartGeneral"></canvas>
             </div>
           </div>
-          <div class="chart-container">
-            <canvas id="chartGeneral"></canvas>
+        </div>
+
+        <div class="tarjeta" style="margin-bottom: 0;">
+          <div class="contenido">
+            <div class="header-grafica">
+              <div>
+                <h3>Número de Intentos</h3>
+                <p>Total de cuadernillos resueltos por área.</p>
+              </div>
+              <div class="view-toggle" id="toggleIntentos">
+                <button data-modo="grupo" class="active">Por Grupo</button>
+                <button data-modo="grado">Por Total (Grado)</button>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="chartIntentos"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -176,7 +197,7 @@
             <div class="header-grafica">
               <div>
                 <h3>Por Categorías</h3>
-                <p>Desglose de aciertos por temáticas.</p>
+                <p>Aciertos por temáticas (Área seleccionada).</p>
               </div>
               <div class="view-toggle" id="toggleCategorias">
                 <button data-modo="grupo" class="active">Grupo</button>
@@ -194,7 +215,7 @@
             <div class="header-grafica">
               <div>
                 <h3>Por Competencias</h3>
-                <p>Desglose de aciertos por habilidades.</p>
+                <p>Aciertos por habilidades (Área seleccionada).</p>
               </div>
               <div class="view-toggle" id="toggleCompetencias">
                 <button data-modo="grupo" class="active">Grupo</button>
@@ -207,6 +228,7 @@
           </div>
         </div>
       </div>
+
     </div>
 
   </main>
@@ -215,24 +237,21 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-    // URL del CSV alojado en GitHub (Asegúrate de cambiarla por la URL "Raw" real)
     const RUTA_CSV = "comparativoartefactos.csv"; 
 
     // Variables globales
     let filasCSV = [];
-    let instanciasCharts = { general: null, categorias: null, competencias: null };
-    let modosVista = { general: 'grupo', categorias: 'grupo', competencias: 'grupo' };
+    let instanciasCharts = { general: null, intentos: null, categorias: null, competencias: null };
+    let modosVista = { general: 'grupo', intentos: 'grupo', categorias: 'grupo', competencias: 'grupo' };
     
-    // Paleta de colores para los datasets (barras agrupadas)
-    const PALETA = ['#9b2226', '#e0aa00', '#1a7f37', '#4a4238', '#8b5a2b', '#666666'];
+    // Paleta para múltiples grupos/grados
+    const PALETA = ['#9b2226', '#e0aa00', '#1a7f37', '#4a4238', '#2b658b', '#666666', '#d9534f', '#5bc0de'];
 
-    // Referencias DOM
     const selArea = document.getElementById("selArea");
     const panelFiltros = document.getElementById("panelFiltros");
     const panelGraficas = document.getElementById("panelGraficas");
     const mensajeEstado = document.getElementById("mensajeEstado");
 
-    // Inicialización
     mensajeEstado.style.display = "block";
 
     Papa.parse(RUTA_CSV, {
@@ -253,7 +272,7 @@
           }));
 
         if (filasCSV.length === 0) {
-          mensajeEstado.textContent = "El archivo CSV está vacío o no tiene el formato correcto.";
+          mensajeEstado.textContent = "El archivo CSV está vacío o sin el formato correcto.";
           return;
         }
 
@@ -266,52 +285,50 @@
         actualizarDashboard();
       },
       error: function () {
-        mensajeEstado.textContent = "Error al descargar el archivo CSV. Verifica la ruta.";
+        mensajeEstado.textContent = "Error al descargar el archivo CSV.";
       }
     });
 
-    // --- Filtros y Eventos ---
     function inicializarFiltros() {
       const areas = Array.from(new Set(filasCSV.map(f => f.area))).sort();
       selArea.innerHTML = areas.map(a => `<option value="${a}">${a}</option>`).join("");
-      selArea.addEventListener("change", actualizarDashboard);
+      selArea.addEventListener("change", () => {
+        actualizarKPIs();
+        renderizarDetalle('categoria', 'categorias', 'chartCategorias');
+        renderizarDetalle('competencia', 'competencias', 'chartCompetencias');
+      });
 
-      // Eventos para los toggles de cada gráfica
-      configurarToggle("toggleGeneral", "general");
-      configurarToggle("toggleCategorias", "categorias");
-      configurarToggle("toggleCompetencias", "competencias");
+      configurarToggle("toggleGeneral", "general", renderizarGeneral);
+      configurarToggle("toggleIntentos", "intentos", renderizarIntentos);
+      configurarToggle("toggleCategorias", "categorias", () => renderizarDetalle('categoria', 'categorias', 'chartCategorias'));
+      configurarToggle("toggleCompetencias", "competencias", () => renderizarDetalle('competencia', 'competencias', 'chartCompetencias'));
     }
 
-    function configurarToggle(idContenedor, claveGrafica) {
+    function configurarToggle(idContenedor, claveGrafica, callbackRender) {
       const botones = document.querySelectorAll(`#${idContenedor} button`);
       botones.forEach(btn => {
         btn.addEventListener("click", function() {
           botones.forEach(b => b.classList.remove("active"));
           this.classList.add("active");
-          modosVista[claveGrafica] = this.dataset.modo; // 'grupo' o 'grado'
-          if(claveGrafica === 'general') renderizarGeneral();
-          if(claveGrafica === 'categorias') renderizarDetalle('categoria', 'categorias', 'chartCategorias');
-          if(claveGrafica === 'competencias') renderizarDetalle('competencia', 'competencias', 'chartCompetencias');
+          modosVista[claveGrafica] = this.dataset.modo; 
+          callbackRender();
         });
       });
     }
 
-    // --- Lógica Principal ---
     function actualizarDashboard() {
       actualizarKPIs();
       renderizarGeneral();
+      renderizarIntentos();
       renderizarDetalle('categoria', 'categorias', 'chartCategorias');
       renderizarDetalle('competencia', 'competencias', 'chartCompetencias');
     }
 
-    // --- 1. Calcular KPIs de Intentos ---
     function actualizarKPIs() {
       const areaSel = selArea.value;
       const filasTotalArea = filasCSV.filter(f => f.tipo === "total" && f.area === areaSel);
       
-      let intentos10 = 0;
-      let intentos11 = 0;
-
+      let intentos10 = 0, intentos11 = 0;
       filasTotalArea.forEach(f => {
         if(f.grado.includes("10")) intentos10 += f.numeroIntentos;
         if(f.grado.includes("11")) intentos11 += f.numeroIntentos;
@@ -322,7 +339,7 @@
       document.getElementById("kpi-total").textContent = intentos10 + intentos11;
     }
 
-    // --- Motor de Ponderación Matemática ---
+    // Funciones matemáticas auxiliares
     function calcularPonderadoPor(filas, campoClave) {
       const grupos = {};
       filas.forEach(f => {
@@ -338,57 +355,93 @@
       return resultado;
     }
 
-    // --- 2. Renderizar Gráfica General ---
+    function calcularSumaPor(filas, campoClave) {
+      const grupos = {};
+      filas.forEach(f => {
+        const clave = f[campoClave];
+        if (!grupos[clave]) grupos[clave] = 0;
+        grupos[clave] += f.numeroIntentos;
+      });
+      return grupos;
+    }
+
+    // --- 1. Gráfica General (Todas las áreas) ---
     function renderizarGeneral() {
-      const areaSel = selArea.value;
-      const modo = modosVista.general; // 'grupo' o 'grado'
-      const filas = filasCSV.filter(f => f.tipo === "total" && f.area === areaSel);
+      const modo = modosVista.general; 
+      const filas = filasCSV.filter(f => f.tipo === "total");
       
-      let etiquetas = [];
-      let valores = [];
+      const etiquetasEjeY = Array.from(new Set(filas.map(f => f.area))).sort();
+      const entidades = Array.from(new Set(filas.map(f => f[modo]))).sort();
 
-      if (modo === "grupo") {
-        filas.sort((a, b) => a.grupo.localeCompare(b.grupo));
-        etiquetas = filas.map(f => f.grupo);
-        valores = filas.map(f => f.porcentaje);
-      } else {
-        // Agrupar por grado
-        const ponderados = calcularPonderadoPor(filas, "grado");
-        etiquetas = Object.keys(ponderados).sort();
-        valores = etiquetas.map(e => Math.round(ponderados[e] * 10) / 10);
-      }
+      const datasets = entidades.map((entidad, index) => {
+        const filasEntidad = filas.filter(f => f[modo] === entidad);
+        const ponderados = calcularPonderadoPor(filasEntidad, "area"); 
+        
+        const data = etiquetasEjeY.map(eti => {
+          return ponderados[eti] ? Math.round(ponderados[eti] * 10) / 10 : 0;
+        });
 
-      // Asignar colores según rendimiento
-      const colores = valores.map(v => v >= 70 ? 'var(--verde)' : (v >= 50 ? 'var(--dorado)' : 'var(--rojo)'));
+        return {
+          label: modo === 'grupo' ? `Grupo ${entidad}` : `Grado ${entidad}`,
+          data: data,
+          backgroundColor: PALETA[index % PALETA.length],
+          borderRadius: 4,
+          maxBarThickness: 20
+        };
+      });
 
       if (instanciasCharts.general) instanciasCharts.general.destroy();
       const ctx = document.getElementById("chartGeneral").getContext("2d");
       instanciasCharts.general = new Chart(ctx, {
         type: "bar",
-        data: {
-          labels: etiquetas,
-          datasets: [{ data: valores, backgroundColor: colores, borderRadius: 6, maxBarThickness: 40 }]
-        },
-        options: opcionesBaseGrafica()
+        data: { labels: etiquetasEjeY, datasets: datasets },
+        options: opcionesBaseGrafica('porcentaje')
       });
     }
 
-    // --- 3. Renderizar Gráficas de Detalle (Categorías y Competencias) ---
-    function renderizarDetalle(tipoAgrupacion, claveInstancia, idCanvas) {
-      const areaSel = selArea.value;
-      const modo = modosVista[claveInstancia]; // 'grupo' o 'grado'
-      const filas = filasCSV.filter(f => f.tipo === tipoAgrupacion && f.area === areaSel);
-
-      // 1. Obtener todas las etiquetas únicas (eje Y)
-      const etiquetasEjeY = Array.from(new Set(filas.map(f => f.etiqueta))).sort();
+    // --- 2. Gráfica de Intentos (Todas las áreas) ---
+    function renderizarIntentos() {
+      const modo = modosVista.intentos; 
+      const filas = filasCSV.filter(f => f.tipo === "total");
       
-      // 2. Obtener las entidades únicas para los datasets (e.g., ["1001", "1002"] o ["10°", "11°"])
+      const etiquetasEjeY = Array.from(new Set(filas.map(f => f.area))).sort();
       const entidades = Array.from(new Set(filas.map(f => f[modo]))).sort();
 
-      // 3. Construir los datasets
       const datasets = entidades.map((entidad, index) => {
         const filasEntidad = filas.filter(f => f[modo] === entidad);
-        // Ponderar internamente por si el grado tiene varios grupos
+        const sumas = calcularSumaPor(filasEntidad, "area"); 
+        
+        const data = etiquetasEjeY.map(eti => sumas[eti] || 0);
+
+        return {
+          label: modo === 'grupo' ? `Grupo ${entidad}` : `Grado ${entidad}`,
+          data: data,
+          backgroundColor: PALETA[index % PALETA.length],
+          borderRadius: 4,
+          maxBarThickness: 20
+        };
+      });
+
+      if (instanciasCharts.intentos) instanciasCharts.intentos.destroy();
+      const ctx = document.getElementById("chartIntentos").getContext("2d");
+      instanciasCharts.intentos = new Chart(ctx, {
+        type: "bar",
+        data: { labels: etiquetasEjeY, datasets: datasets },
+        options: opcionesBaseGrafica('cantidad')
+      });
+    }
+
+    // --- 3. Gráficas de Detalle (Área Seleccionada) ---
+    function renderizarDetalle(tipoAgrupacion, claveInstancia, idCanvas) {
+      const areaSel = selArea.value;
+      const modo = modosVista[claveInstancia]; 
+      const filas = filasCSV.filter(f => f.tipo === tipoAgrupacion && f.area === areaSel);
+
+      const etiquetasEjeY = Array.from(new Set(filas.map(f => f.etiqueta))).sort();
+      const entidades = Array.from(new Set(filas.map(f => f[modo]))).sort();
+
+      const datasets = entidades.map((entidad, index) => {
+        const filasEntidad = filas.filter(f => f[modo] === entidad);
         const ponderados = calcularPonderadoPor(filasEntidad, "etiqueta"); 
         
         const data = etiquetasEjeY.map(eti => {
@@ -409,24 +462,31 @@
       instanciasCharts[claveInstancia] = new Chart(ctx, {
         type: "bar",
         data: { labels: etiquetasEjeY, datasets: datasets },
-        options: opcionesBaseGrafica(true) // true para mostrar la leyenda (ya que hay varios datasets)
+        options: opcionesBaseGrafica('porcentaje')
       });
     }
 
-    // --- Configuración compartida de Chart.js ---
-    function opcionesBaseGrafica(mostrarLeyenda = false) {
+    // --- Configuración dinámica de Chart.js ---
+    function opcionesBaseGrafica(tipo = 'porcentaje') {
+      const esPorcentaje = tipo === 'porcentaje';
       return {
         indexAxis: "y",
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: mostrarLeyenda, position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
+          legend: { display: true, position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
           tooltip: {
-            callbacks: { label: item => ` ${item.dataset.label || ''}: ${item.formattedValue}% de acierto` }
+            callbacks: { 
+              label: item => esPorcentaje 
+                ? ` ${item.dataset.label || ''}: ${item.formattedValue}% de acierto` 
+                : ` ${item.dataset.label || ''}: ${item.formattedValue} intentos`
+            }
           }
         },
         scales: {
-          x: { min: 0, max: 100, ticks: { callback: v => v + "%" } },
+          x: esPorcentaje 
+             ? { min: 0, max: 100, ticks: { callback: v => v + "%" } } 
+             : { min: 0, ticks: { precision: 0 } },
           y: { ticks: { autoSkip: false } }
         }
       };
