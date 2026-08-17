@@ -220,6 +220,10 @@ body{
   background:var(--card); border:1.5px solid var(--gold); color:var(--gold);
   padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);
 }
+body.es-estudiante .score-pill {
+  visibility: hidden;
+}
+
 
 /* ---------- summary screen ---------- */
 .summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:30px 28px; display:none;}
@@ -325,6 +329,9 @@ body{
   let datosSesion = {};
   try { datosSesion = JSON.parse(sesion); } catch (e) {}
   window.ES_DOCENTE = (datosSesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
+  if (!window.ES_DOCENTE) {
+    document.body.classList.add('es-estudiante');
+  }
 })();
 </script>
 <div class="wrap">
