@@ -393,6 +393,7 @@ const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbwEzpQsbsQ9
 const VERSION_ARTEFACTO = "v1"; // súbelo manualmente si algún día cambias las preguntas de este cuadernillo
 const AREA_ARTEFACTO = "Lectura Crítica";
 let inicioIntento = Date.now(); // se define al cargar la página
+let numeroIntentoActual = 1; // valor por defecto si falla la consulta o es el primer intento
 
 const Q = [
 {id:25, group:'historieta', setLabel:'Preguntas 25 a 29', category:'Texto narrativo', competencia:'Comprensión global',
@@ -809,7 +810,7 @@ function enviarIntentoAlBackend() {
     nombre: sesion.nombre || "",
     grupo: sesion.grupo || "",
     area: AREA_ARTEFACTO,
-    numeroIntento: 1, // por ahora fijo; se puede mejorar más adelante si se guarda historial
+    numeroIntento: numeroIntentoActual,
     duracionSegundos: Math.round((Date.now() - inicioIntento) / 1000),
     origen: "portal",
     rol: window.ES_DOCENTE ? "docente" : "estudiante",
@@ -841,6 +842,50 @@ function agruparPorCampo(campo) {
   });
   return Object.values(grupos);
 }
+
+
+async function cargarHistorialIntentos() {
+  if (window.ES_DOCENTE) return; // solo aplica a estudiantes
+
+  const sesionRaw = sessionStorage.getItem("slg_sesion");
+  let sesion = {};
+  try { sesion = JSON.parse(sesionRaw); } catch (e) {}
+  if (!sesion.documento) return;
+
+  try {
+    const params = new URLSearchParams({
+      doc: sesion.documento,
+      area: AREA_ARTEFACTO,
+      accion: "historialArtefacto"
+    });
+    const resp = await fetch(SCRIPT_URL_INTENTOS + "?" + params.toString());
+    const datos = await resp.json();
+
+    if (datos.encontrado) {
+      numeroIntentoActual = datos.numeroIntentosPrevios + 1;
+      mostrarBannerHistorial(datos.numeroIntentosPrevios, datos.ultimoIntento);
+    }
+  } catch (e) {
+    // Falla silenciosa: si no se puede consultar, se asume intento 1
+    // y el cuestionario funciona con normalidad de todas formas.
+  }
+}
+
+function mostrarBannerHistorial(numeroIntentosPrevios, ultimoIntento) {
+  if (numeroIntentosPrevios === 0) return; // primer intento: no hay nada que mostrar
+
+  const banner = document.createElement('div');
+  banner.style.cssText = 'background:#faf7f1; border-left:4px solid #c9a24b; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13.5px; color:#333;';
+  banner.innerHTML =
+    '<strong>Intento N.\u00b0 ' + (numeroIntentosPrevios + 1) + '</strong> \u2014 ' +
+    'tu puntaje del intento anterior fue <strong>' + ultimoIntento.aciertos + '/' + ultimoIntento.totalPreguntas +
+    '</strong> (' + ultimoIntento.porcentaje + '%)';
+
+  // Inserta el banner al inicio del contenedor principal del cuestionario
+  document.querySelector('.wrap').prepend(banner);
+}
+
+cargarHistorialIntentos(); // llamar al cargar la página
 
 </script>
 </body>
