@@ -6,13 +6,13 @@ Grupo,Grado,Área,TipoAgrupación,Etiqueta,NumeroIntentos,PromedioPorcentaje
 1001,10°,Matemáticas,categoria,Geometría,4,77.8
 1001,10°,Matemáticas,competencia,Formulación y ejecución,4,66.7
 1001,10°,Matemáticas,competencia,Argumentación,4,16.7
-1001,10°,Ciencias Naturales,categoria,Física,1,25
-1001,10°,Ciencias Naturales,categoria,Biología,1,45.5
-1001,10°,Ciencias Naturales,categoria,Química,1,20
-1001,10°,Ciencias Naturales,competencia,Indagación,1,0
-1001,10°,Ciencias Naturales,competencia,Explicación de fenómenos,1,25
-1001,10°,Ciencias Naturales,competencia,Uso comprensivo del conocimiento científico,1,46.2
-1001,10°,Ciencias Naturales,total,Total,1,33.3
+1001,10°,Ciencias Naturales,categoria,Física,2,18.8
+1001,10°,Ciencias Naturales,categoria,Biología,2,36.4
+1001,10°,Ciencias Naturales,categoria,Química,2,20
+1001,10°,Ciencias Naturales,competencia,Indagación,2,0
+1001,10°,Ciencias Naturales,competencia,Explicación de fenómenos,2,25
+1001,10°,Ciencias Naturales,competencia,Uso comprensivo del conocimiento científico,2,34.6
+1001,10°,Ciencias Naturales,total,Total,2,27.1
 1001,10°,Lectura Crítica,categoria,Texto narrativo,1,60
 1001,10°,Lectura Crítica,categoria,Texto informativo,1,14.3
 1001,10°,Lectura Crítica,categoria,Texto argumentativo,1,14.3
