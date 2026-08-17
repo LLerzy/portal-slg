@@ -132,19 +132,23 @@
             <label for="selArea">Filtro para Detalle (Categorías/Competencias)</label>
             <select id="selArea"></select>
           </div>
+          <div class="field">
+            <label for="selGrupo">Filtro de Grupo</label>
+            <select id="selGrupo"></select>
+          </div>
         </div>
 
         <div class="kpi-grid">
           <div class="kpi-card">
-            <h4>Total Intentos 10° <br><small>(Área Seleccionada)</small></h4>
+            <h4>Total Intentos 10° <br><small>(Filtros Activos)</small></h4>
             <div class="valor" id="kpi-10">0</div>
           </div>
           <div class="kpi-card">
-            <h4>Total Intentos 11° <br><small>(Área Seleccionada)</small></h4>
+            <h4>Total Intentos 11° <br><small>(Filtros Activos)</small></h4>
             <div class="valor" id="kpi-11">0</div>
           </div>
           <div class="kpi-card" style="border-color: var(--dorado);">
-            <h4 style="color: var(--tinta);">Total General <br><small>(Área Seleccionada)</small></h4>
+            <h4 style="color: var(--tinta);">Total General <br><small>(Filtros Activos)</small></h4>
             <div class="valor" id="kpi-total">0</div>
           </div>
         </div>
@@ -237,26 +241,29 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-    // IMPORTANTE: Cambia esta URL por la URL "Raw" de tu archivo CSV en GitHub.
-    // Ejemplo: "https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/comparativoartefactos.csv"
+    // URL estática alojada en tus Github Pages.
     const RUTA_CSV = "https://llerzy.github.io/portal-slg/dashboard-artefactos/comparativoartefactos.csv"; 
+    
+    // Generar URL con sello de tiempo para saltarse siempre la memoria caché del navegador
+    const urlSinCache = RUTA_CSV + "?v=" + new Date().getTime();
 
     // Variables globales
     let filasCSV = [];
     let instanciasCharts = { general: null, intentos: null, categorias: null, competencias: null };
     let modosVista = { general: 'grupo', intentos: 'grupo', categorias: 'grupo', competencias: 'grupo' };
     
-    // Paleta ampliada para soportar múltiples grupos dinámicamente sin repetir pronto
+    // Paleta ampliada
     const PALETA = ['#9b2226', '#e0aa00', '#1a7f37', '#4a4238', '#2b658b', '#666666', '#d9534f', '#5bc0de', '#f0ad4e', '#5cb85c', '#0275d8', '#8b5a2b'];
 
     const selArea = document.getElementById("selArea");
+    const selGrupo = document.getElementById("selGrupo");
     const panelFiltros = document.getElementById("panelFiltros");
     const panelGraficas = document.getElementById("panelGraficas");
     const mensajeEstado = document.getElementById("mensajeEstado");
 
     mensajeEstado.style.display = "block";
 
-    Papa.parse(RUTA_CSV, {
+    Papa.parse(urlSinCache, {
       download: true,
       header: true,
       skipEmptyLines: true,
@@ -279,7 +286,7 @@
         }
 
         mensajeEstado.style.display = "none";
-        document.getElementById("updatedAt").textContent = "Actualizado: " + new Date().toLocaleDateString("es-CO");
+        document.getElementById("updatedAt").textContent = "Actualizado: " + new Date().toLocaleString("es-CO");
         
         inicializarFiltros();
         panelFiltros.style.display = "block";
@@ -287,18 +294,32 @@
         actualizarDashboard();
       },
       error: function () {
-        mensajeEstado.textContent = "Error al descargar el archivo CSV. Verifica que la URL sea correcta (formato Raw).";
+        mensajeEstado.textContent = "Error al descargar el archivo CSV. Verifica la ruta.";
       }
     });
 
     function inicializarFiltros() {
-      // Extrae automáticamente todas las áreas del CSV
+      // 1. Selector de Áreas
       const areas = Array.from(new Set(filasCSV.map(f => f.area))).sort();
       selArea.innerHTML = areas.map(a => `<option value="${a}">${a}</option>`).join("");
-      selArea.addEventListener("change", () => {
-        actualizarKPIs();
-        renderizarDetalle('categoria', 'categorias', 'chartCategorias');
-        renderizarDetalle('competencia', 'competencias', 'chartCompetencias');
+      
+      // 2. Selector de Grupos Dinámico
+      const grupos = Array.from(new Set(filasCSV.map(f => f.grupo))).sort();
+      selGrupo.innerHTML = `<option value="todos">Todos los grupos</option>` + 
+                           grupos.map(g => `<option value="${g}">${g}</option>`).join("");
+
+      // 3. Eventos de los selectores
+      selArea.addEventListener("change", actualizarDashboard);
+      
+      selGrupo.addEventListener("change", () => {
+        // Lógica para mostrar/ocultar los botones de vista "Grupo/Grado"
+        const toggles = document.querySelectorAll(".view-toggle");
+        if (selGrupo.value === "todos") {
+          toggles.forEach(t => t.style.display = "flex");
+        } else {
+          toggles.forEach(t => t.style.display = "none");
+        }
+        actualizarDashboard();
       });
 
       configurarToggle("toggleGeneral", "general", renderizarGeneral);
@@ -329,7 +350,14 @@
 
     function actualizarKPIs() {
       const areaSel = selArea.value;
-      const filasTotalArea = filasCSV.filter(f => f.tipo === "total" && f.area === areaSel);
+      const grupoSel = selGrupo.value;
+      
+      let filasTotalArea = filasCSV.filter(f => f.tipo === "total" && f.area === areaSel);
+      
+      // Filtramos por grupo si aplica
+      if (grupoSel !== "todos") {
+        filasTotalArea = filasTotalArea.filter(f => f.grupo === grupoSel);
+      }
       
       let intentos10 = 0, intentos11 = 0;
       filasTotalArea.forEach(f => {
@@ -370,11 +398,16 @@
 
     // --- 1. Gráfica General (Todas las áreas) ---
     function renderizarGeneral() {
-      const modo = modosVista.general; 
-      const filas = filasCSV.filter(f => f.tipo === "total");
+      const grupoSel = selGrupo.value;
+      // Forzamos "por grupo" si hay un grupo específico seleccionado
+      const modo = grupoSel === "todos" ? modosVista.general : "grupo"; 
+      
+      let filas = filasCSV.filter(f => f.tipo === "total");
+      if (grupoSel !== "todos") {
+        filas = filas.filter(f => f.grupo === grupoSel);
+      }
       
       const etiquetasEjeY = Array.from(new Set(filas.map(f => f.area))).sort();
-      // ¡Esta es la magia! Aquí detecta dinámicamente TODOS los grupos (o grados) que existan en el CSV
       const entidades = Array.from(new Set(filas.map(f => f[modo]))).sort();
 
       const datasets = entidades.map((entidad, index) => {
@@ -405,8 +438,13 @@
 
     // --- 2. Gráfica de Intentos (Todas las áreas) ---
     function renderizarIntentos() {
-      const modo = modosVista.intentos; 
-      const filas = filasCSV.filter(f => f.tipo === "total");
+      const grupoSel = selGrupo.value;
+      const modo = grupoSel === "todos" ? modosVista.intentos : "grupo"; 
+      
+      let filas = filasCSV.filter(f => f.tipo === "total");
+      if (grupoSel !== "todos") {
+        filas = filas.filter(f => f.grupo === grupoSel);
+      }
       
       const etiquetasEjeY = Array.from(new Set(filas.map(f => f.area))).sort();
       const entidades = Array.from(new Set(filas.map(f => f[modo]))).sort();
@@ -438,8 +476,13 @@
     // --- 3. Gráficas de Detalle (Área Seleccionada) ---
     function renderizarDetalle(tipoAgrupacion, claveInstancia, idCanvas) {
       const areaSel = selArea.value;
-      const modo = modosVista[claveInstancia]; 
-      const filas = filasCSV.filter(f => f.tipo === tipoAgrupacion && f.area === areaSel);
+      const grupoSel = selGrupo.value;
+      const modo = grupoSel === "todos" ? modosVista[claveInstancia] : "grupo"; 
+      
+      let filas = filasCSV.filter(f => f.tipo === tipoAgrupacion && f.area === areaSel);
+      if (grupoSel !== "todos") {
+        filas = filas.filter(f => f.grupo === grupoSel);
+      }
 
       const etiquetasEjeY = Array.from(new Set(filas.map(f => f.etiqueta))).sort();
       const entidades = Array.from(new Set(filas.map(f => f[modo]))).sort();
