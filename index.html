@@ -760,7 +760,7 @@ function mostrarPantallaDashboard(sesion) {
   if (guardada) {
     try {
       const sesion = JSON.parse(guardada);
-      if (sesion && sesion.documento && sesion.nombre) {
+      if (sesion && sesion.documento && (sesion.grupo || sesion.rol === "docente" || sesion.nombre)) {
         mostrarPantallaDashboard(sesion);
         return;
       }
