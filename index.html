@@ -264,12 +264,21 @@
     z-index: 2;
   }
   .fila-descanso { background-color: #f9f9f9; font-style: italic; color: #888; }
-  .col-hoy {
-    background-color: #fffdf0 !important; border-left: 2px solid var(--dorado, #e0aa00) !important;
-    border-right: 2px solid var(--dorado, #e0aa00) !important;
-  }
-  th.col-hoy { background-color: var(--dorado, #e0aa00) !important; color: #000 !important; font-weight: 800; }
-  td.col-hoy { font-weight: 600; color: var(--rojo-oscuro, #7a1a1e); }  
+  /* ---------- Destacado del Día Actual (Conserva el color del grupo) ---------- */
+.col-hoy {
+  border-left: 3px solid var(--dorado, #e0aa00) !important;
+  border-right: 3px solid var(--dorado, #e0aa00) !important;
+}
+
+th.col-hoy {
+  background-color: var(--dorado, #e0aa00) !important;
+  color: #000000 !important;
+  font-weight: 800;
+}
+
+td.col-hoy {
+  box-shadow: inset 0 0 0 1px var(--dorado, #e0aa00);
+}  
 </style>
 </head>
 <body>
@@ -957,7 +966,7 @@ function mostrarError(texto) {
 // Variable para almacenar todas las versiones del docente activo
 let maestroHorariosVersiones = {};
 
-// Paleta de colores suaves (se asignarán automáticamente a cada grupo diferente)
+// Paleta de colores pastel dinámicos para los grupos
 const paletaGrupos = [
   '#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#fce4ec', 
   '#e0f7fa', '#fbe9e7', '#f0f4c3', '#d1c4e9', '#b2dfdb'
@@ -965,18 +974,34 @@ const paletaGrupos = [
 let mapaColoresGrupos = {};
 let indiceColorGrupo = 0;
 
+// Auxiliar para formatear la versión si viene en formato ISO o fecha
+function formatearNombreVersion(v) {
+  if (!v) return "Única";
+  // Si la versión es un ISO String de fecha (ej: 2026-07-30T05:00:00.000Z)
+  if (v.includes("T00:00:00") || v.includes("Z") || !isNaN(Date.parse(v)) && v.length > 15) {
+    try {
+      const fecha = new Date(v);
+      if (!isNaN(fecha.getTime())) {
+        // Formatear a: "jueves, 30 de julio de 2026"
+        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return fecha.toLocaleDateString('es-CO', opciones);
+      }
+    } catch(e) {}
+  }
+  return v;
+}
+
 function cargarHorarioDocente(matrizHorarioCompleta) {
   const contenedor = document.getElementById("seccion-horario");
   if(!contenedor) return;
 
-  // Reiniciamos los colores cada vez que un docente inicia sesión
   mapaColoresGrupos = {};
   indiceColorGrupo = 0;
 
   // 1. Agrupar la información por versiones
   maestroHorariosVersiones = {};
   matrizHorarioCompleta.forEach(fila => {
-    const v = fila.version || "Única";
+    let v = formatearNombreVersion(fila.version);
     if (!maestroHorariosVersiones[v]) maestroHorariosVersiones[v] = [];
     maestroHorariosVersiones[v].push(fila);
   });
@@ -995,7 +1020,7 @@ function cargarHorarioDocente(matrizHorarioCompleta) {
     contVersiones.style.display = "flex";
     selector.innerHTML = nombresVersiones.map(v => `<option value="${v}">${v}</option>`).join("");
     
-    // Dejar seleccionada la última versión añadida (suele ser la más reciente)
+    // Dejar seleccionada la versión más reciente
     const ultimaVersion = nombresVersiones[nombresVersiones.length - 1];
     selector.value = ultimaVersion;
 
@@ -1023,22 +1048,25 @@ function renderizarTablaHorario(matrizVersion) {
     badgeDia.textContent = "Fin de Semana";
   }
 
-  // Marcar columna de hoy en el encabezado
+  // Encabezados del día actual
   document.querySelectorAll("#tabla-horario th[data-dia]").forEach(th => {
     th.classList.remove("col-hoy");
     if (parseInt(th.dataset.dia) === diaSemana) th.classList.add("col-hoy");
   });
 
-  // --- FUNCIÓN INTERNA: Formatea texto y asigna color por GRUPO ---
+  // --- FUNCIÓN INTERNA: Procesa celdas manteniendo color de grupo en el día actual ---
   function procesarCelda(texto, esDiaActual) {
+    let claseFinal = esDiaActual ? "col-hoy" : "";
+    
     if (!texto || texto.toUpperCase().includes("LIBRE") || texto.toUpperCase().includes("DESCANSO")) {
-      return { html: texto, clase: esDiaActual ? "col-hoy" : "", estilo: "" };
+      // Si es el día actual y no tiene grupo, le colocamos un tono crema suave
+      let estiloVacio = esDiaActual ? "background-color: #fffdf0;" : "";
+      return { html: texto || "", clase: claseFinal, estilo: estiloVacio };
     }
     
     let htmlFinal = texto;
     let estiloFondo = "";
     
-    // Si contiene guion, separamos la materia del grupo
     if (texto.includes("-")) {
       let partes = texto.split("-");
       let asignatura = partes[0].trim();
@@ -1046,24 +1074,22 @@ function renderizarTablaHorario(matrizVersion) {
       
       htmlFinal = `<strong>${asignatura}</strong><br><span style="font-size:12px; opacity:0.85;">${grado}</span>`;
       
-      // Extraemos solo los números para identificar el GRUPO exacto (ej. "10° 01" -> "1001")
       let numerosGrupo = grado.replace(/[^0-9]/g, ""); 
       
       if (numerosGrupo) {
-        // Si no le hemos dado un color a este grupo, le asignamos el siguiente de la paleta
         if (!mapaColoresGrupos[numerosGrupo]) {
           mapaColoresGrupos[numerosGrupo] = paletaGrupos[indiceColorGrupo % paletaGrupos.length];
           indiceColorGrupo++;
         }
+        // Asigna siempre el color de grupo pastel correspondiente
         estiloFondo = `background-color: ${mapaColoresGrupos[numerosGrupo]};`;
       }
     }
     
-    let claseFinal = esDiaActual ? "col-hoy" : "";
     return { html: htmlFinal, clase: claseFinal, estilo: estiloFondo };
   }
 
-  // 3. Llenar el cuerpo de la tabla
+  // Llenar filas de la tabla
   matrizVersion.forEach(fila => {
     const tr = document.createElement("tr");
     
@@ -1087,7 +1113,6 @@ function renderizarTablaHorario(matrizVersion) {
     tbody.appendChild(tr);
   });
 
-  // Centrar el scroll horizontal si es celular
   if (diaSemana >= 1 && diaSemana <= 5 && window.innerWidth < 768) {
     setTimeout(() => {
       const colDestacada = document.querySelector("#tabla-horario th.col-hoy");
