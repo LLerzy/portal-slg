@@ -806,7 +806,7 @@ btnSalir.addEventListener("click", function () {
   mostrarPantallaLogin();
 });
 
-<script>
+
 (function () {
   const CLAVE_DESCARTADO = "slg_instalar_descartado";
   const banner = document.getElementById("banner-instalar");
@@ -869,7 +869,6 @@ btnSalir.addEventListener("click", function () {
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
 })();
-</script>
 
 campoDocumento.addEventListener("keydown", function (ev) {
   if (ev.key === "Enter") { ev.preventDefault(); intentarIngresar(); }
