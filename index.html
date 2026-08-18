@@ -254,8 +254,14 @@
   }
   .tabla-horario th { background: #fbf8f2; color: var(--tinta, #222); font-weight: 700; text-transform: uppercase; font-size: 12px; }
   .col-hora {
-    min-width: 90px !important; font-weight: bold; background: #f4efe4 !important;
-    color: var(--rojo-oscuro, #7a1a1e); position: sticky; left: 0; z-index: 2;
+    min-width: 120px !important; /* Más ancho para que no se corte */
+    white-space: nowrap; /* Evita que el texto salte de línea */
+    font-weight: bold; 
+    background: #f4efe4 !important;
+    color: var(--rojo-oscuro, #7a1a1e); 
+    position: sticky; 
+    left: 0; 
+    z-index: 2;
   }
   .fila-descanso { background-color: #f9f9f9; font-style: italic; color: #888; }
   .col-hoy {
@@ -501,6 +507,10 @@
           <div class="horario-titulo">
             <h3>📅 Mi Horario de Clases</h3>
             <span id="badge-dia-actual" class="badge-dia">Hoy es ...</span>
+          </div>
+          <div id="contenedor-versiones" style="display:none; align-items:center; gap:8px;">
+            <label for="selector-version-horario" style="font-size:13px; font-weight:700; color:var(--gris);">Versión:</label>
+            <select id="selector-version-horario" style="padding:6px 12px; border-radius:8px; border:1px solid #d8cfc2; font-family:inherit; outline:none; background:#fff; cursor:pointer;"></select>
           </div>
         </div>
         
@@ -944,16 +954,65 @@ function mostrarError(texto) {
     '<p style="margin:0;"><strong>Atención:</strong> ' + texto + "</p></div>";
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-// Función para renderizar el horario resaltando el día de la semana
-function cargarHorarioDocente(matrizHorario) {
+// Variable para almacenar todas las versiones del docente activo
+let maestroHorariosVersiones = {};
+
+// Paleta de colores suaves (se asignarán automáticamente a cada grupo diferente)
+const paletaGrupos = [
+  '#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#fce4ec', 
+  '#e0f7fa', '#fbe9e7', '#f0f4c3', '#d1c4e9', '#b2dfdb'
+];
+let mapaColoresGrupos = {};
+let indiceColorGrupo = 0;
+
+function cargarHorarioDocente(matrizHorarioCompleta) {
+  const contenedor = document.getElementById("seccion-horario");
+  if(!contenedor) return;
+
+  // Reiniciamos los colores cada vez que un docente inicia sesión
+  mapaColoresGrupos = {};
+  indiceColorGrupo = 0;
+
+  // 1. Agrupar la información por versiones
+  maestroHorariosVersiones = {};
+  matrizHorarioCompleta.forEach(fila => {
+    const v = fila.version || "Única";
+    if (!maestroHorariosVersiones[v]) maestroHorariosVersiones[v] = [];
+    maestroHorariosVersiones[v].push(fila);
+  });
+
+  const nombresVersiones = Object.keys(maestroHorariosVersiones);
+  if (nombresVersiones.length === 0) {
+    contenedor.classList.add("oculto");
+    return;
+  }
+
+  // 2. Configurar el selector de versiones
+  const contVersiones = document.getElementById("contenedor-versiones");
+  const selector = document.getElementById("selector-version-horario");
+  
+  if (nombresVersiones.length > 0) {
+    contVersiones.style.display = "flex";
+    selector.innerHTML = nombresVersiones.map(v => `<option value="${v}">${v}</option>`).join("");
+    
+    // Dejar seleccionada la última versión añadida (suele ser la más reciente)
+    const ultimaVersion = nombresVersiones[nombresVersiones.length - 1];
+    selector.value = ultimaVersion;
+
+    selector.onchange = () => renderizarTablaHorario(maestroHorariosVersiones[selector.value]);
+    renderizarTablaHorario(maestroHorariosVersiones[ultimaVersion]);
+  }
+  
+  contenedor.classList.remove("oculto");
+}
+
+function renderizarTablaHorario(matrizVersion) {
   const tbody = document.getElementById("tbody-horario");
   const badgeDia = document.getElementById("badge-dia-actual");
-  const contenedor = document.getElementById("seccion-horario");
+  if(!tbody) return;
   
-  if(!tbody || !contenedor) return;
   tbody.innerHTML = "";
   
-  // 1. Obtener el día actual de la semana (1 = Lunes, ..., 5 = Viernes)
   const fechaActual = new Date();
   const diaSemana = fechaActual.getDay(); 
   const nombresDias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
@@ -964,42 +1023,75 @@ function cargarHorarioDocente(matrizHorario) {
     badgeDia.textContent = "Fin de Semana";
   }
 
-  // 2. Resaltar el encabezado del día actual
+  // Marcar columna de hoy en el encabezado
   document.querySelectorAll("#tabla-horario th[data-dia]").forEach(th => {
     th.classList.remove("col-hoy");
-    if (parseInt(th.dataset.dia) === diaSemana) {
-      th.classList.add("col-hoy");
-    }
+    if (parseInt(th.dataset.dia) === diaSemana) th.classList.add("col-hoy");
   });
 
-  // 3. Poblar la tabla
-  matrizHorario.forEach(fila => {
+  // --- FUNCIÓN INTERNA: Formatea texto y asigna color por GRUPO ---
+  function procesarCelda(texto, esDiaActual) {
+    if (!texto || texto.toUpperCase().includes("LIBRE") || texto.toUpperCase().includes("DESCANSO")) {
+      return { html: texto, clase: esDiaActual ? "col-hoy" : "", estilo: "" };
+    }
+    
+    let htmlFinal = texto;
+    let estiloFondo = "";
+    
+    // Si contiene guion, separamos la materia del grupo
+    if (texto.includes("-")) {
+      let partes = texto.split("-");
+      let asignatura = partes[0].trim();
+      let grado = partes.slice(1).join("-").trim(); 
+      
+      htmlFinal = `<strong>${asignatura}</strong><br><span style="font-size:12px; opacity:0.85;">${grado}</span>`;
+      
+      // Extraemos solo los números para identificar el GRUPO exacto (ej. "10° 01" -> "1001")
+      let numerosGrupo = grado.replace(/[^0-9]/g, ""); 
+      
+      if (numerosGrupo) {
+        // Si no le hemos dado un color a este grupo, le asignamos el siguiente de la paleta
+        if (!mapaColoresGrupos[numerosGrupo]) {
+          mapaColoresGrupos[numerosGrupo] = paletaGrupos[indiceColorGrupo % paletaGrupos.length];
+          indiceColorGrupo++;
+        }
+        estiloFondo = `background-color: ${mapaColoresGrupos[numerosGrupo]};`;
+      }
+    }
+    
+    let claseFinal = esDiaActual ? "col-hoy" : "";
+    return { html: htmlFinal, clase: claseFinal, estilo: estiloFondo };
+  }
+
+  // 3. Llenar el cuerpo de la tabla
+  matrizVersion.forEach(fila => {
     const tr = document.createElement("tr");
     
     const esDescanso = (fila.lunes || "").toUpperCase().includes("DESCANSO");
     if (esDescanso) tr.classList.add("fila-descanso");
 
+    const cLunes = procesarCelda(fila.lunes, diaSemana === 1);
+    const cMartes = procesarCelda(fila.martes, diaSemana === 2);
+    const cMiercoles = procesarCelda(fila.miercoles, diaSemana === 3);
+    const cJueves = procesarCelda(fila.jueves, diaSemana === 4);
+    const cViernes = procesarCelda(fila.viernes, diaSemana === 5);
+
     tr.innerHTML = `
       <td class="col-hora">${fila.hora || ""}</td>
-      <td class="${diaSemana === 1 ? 'col-hoy' : ''}">${fila.lunes || ""}</td>
-      <td class="${diaSemana === 2 ? 'col-hoy' : ''}">${fila.martes || ""}</td>
-      <td class="${diaSemana === 3 ? 'col-hoy' : ''}">${fila.miercoles || ""}</td>
-      <td class="${diaSemana === 4 ? 'col-hoy' : ''}">${fila.jueves || ""}</td>
-      <td class="${diaSemana === 5 ? 'col-hoy' : ''}">${fila.viernes || ""}</td>
+      <td class="${cLunes.clase}" style="${cLunes.estilo}">${cLunes.html}</td>
+      <td class="${cMartes.clase}" style="${cMartes.estilo}">${cMartes.html}</td>
+      <td class="${cMiercoles.clase}" style="${cMiercoles.estilo}">${cMiercoles.html}</td>
+      <td class="${cJueves.clase}" style="${cJueves.estilo}">${cJueves.html}</td>
+      <td class="${cViernes.clase}" style="${cViernes.estilo}">${cViernes.html}</td>
     `;
     tbody.appendChild(tr);
   });
 
-  // 4. Mostrar el contenedor
-  contenedor.classList.remove("oculto");
-
-  // 5. En celulares: desplazar automáticamente hacia el día actual
+  // Centrar el scroll horizontal si es celular
   if (diaSemana >= 1 && diaSemana <= 5 && window.innerWidth < 768) {
     setTimeout(() => {
       const colDestacada = document.querySelector("#tabla-horario th.col-hoy");
-      if (colDestacada) {
-        colDestacada.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      }
+      if (colDestacada) colDestacada.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }, 300);
   }
 }
