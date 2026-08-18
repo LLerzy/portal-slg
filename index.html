@@ -755,19 +755,27 @@ function mostrarPantallaDashboard(sesion) {
 }
 
 // Si ya había una sesión activa en esta pestaña, entra directo al panel.
-(function restaurarSesion() {
-  const guardada = sessionStorage.getItem(CLAVE_SESION);
-  if (guardada) {
-    try {
-      const sesion = JSON.parse(guardada);
-      if (sesion && sesion.documento && (sesion.grupo || sesion.rol === "docente" || sesion.nombre)) {
-        mostrarPantallaDashboard(sesion);
-        return;
-      }
-    } catch (err) { /* sesión corrupta, se ignora */ }
-  }
-  mostrarPantallaLogin();
-})();
+setTimeout(function restaurarSesion() { 
+  const guardada = sessionStorage.getItem(CLAVE_SESION); 
+  if (guardada) { 
+    try { 
+      const sesion = JSON.parse(guardada); 
+      
+      // Validamos si es docente asegurándonos de ignorar mayúsculas/minúsculas
+      const esRolDocente = (sesion.rol || "").trim().toLowerCase() === "docente";
+      
+      // CANDADO BLANDO ACTUALIZADO
+      if (sesion && sesion.documento && (sesion.grupo || esRolDocente || sesion.nombre)) { 
+        mostrarPantallaDashboard(sesion); 
+        return; 
+      } 
+    } catch (err) { 
+      // Si ocurre un error, ahora lo mostrará en la consola en vez de fallar en silencio
+      console.error("Error del sistema al restaurar la sesión:", err); 
+    } 
+  } 
+  mostrarPantallaLogin(); 
+}, 0); // El ", 0" asegura que se ejecute justo después de cargar las variables de abajo
 
 btnSalir.addEventListener("click", function () {
   sessionStorage.removeItem(CLAVE_SESION);
