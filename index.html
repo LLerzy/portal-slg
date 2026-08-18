@@ -814,39 +814,56 @@ btnSalir.addEventListener("click", function () {
   const btnCerrar = document.getElementById("btn-cerrar-instalar");
   const textoInstalar = document.getElementById("texto-instalar");
   if (!banner || !btnInstalar || !btnCerrar) return;
- 
+
   // Ya está instalado / abierto como app -> no mostrar nada.
   const yaInstalado =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
- 
-  // El estudiante ya cerró el aviso antes en este dispositivo.
+
+  // El estudiante ya cerró el aviso antes en este dispositivo/navegador.
   const yaDescartado = localStorage.getItem(CLAVE_DESCARTADO) === "1";
- 
+
   if (yaInstalado || yaDescartado) return;
- 
-  const esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+  // Detecta iOS incluyendo iPadOS, que desde iPadOS 13 se identifica
+  // como "Macintosh" en el user-agent (igual que iPhone en modo
+  // "Sitio para computadora").
+  const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
   let eventoInstalacion = null;
- 
+
   btnCerrar.addEventListener("click", function () {
     banner.classList.add("oculto");
     localStorage.setItem(CLAVE_DESCARTADO, "1");
   });
- 
+
+  function mostrarInstruccionesManuales() {
+    textoInstalar.textContent =
+      "Abre el menú (⋮) de tu navegador y toca \"Instalar aplicación\" o \"Agregar a pantalla de inicio\".";
+    btnInstalar.style.display = "none";
+    banner.classList.remove("oculto");
+  }
+
   if (esIOS) {
-    // Safari/iOS no dispara 'beforeinstallprompt': se muestran instrucciones manuales.
+    // Safari/iOS no dispara 'beforeinstallprompt': instrucciones manuales directas.
     textoInstalar.textContent =
       "Toca el ícono Compartir (⬆️) en Safari y luego \"Agregar a pantalla de inicio\".";
     btnInstalar.style.display = "none";
     banner.classList.remove("oculto");
   } else {
-    // Chrome/Android (y navegadores basados en Chromium): esperamos el evento nativo.
+    // Chrome/Android y similares: esperamos el evento nativo, pero con
+    // respaldo manual si el navegador no lo dispara (Brave con Shields
+    // activos, heurísticas de Chrome, versiones que no lo soportan, etc.)
     window.addEventListener("beforeinstallprompt", function (e) {
       e.preventDefault();
       eventoInstalacion = e;
+      textoInstalar.textContent =
+        "Agrégalo a tu pantalla de inicio para entrar más rápido, como una app.";
+      btnInstalar.style.display = "";
       banner.classList.remove("oculto");
     });
- 
+
     btnInstalar.addEventListener("click", function () {
       if (!eventoInstalacion) return;
       eventoInstalacion.prompt();
@@ -855,13 +872,22 @@ btnSalir.addEventListener("click", function () {
         banner.classList.add("oculto");
       });
     });
- 
+
     window.addEventListener("appinstalled", function () {
       banner.classList.add("oculto");
       localStorage.setItem(CLAVE_DESCARTADO, "1");
     });
+
+    // Respaldo: si a los 3 segundos el navegador no ofreció el prompt
+    // nativo, mostramos igual el banner con instrucciones manuales en
+    // vez de dejar al estudiante sin ninguna forma de instalar.
+    setTimeout(function () {
+      if (!eventoInstalacion && banner.classList.contains("oculto")) {
+        mostrarInstruccionesManuales();
+      }
+    }, 3000);
   }
- 
+
   // Registro del service worker — solo habilita instalabilidad,
   // no cachea nada (ver comentarios en sw.js). Falla silenciosa
   // si el navegador no lo soporta.
