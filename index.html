@@ -762,7 +762,7 @@ setTimeout(function restaurarSesion() {
       const sesion = JSON.parse(guardada); 
       
       // Validamos si es docente asegurándonos de ignorar mayúsculas/minúsculas
-      const esRolDocente = (sesion.rol || "").trim().toLowerCase() === "docente";
+      const esRolDocente = (sesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
       
       // CANDADO BLANDO ACTUALIZADO
       if (sesion && sesion.documento && (sesion.grupo || esRolDocente || sesion.nombre)) { 
@@ -1006,19 +1006,34 @@ function cargarHorarioDocente(matrizHorarioCompleta) {
   mapaColoresGrupos = {};
   indiceColorGrupo = 0;
 
-  // 1. Agrupar la información por versiones
+  // 1. Agrupar la información por versiones, conservando el valor "crudo"
+  //    de cada versión para poder ordenarlas cronológicamente después
+  //    (el orden de aparición en la hoja HORARIOS no es confiable).
   maestroHorariosVersiones = {};
+  const versionCruda = {}; // etiqueta formateada -> valor original de la celda
   matrizHorarioCompleta.forEach(fila => {
-    let v = formatearNombreVersion(fila.version);
+    let vCruda = fila.version || "";
+    let v = formatearNombreVersion(vCruda);
     if (!maestroHorariosVersiones[v]) maestroHorariosVersiones[v] = [];
     maestroHorariosVersiones[v].push(fila);
+    versionCruda[v] = vCruda;
   });
 
-  const nombresVersiones = Object.keys(maestroHorariosVersiones);
+  let nombresVersiones = Object.keys(maestroHorariosVersiones);
   if (nombresVersiones.length === 0) {
     contenedor.classList.add("oculto");
     return;
   }
+
+  // Ordena cronológicamente cuando el valor crudo es una fecha parseable
+  // (ej. ISO string). Si no lo es (versión con nombre libre como "Ajuste2"),
+  // se conserva el orden original tal como venía de la hoja.
+  nombresVersiones = nombresVersiones.sort((a, b) => {
+    const fechaA = Date.parse(versionCruda[a]);
+    const fechaB = Date.parse(versionCruda[b]);
+    if (!isNaN(fechaA) && !isNaN(fechaB)) return fechaA - fechaB;
+    return 0;
+  });
 
   // 2. Configurar el selector de versiones
   const contVersiones = document.getElementById("contenedor-versiones");
