@@ -6,6 +6,12 @@
 <title>Portal de Consulta · Institución Educativa San Luis Gonzaga</title>
 <meta name="description" content="Consulta de reportes académicos: notas parciales, simulacros, boletines por periodo y boletines SENA.">
 <link rel="icon" href="assets/logo-slg.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c40016">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Portal SLG">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -312,6 +318,21 @@ td.col-hoy {
         <p class="detalle-sesion" id="saludo-detalle"></p>
       </div>
       <button type="button" class="btn-salir" id="btn-salir">Cerrar sesión</button>
+    </div>
+  </div>
+  <div id="banner-instalar" class="tarjeta oculto" style="margin-bottom:16px;">
+    <div class="listón"></div>
+    <div class="contenido" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+      <div>
+        <strong>Instala el Portal SLG en tu dispositivo</strong>
+        <p id="texto-instalar" style="margin:4px 0 0; font-size:13.5px; color:var(--gris);">
+          Agrégalo a tu pantalla de inicio para entrar más rápido, como una app.
+        </p>
+      </div>
+      <div style="display:flex; gap:8px; flex-shrink:0;">
+        <button type="button" class="btn" id="btn-instalar" style="max-width:180px;">Instalar</button>
+        <button type="button" class="btn-salir" id="btn-cerrar-instalar">Ahora no</button>
+      </div>
     </div>
   </div>
 
@@ -784,6 +805,71 @@ btnSalir.addEventListener("click", function () {
   estadoDoc.className = "estado-doc";
   mostrarPantallaLogin();
 });
+
+<script>
+(function () {
+  const CLAVE_DESCARTADO = "slg_instalar_descartado";
+  const banner = document.getElementById("banner-instalar");
+  const btnInstalar = document.getElementById("btn-instalar");
+  const btnCerrar = document.getElementById("btn-cerrar-instalar");
+  const textoInstalar = document.getElementById("texto-instalar");
+  if (!banner || !btnInstalar || !btnCerrar) return;
+ 
+  // Ya está instalado / abierto como app -> no mostrar nada.
+  const yaInstalado =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+ 
+  // El estudiante ya cerró el aviso antes en este dispositivo.
+  const yaDescartado = localStorage.getItem(CLAVE_DESCARTADO) === "1";
+ 
+  if (yaInstalado || yaDescartado) return;
+ 
+  const esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  let eventoInstalacion = null;
+ 
+  btnCerrar.addEventListener("click", function () {
+    banner.classList.add("oculto");
+    localStorage.setItem(CLAVE_DESCARTADO, "1");
+  });
+ 
+  if (esIOS) {
+    // Safari/iOS no dispara 'beforeinstallprompt': se muestran instrucciones manuales.
+    textoInstalar.textContent =
+      "Toca el ícono Compartir (⬆️) en Safari y luego \"Agregar a pantalla de inicio\".";
+    btnInstalar.style.display = "none";
+    banner.classList.remove("oculto");
+  } else {
+    // Chrome/Android (y navegadores basados en Chromium): esperamos el evento nativo.
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      eventoInstalacion = e;
+      banner.classList.remove("oculto");
+    });
+ 
+    btnInstalar.addEventListener("click", function () {
+      if (!eventoInstalacion) return;
+      eventoInstalacion.prompt();
+      eventoInstalacion.userChoice.finally(function () {
+        eventoInstalacion = null;
+        banner.classList.add("oculto");
+      });
+    });
+ 
+    window.addEventListener("appinstalled", function () {
+      banner.classList.add("oculto");
+      localStorage.setItem(CLAVE_DESCARTADO, "1");
+    });
+  }
+ 
+  // Registro del service worker — solo habilita instalabilidad,
+  // no cachea nada (ver comentarios en sw.js). Falla silenciosa
+  // si el navegador no lo soporta.
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+})();
+</script>
 
 campoDocumento.addEventListener("keydown", function (ev) {
   if (ev.key === "Enter") { ev.preventDefault(); intentarIngresar(); }
