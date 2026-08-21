@@ -34,13 +34,13 @@ Grupo,Grado,Área,TipoAgrupación,Etiqueta,NumeroIntentos,PromedioPorcentaje
 1001,10°,Inglés,competencia,Nivel A2,1,16.7
 1001,10°,Inglés,competencia,Nivel B1,1,62.5
 1001,10°,Inglés,total,Total,1,45.8
-1003,10°,Matemáticas,categoria,Estadística,1,22.2
-1003,10°,Matemáticas,categoria,Álgebra y cálculo,1,33.3
-1003,10°,Matemáticas,categoria,Geometría,1,66.7
-1003,10°,Matemáticas,competencia,Interpretación y representación,1,18.2
-1003,10°,Matemáticas,competencia,Formulación y ejecución,1,44.4
-1003,10°,Matemáticas,competencia,Argumentación,1,25
-1003,10°,Matemáticas,total,Total,1,29.2
+1003,10°,Matemáticas,categoria,Estadística,2,11.1
+1003,10°,Matemáticas,categoria,Álgebra y cálculo,2,16.7
+1003,10°,Matemáticas,categoria,Geometría,2,33.3
+1003,10°,Matemáticas,competencia,Interpretación y representación,2,9.1
+1003,10°,Matemáticas,competencia,Formulación y ejecución,2,22.2
+1003,10°,Matemáticas,competencia,Argumentación,2,12.5
+1003,10°,Matemáticas,total,Total,2,14.6
 1005,10°,Matemáticas,categoria,Estadística,1,44.4
 1005,10°,Matemáticas,categoria,Álgebra y cálculo,1,33.3
 1005,10°,Matemáticas,categoria,Geometría,1,33.3
