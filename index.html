@@ -102,41 +102,56 @@
   }
   .toggle-vista-interfaz button.active{ background:var(--rojo); color:#fff; }
 
-  /* ---------- Vista de lista (menú desplegable) ---------- */
-  /* ---------- Vista de lista (menú acordeón oscuro) ---------- */
-  .menu-lista-wrap{ max-width:640px; margin:0 auto; }
-  .menu-lista{
-    background:#26242a; border-radius:12px; overflow:hidden; box-shadow:var(--sombra);
+  /* ---------- Botón hamburguesa (abre/cierra el menú de lista) ---------- */
+  .btn-hamburguesa{
+    width:40px; height:40px; border-radius:10px; border:1.5px solid var(--rojo);
+    background:var(--rojo); color:#fff; font-size:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    transition:background .12s ease, transform .12s ease;
   }
-  .menu-categoria{ border-bottom:1px solid rgba(255,255,255,0.06); }
+  .btn-hamburguesa:hover{ background:var(--rojo-oscuro); }
+  .btn-hamburguesa.activo{ transform:rotate(90deg); }
+
+  /* ---------- Vista de lista (menú acordeón, paleta institucional) ---------- */
+  .menu-lista-wrap{ max-width:640px; margin:0 auto; }
+  .menu-lista-panel{
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height .25s ease, opacity .2s ease;
+  }
+  .menu-lista-panel.abierto{ max-height:2000px; opacity:1; }
+  .menu-lista{
+    background:linear-gradient(180deg, #3a0d13 0%, #24080c 100%);
+    border:1px solid var(--dorado); border-radius:12px; overflow:hidden; box-shadow:var(--sombra);
+  }
+  .menu-categoria{ border-bottom:1px solid rgba(201,162,75,0.18); }
   .menu-categoria:last-child{ border-bottom:none; }
   .menu-categoria-cabecera{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:15px 18px; cursor:pointer; color:#f2ede4; font-size:15px; font-weight:600;
+    padding:15px 18px; cursor:pointer; color:var(--crema); font-size:15px; font-weight:600;
     background:transparent; transition:background .12s ease;
   }
-  .menu-categoria-cabecera:hover{ background:rgba(255,255,255,0.05); }
+  .menu-categoria-cabecera:hover{ background:rgba(201,162,75,0.12); }
   .menu-categoria-cabecera .icono-cat{ margin-right:4px; }
   .menu-categoria-cabecera .flecha{
-    font-size:12px; color:#9a958c; transition:transform .15s ease; flex-shrink:0;
+    font-size:12px; color:var(--dorado); transition:transform .15s ease; flex-shrink:0;
   }
   .menu-categoria.abierta .menu-categoria-cabecera .flecha{ transform:rotate(90deg); }
-  .menu-categoria.abierta .menu-categoria-cabecera{ background:rgba(255,255,255,0.06); }
-  .menu-subitems{ max-height:0; overflow:hidden; transition:max-height .2s ease; background:#1f1d22; }
+  .menu-categoria.abierta .menu-categoria-cabecera{ background:rgba(201,162,75,0.16); }
+  .menu-subitems{ max-height:0; overflow:hidden; transition:max-height .2s ease; background:#1b0508; }
   .menu-categoria.abierta .menu-subitems{ max-height:600px; }
   .menu-subitem{
     display:block; width:100%; text-align:left; padding:13px 18px 13px 42px;
-    color:#cfc9bd; font-size:14px; background:transparent; border:none; cursor:pointer;
-    font-family:inherit; border-top:1px solid rgba(255,255,255,0.04);
+    color:#e8d9cf; font-size:14px; background:transparent; border:none; cursor:pointer;
+    font-family:inherit; border-top:1px solid rgba(201,162,75,0.10);
   }
-  .menu-subitem:hover{ background:rgba(201,162,75,0.14); color:#fff; }
+  .menu-subitem:hover{ background:rgba(201,162,75,0.20); color:#fff; }
   .menu-item-directo{
     display:flex; align-items:center; gap:10px; width:100%; text-align:left;
-    padding:15px 18px; color:#f2ede4; font-size:15px; font-weight:600;
+    padding:15px 18px; color:var(--crema); font-size:15px; font-weight:600;
     background:transparent; border:none; cursor:pointer; font-family:inherit;
     transition:background .12s ease;
   }
-  .menu-item-directo:hover{ background:rgba(255,255,255,0.05); }
+  .menu-item-directo:hover{ background:rgba(201,162,75,0.12); }
   main{ max-width:1040px; margin:0 auto; padding:34px 24px 70px; }
   .tarjeta{
     background:var(--blanco); border:1px solid var(--linea); border-radius:var(--radio);
@@ -315,6 +330,7 @@
           <button type="button" data-vista="tarjetas">🗂️ Tarjetas</button>
           <button type="button" data-vista="lista">📋 Lista</button>
         </div>
+        <button type="button" class="btn-hamburguesa oculto" id="btn-hamburguesa" aria-label="Abrir menú" aria-expanded="false">☰</button>
         <button type="button" class="btn-salir" id="btn-salir">Cerrar sesión</button>
       </div>
     </div>
@@ -363,7 +379,9 @@
     <section id="pantalla-dashboard" class="oculto">
 
       <section class="menu-lista-wrap oculto" id="vista-lista-docente">
-        <div class="menu-lista" id="menu-lista-docente"></div>
+        <div class="menu-lista-panel" id="menu-lista-panel-docente">
+          <div class="menu-lista" id="menu-lista-docente"></div>
+        </div>
       </section>
 
       <div class="carrusel-wrap oculto" id="carrusel-wrap-docente">
@@ -410,7 +428,9 @@
       </div>
 
       <section class="menu-lista-wrap oculto" id="vista-lista-estudiante">
-        <div class="menu-lista" id="menu-lista-estudiante"></div>
+        <div class="menu-lista-panel" id="menu-lista-panel-estudiante">
+          <div class="menu-lista" id="menu-lista-estudiante"></div>
+        </div>
       </section>
 
       <div class="carrusel-wrap" id="carrusel-wrap">
@@ -1359,7 +1379,10 @@ function renderizarMenuLista(idContenedor, categorias) {
       boton.type = "button";
       boton.className = "menu-item-directo";
       boton.innerHTML = "<span>" + cat.icono + "</span><span>" + cat.nombre + "</span>";
-      boton.addEventListener("click", cat.accionDirecta);
+      boton.addEventListener("click", function () {
+        cerrarPanelMenuLista();
+        cat.accionDirecta();
+      });
       contenedor.appendChild(boton);
       return;
     }
@@ -1386,6 +1409,7 @@ function renderizarMenuLista(idContenedor, categorias) {
       boton.textContent = sub.etiqueta;
       boton.addEventListener("click", function (ev) {
         ev.stopPropagation();
+        cerrarPanelMenuLista();
         sub.accion();
       });
       subMenu.appendChild(boton);
@@ -1424,15 +1448,21 @@ function aplicarVistaInterfaz() {
 
   const vistaListaEstudiante = document.getElementById("vista-lista-estudiante");
   const vistaListaDocente = document.getElementById("vista-lista-docente");
+  const btnHamburguesa = document.getElementById("btn-hamburguesa");
+
+  // El panel siempre arranca cerrado al cambiar de modo/rol — se abre con el ☰
+  cerrarPanelMenuLista();
 
   if (esDocenteActual) {
     vistaListaEstudiante.classList.add("oculto");
     if (vista === "lista") {
       carruselWrapDocente.classList.add("oculto");
       vistaListaDocente.classList.remove("oculto");
+      btnHamburguesa.classList.remove("oculto");
     } else {
       vistaListaDocente.classList.add("oculto");
       carruselWrapDocente.classList.remove("oculto");
+      btnHamburguesa.classList.add("oculto");
       if (actualizarCarruselDocente) setTimeout(actualizarCarruselDocente, 50);
     }
   } else {
@@ -1440,13 +1470,33 @@ function aplicarVistaInterfaz() {
     if (vista === "lista") {
       carruselWrap.classList.add("oculto");
       vistaListaEstudiante.classList.remove("oculto");
+      btnHamburguesa.classList.remove("oculto");
     } else {
       vistaListaEstudiante.classList.add("oculto");
       carruselWrap.classList.remove("oculto");
+      btnHamburguesa.classList.add("oculto");
       if (actualizarCarruselEstudiante) setTimeout(actualizarCarruselEstudiante, 50);
     }
   }
 }
+
+function panelMenuListaActivo() {
+  return esDocenteActual ? document.getElementById("menu-lista-panel-docente") : document.getElementById("menu-lista-panel-estudiante");
+}
+
+function cerrarPanelMenuLista() {
+  document.querySelectorAll(".menu-lista-panel").forEach(function (p) { p.classList.remove("abierto"); });
+  const btnHamburguesa = document.getElementById("btn-hamburguesa");
+  btnHamburguesa.classList.remove("activo");
+  btnHamburguesa.setAttribute("aria-expanded", "false");
+}
+
+document.getElementById("btn-hamburguesa").addEventListener("click", function () {
+  const panel = panelMenuListaActivo();
+  const abierto = panel.classList.toggle("abierto");
+  this.classList.toggle("activo", abierto);
+  this.setAttribute("aria-expanded", abierto ? "true" : "false");
+});
 
 document.querySelectorAll("#toggle-vista-interfaz button").forEach(function (boton) {
   boton.addEventListener("click", function () {
