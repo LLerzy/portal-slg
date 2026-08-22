@@ -6,6 +6,12 @@
 <title>Portal de Consulta · Institución Educativa San Luis Gonzaga</title>
 <meta name="description" content="Consulta de reportes académicos: notas parciales, simulacros, boletines por periodo y boletines SENA.">
 <link rel="icon" href="assets/logo-slg.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c40016">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Portal SLG">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -200,62 +206,6 @@
 
   /* ---------- Resultado ---------- */
   #zona-resultado{ margin-top:32px; scroll-margin-top:24px; }
-  #zona-resultado .resultado-header{
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;
-  }
-  #zona-resultado .resultado-header h2{ margin-bottom:0; }
-  .btn-ver-horario{
-    background:#fff; border:1.5px solid var(--dorado); color:var(--rojo); font-weight:700;
-    font-size:13.5px; padding:8px 14px; border-radius:999px; cursor:pointer; font-family:inherit;
-  }
-  .btn-ver-horario:hover{ background:#fdf6e3; }
-
-  /* ---------- Horario del estudiante ---------- */
-  #zona-horario{ margin-top:32px; scroll-margin-top:24px; }
-  #zona-horario h2{ font-size:19px; color:var(--rojo); margin-bottom:14px; }
-  .horario-grid{
-    display:grid;
-    grid-template-columns: 110px repeat(5, minmax(120px, 1fr));
-    gap:6px;
-    overflow-x:auto;
-  }
-  .horario-celda-hora{
-    background:#fff8ea; border:1px solid var(--linea); border-radius:8px;
-    padding:8px 10px; font-size:11.5px; color:var(--gris); display:flex; flex-direction:column; justify-content:center;
-  }
-  .horario-celda-hora b{ display:block; font-size:12.5px; color:var(--tinta); margin-bottom:2px; }
-  .horario-dia-encabezado{
-    text-align:center; font-weight:800; font-size:12.5px; color:var(--rojo); text-transform:uppercase;
-    letter-spacing:.04em; padding:6px 4px;
-  }
-  .horario-tarjeta{
-    border-radius:9px; padding:9px 10px; font-size:12.5px; line-height:1.35;
-    border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:center; gap:2px;
-  }
-  .horario-tarjeta .materia{ font-weight:800; color:var(--tinta); }
-  .horario-tarjeta .docente{ color:#444; }
-  .horario-tarjeta .aula{ color:var(--gris); font-size:11px; }
-  .horario-vacio{ background:transparent; }
-  .horario-dia-encabezado.horario-dia-actual{
-    background:var(--dorado); color:#fff; border-radius:6px;
-  }
-  .horario-tarjeta.horario-dia-actual{
-    outline:2px solid var(--dorado); outline-offset:-2px;
-  }
-  .horario-vacio.horario-dia-actual{
-    outline:2px dashed var(--dorado); outline-offset:-2px;
-  }
-  .horario-descanso{
-    grid-column: 1 / -1; background:#f2ede1; border:1px dashed var(--linea); border-radius:8px;
-    text-align:center; font-size:12px; font-weight:700; color:var(--gris); padding:6px; letter-spacing:.03em;
-  }
-  @media (max-width:700px){
-    .horario-grid{ grid-template-columns: 90px repeat(5, minmax(110px, 1fr)); }
-    .horario-celda-hora{
-      position:sticky; left:0; z-index:2;
-      box-shadow:2px 0 4px rgba(0,0,0,0.06);
-    }
-  }
   #zona-resultado h2{ font-size:19px; color:var(--rojo); margin-bottom:14px; }
   #resultado-caja{ min-height:10px; }
   .cargando{
@@ -279,6 +229,62 @@
   }
   .footer-inner img.banner-facimate{ width:100%; max-width:360px; height:auto; border-radius:8px; }
   footer p{ margin:0; font-size:12.5px; color:var(--gris); }
+
+  /* ---------- Tarjeta de Horario ---------- */
+  .tarjeta-horario {
+    background: var(--blanco, #ffffff);
+    border: 1px solid var(--linea, #e5d8c1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    overflow: hidden;
+  }
+  .horario-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+  }
+  .horario-titulo h3 { color: var(--rojo, #9b2226); font-size: 18px; margin: 0; }
+  .badge-dia {
+    background: var(--rojo, #9b2226); color: #fff; font-size: 12px;
+    font-weight: bold; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+  }
+  .horario-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tabla-horario {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 13px; text-align: center;
+  }
+  .tabla-horario th, .tabla-horario td {
+    padding: 10px 12px; border-bottom: 1px solid #f0eada; border-right: 1px solid #f0eada; min-width: 110px;
+  }
+  .tabla-horario th { background: #fbf8f2; color: var(--tinta, #222); font-weight: 700; text-transform: uppercase; font-size: 12px; }
+  .col-hora {
+    min-width: 120px !important; /* Más ancho para que no se corte */
+    white-space: nowrap; /* Evita que el texto salte de línea */
+    font-weight: bold; 
+    background: #f4efe4 !important;
+    color: var(--rojo-oscuro, #7a1a1e); 
+    position: sticky; 
+    left: 0; 
+    z-index: 2;
+  }
+  .fila-descanso { background-color: #f9f9f9; font-style: italic; color: #888; }
+  /* ---------- Destacado del Día Actual (Conserva el color del grupo) ---------- */
+.col-hoy {
+  border-left: 3px solid var(--dorado, #e0aa00) !important;
+  border-right: 3px solid var(--dorado, #e0aa00) !important;
+}
+
+th.col-hoy {
+  background-color: var(--dorado, #e0aa00) !important;
+  color: #000000 !important;
+  font-weight: 800;
+}
+
+td.col-hoy {
+  box-shadow: inset 0 0 0 1px var(--dorado, #e0aa00);
+}  
 </style>
 </head>
 <body>
@@ -312,6 +318,21 @@
         <p class="detalle-sesion" id="saludo-detalle"></p>
       </div>
       <button type="button" class="btn-salir" id="btn-salir">Cerrar sesión</button>
+    </div>
+  </div>
+  <div id="banner-instalar" class="tarjeta oculto" style="margin-bottom:16px;">
+    <div class="listón"></div>
+    <div class="contenido" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+      <div>
+        <strong>Instala el Portal SLG en tu dispositivo</strong>
+        <p id="texto-instalar" style="margin:4px 0 0; font-size:13.5px; color:var(--gris);">
+          Agrégalo a tu pantalla de inicio para entrar más rápido, como una app.
+        </p>
+      </div>
+      <div style="display:flex; gap:8px; flex-shrink:0;">
+        <button type="button" class="btn" id="btn-instalar" style="max-width:180px;">Instalar</button>
+        <button type="button" class="btn-salir" id="btn-cerrar-instalar">Ahora no</button>
+      </div>
     </div>
   </div>
 
@@ -511,16 +532,38 @@
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno"></div></div>
       </div>
 
-      <section id="zona-horario" class="oculto">
-        <h2 id="horario-titulo">Mi horario</h2>
-        <div id="horario-grid" class="horario-grid"></div>
-      </section>
-
-      <section id="zona-resultado" class="oculto">
-        <div class="resultado-header">
-          <h2>Resultado de la consulta</h2>
-          <button type="button" id="btn-ver-horario" class="btn-ver-horario oculto">📅 Ver mi horario</button>
+      <section id="seccion-horario" class="tarjeta-horario oculto">
+        <div class="horario-header">
+          <div class="horario-titulo">
+            <h3>📅 Mi Horario de Clases</h3>
+            <span id="badge-dia-actual" class="badge-dia">Hoy es ...</span>
+          </div>
+          <div id="contenedor-versiones" style="display:none; align-items:center; gap:8px;">
+            <label for="selector-version-horario" style="font-size:13px; font-weight:700; color:var(--gris);">Versión:</label>
+            <select id="selector-version-horario" style="padding:6px 12px; border-radius:8px; border:1px solid #d8cfc2; font-family:inherit; outline:none; background:#fff; cursor:pointer;"></select>
+          </div>
         </div>
+        
+        <div class="horario-wrapper">
+          <table class="tabla-horario" id="tabla-horario">
+            <thead>
+              <tr>
+                <th class="col-hora">Hora</th>
+                <th data-dia="1">Lunes</th>
+                <th data-dia="2">Martes</th>
+                <th data-dia="3">Miércoles</th>
+                <th data-dia="4">Jueves</th>
+                <th data-dia="5">Viernes</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-horario">
+              </tbody>
+          </table>
+        </div>
+      </section>
+      
+      <section id="zona-resultado" class="oculto">
+        <h2>Resultado de la consulta</h2>
         <div id="resultado-caja"></div>
       </section>
 
@@ -618,11 +661,6 @@ const btnIngresar = document.getElementById("btn-ingresar");
 const estadoDoc = document.getElementById("estado-doc");
 const zonaResultado = document.getElementById("zona-resultado");
 const resultadoCaja = document.getElementById("resultado-caja");
-const zonaHorario = document.getElementById("zona-horario");
-const horarioGrid = document.getElementById("horario-grid");
-const horarioTitulo = document.getElementById("horario-titulo");
-const btnVerHorario = document.getElementById("btn-ver-horario");
-let horarioEstudianteActual = null; // se llena al iniciar sesión, si aplica
 
 const carruselWrap = document.getElementById("carrusel-wrap");
 const carruselWrapDocente = document.getElementById("carrusel-wrap-docente");
@@ -708,6 +746,13 @@ function mostrarPantallaDashboard(sesion) {
     carruselWrapDocente.classList.remove("oculto");
     if (actualizarCarruselDocente) setTimeout(actualizarCarruselDocente, 50);
 
+    // --- LÓGICA PARA MOSTRAR HORARIO DOCENTE ---
+    const contenedorHorario = document.getElementById("seccion-horario");
+    if (sesion.horario && sesion.horario.length > 0) {
+      cargarHorarioDocente(sesion.horario);
+    } else {
+      contenedorHorario.classList.add("oculto");
+    }
     configurarBotonDashboard(enlaceDashboard, CONFIG_DASHBOARD_URL, "Abrir Dashboard de Simulacros ↗", "CONFIG_DASHBOARD_URL");
     configurarBotonDashboard(enlaceDashboardArtefactos, CONFIG_DASHBOARD_ARTEFACTOS_URL, "Abrir Dashboard de Artefactos ↗", "CONFIG_DASHBOARD_ARTEFACTOS_URL");
   } else {
@@ -722,36 +767,134 @@ function mostrarPantallaDashboard(sesion) {
 
     carruselWrapDocente.classList.add("oculto");
     carruselWrap.classList.remove("oculto");
-
-    try {
-      horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
-      if (horarioEstudianteActual.length > 0) {
-        horarioTitulo.textContent = "Mi horario — Grupo " + (sesion.grupo || "");
-        renderizarHorario(horarioEstudianteActual);
-        mostrarZonaHorario();
-      } else {
-        zonaHorario.classList.add("oculto");
-      }
-    } catch (errHorario) {
-      console.error("No se pudo mostrar el horario (el resto del portal sigue funcionando):", errHorario);
-      zonaHorario.classList.add("oculto");
-    }
+    // Ocultar horario a los estudiantes
+    const contenedorHorario = document.getElementById("seccion-horario");
+    if (contenedorHorario) contenedorHorario.classList.add("oculto");
   }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+// Si ya había una sesión activa en esta pestaña, entra directo al panel.
+setTimeout(function restaurarSesion() { 
+  const guardada = sessionStorage.getItem(CLAVE_SESION); 
+  if (guardada) { 
+    try { 
+      const sesion = JSON.parse(guardada); 
+      
+      // Validamos si es docente asegurándonos de ignorar mayúsculas/minúsculas
+      const esRolDocente = (sesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
+      
+      // CANDADO BLANDO ACTUALIZADO
+      if (sesion && sesion.documento && (sesion.grupo || esRolDocente || sesion.nombre)) { 
+        mostrarPantallaDashboard(sesion); 
+        return; 
+      } 
+    } catch (err) { 
+      // Si ocurre un error, ahora lo mostrará en la consola en vez de fallar en silencio
+      console.error("Error del sistema al restaurar la sesión:", err); 
+    } 
+  } 
+  mostrarPantallaLogin(); 
+}, 0); // El ", 0" asegura que se ejecute justo después de cargar las variables de abajo
 
 btnSalir.addEventListener("click", function () {
   sessionStorage.removeItem(CLAVE_SESION);
   campoDocumento.value = "";
   estadoDoc.textContent = "Con este documento se verifica al estudiante y se habilitan los reportes disponibles.";
   estadoDoc.className = "estado-doc";
-  horarioEstudianteActual = null;
-  zonaHorario.classList.add("oculto");
-  zonaResultado.classList.add("oculto");
-  btnVerHorario.classList.add("oculto");
   mostrarPantallaLogin();
 });
+
+
+(function () {
+  const CLAVE_DESCARTADO = "slg_instalar_descartado";
+  const banner = document.getElementById("banner-instalar");
+  const btnInstalar = document.getElementById("btn-instalar");
+  const btnCerrar = document.getElementById("btn-cerrar-instalar");
+  const textoInstalar = document.getElementById("texto-instalar");
+  if (!banner || !btnInstalar || !btnCerrar) return;
+
+  // Ya está instalado / abierto como app -> no mostrar nada.
+  const yaInstalado =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  // El estudiante ya cerró el aviso antes en este dispositivo/navegador.
+  const yaDescartado = localStorage.getItem(CLAVE_DESCARTADO) === "1";
+
+  if (yaInstalado || yaDescartado) return;
+
+  // Detecta iOS incluyendo iPadOS, que desde iPadOS 13 se identifica
+  // como "Macintosh" en el user-agent (igual que iPhone en modo
+  // "Sitio para computadora").
+  const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  let eventoInstalacion = null;
+
+  btnCerrar.addEventListener("click", function () {
+    banner.classList.add("oculto");
+    localStorage.setItem(CLAVE_DESCARTADO, "1");
+  });
+
+  function mostrarInstruccionesManuales() {
+    textoInstalar.textContent =
+      "Abre el menú (⋮) de tu navegador y toca \"Instalar aplicación\" o \"Agregar a pantalla de inicio\".";
+    btnInstalar.style.display = "none";
+    banner.classList.remove("oculto");
+  }
+
+  if (esIOS) {
+    // Safari/iOS no dispara 'beforeinstallprompt': instrucciones manuales directas.
+    textoInstalar.textContent =
+      "Toca el ícono Compartir (⬆️) en Safari y luego \"Agregar a pantalla de inicio\".";
+    btnInstalar.style.display = "none";
+    banner.classList.remove("oculto");
+  } else {
+    // Chrome/Android y similares: esperamos el evento nativo, pero con
+    // respaldo manual si el navegador no lo dispara (Brave con Shields
+    // activos, heurísticas de Chrome, versiones que no lo soportan, etc.)
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      eventoInstalacion = e;
+      textoInstalar.textContent =
+        "Agrégalo a tu pantalla de inicio para entrar más rápido, como una app.";
+      btnInstalar.style.display = "";
+      banner.classList.remove("oculto");
+    });
+
+    btnInstalar.addEventListener("click", function () {
+      if (!eventoInstalacion) return;
+      eventoInstalacion.prompt();
+      eventoInstalacion.userChoice.finally(function () {
+        eventoInstalacion = null;
+        banner.classList.add("oculto");
+      });
+    });
+
+    window.addEventListener("appinstalled", function () {
+      banner.classList.add("oculto");
+      localStorage.setItem(CLAVE_DESCARTADO, "1");
+    });
+
+    // Respaldo: si a los 3 segundos el navegador no ofreció el prompt
+    // nativo, mostramos igual el banner con instrucciones manuales en
+    // vez de dejar al estudiante sin ninguna forma de instalar.
+    setTimeout(function () {
+      if (!eventoInstalacion && banner.classList.contains("oculto")) {
+        mostrarInstruccionesManuales();
+      }
+    }, 3000);
+  }
+
+  // Registro del service worker — solo habilita instalabilidad,
+  // no cachea nada (ver comentarios en sw.js). Falla silenciosa
+  // si el navegador no lo soporta.
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+})();
 
 campoDocumento.addEventListener("keydown", function (ev) {
   if (ev.key === "Enter") { ev.preventDefault(); intentarIngresar(); }
@@ -920,124 +1063,8 @@ function configurarBotonDashboard(boton, url, textoHabilitado, nombreConstante) 
   });
 });
 
-function mostrarZonaResultado() {
-  zonaHorario.classList.add("oculto");
-  zonaResultado.classList.remove("oculto");
-  if (horarioEstudianteActual && horarioEstudianteActual.length > 0) {
-    btnVerHorario.classList.remove("oculto");
-  }
-}
-
-function mostrarZonaHorario() {
-  zonaResultado.classList.add("oculto");
-  zonaHorario.classList.remove("oculto");
-  zonaHorario.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-btnVerHorario.addEventListener("click", mostrarZonaHorario);
-
-const DIAS_HORARIO = [
-  { clave: "lunes", etiqueta: "Lunes" },
-  { clave: "martes", etiqueta: "Martes" },
-  { clave: "miercoles", etiqueta: "Miércoles" },
-  { clave: "jueves", etiqueta: "Jueves" },
-  { clave: "viernes", etiqueta: "Viernes" }
-];
-
-const PALETA_MATERIAS = [
-  { fondo: "#e8f4ea", texto: "#1a5c2a" }, { fondo: "#fdeeee", texto: "#8a2b2b" },
-  { fondo: "#eef1fb", texto: "#2c3e8a" }, { fondo: "#fff6e0", texto: "#8a6a10" },
-  { fondo: "#f3ecfb", texto: "#5a2c8a" }, { fondo: "#e6f6f6", texto: "#0d6b6b" },
-  { fondo: "#fdeef6", texto: "#8a2c5f" }, { fondo: "#f0f4e8", texto: "#4a6a1a" },
-  { fondo: "#eaf2fb", texto: "#1a4a7a" }, { fondo: "#faf0e6", texto: "#7a4a1a" }
-];
-
-function colorParaMateria(nombre) {
-  let hash = 0;
-  for (let i = 0; i < nombre.length; i++) hash = (hash * 31 + nombre.charCodeAt(i)) >>> 0;
-  return PALETA_MATERIAS[hash % PALETA_MATERIAS.length];
-}
-
-function obtenerClaveDiaActual() {
-  const mapa = { 1: "lunes", 2: "martes", 3: "miercoles", 4: "jueves", 5: "viernes" };
-  return mapa[new Date().getDay()] || null; // null en fin de semana: no se resalta ningún día
-}
-
-function renderizarHorario(periodos) {
-  horarioGrid.innerHTML = "";
-  const diaActual = obtenerClaveDiaActual();
-
-  // Encabezado: celda vacía (columna Hora) + un encabezado por día
-  horarioGrid.appendChild(crearDiv("horario-celda-hora", ""));
-  DIAS_HORARIO.forEach(function (d) {
-    const clase = "horario-dia-encabezado" + (d.clave === diaActual ? " horario-dia-actual" : "");
-    horarioGrid.appendChild(crearDiv(clase, d.etiqueta));
-  });
-
-  periodos.forEach(function (periodo, indice) {
-    if (periodo.tipo === "descanso") {
-      const celda = crearDiv("horario-descanso", "☕ " + (periodo.horaEtiqueta || "Descanso") + (periodo.horaRango ? " · " + periodo.horaRango : ""));
-      horarioGrid.appendChild(celda);
-      return;
-    }
-
-    // Columna de hora
-    const horaHtml = (periodo.horaEtiqueta ? "<b>" + periodo.horaEtiqueta + "</b>" : "") + (periodo.horaRango || "");
-    const celdaHora = crearDiv("horario-celda-hora", "");
-    celdaHora.innerHTML = horaHtml;
-    horarioGrid.appendChild(celdaHora);
-
-    DIAS_HORARIO.forEach(function (dia) {
-      const texto = (periodo[dia.clave] || "").trim();
-
-      // Si el mismo texto ya venía del periodo inmediatamente anterior en este día,
-      // esta celda es continuación de un bloque fusionado: no se vuelve a dibujar.
-      const anterior = periodos[indice - 1];
-      const esContinuacion = texto && anterior && anterior.tipo === "clase" && (anterior[dia.clave] || "").trim() === texto;
-      if (esContinuacion) return;
-
-      if (!texto) {
-        horarioGrid.appendChild(crearDiv("horario-tarjeta horario-vacio" + (dia.clave === diaActual ? " horario-dia-actual" : ""), ""));
-        return;
-      }
-
-      // Cuenta cuántos periodos consecutivos (a partir de este) repiten el mismo texto,
-      // para fusionar visualmente el bloque con grid-row: span N.
-      let span = 1;
-      for (let j = indice + 1; j < periodos.length; j++) {
-        if (periodos[j].tipo === "clase" && (periodos[j][dia.clave] || "").trim() === texto) span++;
-        else break;
-      }
-
-      const partes = texto.split("|");
-      const materia = (partes[0] || "").trim();
-      const docenteNombre = (partes[1] || "").trim();
-      const aula = (partes[2] || "").trim();
-      const color = colorParaMateria(materia);
-
-      const tarjeta = document.createElement("div");
-      tarjeta.className = "horario-tarjeta" + (dia.clave === diaActual ? " horario-dia-actual" : "");
-      tarjeta.style.background = color.fondo;
-      tarjeta.style.color = color.texto;
-      if (span > 1) tarjeta.style.gridRow = "span " + span;
-      tarjeta.innerHTML =
-        '<span class="materia">📘 ' + materia + '</span>' +
-        (docenteNombre ? '<span class="docente">' + docenteNombre + '</span>' : "") +
-        (aula ? '<span class="aula">' + aula + '</span>' : "");
-      horarioGrid.appendChild(tarjeta);
-    });
-  });
-}
-
-function crearDiv(clase, texto) {
-  const div = document.createElement("div");
-  div.className = clase;
-  div.textContent = texto;
-  return div;
-}
-
 function consultar(url) {
-  mostrarZonaResultado();
+  zonaResultado.classList.remove("oculto");
   resultadoCaja.innerHTML =
     '<div class="cargando"><span class="spinner"></span> Consultando información, por favor espera un momento...</div>';
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1049,34 +1076,186 @@ function consultar(url) {
 }
 
 function mostrarError(texto) {
-  mostrarZonaResultado();
+  zonaResultado.classList.remove("oculto");
   resultadoCaja.innerHTML =
     '<div style="background:#fff4f4; border-left:6px solid #c40016; padding:18px; border-radius:8px; color:#333;">' +
     '<p style="margin:0;"><strong>Atención:</strong> ' + texto + "</p></div>";
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+// Variable para almacenar todas las versiones del docente activo
+let maestroHorariosVersiones = {};
 
-// Si ya había una sesión activa en esta pestaña, entra directo al panel.
-// IMPORTANTE: este bloque debe ir AL FINAL del script — se ejecuta de
-// inmediato al cargar la página (a diferencia del login, que espera una
-// respuesta de red), así que todo lo que usa (DIAS_HORARIO, funciones,
-// etc.) debe estar ya definido antes de que se llegue a esta línea.
-(function restaurarSesion() {
-  const guardada = sessionStorage.getItem(CLAVE_SESION);
-  if (guardada) {
+// Paleta de colores pastel dinámicos para los grupos
+const paletaGrupos = [
+  '#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#fce4ec', 
+  '#e0f7fa', '#fbe9e7', '#f0f4c3', '#d1c4e9', '#b2dfdb'
+];
+let mapaColoresGrupos = {};
+let indiceColorGrupo = 0;
+
+// Auxiliar para formatear la versión si viene en formato ISO o fecha
+function formatearNombreVersion(v) {
+  if (!v) return "Única";
+  // Si la versión es un ISO String de fecha (ej: 2026-07-30T05:00:00.000Z)
+  if (v.includes("T00:00:00") || v.includes("Z") || !isNaN(Date.parse(v)) && v.length > 15) {
     try {
-      const sesion = JSON.parse(guardada);
-      if (sesion && sesion.documento && sesion.nombre) {
-        mostrarPantallaDashboard(sesion);
-        return;
+      const fecha = new Date(v);
+      if (!isNaN(fecha.getTime())) {
+        // Formatear a: "jueves, 30 de julio de 2026"
+        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return fecha.toLocaleDateString('es-CO', opciones);
       }
-    } catch (err) {
-      console.error("No se pudo restaurar la sesión al recargar:", err);
-    }
+    } catch(e) {}
   }
-  mostrarPantallaLogin();
-})();
+  return v;
+}
+
+function cargarHorarioDocente(matrizHorarioCompleta) {
+  const contenedor = document.getElementById("seccion-horario");
+  if(!contenedor) return;
+
+  mapaColoresGrupos = {};
+  indiceColorGrupo = 0;
+
+  // 1. Agrupar la información por versiones, conservando el valor "crudo"
+  //    de cada versión para poder ordenarlas cronológicamente después
+  //    (el orden de aparición en la hoja HORARIOS no es confiable).
+  maestroHorariosVersiones = {};
+  const versionCruda = {}; // etiqueta formateada -> valor original de la celda
+  matrizHorarioCompleta.forEach(fila => {
+    let vCruda = fila.version || "";
+    let v = formatearNombreVersion(vCruda);
+    if (!maestroHorariosVersiones[v]) maestroHorariosVersiones[v] = [];
+    maestroHorariosVersiones[v].push(fila);
+    versionCruda[v] = vCruda;
+  });
+
+  let nombresVersiones = Object.keys(maestroHorariosVersiones);
+  if (nombresVersiones.length === 0) {
+    contenedor.classList.add("oculto");
+    return;
+  }
+
+  // Ordena cronológicamente cuando el valor crudo es una fecha parseable
+  // (ej. ISO string). Si no lo es (versión con nombre libre como "Ajuste2"),
+  // se conserva el orden original tal como venía de la hoja.
+  nombresVersiones = nombresVersiones.sort((a, b) => {
+    const fechaA = Date.parse(versionCruda[a]);
+    const fechaB = Date.parse(versionCruda[b]);
+    if (!isNaN(fechaA) && !isNaN(fechaB)) return fechaA - fechaB;
+    return 0;
+  });
+
+  // 2. Configurar el selector de versiones
+  const contVersiones = document.getElementById("contenedor-versiones");
+  const selector = document.getElementById("selector-version-horario");
+  
+  if (nombresVersiones.length > 0) {
+    contVersiones.style.display = "flex";
+    selector.innerHTML = nombresVersiones.map(v => `<option value="v">{v}</option>`).join("");
+    
+    // Dejar seleccionada la versión más reciente
+    const ultimaVersion = nombresVersiones[nombresVersiones.length - 1];
+    selector.value = ultimaVersion;
+
+    selector.onchange = () => renderizarTablaHorario(maestroHorariosVersiones[selector.value]);
+    renderizarTablaHorario(maestroHorariosVersiones[ultimaVersion]);
+  }
+  
+  contenedor.classList.remove("oculto");
+}
+
+function renderizarTablaHorario(matrizVersion) {
+  const tbody = document.getElementById("tbody-horario");
+  const badgeDia = document.getElementById("badge-dia-actual");
+  if(!tbody) return;
+  
+  tbody.innerHTML = "";
+  
+  const fechaActual = new Date();
+  const diaSemana = fechaActual.getDay(); 
+  const nombresDias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  
+  if (diaSemana >= 1 && diaSemana <= 5) {
+    badgeDia.textContent = `Hoy es ${nombresDias[diaSemana]}`;
+  } else {
+    badgeDia.textContent = "Fin de Semana";
+  }
+
+  // Encabezados del día actual
+  document.querySelectorAll("#tabla-horario th[data-dia]").forEach(th => {
+    th.classList.remove("col-hoy");
+    if (parseInt(th.dataset.dia) === diaSemana) th.classList.add("col-hoy");
+  });
+
+  // --- FUNCIÓN INTERNA: Procesa celdas manteniendo color de grupo en el día actual ---
+  function procesarCelda(texto, esDiaActual) {
+    let claseFinal = esDiaActual ? "col-hoy" : "";
+    
+    if (!texto || texto.toUpperCase().includes("LIBRE") || texto.toUpperCase().includes("DESCANSO")) {
+      // Si es el día actual y no tiene grupo, le colocamos un tono crema suave
+      let estiloVacio = esDiaActual ? "background-color: #fffdf0;" : "";
+      return { html: texto || "", clase: claseFinal, estilo: estiloVacio };
+    }
+    
+    let htmlFinal = texto;
+    let estiloFondo = "";
+    
+    if (texto.includes("-")) {
+      let partes = texto.split("-");
+      let asignatura = partes[0].trim();
+      let grado = partes.slice(1).join("-").trim(); 
+      
+      htmlFinal = `<strong>asignatura</strong><br><spanstyle="font-size:12px;opacity:0.85;">{grado}</span>`;
+      
+      let numerosGrupo = grado.replace(/[^0-9]/g, ""); 
+      
+      if (numerosGrupo) {
+        if (!mapaColoresGrupos[numerosGrupo]) {
+          mapaColoresGrupos[numerosGrupo] = paletaGrupos[indiceColorGrupo % paletaGrupos.length];
+          indiceColorGrupo++;
+        }
+        // Asigna siempre el color de grupo pastel correspondiente
+        estiloFondo = `background-color: ${mapaColoresGrupos[numerosGrupo]};`;
+      }
+    }
+    
+    return { html: htmlFinal, clase: claseFinal, estilo: estiloFondo };
+  }
+
+  // Llenar filas de la tabla
+  matrizVersion.forEach(fila => {
+    const tr = document.createElement("tr");
+    
+    const esDescanso = (fila.lunes || "").toUpperCase().includes("DESCANSO");
+    if (esDescanso) tr.classList.add("fila-descanso");
+
+    const cLunes = procesarCelda(fila.lunes, diaSemana === 1);
+    const cMartes = procesarCelda(fila.martes, diaSemana === 2);
+    const cMiercoles = procesarCelda(fila.miercoles, diaSemana === 3);
+    const cJueves = procesarCelda(fila.jueves, diaSemana === 4);
+    const cViernes = procesarCelda(fila.viernes, diaSemana === 5);
+
+    tr.innerHTML = `
+      <td class="col-hora">${fila.hora || ""}</td>
+      <td class="cLunes.clase"style="{cLunes.estilo}">${cLunes.html}</td>
+      <td class="cMartes.clase"style="{cMartes.estilo}">${cMartes.html}</td>
+      <td class="cMiercoles.clase"style="{cMiercoles.estilo}">${cMiercoles.html}</td>
+      <td class="cJueves.clase"style="{cJueves.estilo}">${cJueves.html}</td>
+      <td class="cViernes.clase"style="{cViernes.estilo}">${cViernes.html}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  if (diaSemana >= 1 && diaSemana <= 5 && window.innerWidth < 768) {
+    setTimeout(() => {
+      const colDestacada = document.querySelector("#tabla-horario th.col-hoy");
+      if (colDestacada) colDestacada.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }, 300);
+  }
+}
 </script>
 
 </body>
 </html>
+
