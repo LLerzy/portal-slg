@@ -45,11 +45,7 @@
   h1,h2,h3{ font-family:'Lora', Georgia, serif; font-weight:600; margin:0; }
   a{ color:inherit; }
   .oculto{ display:none !important; }
-
-  /* ---------- Ribbon (marca de fábrica del sistema) ---------- */
   .ribbon{ height:10px; background:linear-gradient(90deg, var(--dorado), #e6c887 45%, var(--dorado)); }
-
-  /* ---------- Header ---------- */
   header.masthead{
     background: linear-gradient(180deg, #ffffff 0%, var(--crema) 100%);
     border-bottom:1px solid var(--linea);
@@ -79,11 +75,7 @@
     display:inline-block; font-size:11.5px; letter-spacing:1.6px; text-transform:uppercase;
     color:var(--dorado); font-weight:700; margin-bottom:6px;
   }
-
-  /* ---------- Barra de sesión (solo visible en el dashboard) ---------- */
-  .barra-sesion{
-    background:var(--crema-2); border-bottom:1px solid #ecdcae;
-  }
+  .barra-sesion{ background:var(--crema-2); border-bottom:1px solid #ecdcae; }
   .barra-sesion-inner{
     max-width:1040px; margin:0 auto; padding:12px 24px;
     display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
@@ -101,27 +93,19 @@
     border-radius:8px; cursor:pointer;
   }
   .btn-salir:hover{ background:var(--rojo); color:#fff; }
-
   main{ max-width:1040px; margin:0 auto; padding:34px 24px 70px; }
-
-  /* ---------- Tarjeta base con listón dorado (motivo repetido) ---------- */
   .tarjeta{
     background:var(--blanco); border:1px solid var(--linea); border-radius:var(--radio);
     overflow:hidden; box-shadow:var(--sombra);
   }
   .tarjeta > .listón{ height:8px; background:var(--dorado); }
   .tarjeta .contenido{ padding:22px 24px; }
-
-  /* ---------- Bienvenida (pantalla de acceso) ---------- */
   .bienvenida{ margin-bottom:26px; }
   .bienvenida .contenido{ background:var(--crema); }
   .bienvenida p{ margin:0 0 10px; color:#4a4238; }
   .bienvenida p:last-child{ margin-bottom:0; }
   .bienvenida strong{ color:var(--rojo); }
-
   #pantalla-login{ max-width:640px; margin:0 auto; }
-
-  /* ---------- Panel de documento ---------- */
   .panel-doc{ border-color:#f0cdd2; }
   .panel-doc > .listón{ background:var(--rojo); }
   .panel-doc .contenido{ background:#fffaf9; }
@@ -137,8 +121,6 @@
   .estado-doc:not(:empty){ margin-top:12px; min-height:18px; }
   .estado-doc.ok{ color:#1a7f37; font-weight:700; }
   .estado-doc.error{ color:var(--rojo); font-weight:700; }
-
-  /* ---------- Rejilla de reportes ---------- */
   .carrusel-wrap{ position:relative; }
   .carrusel{
     display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory;
@@ -161,18 +143,12 @@
   .flecha-carrusel.izquierda{ left:-6px; }
   .flecha-carrusel.derecha{ right:-6px; }
   @media (max-width:640px){ .flecha-carrusel{ display:none; } }
-  .pista-scroll{
-    height:3px; background:var(--linea); border-radius:2px; margin:0 4px 8px; overflow:hidden;
-  }
-  .pista-scroll-relleno{
-    height:100%; width:25%; background:var(--dorado); border-radius:2px; transition:width .15s ease;
-  }
-
+  .pista-scroll{ height:3px; background:var(--linea); border-radius:2px; margin:0 4px 8px; overflow:hidden; }
+  .pista-scroll-relleno{ height:100%; width:25%; background:var(--dorado); border-radius:2px; transition:width .15s ease; }
   .reporte{ display:flex; flex-direction:column; }
   .reporte > .listón{ background:var(--dorado); }
   .reporte.activo > .listón{ background:var(--rojo); }
   .reporte .contenido{ flex:1; display:flex; flex-direction:column; }
-
   .reporte .icono{
     width:42px; height:42px; border-radius:10px; background:var(--crema-2);
     display:flex; align-items:center; justify-content:center; font-size:21px;
@@ -180,12 +156,10 @@
   }
   .reporte h3{ font-size:17.5px; color:var(--rojo); margin-bottom:6px; }
   .reporte p.desc{ color:var(--gris); font-size:14px; margin:0 0 16px; flex:1; }
-
   .reporte select{
     width:100%; padding:10px 12px; border:1.5px solid #d8cfc2; border-radius:9px;
     font-size:14.5px; font-family:inherit; background:#fff; margin-bottom:12px;
   }
-
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
     background:var(--rojo); color:#fff; border:none; padding:12px 16px;
@@ -197,14 +171,11 @@
   .btn:active{ transform:translateY(1px); }
   .btn:disabled{ background:#d9c6c6; cursor:not-allowed; }
   .btn:focus-visible{ outline:3px solid var(--dorado); outline-offset:2px; }
-
   .nota-config{
     font-size:12px; color:#b98a00; background:#fff8e0; border:1px dashed #e3c264;
     padding:6px 9px; border-radius:7px; margin-top:10px; display:none;
   }
   .nota-config.mostrar{ display:block; }
-
-  /* ---------- Resultado ---------- */
   #zona-resultado{ margin-top:32px; scroll-margin-top:24px; }
   #zona-resultado h2{ font-size:19px; color:var(--rojo); margin-bottom:14px; }
   #resultado-caja{ min-height:10px; }
@@ -217,103 +188,53 @@
     border-top-color:var(--rojo); animation:girar .8s linear infinite; flex-shrink:0;
   }
   @keyframes girar{ to{ transform:rotate(360deg); } }
-
-  /* ---------- Footer ---------- */
-  footer{
-    border-top:1px solid var(--linea); background:var(--crema);
-    padding:28px 24px 34px; margin-top:10px;
-  }
-  .footer-inner{
-    max-width:1040px; margin:0 auto; display:flex; flex-direction:column;
-    align-items:center; text-align:center; gap:14px;
-  }
+  footer{ border-top:1px solid var(--linea); background:var(--crema); padding:28px 24px 34px; margin-top:10px; }
+  .footer-inner{ max-width:1040px; margin:0 auto; display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; }
   .footer-inner img.banner-facimate{ width:100%; max-width:360px; height:auto; border-radius:8px; }
   footer p{ margin:0; font-size:12.5px; color:var(--gris); }
-
-  /* ---------- Tarjeta de Horario ---------- */
   .tarjeta-horario {
-    background: var(--blanco, #ffffff);
-    border: 1px solid var(--linea, #e5d8c1);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 20px;
-    overflow: hidden;
+    background: var(--blanco, #ffffff); border: 1px solid var(--linea, #e5d8c1); border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; margin-bottom: 20px; padding: 20px; overflow: hidden;
   }
-  .horario-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
-  }
+  .horario-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
   .horario-titulo h3 { color: var(--rojo, #9b2226); font-size: 18px; margin: 0; }
-  .badge-dia {
-    background: var(--rojo, #9b2226); color: #fff; font-size: 12px;
-    font-weight: bold; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
-  }
+  .badge-dia { background: var(--rojo, #9b2226); color: #fff; font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
   .horario-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .tabla-horario {
-    width: 100%; border-collapse: separate; border-spacing: 0;
-    font-size: 13px; text-align: center;
-  }
-  .tabla-horario th, .tabla-horario td {
-    padding: 10px 12px; border-bottom: 1px solid #f0eada; border-right: 1px solid #f0eada; min-width: 110px;
-  }
+  .tabla-horario { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; text-align: center; }
+  .tabla-horario th, .tabla-horario td { padding: 10px 12px; border-bottom: 1px solid #f0eada; border-right: 1px solid #f0eada; min-width: 110px; }
   .tabla-horario th { background: #fbf8f2; color: var(--tinta, #222); font-weight: 700; text-transform: uppercase; font-size: 12px; }
   .col-hora {
-    min-width: 120px !important; /* Más ancho para que no se corte */
-    white-space: nowrap; /* Evita que el texto salte de línea */
-    font-weight: bold; 
-    background: #f4efe4 !important;
-    color: var(--rojo-oscuro, #7a1a1e); 
-    position: sticky; 
-    left: 0; 
-    z-index: 2;
+    min-width: 120px !important; white-space: nowrap; font-weight: bold; background: #f4efe4 !important;
+    color: var(--rojo-oscuro, #7a1a1e); position: sticky; left: 0; z-index: 2;
   }
   .fila-descanso { background-color: #f9f9f9; font-style: italic; color: #888; }
-  /* ---------- Destacado del Día Actual (Conserva el color del grupo) ---------- */
-.col-hoy {
-  border-left: 3px solid var(--dorado, #e0aa00) !important;
-  border-right: 3px solid var(--dorado, #e0aa00) !important;
-}
+  .col-hoy { border-left: 3px solid var(--dorado, #e0aa00) !important; border-right: 3px solid var(--dorado, #e0aa00) !important; }
+  th.col-hoy { background-color: var(--dorado, #e0aa00) !important; color: #000000 !important; font-weight: 800; }
+  td.col-hoy { box-shadow: inset 0 0 0 1px var(--dorado, #e0aa00); }
 
-th.col-hoy {
-  background-color: var(--dorado, #e0aa00) !important;
-  color: #000000 !important;
-  font-weight: 800;
-}
-
-td.col-hoy {
-  box-shadow: inset 0 0 0 1px var(--dorado, #e0aa00);
-}
-
-/* ---------- Horario del Estudiante ---------- */
-.resultado-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-.resultado-header h2 { margin-bottom: 0; }
-.btn-ver-horario { background:#fff; border:1.5px solid var(--dorado); color:var(--rojo); font-weight:700; font-size:13.5px; padding:8px 14px; border-radius:999px; cursor:pointer; font-family:inherit; }
-.btn-ver-horario:hover { background:#fdf6e3; }
-#zona-horario { margin-top:32px; scroll-margin-top:24px; }
-#zona-horario h2 { font-size:19px; color:var(--rojo); margin-bottom:14px; }
-.horario-grid { display:grid; grid-template-columns: 110px repeat(5, minmax(120px, 1fr)); gap:6px; overflow-x:auto; }
-.horario-celda-hora{
-  background:#fff8ea; border:1px solid var(--linea); border-radius:8px;
-  padding:8px 10px; font-size:11.5px; color:var(--gris); display:flex; flex-direction:column; justify-content:center;
-  /* Propiedades para inmovilizar la columna: */
-  position: sticky;
-  left: 0;
-  z-index: 2;
-  box-shadow: 2px 0 4px rgba(0,0,0,0.06);
-}
-.horario-celda-hora b { display:block; font-size:12.5px; color:var(--tinta); margin-bottom:2px; }
-.horario-dia-encabezado { text-align:center; font-weight:800; font-size:12.5px; color:var(--rojo); text-transform:uppercase; letter-spacing:.04em; padding:6px 4px; }
-.horario-tarjeta { border-radius:9px; padding:9px 10px; font-size:12.5px; line-height:1.35; border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:center; gap:2px; }
-.horario-tarjeta .materia { font-weight:800; color:var(--tinta); }
-.horario-tarjeta .docente { color:#444; }
-.horario-tarjeta .aula { color:var(--gris); font-size:11px; }
-.horario-vacio { background:transparent; }
-.horario-dia-encabezado.horario-dia-actual { background:var(--dorado); color:#fff; border-radius:6px; }
-.horario-tarjeta.horario-dia-actual { outline:2px solid var(--dorado); outline-offset:-2px; }
-.horario-vacio.horario-dia-actual { outline:2px dashed var(--dorado); outline-offset:-2px; }
-.horario-descanso { grid-column: 1 / -1; background:#f2ede1; border:1px dashed var(--linea); border-radius:8px; padding:8px; text-align:center; font-weight:bold; color:#888; font-style:italic; }
+  .resultado-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .resultado-header h2 { margin-bottom: 0; }
+  .btn-ver-horario { background:#fff; border:1.5px solid var(--dorado); color:var(--rojo); font-weight:700; font-size:13.5px; padding:8px 14px; border-radius:999px; cursor:pointer; font-family:inherit; }
+  .btn-ver-horario:hover { background:#fdf6e3; }
+  #zona-horario { margin-top:32px; scroll-margin-top:24px; }
+  #zona-horario h2 { font-size:19px; color:var(--rojo); margin-bottom:14px; }
+  .horario-grid { display:grid; grid-template-columns: 110px repeat(5, minmax(120px, 1fr)); gap:6px; overflow-x:auto; }
+  .horario-celda-hora{
+    background:#fff8ea; border:1px solid var(--linea); border-radius:8px; padding:8px 10px; font-size:11.5px; color:var(--gris);
+    display:flex; flex-direction:column; justify-content:center; position: sticky; left: 0; z-index: 2; box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+  }
+  .horario-celda-hora b { display:block; font-size:12.5px; color:var(--tinta); margin-bottom:2px; }
+  .horario-dia-encabezado { text-align:center; font-weight:800; font-size:12.5px; color:var(--rojo); text-transform:uppercase; letter-spacing:.04em; padding:6px 4px; }
+  .horario-tarjeta { border-radius:9px; padding:9px 10px; font-size:12.5px; line-height:1.35; border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:center; gap:2px; }
+  .horario-tarjeta .materia { font-weight:800; color:var(--tinta); }
+  .horario-tarjeta .docente { color:#444; }
+  .horario-tarjeta .aula { color:var(--gris); font-size:11px; }
+  .horario-vacio { background:transparent; }
+  .horario-dia-encabezado.horario-dia-actual { background:var(--dorado); color:#fff; border-radius:6px; }
+  .horario-tarjeta.horario-dia-actual { border:2px solid var(--rojo) !important; box-shadow:0 0 0 1px var(--rojo); }
+  .horario-vacio.horario-dia-actual { background:#fffdf0; border:2px dashed var(--dorado); border-radius:8px; }
+  .horario-celda-hora.horario-dia-actual{ background:#fdf3d8; }
+  .horario-descanso { grid-column: 1 / -1; background:#f2ede1; border:1px dashed var(--linea); border-radius:8px; padding:8px; text-align:center; font-weight:bold; color:#888; font-style:italic; }
 </style>
 </head>
 <body>
@@ -339,7 +260,6 @@ td.col-hoy {
     </div>
   </header>
 
-  <!-- Barra de sesión: solo se muestra cuando ya se identificó al estudiante -->
   <div class="barra-sesion oculto" id="barra-sesion">
     <div class="barra-sesion-inner">
       <div>
@@ -367,11 +287,7 @@ td.col-hoy {
 
   <main>
 
-    <!-- ============================================================
-         PANTALLA 1: acceso — solo se pide el documento
-         ============================================================ -->
     <section id="pantalla-login">
-
       <section class="tarjeta bienvenida">
         <div class="listón"></div>
         <div class="contenido">
@@ -392,22 +308,14 @@ td.col-hoy {
           <p id="estado-doc" class="estado-doc">Con este documento se verifica al estudiante y se habilitan los reportes disponibles.</p>
         </div>
       </section>
-
     </section>
 
-    <!-- ============================================================
-         PANTALLA 2: panel de reportes — solo tras verificar el documento
-         ============================================================ -->
     <section id="pantalla-dashboard" class="oculto">
 
-      <!-- Carrusel exclusivo para docentes: reemplaza el carrusel de fichas de estudiante -->
       <div class="carrusel-wrap oculto" id="carrusel-wrap-docente">
         <button type="button" class="flecha-carrusel izquierda" id="flecha-izq-docente" aria-label="Ficha anterior">‹</button>
         <button type="button" class="flecha-carrusel derecha" id="flecha-der-docente" aria-label="Ficha siguiente">›</button>
-
         <div class="carrusel" id="rejilla-docente">
-
-        <!-- 1. Dashboard de simulacros -->
         <article class="reporte tarjeta">
           <div class="listón"></div>
           <div class="contenido">
@@ -417,15 +325,12 @@ td.col-hoy {
             <button type="button" class="btn" id="enlace-dashboard">Abrir Dashboard de Simulacros ↗</button>
           </div>
         </article>
-
-        <!-- 2. Artefactos de práctica -->
         <article class="reporte tarjeta">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">🧩</div>
             <h3>Artefactos de práctica</h3>
             <p class="desc">Abre el artefacto de un área para proyectarlo en clase.</p>
-
             <select class="selector-hoja" id="selector-artefacto-docente" aria-label="Seleccione el área">
               <option value="matematicas">Matemáticas</option>
               <option value="lectura_critica">Lectura Crítica</option>
@@ -433,13 +338,10 @@ td.col-hoy {
               <option value="ingles">Inglés</option>
               <option value="sociales_ciudadanas">Sociales y Ciudadanas</option>
             </select>
-
             <button type="button" class="btn" id="btn-artefacto-docente">Abrir artefacto ↗</button>
             <p class="estado-doc" id="estado-artefacto-docente"></p>
           </div>
         </article>
-
-        <!-- 3. Dashboard de artefactos -->
         <article class="reporte tarjeta">
           <div class="listón"></div>
           <div class="contenido">
@@ -449,100 +351,78 @@ td.col-hoy {
             <button type="button" class="btn" id="enlace-dashboard-artefactos">Abrir Dashboard de Artefactos ↗</button>
           </div>
         </article>
-
         </div>
-
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno-docente"></div></div>
       </div>
 
       <div class="carrusel-wrap" id="carrusel-wrap">
         <button type="button" class="flecha-carrusel izquierda" id="flecha-izq" aria-label="Reporte anterior">‹</button>
         <button type="button" class="flecha-carrusel derecha" id="flecha-der" aria-label="Reporte siguiente">›</button>
-
         <div class="carrusel" id="rejilla-reportes">
-
-        <!-- 1. Notas parciales -->
         <article class="reporte tarjeta" data-endpoint="notasParciales">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">📝</div>
             <h3>Reporte de notas parciales</h3>
             <p class="desc">Consulta las asignaturas reportadas y las observaciones registradas por los docentes en cada corte del periodo.</p>
-
             <select class="selector-hoja" aria-label="Seleccione el reporte">
               <option value="PrimerReporte">🗓️ Primer Reporte del Primer Periodo (26 de marzo de 2026)</option>
               <option value="SegundoReporte">🗓️ Segundo Reporte del Primer Periodo (8 de mayo de 2026)</option>
               <option value="Reporte Final Periodo 1">🗓️ Reporte Final del Primer Periodo (12 de junio de 2026)</option>
             </select>
-
             <button type="button" class="btn btn-consultar">Consultar</button>
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-
-        <!-- 2. Resultados de simulacros -->
         <article class="reporte tarjeta" data-endpoint="simulacros">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">📊</div>
             <h3>Resultados de simulacros</h3>
             <p class="desc">Revisa el reporte de un simulacro puntual, con imagen, PDF y notas por área, o el comparativo entre el primer y segundo simulacro.</p>
-
             <select class="selector-hoja" aria-label="Seleccione el simulacro">
               <option value="PrimerSimulacro">Primer simulacro</option>
               <option value="SegundoSimulacro">Segundo simulacro</option>
               <option value="Comparativo">Comparativo Simulacros</option>
             </select>
-
             <button type="button" class="btn btn-consultar">Consultar</button>
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-
-        <!-- 3. Boletines por periodo -->
         <article class="reporte tarjeta" data-endpoint="boletinesPeriodo">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">📄</div>
             <h3>Boletines académicos por periodo</h3>
             <p class="desc">Consulta y descarga el boletín académico oficial del estudiante correspondiente a cada periodo.</p>
-
             <select class="selector-hoja" aria-label="Seleccione el periodo">
               <option value="BoletinPeriodo1">Periodo 1</option>
               <option value="BoletinPeriodo2">Periodo 2</option>
             </select>
-
             <button type="button" class="btn btn-consultar">Consultar</button>
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-
-        <!-- 4. Boletines SENA -->
         <article class="reporte tarjeta" data-endpoint="boletinSena">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">🎓</div>
             <h3>Boletines SENA</h3>
             <p class="desc">Consulta el boletín de seguimiento del programa de articulación con el SENA.</p>
-
             <select class="selector-hoja" aria-label="Seleccione el reporte">
               <option value="BoletinSENA1">Reporte 1</option>
               <option value="BoletinSENA2">Reporte 2</option>
             </select>
-
             <button type="button" class="btn btn-consultar">Consultar</button>
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-
-        <!-- 5. Artefactos de práctica FaciMate Lleto -->
         <article class="reporte tarjeta" id="ficha-artefactos">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">🧩</div>
             <h3>Practica con FaciMate Lleto</h3>
             <p class="desc">Explora artefactos interactivos con preguntas de práctica, organizados por área.</p>
-
             <select class="selector-hoja" id="selector-artefacto" aria-label="Seleccione el área">
               <option value="matematicas">Matemáticas</option>
               <option value="lectura_critica">Lectura Crítica</option>
@@ -550,21 +430,18 @@ td.col-hoy {
               <option value="ingles">Inglés</option>
               <option value="sociales_ciudadanas">Sociales y Ciudadanas</option>
             </select>
-
             <button type="button" class="btn" id="btn-artefacto">Abrir artefacto ↗</button>
             <p class="estado-doc" id="estado-artefacto"></p>
           </div>
         </article>
-
         </div>
-
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno"></div></div>
       </div>
 
       <section id="seccion-horario" class="tarjeta-horario oculto">
         <div class="horario-header">
           <div class="horario-titulo">
-            <h3>📅 Mi Horario de Clases</h3>
+            <h3 id="horario-titulo-texto">📅 Mi Horario de Clases</h3>
             <span id="badge-dia-actual" class="badge-dia">Hoy es ...</span>
           </div>
           <div id="contenedor-versiones" style="display:none; align-items:center; gap:8px;">
@@ -572,7 +449,6 @@ td.col-hoy {
             <select id="selector-version-horario" style="padding:6px 12px; border-radius:8px; border:1px solid #d8cfc2; font-family:inherit; outline:none; background:#fff; cursor:pointer;"></select>
           </div>
         </div>
-        
         <div class="horario-wrapper">
           <table class="tabla-horario" id="tabla-horario">
             <thead>
@@ -585,25 +461,24 @@ td.col-hoy {
                 <th data-dia="5">Viernes</th>
               </tr>
             </thead>
-            <tbody id="tbody-horario">
-              </tbody>
+            <tbody id="tbody-horario"></tbody>
           </table>
         </div>
       </section>
 
-<!-- === NUEVA ZONA: Horario Estudiante === -->
-       <section id="zona-horario" class="oculto">
-         <h2 id="horario-titulo">Mi horario</h2>
-         <div id="horario-grid" class="horario-grid"></div>
-       </section>
- <!-- === ZONA RESULTADOS (Actualizada) === -->
-       <section id="zona-resultado" class="oculto">
-         <div class="resultado-header">
-           <h2>Resultado de la consulta</h2>
-           <button type="button" id="btn-ver-horario" class="btn-ver-horario oculto">📅 Ver mi horario</button>
-         </div>
-         <div id="resultado-caja"></div>
-       </section>
+      <section id="zona-horario" class="oculto">
+        <h2 id="horario-titulo">Mi horario</h2>
+        <div id="horario-grid" class="horario-grid"></div>
+      </section>
+
+      <section id="zona-resultado" class="oculto">
+        <div class="resultado-header">
+          <h2>Resultado de la consulta</h2>
+          <button type="button" id="btn-ver-horario" class="btn-ver-horario oculto">📅 Ver mi horario</button>
+        </div>
+        <div id="resultado-caja"></div>
+      </section>
+
     </section>
 
   </main>
@@ -618,18 +493,6 @@ td.col-hoy {
   </footer>
 
 <script>
-/* ============================================================
- * CONFIGURACIÓN DE REPORTES
- * ------------------------------------------------------------
- * Un registro por cada tarjeta del panel. scriptUrl = URL de
- * implementación ("/exec") del Apps Script publicado para esa
- * hoja de cálculo. Reemplaza "PEGA_AQUI_LA_URL_DEL_DEPLOY" por
- * la URL real cuando la tengas; mientras tanto, la tarjeta avisa
- * que falta configurarse en vez de fallar en silencio.
- *
- * necesitaHoja = true cuando el Apps Script espera el parámetro
- * "hoja" además de "doc".
- * ============================================================ */
 const CONFIG_REPORTES = {
   notasParciales: {
     scriptUrl: "https://script.google.com/macros/s/AKfycbwzxnBPiQeZR_FBW8Ziy_8o42Kb08ln41QnRt4eM_sSgUKrP9aJzTJj3lCgy2p0nan_gA/exec",
@@ -639,9 +502,6 @@ const CONFIG_REPORTES = {
     scriptUrl: "https://script.google.com/macros/s/AKfycbwEzpQsbsQ9JrLpY_ItBRljCfNTy1h_fEUxRVIm0vzr0iy98rjKAi4nz9S0owaBZiHg/exec",
     necesitaHoja: true
   },
-  // boletinesPeriodo y boletinSena comparten el MISMO Apps Script (una
-  // sola hoja "Boletines" con columnas separadas por tipo) — pega la
-  // misma URL de despliegue en ambas cuando la tengas.
   boletinesPeriodo: {
     scriptUrl: "https://script.google.com/macros/s/AKfycbzJyQwPGT6owGQ49Aq0TubWXSxgfN-FiZhkz9MoGUcYv8AP0ZH2Wz9J85VtEVv-fws4/exec",
     necesitaHoja: true
@@ -652,29 +512,13 @@ const CONFIG_REPORTES = {
   }
 };
 
-/* ------------------------------------------------------------
- * Verificación / identificación del estudiante (pantalla de
- * acceso). Apunta al Apps Script propio del spreadsheet "Lista
- * Estudiantes SLG 2026" (hojas Estudiantes + Grupos), NO al de
- * simulacros — así cualquier estudiante puede entrar al portal
- * aunque todavía no tenga resultados de simulacro cargados.
- * ------------------------------------------------------------ */
 const CONFIG_VERIFICACION = {
   scriptUrl: "https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec"
 };
 
-// URL del dashboard de simulacros dentro de este mismo repositorio
-// (subcarpeta en GitHub Pages). Reemplaza por la ruta real cuando
-// muevas el dashboard a portal-slg.
 const CONFIG_DASHBOARD_URL = "https://llerzy.github.io/portal-slg/dashboard-simulacros/";
 const CONFIG_DASHBOARD_ARTEFACTOS_URL = "https://llerzy.github.io/portal-slg/dashboard-artefactos/";
 
-/* ------------------------------------------------------------
- * Artefactos de práctica (cuadernillos HTML autocontenidos) por
- * área, para la ficha de estudiantes. Ruta relativa dentro del
- * repo: carpeta "artefactos/". Usa null para áreas que todavía
- * no tienen artefacto publicado — la ficha avisa en vez de fallar.
- * ------------------------------------------------------------ */
 const CONFIG_ARTEFACTOS = {
   matematicas: "artefactos/matematicas.html",
   lectura_critica: "artefactos/lectura-critica.html",
@@ -709,7 +553,6 @@ const carruselWrapDocente = document.getElementById("carrusel-wrap-docente");
 const enlaceDashboard = document.getElementById("enlace-dashboard");
 const enlaceDashboardArtefactos = document.getElementById("enlace-dashboard-artefactos");
 
-// --- Carrusel de reportes: flechas + barra de progreso (reutilizable) ---
 function inicializarCarrusel(idCarrusel, idFlechaIzq, idFlechaDer, idPistaRelleno) {
   const carrusel = document.getElementById(idCarrusel);
   const flechaIzq = document.getElementById(idFlechaIzq);
@@ -745,12 +588,11 @@ function inicializarCarrusel(idCarrusel, idFlechaIzq, idFlechaDer, idPistaRellen
 const actualizarCarruselEstudiante = inicializarCarrusel("rejilla-reportes", "flecha-izq", "flecha-der", "pista-relleno");
 const actualizarCarruselDocente = inicializarCarrusel("rejilla-docente", "flecha-izq-docente", "flecha-der-docente", "pista-relleno-docente");
 
-// Marca en el HTML qué tarjetas aún no tienen URL configurada.
 document.querySelectorAll(".reporte").forEach(function (tarjeta) {
   const clave = tarjeta.dataset.endpoint;
   const cfg = CONFIG_REPORTES[clave];
   const aviso = tarjeta.querySelector(".nota-config");
-  if (!aviso) return; // fichas sin este elemento (ej. artefactos, dashboard) no aplican
+  if (!aviso) return;
   if (!cfg || !cfg.scriptUrl || cfg.scriptUrl.indexOf("PEGA_AQUI") === 0) {
     aviso.classList.add("mostrar");
   }
@@ -778,7 +620,6 @@ function mostrarPantallaDashboard(sesion) {
   const esDocente = (sesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
 
   if (esDocente) {
-    // --- Vista docente: se oculta el carrusel de fichas de estudiante y se muestra el de docente ---
     saludoGrupo.textContent = "Docente";
     saludoGrupo.style.display = "inline-block";
     document.getElementById("saludo-detalle").textContent =
@@ -788,17 +629,16 @@ function mostrarPantallaDashboard(sesion) {
     carruselWrapDocente.classList.remove("oculto");
     if (actualizarCarruselDocente) setTimeout(actualizarCarruselDocente, 50);
 
-    // --- LÓGICA PARA MOSTRAR HORARIO DOCENTE ---
     const contenedorHorario = document.getElementById("seccion-horario");
     if (sesion.horario && sesion.horario.length > 0) {
       cargarHorarioDocente(sesion.horario);
     } else {
       contenedorHorario.classList.add("oculto");
     }
+    if (zonaHorario) zonaHorario.classList.add("oculto");
     configurarBotonDashboard(enlaceDashboard, CONFIG_DASHBOARD_URL, "Abrir Dashboard de Simulacros ↗", "CONFIG_DASHBOARD_URL");
     configurarBotonDashboard(enlaceDashboardArtefactos, CONFIG_DASHBOARD_ARTEFACTOS_URL, "Abrir Dashboard de Artefactos ↗", "CONFIG_DASHBOARD_ARTEFACTOS_URL");
   } else {
-    // --- Vista estudiante: comportamiento original ---
     saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
     saludoGrupo.style.display = sesion.grupo ? "inline-block" : "none";
 
@@ -809,10 +649,10 @@ function mostrarPantallaDashboard(sesion) {
 
     carruselWrapDocente.classList.add("oculto");
     carruselWrap.classList.remove("oculto");
-    // Ocultar horario a los estudiantes
+
     const contenedorHorario = document.getElementById("seccion-horario");
     if (contenedorHorario) contenedorHorario.classList.add("oculto");
-    // --- LÓGICA PARA MOSTRAR HORARIO ESTUDIANTE ---
+
     try {
       horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
       if (horarioEstudianteActual.length > 0) {
@@ -820,39 +660,33 @@ function mostrarPantallaDashboard(sesion) {
         renderizarHorarioEstudiante(horarioEstudianteActual);
         mostrarZonaHorario();
       } else {
-        if(zonaHorario) zonaHorario.classList.add("oculto");
+        if (zonaHorario) zonaHorario.classList.add("oculto");
       }
     } catch (errHorario) {
       console.error("No se pudo mostrar el horario de estudiante:", errHorario);
-      if(zonaHorario) zonaHorario.classList.add("oculto");
+      if (zonaHorario) zonaHorario.classList.add("oculto");
     }
   }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Si ya había una sesión activa en esta pestaña, entra directo al panel.
-setTimeout(function restaurarSesion() { 
-  const guardada = sessionStorage.getItem(CLAVE_SESION); 
-  if (guardada) { 
-    try { 
-      const sesion = JSON.parse(guardada); 
-      
-      // Validamos si es docente asegurándonos de ignorar mayúsculas/minúsculas
+setTimeout(function restaurarSesion() {
+  const guardada = sessionStorage.getItem(CLAVE_SESION);
+  if (guardada) {
+    try {
+      const sesion = JSON.parse(guardada);
       const esRolDocente = (sesion.rol || "").trim().toLowerCase().indexOf("docente") === 0;
-      
-      // CANDADO BLANDO ACTUALIZADO
-      if (sesion && sesion.documento && (sesion.grupo || esRolDocente || sesion.nombre)) { 
-        mostrarPantallaDashboard(sesion); 
-        return; 
-      } 
-    } catch (err) { 
-      // Si ocurre un error, ahora lo mostrará en la consola en vez de fallar en silencio
-      console.error("Error del sistema al restaurar la sesión:", err); 
-    } 
-  } 
-  mostrarPantallaLogin(); 
-}, 0); // El ", 0" asegura que se ejecute justo después de cargar las variables de abajo
+      if (sesion && sesion.documento && (sesion.grupo || esRolDocente || sesion.nombre)) {
+        mostrarPantallaDashboard(sesion);
+        return;
+      }
+    } catch (err) {
+      console.error("Error del sistema al restaurar la sesión:", err);
+    }
+  }
+  mostrarPantallaLogin();
+}, 0);
 
 btnSalir.addEventListener("click", function () {
   sessionStorage.removeItem(CLAVE_SESION);
@@ -874,19 +708,14 @@ btnSalir.addEventListener("click", function () {
   const textoInstalar = document.getElementById("texto-instalar");
   if (!banner || !btnInstalar || !btnCerrar) return;
 
-  // Ya está instalado / abierto como app -> no mostrar nada.
   const yaInstalado =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
 
-  // El estudiante ya cerró el aviso antes en este dispositivo/navegador.
   const yaDescartado = localStorage.getItem(CLAVE_DESCARTADO) === "1";
 
   if (yaInstalado || yaDescartado) return;
 
-  // Detecta iOS incluyendo iPadOS, que desde iPadOS 13 se identifica
-  // como "Macintosh" en el user-agent (igual que iPhone en modo
-  // "Sitio para computadora").
   const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
@@ -905,15 +734,11 @@ btnSalir.addEventListener("click", function () {
   }
 
   if (esIOS) {
-    // Safari/iOS no dispara 'beforeinstallprompt': instrucciones manuales directas.
     textoInstalar.textContent =
       "Toca el ícono Compartir (⬆️) en Safari y luego \"Agregar a pantalla de inicio\".";
     btnInstalar.style.display = "none";
     banner.classList.remove("oculto");
   } else {
-    // Chrome/Android y similares: esperamos el evento nativo, pero con
-    // respaldo manual si el navegador no lo dispara (Brave con Shields
-    // activos, heurísticas de Chrome, versiones que no lo soportan, etc.)
     window.addEventListener("beforeinstallprompt", function (e) {
       e.preventDefault();
       eventoInstalacion = e;
@@ -937,9 +762,6 @@ btnSalir.addEventListener("click", function () {
       localStorage.setItem(CLAVE_DESCARTADO, "1");
     });
 
-    // Respaldo: si a los 3 segundos el navegador no ofreció el prompt
-    // nativo, mostramos igual el banner con instrucciones manuales en
-    // vez de dejar al estudiante sin ninguna forma de instalar.
     setTimeout(function () {
       if (!eventoInstalacion && banner.classList.contains("oculto")) {
         mostrarInstruccionesManuales();
@@ -947,9 +769,6 @@ btnSalir.addEventListener("click", function () {
     }, 3000);
   }
 
-  // Registro del service worker — solo habilita instalabilidad,
-  // no cachea nada (ver comentarios en sw.js). Falla silenciosa
-  // si el navegador no lo soporta.
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
@@ -1068,8 +887,6 @@ document.querySelectorAll(".btn-consultar").forEach(function (boton) {
   });
 });
 
-// --- Selector de artefactos de práctica: abre en pestaña nueva, no consulta Apps Script ---
-// Reutilizable: conecta cualquier par selector+botón+estado (ficha de estudiante y panel de docente)
 function conectarSelectorArtefactos(idSelector, idBoton, idEstado) {
   const selector = document.getElementById(idSelector);
   const boton = document.getElementById(idBoton);
@@ -1100,8 +917,6 @@ function conectarSelectorArtefactos(idSelector, idBoton, idEstado) {
 conectarSelectorArtefactos("selector-artefacto", "btn-artefacto", "estado-artefacto");
 conectarSelectorArtefactos("selector-artefacto-docente", "btn-artefacto-docente", "estado-artefacto-docente");
 
-// --- Botones de dashboard (docentes): mismo mecanismo window.open() que los artefactos,
-// necesario para que sessionStorage se copie de forma confiable a la pestaña nueva ---
 function configurarBotonDashboard(boton, url, textoHabilitado, nombreConstante) {
   if (url && url.indexOf("PEGA_AQUI") === -1) {
     boton.dataset.url = url;
@@ -1123,7 +938,7 @@ function configurarBotonDashboard(boton, url, textoHabilitado, nombreConstante) 
 });
 
 function consultar(url) {
-  zonaResultado.classList.remove("oculto");
+  mostrarZonaResultado();
   resultadoCaja.innerHTML =
     '<div class="cargando"><span class="spinner"></span> Consultando información, por favor espera un momento...</div>';
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1135,32 +950,28 @@ function consultar(url) {
 }
 
 function mostrarError(texto) {
-  zonaResultado.classList.remove("oculto");
+  mostrarZonaResultado();
   resultadoCaja.innerHTML =
     '<div style="background:#fff4f4; border-left:6px solid #c40016; padding:18px; border-radius:8px; color:#333;">' +
     '<p style="margin:0;"><strong>Atención:</strong> ' + texto + "</p></div>";
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-// Variable para almacenar todas las versiones del docente activo
+
 let maestroHorariosVersiones = {};
 
-// Paleta de colores pastel dinámicos para los grupos
 const paletaGrupos = [
-  '#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#fce4ec', 
+  '#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#fce4ec',
   '#e0f7fa', '#fbe9e7', '#f0f4c3', '#d1c4e9', '#b2dfdb'
 ];
 let mapaColoresGrupos = {};
 let indiceColorGrupo = 0;
 
-// Auxiliar para formatear la versión si viene en formato ISO o fecha
 function formatearNombreVersion(v) {
   if (!v) return "Única";
-  // Si la versión es un ISO String de fecha (ej: 2026-07-30T05:00:00.000Z)
   if (v.includes("T00:00:00") || v.includes("Z") || !isNaN(Date.parse(v)) && v.length > 15) {
     try {
       const fecha = new Date(v);
       if (!isNaN(fecha.getTime())) {
-        // Formatear a: "jueves, 30 de julio de 2026"
         const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return fecha.toLocaleDateString('es-CO', opciones);
       }
@@ -1176,11 +987,8 @@ function cargarHorarioDocente(matrizHorarioCompleta) {
   mapaColoresGrupos = {};
   indiceColorGrupo = 0;
 
-  // 1. Agrupar la información por versiones, conservando el valor "crudo"
-  //    de cada versión para poder ordenarlas cronológicamente después
-  //    (el orden de aparición en la hoja HORARIOS no es confiable).
   maestroHorariosVersiones = {};
-  const versionCruda = {}; // etiqueta formateada -> valor original de la celda
+  const versionCruda = {};
   matrizHorarioCompleta.forEach(fila => {
     let vCruda = fila.version || "";
     let v = formatearNombreVersion(vCruda);
@@ -1195,9 +1003,6 @@ function cargarHorarioDocente(matrizHorarioCompleta) {
     return;
   }
 
-  // Ordena cronológicamente cuando el valor crudo es una fecha parseable
-  // (ej. ISO string). Si no lo es (versión con nombre libre como "Ajuste2"),
-  // se conserva el orden original tal como venía de la hoja.
   nombresVersiones = nombresVersiones.sort((a, b) => {
     const fechaA = Date.parse(versionCruda[a]);
     const fechaB = Date.parse(versionCruda[b]);
@@ -1205,22 +1010,22 @@ function cargarHorarioDocente(matrizHorarioCompleta) {
     return 0;
   });
 
-  // 2. Configurar el selector de versiones
   const contVersiones = document.getElementById("contenedor-versiones");
   const selector = document.getElementById("selector-version-horario");
-  
+  const tituloTexto = document.getElementById("horario-titulo-texto");
+  if (tituloTexto) tituloTexto.textContent = "📅 Mi Horario de Clases";
+
   if (nombresVersiones.length > 0) {
     contVersiones.style.display = "flex";
     selector.innerHTML = nombresVersiones.map(v => `<option value="${v}">${v}</option>`).join("");
-    
-    // Dejar seleccionada la versión más reciente
+
     const ultimaVersion = nombresVersiones[nombresVersiones.length - 1];
     selector.value = ultimaVersion;
 
     selector.onchange = () => renderizarTablaHorario(maestroHorariosVersiones[selector.value]);
     renderizarTablaHorario(maestroHorariosVersiones[ultimaVersion]);
   }
-  
+
   contenedor.classList.remove("oculto");
 }
 
@@ -1228,64 +1033,59 @@ function renderizarTablaHorario(matrizVersion) {
   const tbody = document.getElementById("tbody-horario");
   const badgeDia = document.getElementById("badge-dia-actual");
   if(!tbody) return;
-  
+
   tbody.innerHTML = "";
-  
+
   const fechaActual = new Date();
-  const diaSemana = fechaActual.getDay(); 
+  const diaSemana = fechaActual.getDay();
   const nombresDias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-  
+
   if (diaSemana >= 1 && diaSemana <= 5) {
     badgeDia.textContent = `Hoy es ${nombresDias[diaSemana]}`;
   } else {
     badgeDia.textContent = "Fin de Semana";
   }
 
-  // Encabezados del día actual
   document.querySelectorAll("#tabla-horario th[data-dia]").forEach(th => {
     th.classList.remove("col-hoy");
     if (parseInt(th.dataset.dia) === diaSemana) th.classList.add("col-hoy");
   });
 
-  // --- FUNCIÓN INTERNA: Procesa celdas manteniendo color de grupo en el día actual ---
   function procesarCelda(texto, esDiaActual) {
     let claseFinal = esDiaActual ? "col-hoy" : "";
-    
+
     if (!texto || texto.toUpperCase().includes("LIBRE") || texto.toUpperCase().includes("DESCANSO")) {
-      // Si es el día actual y no tiene grupo, le colocamos un tono crema suave
       let estiloVacio = esDiaActual ? "background-color: #fffdf0;" : "";
       return { html: texto || "", clase: claseFinal, estilo: estiloVacio };
     }
-    
+
     let htmlFinal = texto;
     let estiloFondo = "";
-    
+
     if (texto.includes("-")) {
       let partes = texto.split("-");
       let asignatura = partes[0].trim();
-      let grado = partes.slice(1).join("-").trim(); 
-      
+      let grado = partes.slice(1).join("-").trim();
+
       htmlFinal = `<strong>${asignatura}</strong><br><span style="font-size:12px; opacity:0.85;">${grado}</span>`;
-      
-      let numerosGrupo = grado.replace(/[^0-9]/g, ""); 
-      
+
+      let numerosGrupo = grado.replace(/[^0-9]/g, "");
+
       if (numerosGrupo) {
         if (!mapaColoresGrupos[numerosGrupo]) {
           mapaColoresGrupos[numerosGrupo] = paletaGrupos[indiceColorGrupo % paletaGrupos.length];
           indiceColorGrupo++;
         }
-        // Asigna siempre el color de grupo pastel correspondiente
         estiloFondo = `background-color: ${mapaColoresGrupos[numerosGrupo]};`;
       }
     }
-    
+
     return { html: htmlFinal, clase: claseFinal, estilo: estiloFondo };
   }
 
-  // Llenar filas de la tabla
   matrizVersion.forEach(fila => {
     const tr = document.createElement("tr");
-    
+
     const esDescanso = (fila.lunes || "").toUpperCase().includes("DESCANSO");
     if (esDescanso) tr.classList.add("fila-descanso");
 
@@ -1315,9 +1115,6 @@ function renderizarTablaHorario(matrizVersion) {
 }
 
 
-// =========================================================
-// RENDERIZADO DEL HORARIO ESTUDIANTIL
-// =========================================================
 const DIAS_HORARIO = [
   { clave: "lunes", etiqueta: "Lunes" }, { clave: "martes", etiqueta: "Martes" },
   { clave: "miercoles", etiqueta: "Miércoles" }, { clave: "jueves", etiqueta: "Jueves" },
@@ -1348,32 +1145,27 @@ function crearDivEstudiante(clase, texto) {
 function renderizarHorarioEstudiante(periodos) {
   if (!horarioGrid) return;
   horarioGrid.innerHTML = "";
-  
+
   const diaSemana = new Date().getDay();
   const mapa = { 1: "lunes", 2: "martes", 3: "miercoles", 4: "jueves", 5: "viernes" };
   const diaActual = mapa[diaSemana] || null;
 
-  // 1. Encabezados
   horarioGrid.appendChild(crearDivEstudiante("horario-celda-hora", ""));
   DIAS_HORARIO.forEach(d => {
     const clase = "horario-dia-encabezado" + (d.clave === diaActual ? " horario-dia-actual" : "");
     horarioGrid.appendChild(crearDivEstudiante(clase, d.etiqueta));
   });
 
-  // 2. Períodos y Tarjetas
   periodos.forEach(periodo => {
-    // Si es descanso, abarca toda la fila
     if (periodo.tipo === "descanso") {
       const textoDescanso = "☕ " + (periodo.horaEtiqueta || "Descanso") + (periodo.horaRango ? " · " + periodo.horaRango : "");
       horarioGrid.appendChild(crearDivEstudiante("horario-descanso", textoDescanso));
       return;
     }
 
-    // Columna de hora
     const celdaHora = crearDivEstudiante("horario-celda-hora", `<b>${periodo.horaEtiqueta || ""}</b>${periodo.horaRango || ""}`);
     horarioGrid.appendChild(celdaHora);
 
-    // Celdas de días
     DIAS_HORARIO.forEach(d => {
       const contenido = periodo[d.clave];
       const esHoy = (d.clave === diaActual) ? " horario-dia-actual" : "";
@@ -1383,7 +1175,6 @@ function renderizarHorarioEstudiante(periodos) {
         return;
       }
 
-      // Separa: Asignatura | Docente | Aula
       const partes = contenido.split("|");
       const materia = partes[0] ? partes[0].trim() : "";
       const docente = partes[1] ? partes[1].trim() : "";
@@ -1401,10 +1192,9 @@ function renderizarHorarioEstudiante(periodos) {
     });
   });
 
-  // Auto-scroll hacia el día actual en móviles
   if (window.innerWidth < 768) {
     setTimeout(function() {
-      const colDestacada = document.querySelector(".horario-dia-actual");
+      const colDestacada = document.querySelector("#zona-horario .horario-dia-actual");
       if (colDestacada) {
         colDestacada.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       }
@@ -1412,7 +1202,6 @@ function renderizarHorarioEstudiante(periodos) {
   }
 }
 
-// Controladores de Vistas (Alternar entre Resultado y Horario)
 function mostrarZonaResultado() {
   if (zonaHorario) zonaHorario.classList.add("oculto");
   if (zonaResultado) zonaResultado.classList.remove("oculto");
@@ -1429,13 +1218,9 @@ function mostrarZonaHorario() {
   }
 }
 
-if(btnVerHorario) {
+if (btnVerHorario) {
   btnVerHorario.addEventListener("click", mostrarZonaHorario);
 }
-
-// INYECCIÓN AUTOMÁTICA EN CONSULTAR:
-// Si tienes una función "consultar(url)", asegúrate de que esa función 
-// llame a mostrarZonaResultado() en su interior al iniciarse.
 </script>
 
 </body>
