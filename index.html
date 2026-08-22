@@ -103,6 +103,28 @@
   .toggle-vista-interfaz button.active{ background:var(--rojo); color:#fff; }
 
   /* ---------- Botón hamburguesa (abre/cierra el menú de lista) ---------- */
+  /* ---------- Anuncios / Circulares ---------- */
+  .zona-anuncios{ margin-top:20px; display:flex; flex-direction:column; gap:12px; }
+  .anuncio-card{
+    background:var(--blanco); border:1px solid var(--linea); border-left:5px solid var(--dorado);
+    border-radius:10px; padding:14px 16px; box-shadow:var(--sombra);
+  }
+  .anuncio-card.urgente{ border-left-color:var(--rojo); background:#fff8f8; }
+  .anuncio-card h4{
+    margin:0 0 4px; font-size:15px; color:var(--tinta); font-family:'Lora', serif; font-weight:700;
+    display:flex; align-items:center; gap:8px;
+  }
+  .anuncio-card.urgente h4{ color:var(--rojo-oscuro); }
+  .anuncio-card .badge-urgente{
+    display:inline-block; background:var(--rojo); color:#fff; font-size:10.5px; font-weight:800;
+    text-transform:uppercase; letter-spacing:.04em; padding:2px 8px; border-radius:999px;
+  }
+  .anuncio-card p{ margin:0; font-size:13.5px; color:var(--gris); line-height:1.5; }
+  .anuncio-card img{
+    display:block; width:100%; max-height:280px; object-fit:cover; border-radius:8px;
+    margin-bottom:10px; background:var(--crema-2);
+  }
+
   .btn-hamburguesa{
     width:40px; height:40px; border-radius:10px; border:1.5px solid var(--rojo);
     background:var(--rojo); color:#fff; font-size:18px; cursor:pointer;
@@ -374,6 +396,8 @@
           <p id="estado-doc" class="estado-doc">Con este documento se verifica al estudiante y se habilitan los reportes disponibles.</p>
         </div>
       </section>
+
+      <div id="zona-anuncios-login" class="zona-anuncios oculto"></div>
     </section>
 
     <section id="pantalla-dashboard" class="oculto">
@@ -544,9 +568,12 @@
         </div>
       </section>
 
+      <div id="zona-anuncios-docente" class="zona-anuncios oculto"></div>
+
       <section id="zona-horario" class="oculto">
         <h2 id="horario-titulo">Mi horario</h2>
         <div id="horario-grid" class="horario-grid"></div>
+        <div id="zona-anuncios-estudiante" class="zona-anuncios oculto"></div>
       </section>
 
       <section id="zona-resultado" class="oculto">
@@ -716,6 +743,7 @@ function mostrarPantallaDashboard(sesion) {
     if (zonaHorario) zonaHorario.classList.add("oculto");
     configurarBotonDashboard(enlaceDashboard, CONFIG_DASHBOARD_URL, "Abrir Dashboard de Simulacros ↗", "CONFIG_DASHBOARD_URL");
     configurarBotonDashboard(enlaceDashboardArtefactos, CONFIG_DASHBOARD_ARTEFACTOS_URL, "Abrir Dashboard de Artefactos ↗", "CONFIG_DASHBOARD_ARTEFACTOS_URL");
+    renderizarAnuncios("zona-anuncios-docente", sesion.anuncios);
   } else {
     saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
     saludoGrupo.style.display = sesion.grupo ? "inline-block" : "none";
@@ -733,9 +761,16 @@ function mostrarPantallaDashboard(sesion) {
 
     try {
       horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
-      if (horarioEstudianteActual.length > 0) {
-        horarioTitulo.textContent = "Mi horario — Grupo " + (sesion.grupo || "");
-        renderizarHorarioEstudiante(horarioEstudianteActual);
+      const tieneHorario = horarioEstudianteActual.length > 0;
+      const tieneAnuncios = Array.isArray(sesion.anuncios) && sesion.anuncios.length > 0;
+
+      horarioTitulo.textContent = "Mi horario — Grupo " + (sesion.grupo || "");
+      if (tieneHorario) renderizarHorarioEstudiante(horarioEstudianteActual);
+      else horarioGrid.innerHTML = "";
+
+      renderizarAnuncios("zona-anuncios-estudiante", sesion.anuncios);
+
+      if (tieneHorario || tieneAnuncios) {
         mostrarZonaHorario();
       } else {
         if (zonaHorario) zonaHorario.classList.add("oculto");
@@ -860,6 +895,50 @@ campoDocumento.addEventListener("keydown", function (ev) {
 });
 btnIngresar.addEventListener("click", intentarIngresar);
 
+/* ============================================================
+ * ANUNCIOS / CIRCULARES
+ * ============================================================ */
+function renderizarAnuncios(idContenedor, anuncios) {
+  const contenedor = document.getElementById(idContenedor);
+  if (!contenedor) return;
+
+  if (!anuncios || anuncios.length === 0) {
+    contenedor.classList.add("oculto");
+    contenedor.innerHTML = "";
+    return;
+  }
+
+  contenedor.innerHTML = anuncios.map(function (a) {
+    const clase = a.urgente ? "anuncio-card urgente" : "anuncio-card";
+    const badge = a.urgente ? '<span class="badge-urgente">Urgente</span>' : "";
+    const imagen = a.imagenUrl
+      ? '<img src="' + escaparHtml(a.imagenUrl) + '" alt="" loading="lazy" onerror="this.remove();">'
+      : "";
+    return '<div class="' + clase + '">' + imagen + '<h4>' + escaparHtml(a.titulo) + badge + '</h4><p>' + escaparHtml(a.texto) + '</p></div>';
+  }).join("");
+  contenedor.classList.remove("oculto");
+}
+
+function escaparHtml(texto) {
+  const div = document.createElement("div");
+  div.textContent = texto || "";
+  return div.innerHTML;
+}
+
+// Anuncios públicos en la pantalla de login (antes de identificar a nadie)
+(function cargarAnunciosLogin() {
+  if (!CONFIG_VERIFICACION.scriptUrl || CONFIG_VERIFICACION.scriptUrl.indexOf("PEGA_AQUI") === 0) return;
+  const params = new URLSearchParams();
+  params.set("accion", "anuncios");
+  fetch(CONFIG_VERIFICACION.scriptUrl + "?" + params.toString())
+    .then(function (res) { return res.text(); })
+    .then(function (texto) {
+      const datos = JSON.parse(texto);
+      renderizarAnuncios("zona-anuncios-login", datos.anuncios);
+    })
+    .catch(function () { /* falla silenciosa: el login funciona igual sin anuncios */ });
+})();
+
 function intentarIngresar() {
   const doc = campoDocumento.value.trim();
 
@@ -920,7 +999,8 @@ function intentarIngresar() {
         grado: datos.grado || "",
         director: datos.director || "",
         grupoAsignado: datos.grupoAsignado || "",
-        horario: datos.horario || []
+        horario: datos.horario || [],
+        anuncios: datos.anuncios || []
       };
       sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
       estadoDoc.textContent = "Documento verificado.";
@@ -1297,7 +1377,10 @@ function renderizarHorarioEstudiante(periodos) {
 function mostrarZonaResultado() {
   if (zonaHorario) zonaHorario.classList.add("oculto");
   if (zonaResultado) zonaResultado.classList.remove("oculto");
-  if (horarioEstudianteActual && horarioEstudianteActual.length > 0 && btnVerHorario) {
+  const anunciosEl = document.getElementById("zona-anuncios-estudiante");
+  const hayAnuncios = anunciosEl && !anunciosEl.classList.contains("oculto");
+  const hayHorario = horarioEstudianteActual && horarioEstudianteActual.length > 0;
+  if ((hayHorario || hayAnuncios) && btnVerHorario) {
     btnVerHorario.classList.remove("oculto");
   }
 }
