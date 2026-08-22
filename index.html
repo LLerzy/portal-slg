@@ -284,7 +284,28 @@ th.col-hoy {
 
 td.col-hoy {
   box-shadow: inset 0 0 0 1px var(--dorado, #e0aa00);
-}  
+}
+
+/* ---------- Horario del Estudiante ---------- */
+.resultado-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.resultado-header h2 { margin-bottom: 0; }
+.btn-ver-horario { background:#fff; border:1.5px solid var(--dorado); color:var(--rojo); font-weight:700; font-size:13.5px; padding:8px 14px; border-radius:999px; cursor:pointer; font-family:inherit; }
+.btn-ver-horario:hover { background:#fdf6e3; }
+#zona-horario { margin-top:32px; scroll-margin-top:24px; }
+#zona-horario h2 { font-size:19px; color:var(--rojo); margin-bottom:14px; }
+.horario-grid { display:grid; grid-template-columns: 110px repeat(5, minmax(120px, 1fr)); gap:6px; overflow-x:auto; }
+.horario-celda-hora { background:#fff8ea; border:1px solid var(--linea); border-radius:8px; padding:8px 10px; font-size:11.5px; color:var(--gris); display:flex; flex-direction:column; justify-content:center; }
+.horario-celda-hora b { display:block; font-size:12.5px; color:var(--tinta); margin-bottom:2px; }
+.horario-dia-encabezado { text-align:center; font-weight:800; font-size:12.5px; color:var(--rojo); text-transform:uppercase; letter-spacing:.04em; padding:6px 4px; }
+.horario-tarjeta { border-radius:9px; padding:9px 10px; font-size:12.5px; line-height:1.35; border:1px solid rgba(0,0,0,0.06); display:flex; flex-direction:column; justify-content:center; gap:2px; }
+.horario-tarjeta .materia { font-weight:800; color:var(--tinta); }
+.horario-tarjeta .docente { color:#444; }
+.horario-tarjeta .aula { color:var(--gris); font-size:11px; }
+.horario-vacio { background:transparent; }
+.horario-dia-encabezado.horario-dia-actual { background:var(--dorado); color:#fff; border-radius:6px; }
+.horario-tarjeta.horario-dia-actual { outline:2px solid var(--dorado); outline-offset:-2px; }
+.horario-vacio.horario-dia-actual { outline:2px dashed var(--dorado); outline-offset:-2px; }
+.horario-descanso { grid-column: 1 / -1; background:#f2ede1; border:1px dashed var(--linea); border-radius:8px; padding:8px; text-align:center; font-weight:bold; color:#888; font-style:italic; }
 </style>
 </head>
 <body>
@@ -561,12 +582,20 @@ td.col-hoy {
           </table>
         </div>
       </section>
-      
-      <section id="zona-resultado" class="oculto">
-        <h2>Resultado de la consulta</h2>
-        <div id="resultado-caja"></div>
-      </section>
 
+<!-- === NUEVA ZONA: Horario Estudiante === -->
+       <section id="zona-horario" class="oculto">
+         <h2 id="horario-titulo">Mi horario</h2>
+         <div id="horario-grid" class="horario-grid"></div>
+       </section>
+ <!-- === ZONA RESULTADOS (Actualizada) === -->
+       <section id="zona-resultado" class="oculto">
+         <div class="resultado-header">
+           <h2>Resultado de la consulta</h2>
+           <button type="button" id="btn-ver-horario" class="btn-ver-horario oculto">📅 Ver mi horario</button>
+         </div>
+         <div id="resultado-caja"></div>
+       </section>
     </section>
 
   </main>
@@ -661,6 +690,11 @@ const btnIngresar = document.getElementById("btn-ingresar");
 const estadoDoc = document.getElementById("estado-doc");
 const zonaResultado = document.getElementById("zona-resultado");
 const resultadoCaja = document.getElementById("resultado-caja");
+const zonaHorario = document.getElementById("zona-horario");
+const horarioGrid = document.getElementById("horario-grid");
+const horarioTitulo = document.getElementById("horario-titulo");
+const btnVerHorario = document.getElementById("btn-ver-horario");
+let horarioEstudianteActual = null;
 
 const carruselWrap = document.getElementById("carrusel-wrap");
 const carruselWrapDocente = document.getElementById("carrusel-wrap-docente");
@@ -770,6 +804,20 @@ function mostrarPantallaDashboard(sesion) {
     // Ocultar horario a los estudiantes
     const contenedorHorario = document.getElementById("seccion-horario");
     if (contenedorHorario) contenedorHorario.classList.add("oculto");
+    // --- LÓGICA PARA MOSTRAR HORARIO ESTUDIANTE ---
+    try {
+      horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
+      if (horarioEstudianteActual.length > 0) {
+        horarioTitulo.textContent = "Mi horario — Grupo " + (sesion.grupo || "");
+        renderizarHorarioEstudiante(horarioEstudianteActual);
+        mostrarZonaHorario();
+      } else {
+        if(zonaHorario) zonaHorario.classList.add("oculto");
+      }
+    } catch (errHorario) {
+      console.error("No se pudo mostrar el horario de estudiante:", errHorario);
+      if(zonaHorario) zonaHorario.classList.add("oculto");
+    }
   }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -803,6 +851,9 @@ btnSalir.addEventListener("click", function () {
   campoDocumento.value = "";
   estadoDoc.textContent = "Con este documento se verifica al estudiante y se habilitan los reportes disponibles.";
   estadoDoc.className = "estado-doc";
+  horarioEstudianteActual = null;
+  if (zonaHorario) zonaHorario.classList.add("oculto");
+  if (btnVerHorario) btnVerHorario.classList.add("oculto");
   mostrarPantallaLogin();
 });
 
@@ -1254,6 +1305,119 @@ function renderizarTablaHorario(matrizVersion) {
     }, 300);
   }
 }
+
+
+// =========================================================
+// RENDERIZADO DEL HORARIO ESTUDIANTIL
+// =========================================================
+const DIAS_HORARIO = [
+  { clave: "lunes", etiqueta: "Lunes" }, { clave: "martes", etiqueta: "Martes" },
+  { clave: "miercoles", etiqueta: "Miércoles" }, { clave: "jueves", etiqueta: "Jueves" },
+  { clave: "viernes", etiqueta: "Viernes" }
+];
+
+const PALETA_MATERIAS = [
+  { fondo: "#e8f4ea", texto: "#1a5c2a" }, { fondo: "#fdeeee", texto: "#8a2b2b" },
+  { fondo: "#eef1fb", texto: "#2c3e8a" }, { fondo: "#fff6e0", texto: "#8a6a10" },
+  { fondo: "#f3ecfb", texto: "#5a2c8a" }, { fondo: "#e6f6f6", texto: "#0d6b6b" },
+  { fondo: "#fdeef6", texto: "#8a2c5f" }, { fondo: "#f0f4e8", texto: "#4a6a1a" },
+  { fondo: "#eaf2fb", texto: "#1a4a7a" }, { fondo: "#faf0e6", texto: "#7a4a1a" }
+];
+
+function colorParaMateria(nombre) {
+  let hash = 0;
+  for (let i = 0; i < nombre.length; i++) hash = (hash * 31 + nombre.charCodeAt(i)) >>> 0;
+  return PALETA_MATERIAS[hash % PALETA_MATERIAS.length];
+}
+
+function crearDivEstudiante(clase, texto) {
+  const div = document.createElement("div");
+  div.className = clase;
+  div.innerHTML = texto;
+  return div;
+}
+
+function renderizarHorarioEstudiante(periodos) {
+  if (!horarioGrid) return;
+  horarioGrid.innerHTML = "";
+  
+  const diaSemana = new Date().getDay();
+  const mapa = { 1: "lunes", 2: "martes", 3: "miercoles", 4: "jueves", 5: "viernes" };
+  const diaActual = mapa[diaSemana] || null;
+
+  // 1. Encabezados
+  horarioGrid.appendChild(crearDivEstudiante("horario-celda-hora", ""));
+  DIAS_HORARIO.forEach(d => {
+    const clase = "horario-dia-encabezado" + (d.clave === diaActual ? " horario-dia-actual" : "");
+    horarioGrid.appendChild(crearDivEstudiante(clase, d.etiqueta));
+  });
+
+  // 2. Períodos y Tarjetas
+  periodos.forEach(periodo => {
+    // Si es descanso, abarca toda la fila
+    if (periodo.tipo === "descanso") {
+      const textoDescanso = "☕ " + (periodo.horaEtiqueta || "Descanso") + (periodo.horaRango ? " · " + periodo.horaRango : "");
+      horarioGrid.appendChild(crearDivEstudiante("horario-descanso", textoDescanso));
+      return;
+    }
+
+    // Columna de hora
+    const celdaHora = crearDivEstudiante("horario-celda-hora", `<b>${periodo.horaEtiqueta || ""}</b>${periodo.horaRango || ""}`);
+    horarioGrid.appendChild(celdaHora);
+
+    // Celdas de días
+    DIAS_HORARIO.forEach(d => {
+      const contenido = periodo[d.clave];
+      const esHoy = (d.clave === diaActual) ? " horario-dia-actual" : "";
+
+      if (!contenido || contenido.toUpperCase().includes("LIBRE") || contenido.trim() === "") {
+        horarioGrid.appendChild(crearDivEstudiante("horario-vacio" + esHoy, ""));
+        return;
+      }
+
+      // Separa: Asignatura | Docente | Aula
+      const partes = contenido.split("|");
+      const materia = partes[0] ? partes[0].trim() : "";
+      const docente = partes[1] ? partes[1].trim() : "";
+      const aula = partes[2] ? partes[2].trim() : "";
+
+      const color = colorParaMateria(materia);
+      const tarjeta = crearDivEstudiante("horario-tarjeta" + esHoy, "");
+      tarjeta.style.backgroundColor = color.fondo;
+      tarjeta.style.color = color.texto;
+
+      tarjeta.innerHTML = `<span class="materia">${materia}</span>` +
+                          (docente ? `<span class="docente">${docente}</span>` : "") +
+                          (aula ? `<span class="aula">${aula}</span>` : "");
+      horarioGrid.appendChild(tarjeta);
+    });
+  });
+}
+
+// Controladores de Vistas (Alternar entre Resultado y Horario)
+function mostrarZonaResultado() {
+  if (zonaHorario) zonaHorario.classList.add("oculto");
+  if (zonaResultado) zonaResultado.classList.remove("oculto");
+  if (horarioEstudianteActual && horarioEstudianteActual.length > 0 && btnVerHorario) {
+    btnVerHorario.classList.remove("oculto");
+  }
+}
+
+function mostrarZonaHorario() {
+  if (zonaResultado) zonaResultado.classList.add("oculto");
+  if (zonaHorario) {
+    zonaHorario.classList.remove("oculto");
+    zonaHorario.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+if(btnVerHorario) {
+  btnVerHorario.addEventListener("click", mostrarZonaHorario);
+}
+
+// INYECCIÓN AUTOMÁTICA EN CONSULTAR:
+// Si tienes una función "consultar(url)", asegúrate de que esa función 
+// llame a mostrarZonaResultado() en su interior al iniciarse.
 </script>
 
 </body>
