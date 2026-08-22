@@ -93,6 +93,24 @@
     border-radius:8px; cursor:pointer;
   }
   .btn-salir:hover{ background:var(--rojo); color:#fff; }
+
+  /* ---------- Toggle Tarjetas / Lista ---------- */
+  .toggle-vista-interfaz{ display:flex; gap:4px; background:#fff; border:1px solid #ecdcae; border-radius:999px; padding:3px; }
+  .toggle-vista-interfaz button{
+    border:none; background:transparent; font-family:inherit; font-size:12.5px; font-weight:700;
+    padding:6px 12px; border-radius:999px; cursor:pointer; color:var(--gris);
+  }
+  .toggle-vista-interfaz button.active{ background:var(--rojo); color:#fff; }
+
+  /* ---------- Vista de lista (menú desplegable) ---------- */
+  .vista-lista{ max-width:640px; margin:0 auto; }
+  .vista-lista .contenido{ background:#fffaf9; }
+  .vista-lista label{ display:block; font-weight:700; margin-bottom:8px; font-size:14.5px; color:var(--tinta); }
+  .vista-lista select{
+    width:100%; padding:13px 14px; border:1.5px solid #d8cfc2; border-radius:10px;
+    font-size:15px; font-family:inherit; background:#fff; margin-bottom:14px;
+  }
+  .vista-lista .btn{ margin-bottom:6px; }
   main{ max-width:1040px; margin:0 auto; padding:34px 24px 70px; }
   .tarjeta{
     background:var(--blanco); border:1px solid var(--linea); border-radius:var(--radio);
@@ -266,7 +284,13 @@
         <p>Consultando como <strong id="saludo-nombre">—</strong><span class="grupo-tag" id="saludo-grupo"></span></p>
         <p class="detalle-sesion" id="saludo-detalle"></p>
       </div>
-      <button type="button" class="btn-salir" id="btn-salir">Cerrar sesión</button>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div class="toggle-vista-interfaz" id="toggle-vista-interfaz">
+          <button type="button" data-vista="tarjetas">🗂️ Tarjetas</button>
+          <button type="button" data-vista="lista">📋 Lista</button>
+        </div>
+        <button type="button" class="btn-salir" id="btn-salir">Cerrar sesión</button>
+      </div>
     </div>
   </div>
   <div id="banner-instalar" class="tarjeta oculto" style="margin-bottom:16px;">
@@ -312,6 +336,15 @@
 
     <section id="pantalla-dashboard" class="oculto">
 
+      <section class="tarjeta vista-lista oculto" id="vista-lista-docente">
+        <div class="listón"></div>
+        <div class="contenido">
+          <label for="select-lista-docente">Selecciona lo que deseas consultar</label>
+          <select id="select-lista-docente"></select>
+          <button type="button" class="btn" id="btn-consultar-lista-docente">Consultar</button>
+        </div>
+      </section>
+
       <div class="carrusel-wrap oculto" id="carrusel-wrap-docente">
         <button type="button" class="flecha-carrusel izquierda" id="flecha-izq-docente" aria-label="Ficha anterior">‹</button>
         <button type="button" class="flecha-carrusel derecha" id="flecha-der-docente" aria-label="Ficha siguiente">›</button>
@@ -354,6 +387,15 @@
         </div>
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno-docente"></div></div>
       </div>
+
+      <section class="tarjeta vista-lista oculto" id="vista-lista-estudiante">
+        <div class="listón"></div>
+        <div class="contenido">
+          <label for="select-lista-estudiante">Selecciona lo que deseas consultar</label>
+          <select id="select-lista-estudiante"></select>
+          <button type="button" class="btn" id="btn-consultar-lista-estudiante">Consultar</button>
+        </div>
+      </section>
 
       <div class="carrusel-wrap" id="carrusel-wrap">
         <button type="button" class="flecha-carrusel izquierda" id="flecha-izq" aria-label="Reporte anterior">‹</button>
@@ -668,6 +710,9 @@ function mostrarPantallaDashboard(sesion) {
     }
   }
 
+  esDocenteActual = esDocente;
+  aplicarVistaInterfaz();
+
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -856,36 +901,58 @@ function intentarIngresar() {
     });
 }
 
+function ejecutarConsultaReporte(clave, valorHoja, tarjetaOpcional) {
+  const cfg = CONFIG_REPORTES[clave];
+
+  const guardada = sessionStorage.getItem(CLAVE_SESION);
+  const sesion = guardada ? JSON.parse(guardada) : null;
+  if (!sesion) { mostrarPantallaLogin(); return; }
+
+  if (!cfg || !cfg.scriptUrl || cfg.scriptUrl.indexOf("PEGA_AQUI") === 0) {
+    mostrarError(
+      "Este reporte todavía no tiene configurada la URL de su Apps Script. " +
+      "Publica el deploy correspondiente y actualiza CONFIG_REPORTES en el código de la página."
+    );
+    return;
+  }
+
+  document.querySelectorAll(".reporte").forEach(function (t) { t.classList.remove("activo"); });
+  if (tarjetaOpcional) tarjetaOpcional.classList.add("activo");
+
+  const params = new URLSearchParams();
+  params.set("doc", sesion.documento);
+  params.set("origen", ORIGEN_CONSULTA);
+  if (cfg.necesitaHoja && valorHoja) params.set("hoja", valorHoja);
+
+  consultar(cfg.scriptUrl + "?" + params.toString());
+}
+
 document.querySelectorAll(".btn-consultar").forEach(function (boton) {
   boton.addEventListener("click", function () {
     const tarjeta = boton.closest(".reporte");
     const clave = tarjeta.dataset.endpoint;
-    const cfg = CONFIG_REPORTES[clave];
     const selector = tarjeta.querySelector(".selector-hoja");
-
-    const guardada = sessionStorage.getItem(CLAVE_SESION);
-    const sesion = guardada ? JSON.parse(guardada) : null;
-    if (!sesion) { mostrarPantallaLogin(); return; }
-
-    if (!cfg || !cfg.scriptUrl || cfg.scriptUrl.indexOf("PEGA_AQUI") === 0) {
-      mostrarError(
-        "Este reporte todavía no tiene configurada la URL de su Apps Script. " +
-        "Publica el deploy correspondiente y actualiza CONFIG_REPORTES en el código de la página."
-      );
-      return;
-    }
-
-    document.querySelectorAll(".reporte").forEach(function (t) { t.classList.remove("activo"); });
-    tarjeta.classList.add("activo");
-
-    const params = new URLSearchParams();
-    params.set("doc", sesion.documento);
-    params.set("origen", ORIGEN_CONSULTA);
-    if (cfg.necesitaHoja && selector) params.set("hoja", selector.value);
-
-    consultar(cfg.scriptUrl + "?" + params.toString());
+    ejecutarConsultaReporte(clave, selector ? selector.value : null, tarjeta);
   });
 });
+
+function abrirArtefactoDirecto(clave, idEstado) {
+  const ruta = CONFIG_ARTEFACTOS[clave];
+  const estado = idEstado ? document.getElementById(idEstado) : null;
+
+  if (!ruta) {
+    if (estado) {
+      estado.textContent = "Este artefacto todavía no está disponible para esta área. Muy pronto estará publicado.";
+      estado.className = "estado-doc error";
+    } else {
+      mostrarError("Este artefacto todavía no está disponible para esta área. Muy pronto estará publicado.");
+    }
+    return;
+  }
+
+  if (estado) { estado.textContent = ""; estado.className = "estado-doc"; }
+  window.open(ruta, "_blank");
+}
 
 function conectarSelectorArtefactos(idSelector, idBoton, idEstado) {
   const selector = document.getElementById(idSelector);
@@ -894,18 +961,7 @@ function conectarSelectorArtefactos(idSelector, idBoton, idEstado) {
   if (!selector || !boton || !estado) return;
 
   boton.addEventListener("click", function () {
-    const clave = selector.value;
-    const ruta = CONFIG_ARTEFACTOS[clave];
-
-    if (!ruta) {
-      estado.textContent = "Este artefacto todavía no está disponible para esta área. Muy pronto estará publicado.";
-      estado.className = "estado-doc error";
-      return;
-    }
-
-    estado.textContent = "";
-    estado.className = "estado-doc";
-    window.open(ruta, "_blank");
+    abrirArtefactoDirecto(selector.value, idEstado);
   });
 
   selector.addEventListener("change", function () {
@@ -1221,6 +1277,137 @@ function mostrarZonaHorario() {
 if (btnVerHorario) {
   btnVerHorario.addEventListener("click", mostrarZonaHorario);
 }
+
+/* ============================================================
+ * VISTA DE LISTA (menú desplegable) — alternativa al carrusel
+ * ------------------------------------------------------------
+ * Las opciones se generan leyendo directamente las tarjetas ya
+ * existentes en el HTML (icono, título y <option> de cada
+ * selector-hoja), para no duplicar esa información en el código.
+ * Si mañana agregas un nuevo periodo/simulacro a una tarjeta, la
+ * vista de lista lo recoge automáticamente sin tocar nada aquí.
+ * ============================================================ */
+const CLAVE_VISTA_INTERFAZ = "slg_vista_interfaz";
+
+function construirOpcionesListaReportes(idRejilla) {
+  const opciones = [];
+  document.querySelectorAll("#" + idRejilla + " .reporte[data-endpoint]").forEach(function (tarjeta) {
+    const clave = tarjeta.dataset.endpoint;
+    const iconoEl = tarjeta.querySelector(".icono");
+    const icono = iconoEl ? iconoEl.textContent.trim() : "";
+    const nombre = tarjeta.querySelector("h3").textContent.trim();
+    const select = tarjeta.querySelector(".selector-hoja");
+
+    if (select && select.options.length > 0) {
+      Array.from(select.options).forEach(function (opt) {
+        opciones.push({
+          etiqueta: icono + " " + nombre + " — " + opt.textContent.trim(),
+          accion: function () { ejecutarConsultaReporte(clave, opt.value, tarjeta); }
+        });
+      });
+    } else {
+      opciones.push({
+        etiqueta: icono + " " + nombre,
+        accion: function () { ejecutarConsultaReporte(clave, null, tarjeta); }
+      });
+    }
+  });
+  return opciones;
+}
+
+function construirOpcionesListaArtefactos(idSelectorArtefacto, idEstado) {
+  const opciones = [];
+  const selectorOriginal = document.getElementById(idSelectorArtefacto);
+  if (!selectorOriginal) return opciones;
+
+  Array.from(selectorOriginal.options).forEach(function (opt) {
+    opciones.push({
+      etiqueta: "🧩 Practica con FaciMate Lleto — " + opt.textContent.trim(),
+      accion: function () { abrirArtefactoDirecto(opt.value, idEstado); }
+    });
+  });
+  return opciones;
+}
+
+function poblarSelectLista(idSelect, opciones) {
+  const select = document.getElementById(idSelect);
+  if (!select) return;
+  select.innerHTML = opciones.map(function (o, i) {
+    return '<option value="' + i + '">' + o.etiqueta + "</option>";
+  }).join("");
+  select._opciones = opciones;
+}
+
+const opcionesListaEstudiante = construirOpcionesListaReportes("rejilla-reportes")
+  .concat(construirOpcionesListaArtefactos("selector-artefacto", "estado-artefacto"));
+poblarSelectLista("select-lista-estudiante", opcionesListaEstudiante);
+
+document.getElementById("btn-consultar-lista-estudiante").addEventListener("click", function () {
+  const select = document.getElementById("select-lista-estudiante");
+  const opcion = select._opciones && select._opciones[select.selectedIndex];
+  if (opcion) opcion.accion();
+});
+
+const opcionesListaDocente = [
+  { etiqueta: "📈 Dashboard de resultados de simulacros", accion: function () { if (enlaceDashboard.dataset.url) window.open(enlaceDashboard.dataset.url, "_blank"); } }
+]
+  .concat(construirOpcionesListaArtefactos("selector-artefacto-docente", "estado-artefacto-docente"))
+  .concat([
+    { etiqueta: "📊 Dashboard de artefactos", accion: function () { if (enlaceDashboardArtefactos.dataset.url) window.open(enlaceDashboardArtefactos.dataset.url, "_blank"); } }
+  ]);
+poblarSelectLista("select-lista-docente", opcionesListaDocente);
+
+document.getElementById("btn-consultar-lista-docente").addEventListener("click", function () {
+  const select = document.getElementById("select-lista-docente");
+  const opcion = select._opciones && select._opciones[select.selectedIndex];
+  if (opcion) opcion.accion();
+});
+
+let esDocenteActual = false;
+
+function obtenerVistaInterfaz() {
+  return localStorage.getItem(CLAVE_VISTA_INTERFAZ) === "lista" ? "lista" : "tarjetas";
+}
+
+function aplicarVistaInterfaz() {
+  const vista = obtenerVistaInterfaz();
+
+  document.querySelectorAll("#toggle-vista-interfaz button").forEach(function (b) {
+    b.classList.toggle("active", b.dataset.vista === vista);
+  });
+
+  const vistaListaEstudiante = document.getElementById("vista-lista-estudiante");
+  const vistaListaDocente = document.getElementById("vista-lista-docente");
+
+  if (esDocenteActual) {
+    vistaListaEstudiante.classList.add("oculto");
+    if (vista === "lista") {
+      carruselWrapDocente.classList.add("oculto");
+      vistaListaDocente.classList.remove("oculto");
+    } else {
+      vistaListaDocente.classList.add("oculto");
+      carruselWrapDocente.classList.remove("oculto");
+      if (actualizarCarruselDocente) setTimeout(actualizarCarruselDocente, 50);
+    }
+  } else {
+    vistaListaDocente.classList.add("oculto");
+    if (vista === "lista") {
+      carruselWrap.classList.add("oculto");
+      vistaListaEstudiante.classList.remove("oculto");
+    } else {
+      vistaListaEstudiante.classList.add("oculto");
+      carruselWrap.classList.remove("oculto");
+      if (actualizarCarruselEstudiante) setTimeout(actualizarCarruselEstudiante, 50);
+    }
+  }
+}
+
+document.querySelectorAll("#toggle-vista-interfaz button").forEach(function (boton) {
+  boton.addEventListener("click", function () {
+    localStorage.setItem(CLAVE_VISTA_INTERFAZ, boton.dataset.vista);
+    aplicarVistaInterfaz();
+  });
+});
 </script>
 
 </body>
