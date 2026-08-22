@@ -7,7 +7,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
-  
 :root{
   --paper:#E6E1D3;
   --paper-dark:#D9D0BB;
@@ -83,6 +82,7 @@ body{
 }
 .nav-strip .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
 .order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+body.es-estudiante .order-row{display:none;}
 .order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
 .order-btn{
   font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
@@ -638,7 +638,7 @@ function renderBubbles(){
     if(i===current) cls += ' current';
     if(window.ES_DOCENTE && answers[q.id]){ cls += answers[q.id].correct ? ' correct' : ' incorrect'; }
     b.className = cls;
-    b.textContent = q.id;
+    b.textContent = window.ES_DOCENTE ? q.id : (i + 1);
     b.onclick = ()=>{ current = i; render(); };
     el.appendChild(b);
   });
@@ -687,10 +687,10 @@ function render(){
 
   inner.innerHTML = `
     <div class="q-head">
-      <div class="q-num">${q.id}</div>
+      <div class="q-num">${window.ES_DOCENTE ? q.id : (current + 1)}</div>
       <div class="q-tags"><span class="tag">${q.category}</span><span class="tag tag-comp">${q.competencia}</span></div>
     </div>
-    ${q.setLabel ? `<div class="set-label">${q.setLabel}</div>` : ''}
+    ${(q.setLabel && window.ES_DOCENTE) ? `<div class="set-label">${q.setLabel}</div>` : ''}
     ${ctxHTML}
     <p class="stmt">${q.text}</p>
     <div class="options">${optsHTML}</div>
@@ -766,7 +766,12 @@ document.getElementById('retryBtn').onclick = ()=>{
   window.scrollTo({top:0, behavior:'smooth'});
 };
 
-buildOrder(false);
+if (window.ES_DOCENTE) {
+  buildOrder(false);
+} else {
+  mode = 'aleatorio';
+  buildOrder(true);
+}
 render();
 
 function enviarIntentoAlBackend() {
