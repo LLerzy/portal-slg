@@ -236,6 +236,15 @@
   .horario-tarjeta .docente{ color:#444; }
   .horario-tarjeta .aula{ color:var(--gris); font-size:11px; }
   .horario-vacio{ background:transparent; }
+  .horario-dia-encabezado.horario-dia-actual{
+    background:var(--dorado); color:#fff; border-radius:6px;
+  }
+  .horario-tarjeta.horario-dia-actual{
+    outline:2px solid var(--dorado); outline-offset:-2px;
+  }
+  .horario-vacio.horario-dia-actual{
+    outline:2px dashed var(--dorado); outline-offset:-2px;
+  }
   .horario-descanso{
     grid-column: 1 / -1; background:#f2ede1; border:1px dashed var(--linea); border-radius:8px;
     text-align:center; font-size:12px; font-weight:700; color:var(--gris); padding:6px; letter-spacing:.03em;
@@ -710,12 +719,17 @@ function mostrarPantallaDashboard(sesion) {
     carruselWrapDocente.classList.add("oculto");
     carruselWrap.classList.remove("oculto");
 
-    horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
-    if (horarioEstudianteActual.length > 0) {
-      horarioTitulo.textContent = "Mi horario — Grupo " + (sesion.grupo || "");
-      renderizarHorario(horarioEstudianteActual);
-      mostrarZonaHorario();
-    } else {
+    try {
+      horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
+      if (horarioEstudianteActual.length > 0) {
+        horarioTitulo.textContent = "Mi horario — Grupo " + (sesion.grupo || "");
+        renderizarHorario(horarioEstudianteActual);
+        mostrarZonaHorario();
+      } else {
+        zonaHorario.classList.add("oculto");
+      }
+    } catch (errHorario) {
+      console.error("No se pudo mostrar el horario (el resto del portal sigue funcionando):", errHorario);
       zonaHorario.classList.add("oculto");
     }
   }
@@ -733,7 +747,9 @@ function mostrarPantallaDashboard(sesion) {
         mostrarPantallaDashboard(sesion);
         return;
       }
-    } catch (err) { /* sesión corrupta, se ignora */ }
+    } catch (err) {
+      console.error("No se pudo restaurar la sesión al recargar:", err);
+    }
   }
   mostrarPantallaLogin();
 })();
@@ -955,13 +971,20 @@ function colorParaMateria(nombre) {
   return PALETA_MATERIAS[hash % PALETA_MATERIAS.length];
 }
 
+function obtenerClaveDiaActual() {
+  const mapa = { 1: "lunes", 2: "martes", 3: "miercoles", 4: "jueves", 5: "viernes" };
+  return mapa[new Date().getDay()] || null; // null en fin de semana: no se resalta ningún día
+}
+
 function renderizarHorario(periodos) {
   horarioGrid.innerHTML = "";
+  const diaActual = obtenerClaveDiaActual();
 
   // Encabezado: celda vacía (columna Hora) + un encabezado por día
   horarioGrid.appendChild(crearDiv("horario-celda-hora", ""));
   DIAS_HORARIO.forEach(function (d) {
-    horarioGrid.appendChild(crearDiv("horario-dia-encabezado", d.etiqueta));
+    const clase = "horario-dia-encabezado" + (d.clave === diaActual ? " horario-dia-actual" : "");
+    horarioGrid.appendChild(crearDiv(clase, d.etiqueta));
   });
 
   periodos.forEach(function (periodo, indice) {
@@ -987,7 +1010,7 @@ function renderizarHorario(periodos) {
       if (esContinuacion) return;
 
       if (!texto) {
-        horarioGrid.appendChild(crearDiv("horario-tarjeta horario-vacio", ""));
+        horarioGrid.appendChild(crearDiv("horario-tarjeta horario-vacio" + (dia.clave === diaActual ? " horario-dia-actual" : ""), ""));
         return;
       }
 
@@ -1006,7 +1029,7 @@ function renderizarHorario(periodos) {
       const color = colorParaMateria(materia);
 
       const tarjeta = document.createElement("div");
-      tarjeta.className = "horario-tarjeta";
+      tarjeta.className = "horario-tarjeta" + (dia.clave === diaActual ? " horario-dia-actual" : "");
       tarjeta.style.background = color.fondo;
       tarjeta.style.color = color.texto;
       if (span > 1) tarjeta.style.gridRow = "span " + span;
