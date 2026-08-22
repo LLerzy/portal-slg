@@ -251,6 +251,10 @@
   }
   @media (max-width:700px){
     .horario-grid{ grid-template-columns: 90px repeat(5, minmax(110px, 1fr)); }
+    .horario-celda-hora{
+      position:sticky; left:0; z-index:2;
+      box-shadow:2px 0 4px rgba(0,0,0,0.06);
+    }
   }
   #zona-resultado h2{ font-size:19px; color:var(--rojo); margin-bottom:14px; }
   #resultado-caja{ min-height:10px; }
@@ -737,23 +741,6 @@ function mostrarPantallaDashboard(sesion) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Si ya había una sesión activa en esta pestaña, entra directo al panel.
-(function restaurarSesion() {
-  const guardada = sessionStorage.getItem(CLAVE_SESION);
-  if (guardada) {
-    try {
-      const sesion = JSON.parse(guardada);
-      if (sesion && sesion.documento && sesion.nombre) {
-        mostrarPantallaDashboard(sesion);
-        return;
-      }
-    } catch (err) {
-      console.error("No se pudo restaurar la sesión al recargar:", err);
-    }
-  }
-  mostrarPantallaLogin();
-})();
-
 btnSalir.addEventListener("click", function () {
   sessionStorage.removeItem(CLAVE_SESION);
   campoDocumento.value = "";
@@ -1068,6 +1055,27 @@ function mostrarError(texto) {
     '<p style="margin:0;"><strong>Atención:</strong> ' + texto + "</p></div>";
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
+// Si ya había una sesión activa en esta pestaña, entra directo al panel.
+// IMPORTANTE: este bloque debe ir AL FINAL del script — se ejecuta de
+// inmediato al cargar la página (a diferencia del login, que espera una
+// respuesta de red), así que todo lo que usa (DIAS_HORARIO, funciones,
+// etc.) debe estar ya definido antes de que se llegue a esta línea.
+(function restaurarSesion() {
+  const guardada = sessionStorage.getItem(CLAVE_SESION);
+  if (guardada) {
+    try {
+      const sesion = JSON.parse(guardada);
+      if (sesion && sesion.documento && sesion.nombre) {
+        mostrarPantallaDashboard(sesion);
+        return;
+      }
+    } catch (err) {
+      console.error("No se pudo restaurar la sesión al recargar:", err);
+    }
+  }
+  mostrarPantallaLogin();
+})();
 </script>
 
 </body>
