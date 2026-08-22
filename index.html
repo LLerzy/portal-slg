@@ -1152,7 +1152,7 @@ function cargarHorarioDocente(matrizHorarioCompleta) {
   
   if (nombresVersiones.length > 0) {
     contVersiones.style.display = "flex";
-    selector.innerHTML = nombresVersiones.map(v => `<option value="v">{v}</option>`).join("");
+    selector.innerHTML = nombresVersiones.map(v => `<option value="${v}">${v}</option>`).join("");
     
     // Dejar seleccionada la versión más reciente
     const ultimaVersion = nombresVersiones[nombresVersiones.length - 1];
@@ -1206,7 +1206,7 @@ function renderizarTablaHorario(matrizVersion) {
       let asignatura = partes[0].trim();
       let grado = partes.slice(1).join("-").trim(); 
       
-      htmlFinal = `<strong>asignatura</strong><br><spanstyle="font-size:12px;opacity:0.85;">{grado}</span>`;
+      htmlFinal = `<strong>${asignatura}</strong><br><span style="font-size:12px; opacity:0.85;">${grado}</span>`;
       
       let numerosGrupo = grado.replace(/[^0-9]/g, ""); 
       
@@ -1238,11 +1238,11 @@ function renderizarTablaHorario(matrizVersion) {
 
     tr.innerHTML = `
       <td class="col-hora">${fila.hora || ""}</td>
-      <td class="cLunes.clase"style="{cLunes.estilo}">${cLunes.html}</td>
-      <td class="cMartes.clase"style="{cMartes.estilo}">${cMartes.html}</td>
-      <td class="cMiercoles.clase"style="{cMiercoles.estilo}">${cMiercoles.html}</td>
-      <td class="cJueves.clase"style="{cJueves.estilo}">${cJueves.html}</td>
-      <td class="cViernes.clase"style="{cViernes.estilo}">${cViernes.html}</td>
+      <td class="${cLunes.clase}" style="${cLunes.estilo}">${cLunes.html}</td>
+      <td class="${cMartes.clase}" style="${cMartes.estilo}">${cMartes.html}</td>
+      <td class="${cMiercoles.clase}" style="${cMiercoles.estilo}">${cMiercoles.html}</td>
+      <td class="${cJueves.clase}" style="${cJueves.estilo}">${cJueves.html}</td>
+      <td class="${cViernes.clase}" style="${cViernes.estilo}">${cViernes.html}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -1258,4 +1258,3 @@ function renderizarTablaHorario(matrizVersion) {
 
 </body>
 </html>
-
