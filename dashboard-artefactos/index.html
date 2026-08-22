@@ -68,6 +68,12 @@
     .dot{ width:7px; height:7px; border-radius:50%; background:var(--muted); }
     .dot.ok{ background:var(--green); }
     .dot.warn{ background:var(--red); }
+    .btn-volver{
+      display:inline-flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border);
+      border-radius:999px; padding:7px 14px; font-size:12.5px; font-weight:700; color:var(--red);
+      text-decoration:none; transition:background .12s, border-color .12s;
+    }
+    .btn-volver:hover{ background:#fbf1f1; border-color:var(--red); }
     @media (max-width:700px){ .masthead-meta{ align-items:flex-start; } }
 
     main { max-width: 1180px; margin: 0 auto; padding: 24px; }
@@ -156,6 +162,7 @@
       <p>Comparativo de aciertos por grupo, área, categoría y competencia, a partir de los intentos registrados.</p>
     </div>
     <div class="masthead-meta">
+      <a class="btn-volver" href="https://llerzy.github.io/portal-slg/">← Volver al portal</a>
       <span class="pill"><span class="dot" id="statusDot"></span><span id="statusText">Sin datos cargados</span></span>
       <span id="updatedAt"></span>
     </div>
