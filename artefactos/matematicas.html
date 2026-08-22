@@ -796,7 +796,7 @@ function render(){
       <div class="q-num">${window.ES_DOCENTE ? q.id : (current + 1)}</div>
       <div class="q-tags"><span class="tag">${q.category}</span><span class="tag tag-comp">${q.competencia}</span></div>
     </div>
-    ${q.setLabel ? `<div class="set-label">${q.setLabel}</div>` : ''}
+    ${(q.setLabel && window.ES_DOCENTE) ? `<div class="set-label">${q.setLabel}</div>` : ''}
     ${ctxHTML}
     <p class="stmt">${q.text}</p>
     <div class="options">${optsHTML}</div>
