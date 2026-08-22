@@ -72,6 +72,12 @@
   .dot{ width:7px; height:7px; border-radius:50%; background:var(--muted); }
   .dot.ok{ background:var(--green); }
   .dot.warn{ background:var(--red); }
+  .btn-volver{
+    display:inline-flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border);
+    border-radius:999px; padding:7px 14px; font-size:12.5px; font-weight:700; color:var(--red);
+    text-decoration:none; transition:background .12s, border-color .12s;
+  }
+  .btn-volver:hover{ background:#fbf1f1; border-color:var(--red); }
   button.ghost{
     border:1px solid var(--border); background:var(--surface); color:var(--ink);
     padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;
@@ -118,6 +124,12 @@
     appearance:none; min-width:170px; cursor:pointer;
   }
   .filterbar .spacer{ flex:1; }
+  .aviso-alcance{
+    background:#eef4fb; border:1px solid #cdd9ef; border-left:4px solid var(--red);
+    border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:13.5px; color:var(--ink);
+    display:none;
+  }
+  .aviso-alcance.mostrar{ display:block; }
 
   /* ---------- KPI cards ---------- */
   .kpi-grid{
@@ -291,6 +303,7 @@
       <p>Resumen por grupo, grado y director de grupo, a partir de la hoja «Comparativosimulacros».</p>
     </div>
     <div class="masthead-meta">
+      <a class="btn-volver" href="https://llerzy.github.io/portal-slg/">← Volver al portal</a>
       <span class="pill"><span class="dot" id="statusDot"></span><span id="statusText">Sin datos cargados</span></span>
       <span id="updatedAt"></span>
     </div>
@@ -327,6 +340,8 @@
   </div>
 
   <div id="dashboard" style="display:none;">
+
+    <p class="aviso-alcance" id="avisoAlcance"></p>
 
     <div class="filterbar">
       <div class="field">
@@ -477,6 +492,58 @@ const FILA_INICIO_DATOS = 3; // fila 4 del Sheet (índice 0-based)
 let STUDENTS = [];
 
 /* ============================================================
+ * PRESELECCIÓN INICIAL POR ROL
+ * ============================================================
+ * Esto NO restringe qué datos puede ver ni navegar el docente —
+ * todos los grupos/grados/comparativo siguen disponibles en los
+ * filtros de siempre. Solo cambia qué queda elegido por defecto
+ * al abrir el dashboard, para ahorrarle el primer clic:
+ * - Directivo docente: queda en "Todos" los grados, "Todos" los
+ *   grupos, y el simulacro "Comparativo" (el estado por defecto
+ *   normal del dashboard — no hace falta tocar nada).
+ * - Docente de grupo: se preselecciona su primer grupo asignado
+ *   (columna GrupoAsignado, separada por coma si tiene varios).
+ * - Estudiante o sin sesión: sin cambios, comportamiento normal.
+ * ============================================================ */
+function obtenerPreseleccionDocente() {
+  try {
+    const sesionRaw = sessionStorage.getItem("slg_sesion");
+    if (!sesionRaw) return null;
+    const sesion = JSON.parse(sesionRaw);
+    const rol = (sesion.rol || "").trim().toLowerCase();
+
+    if (rol.indexOf("docente") !== 0) return null; // no es docente
+    if (rol.indexOf("directivo") !== -1) return null; // directivo: se queda en "Todos" (default)
+
+    const gruposTexto = (sesion.grupoAsignado || "").trim();
+    if (!gruposTexto) return null; // sin grupo configurado: se queda en "Todos"
+
+    const primerGrupo = gruposTexto.split(",")[0].trim();
+    return primerGrupo || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function aplicarPreseleccionDocente() {
+  const grupoPreseleccionado = obtenerPreseleccionDocente();
+  if (!grupoPreseleccionado) return; // directivo, estudiante, o sin grupo: se deja el default normal
+
+  const grado = inferirGrado(grupoPreseleccionado);
+  document.getElementById("fGrado").value = grado;
+  populateGrupoFilter(); // repuebla el selector de Grupo según el grado recién elegido
+
+  const selGrupo = document.getElementById("fGrupo");
+  // Solo se preselecciona si ese grupo existe entre las opciones disponibles
+  const existe = Array.from(selGrupo.options).some(function (o) { return o.value === grupoPreseleccionado; });
+  if (existe) selGrupo.value = grupoPreseleccionado;
+
+  const aviso = document.getElementById("avisoAlcance");
+  aviso.textContent = "Se preseleccionó tu grupo (" + grupoPreseleccionado + "). Puedes cambiar los filtros para ver cualquier otro grupo o grado.";
+  aviso.classList.add("mostrar");
+}
+
+/* ============================================================
  * CARGA DE DATOS
  * ============================================================ */
 function setStatus(ok, text){
@@ -513,6 +580,7 @@ function parseCsv(csvText){
   document.getElementById("setupCard").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
   populateGrupoFilter();
+  aplicarPreseleccionDocente();
   renderAll();
 }
 
