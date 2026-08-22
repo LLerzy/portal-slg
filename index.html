@@ -103,14 +103,40 @@
   .toggle-vista-interfaz button.active{ background:var(--rojo); color:#fff; }
 
   /* ---------- Vista de lista (menú desplegable) ---------- */
-  .vista-lista{ max-width:640px; margin:0 auto; }
-  .vista-lista .contenido{ background:#fffaf9; }
-  .vista-lista label{ display:block; font-weight:700; margin-bottom:8px; font-size:14.5px; color:var(--tinta); }
-  .vista-lista select{
-    width:100%; padding:13px 14px; border:1.5px solid #d8cfc2; border-radius:10px;
-    font-size:15px; font-family:inherit; background:#fff; margin-bottom:14px;
+  /* ---------- Vista de lista (menú acordeón oscuro) ---------- */
+  .menu-lista-wrap{ max-width:640px; margin:0 auto; }
+  .menu-lista{
+    background:#26242a; border-radius:12px; overflow:hidden; box-shadow:var(--sombra);
   }
-  .vista-lista .btn{ margin-bottom:6px; }
+  .menu-categoria{ border-bottom:1px solid rgba(255,255,255,0.06); }
+  .menu-categoria:last-child{ border-bottom:none; }
+  .menu-categoria-cabecera{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:15px 18px; cursor:pointer; color:#f2ede4; font-size:15px; font-weight:600;
+    background:transparent; transition:background .12s ease;
+  }
+  .menu-categoria-cabecera:hover{ background:rgba(255,255,255,0.05); }
+  .menu-categoria-cabecera .icono-cat{ margin-right:4px; }
+  .menu-categoria-cabecera .flecha{
+    font-size:12px; color:#9a958c; transition:transform .15s ease; flex-shrink:0;
+  }
+  .menu-categoria.abierta .menu-categoria-cabecera .flecha{ transform:rotate(90deg); }
+  .menu-categoria.abierta .menu-categoria-cabecera{ background:rgba(255,255,255,0.06); }
+  .menu-subitems{ max-height:0; overflow:hidden; transition:max-height .2s ease; background:#1f1d22; }
+  .menu-categoria.abierta .menu-subitems{ max-height:600px; }
+  .menu-subitem{
+    display:block; width:100%; text-align:left; padding:13px 18px 13px 42px;
+    color:#cfc9bd; font-size:14px; background:transparent; border:none; cursor:pointer;
+    font-family:inherit; border-top:1px solid rgba(255,255,255,0.04);
+  }
+  .menu-subitem:hover{ background:rgba(201,162,75,0.14); color:#fff; }
+  .menu-item-directo{
+    display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+    padding:15px 18px; color:#f2ede4; font-size:15px; font-weight:600;
+    background:transparent; border:none; cursor:pointer; font-family:inherit;
+    transition:background .12s ease;
+  }
+  .menu-item-directo:hover{ background:rgba(255,255,255,0.05); }
   main{ max-width:1040px; margin:0 auto; padding:34px 24px 70px; }
   .tarjeta{
     background:var(--blanco); border:1px solid var(--linea); border-radius:var(--radio);
@@ -336,13 +362,8 @@
 
     <section id="pantalla-dashboard" class="oculto">
 
-      <section class="tarjeta vista-lista oculto" id="vista-lista-docente">
-        <div class="listón"></div>
-        <div class="contenido">
-          <label for="select-lista-docente">Selecciona lo que deseas consultar</label>
-          <select id="select-lista-docente"></select>
-          <button type="button" class="btn" id="btn-consultar-lista-docente">Consultar</button>
-        </div>
+      <section class="menu-lista-wrap oculto" id="vista-lista-docente">
+        <div class="menu-lista" id="menu-lista-docente"></div>
       </section>
 
       <div class="carrusel-wrap oculto" id="carrusel-wrap-docente">
@@ -388,13 +409,8 @@
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno-docente"></div></div>
       </div>
 
-      <section class="tarjeta vista-lista oculto" id="vista-lista-estudiante">
-        <div class="listón"></div>
-        <div class="contenido">
-          <label for="select-lista-estudiante">Selecciona lo que deseas consultar</label>
-          <select id="select-lista-estudiante"></select>
-          <button type="button" class="btn" id="btn-consultar-lista-estudiante">Consultar</button>
-        </div>
+      <section class="menu-lista-wrap oculto" id="vista-lista-estudiante">
+        <div class="menu-lista" id="menu-lista-estudiante"></div>
       </section>
 
       <div class="carrusel-wrap" id="carrusel-wrap">
@@ -1279,18 +1295,20 @@ if (btnVerHorario) {
 }
 
 /* ============================================================
- * VISTA DE LISTA (menú desplegable) — alternativa al carrusel
+ * VISTA DE LISTA (menú acordeón oscuro) — alternativa al carrusel
  * ------------------------------------------------------------
- * Las opciones se generan leyendo directamente las tarjetas ya
- * existentes en el HTML (icono, título y <option> de cada
- * selector-hoja), para no duplicar esa información en el código.
- * Si mañana agregas un nuevo periodo/simulacro a una tarjeta, la
- * vista de lista lo recoge automáticamente sin tocar nada aquí.
+ * Las categorías y sub-ítems se generan leyendo directamente las
+ * tarjetas ya existentes en el HTML (icono, título y <option> de
+ * cada selector-hoja), para no duplicar esa información. Si mañana
+ * agregas un nuevo periodo/simulacro a una tarjeta, la vista de
+ * lista lo recoge automáticamente sin tocar nada aquí.
  * ============================================================ */
 const CLAVE_VISTA_INTERFAZ = "slg_vista_interfaz";
 
-function construirOpcionesListaReportes(idRejilla) {
-  const opciones = [];
+// Cada categoría: { icono, nombre, subitems: [{etiqueta, accion}] }
+// o, si no tiene sub-ítems, { icono, nombre, accionDirecta } (fila clickeable sin desplegar).
+function construirCategoriasReportes(idRejilla) {
+  const categorias = [];
   document.querySelectorAll("#" + idRejilla + " .reporte[data-endpoint]").forEach(function (tarjeta) {
     const clave = tarjeta.dataset.endpoint;
     const iconoEl = tarjeta.querySelector(".icono");
@@ -1299,69 +1317,97 @@ function construirOpcionesListaReportes(idRejilla) {
     const select = tarjeta.querySelector(".selector-hoja");
 
     if (select && select.options.length > 0) {
-      Array.from(select.options).forEach(function (opt) {
-        opciones.push({
-          etiqueta: icono + " " + nombre + " — " + opt.textContent.trim(),
-          accion: function () { ejecutarConsultaReporte(clave, opt.value, tarjeta); }
-        });
+      categorias.push({
+        icono: icono,
+        nombre: nombre,
+        subitems: Array.from(select.options).map(function (opt) {
+          return { etiqueta: opt.textContent.trim(), accion: function () { ejecutarConsultaReporte(clave, opt.value, tarjeta); } };
+        })
       });
     } else {
-      opciones.push({
-        etiqueta: icono + " " + nombre,
-        accion: function () { ejecutarConsultaReporte(clave, null, tarjeta); }
+      categorias.push({
+        icono: icono,
+        nombre: nombre,
+        accionDirecta: function () { ejecutarConsultaReporte(clave, null, tarjeta); }
       });
     }
   });
-  return opciones;
+  return categorias;
 }
 
-function construirOpcionesListaArtefactos(idSelectorArtefacto, idEstado) {
-  const opciones = [];
+function construirCategoriaArtefactos(idSelectorArtefacto, idEstado, nombreCategoria) {
   const selectorOriginal = document.getElementById(idSelectorArtefacto);
-  if (!selectorOriginal) return opciones;
+  if (!selectorOriginal) return null;
 
-  Array.from(selectorOriginal.options).forEach(function (opt) {
-    opciones.push({
-      etiqueta: "🧩 Practica con FaciMate Lleto — " + opt.textContent.trim(),
-      accion: function () { abrirArtefactoDirecto(opt.value, idEstado); }
+  return {
+    icono: "🧩",
+    nombre: nombreCategoria || "Practica con FaciMate Lleto",
+    subitems: Array.from(selectorOriginal.options).map(function (opt) {
+      return { etiqueta: opt.textContent.trim(), accion: function () { abrirArtefactoDirecto(opt.value, idEstado); } };
+    })
+  };
+}
+
+function renderizarMenuLista(idContenedor, categorias) {
+  const contenedor = document.getElementById(idContenedor);
+  if (!contenedor) return;
+  contenedor.innerHTML = "";
+
+  categorias.forEach(function (cat, indiceCat) {
+    if (cat.accionDirecta) {
+      const boton = document.createElement("button");
+      boton.type = "button";
+      boton.className = "menu-item-directo";
+      boton.innerHTML = "<span>" + cat.icono + "</span><span>" + cat.nombre + "</span>";
+      boton.addEventListener("click", cat.accionDirecta);
+      contenedor.appendChild(boton);
+      return;
+    }
+
+    const wrapCategoria = document.createElement("div");
+    wrapCategoria.className = "menu-categoria";
+
+    const cabecera = document.createElement("div");
+    cabecera.className = "menu-categoria-cabecera";
+    cabecera.innerHTML =
+      "<span><span class=\"icono-cat\">" + cat.icono + "</span>" + cat.nombre + "</span>" +
+      "<span class=\"flecha\">▶</span>";
+    cabecera.addEventListener("click", function () {
+      wrapCategoria.classList.toggle("abierta");
     });
+    wrapCategoria.appendChild(cabecera);
+
+    const subMenu = document.createElement("div");
+    subMenu.className = "menu-subitems";
+    (cat.subitems || []).forEach(function (sub) {
+      const boton = document.createElement("button");
+      boton.type = "button";
+      boton.className = "menu-subitem";
+      boton.textContent = sub.etiqueta;
+      boton.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        sub.accion();
+      });
+      subMenu.appendChild(boton);
+    });
+    wrapCategoria.appendChild(subMenu);
+
+    contenedor.appendChild(wrapCategoria);
   });
-  return opciones;
 }
 
-function poblarSelectLista(idSelect, opciones) {
-  const select = document.getElementById(idSelect);
-  if (!select) return;
-  select.innerHTML = opciones.map(function (o, i) {
-    return '<option value="' + i + '">' + o.etiqueta + "</option>";
-  }).join("");
-  select._opciones = opciones;
-}
+const categoriasEstudiante = construirCategoriasReportes("rejilla-reportes")
+  .concat([construirCategoriaArtefactos("selector-artefacto", "estado-artefacto")].filter(Boolean));
+renderizarMenuLista("menu-lista-estudiante", categoriasEstudiante);
 
-const opcionesListaEstudiante = construirOpcionesListaReportes("rejilla-reportes")
-  .concat(construirOpcionesListaArtefactos("selector-artefacto", "estado-artefacto"));
-poblarSelectLista("select-lista-estudiante", opcionesListaEstudiante);
-
-document.getElementById("btn-consultar-lista-estudiante").addEventListener("click", function () {
-  const select = document.getElementById("select-lista-estudiante");
-  const opcion = select._opciones && select._opciones[select.selectedIndex];
-  if (opcion) opcion.accion();
-});
-
-const opcionesListaDocente = [
-  { etiqueta: "📈 Dashboard de resultados de simulacros", accion: function () { if (enlaceDashboard.dataset.url) window.open(enlaceDashboard.dataset.url, "_blank"); } }
+const categoriasDocente = [
+  { icono: "📈", nombre: "Dashboard de resultados de simulacros", accionDirecta: function () { if (enlaceDashboard.dataset.url) window.open(enlaceDashboard.dataset.url, "_blank"); } }
 ]
-  .concat(construirOpcionesListaArtefactos("selector-artefacto-docente", "estado-artefacto-docente"))
+  .concat([construirCategoriaArtefactos("selector-artefacto-docente", "estado-artefacto-docente", "Artefactos de práctica")].filter(Boolean))
   .concat([
-    { etiqueta: "📊 Dashboard de artefactos", accion: function () { if (enlaceDashboardArtefactos.dataset.url) window.open(enlaceDashboardArtefactos.dataset.url, "_blank"); } }
+    { icono: "📊", nombre: "Dashboard de artefactos", accionDirecta: function () { if (enlaceDashboardArtefactos.dataset.url) window.open(enlaceDashboardArtefactos.dataset.url, "_blank"); } }
   ]);
-poblarSelectLista("select-lista-docente", opcionesListaDocente);
-
-document.getElementById("btn-consultar-lista-docente").addEventListener("click", function () {
-  const select = document.getElementById("select-lista-docente");
-  const opcion = select._opciones && select._opciones[select.selectedIndex];
-  if (opcion) opcion.accion();
-});
+renderizarMenuLista("menu-lista-docente", categoriasDocente);
 
 let esDocenteActual = false;
 
