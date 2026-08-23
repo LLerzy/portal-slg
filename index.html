@@ -448,7 +448,11 @@
         </div>
       </section>
 
-      <div id="zona-anuncios-login" class="zona-anuncios oculto"></div>
+      <!-- === ZONA DE ANUNCIOS LOGIN (Carrusel Auto-Scroll) === -->
+      <div id="zona-anuncios-login-wrap" class="carrusel-anuncios-wrap oculto" style="margin-top: 24px;">
+        <h2 style="font-size:18px; color:var(--rojo); margin-bottom:12px; text-align:center;">Anuncios / Circulares Académicas</h2>
+        <div id="zona-anuncios-login" class="pista-anuncios"></div>
+      </div>
     </section>
 
     <section id="pantalla-dashboard" class="oculto">
@@ -958,25 +962,24 @@ btnIngresar.addEventListener("click", intentarIngresar);
 /* ============================================================
  * ANUNCIOS / CIRCULARES
  * ============================================================ */
-let intervaloAutoScrollAnuncios = null;
+let intervalosAutoScrollAnuncios = {};
 
 function renderizarAnuncios(idContenedor, anuncios) {
-  const contenedor = document.getElementById(idContenedor);
-  if (!contenedor) return;
+  const pista = document.getElementById(idContenedor);
+  if (!pista) return;
   
-  // Detectar si estamos dibujando en el login o en el dashboard interior
+  // Detectar el contenedor padre correcto (el que envuelve la pista y tiene el título)
   const esLogin = idContenedor === "zona-anuncios-login";
-  const contenedorPadre = esLogin ? contenedor : document.getElementById("contenedor-anuncios-dashboard");
+  const contenedorPadre = esLogin ? document.getElementById("zona-anuncios-login-wrap") : document.getElementById("contenedor-anuncios-dashboard");
 
   if (!anuncios || anuncios.length === 0) {
-    // CORRECCIÓN: Quitamos el "&& !esLogin" para que también oculte el contenedor del login si está vacío
     if (contenedorPadre) contenedorPadre.classList.add("oculto");
-    contenedor.innerHTML = "";
-    if (!esLogin && intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
+    pista.innerHTML = "";
+    if (intervalosAutoScrollAnuncios[idContenedor]) clearInterval(intervalosAutoScrollAnuncios[idContenedor]);
     return;
   }
 
-  contenedor.innerHTML = anuncios.map(function (a) {
+  pista.innerHTML = anuncios.map(function (a) {
     let clase = a.urgente ? "anuncio-card urgente" : "anuncio-card";
     const urlSegura = a.imagenUrl ? escaparHtml(a.imagenUrl) : "";
     const badge = a.urgente ? '<span class="badge-urgente">Urgente</span>' : "";
@@ -990,25 +993,23 @@ function renderizarAnuncios(idContenedor, anuncios) {
     return '<div class="' + clase + '">' + imagen + '<h4>' + escaparHtml(a.titulo) + badge + '</h4><p>' + escaparHtml(a.texto) + '</p></div>';
   }).join("");
 
-  // CORRECCIÓN PRINCIPAL: Quitamos el "&& !esLogin" para que SÍ quite la clase oculto en la pantalla de inicio
   if (contenedorPadre) contenedorPadre.classList.remove("oculto");
 
-  // El Auto-scroll se activa únicamente en la pista del dashboard
-  if (!esLogin) {
-    if(intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
-    intervaloAutoScrollAnuncios = setInterval(() => {
-      if (contenedor.scrollWidth <= contenedor.clientWidth) return; 
-      const anchoTarjeta = contenedor.children[0].offsetWidth + 16;
-      const maxScroll = contenedor.scrollWidth - contenedor.clientWidth;
-      if (contenedor.scrollLeft >= maxScroll - 10) {
-        contenedor.scrollLeft = 0; 
-      } else {
-        contenedor.scrollBy({ left: anchoTarjeta, behavior: 'smooth' });
-      }
-    }, 4000);
-    contenedor.addEventListener("mouseenter", () => clearInterval(intervaloAutoScrollAnuncios));
-    contenedor.addEventListener("touchstart", () => clearInterval(intervaloAutoScrollAnuncios), {passive: true});
-  }
+  // Activar Auto-scroll para CUALQUIER carrusel (login o dashboard)
+  if(intervalosAutoScrollAnuncios[idContenedor]) clearInterval(intervalosAutoScrollAnuncios[idContenedor]);
+  intervalosAutoScrollAnuncios[idContenedor] = setInterval(() => {
+    if (pista.scrollWidth <= pista.clientWidth) return; 
+    const anchoTarjeta = pista.children[0].offsetWidth + 16;
+    const maxScroll = pista.scrollWidth - pista.clientWidth;
+    if (pista.scrollLeft >= maxScroll - 10) {
+      pista.scrollLeft = 0; 
+    } else {
+      pista.scrollBy({ left: anchoTarjeta, behavior: 'smooth' });
+    }
+  }, 4000);
+  
+  pista.addEventListener("mouseenter", () => clearInterval(intervalosAutoScrollAnuncios[idContenedor]));
+  pista.addEventListener("touchstart", () => clearInterval(intervalosAutoScrollAnuncios[idContenedor]), {passive: true});
 }
 
 function escaparHtml(texto) {
