@@ -969,9 +969,10 @@ function renderizarAnuncios(idContenedor, anuncios) {
   const contenedorPadre = esLogin ? contenedor : document.getElementById("contenedor-anuncios-dashboard");
 
   if (!anuncios || anuncios.length === 0) {
-    if(contenedorPadre && !esLogin) contenedorPadre.classList.add("oculto");
+    // CORRECCIÓN: Quitamos el "&& !esLogin" para que también oculte el contenedor del login si está vacío
+    if (contenedorPadre) contenedorPadre.classList.add("oculto");
     contenedor.innerHTML = "";
-    if(!esLogin && intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
+    if (!esLogin && intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
     return;
   }
 
@@ -980,7 +981,7 @@ function renderizarAnuncios(idContenedor, anuncios) {
     const urlSegura = a.imagenUrl ? escaparHtml(a.imagenUrl) : "";
     const badge = a.urgente ? '<span class="badge-urgente">Urgente</span>' : "";
     
-    // MAGIA: Si no tiene imagen, le agregamos la clase especial
+    // MAGIA: Si no tiene imagen, le agregamos la clase especial 'solo-texto'
     if (!urlSegura) clase += " solo-texto";
 
     const imagen = urlSegura 
@@ -989,7 +990,8 @@ function renderizarAnuncios(idContenedor, anuncios) {
     return '<div class="' + clase + '">' + imagen + '<h4>' + escaparHtml(a.titulo) + badge + '</h4><p>' + escaparHtml(a.texto) + '</p></div>';
   }).join("");
 
-  if(contenedorPadre && !esLogin) contenedorPadre.classList.remove("oculto");
+  // CORRECCIÓN PRINCIPAL: Quitamos el "&& !esLogin" para que SÍ quite la clase oculto en la pantalla de inicio
+  if (contenedorPadre) contenedorPadre.classList.remove("oculto");
 
   // El Auto-scroll se activa únicamente en la pista del dashboard
   if (!esLogin) {
