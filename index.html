@@ -354,6 +354,19 @@
   @media (max-width: 400px) {
      .pista-anuncios .anuncio-card { flex: 0 0 88vw; }
   }
+  /* ---------- Estilo especial para anuncios SOLO TEXTO ---------- */
+  .anuncio-card.solo-texto {
+    justify-content: center; text-align: center;
+    background: linear-gradient(145deg, #ffffff, #fff8e8);
+    border-top: 5px solid var(--dorado); border-left: 1px solid var(--linea);
+    padding: 24px 18px;
+  }
+  .anuncio-card.solo-texto h4 {
+    font-size: 18px; margin-bottom: 12px; justify-content: center;
+  }
+  .anuncio-card.solo-texto p {
+    font-size: 15.5px; color: var(--tinta);
+  }
 </style>
 </head>
 <body>
@@ -606,16 +619,16 @@
         </div>
       </section>
 
-      <!-- === ZONA ÚNICA DE ANUNCIOS (Carrusel Auto-Scroll) === -->
-      <div id="contenedor-anuncios-dashboard" class="carrusel-anuncios-wrap oculto">
-        <div id="pista-anuncios" class="pista-anuncios"></div>
-      </div>
-      
       <!-- === ZONA DE HORARIO === -->
       <section id="zona-horario" class="oculto">
         <h2 id="horario-titulo">Mi horario</h2>
         <div id="horario-grid" class="horario-grid"></div>
       </section>
+      
+      <!-- === ZONA ÚNICA DE ANUNCIOS (Carrusel Auto-Scroll) === -->
+      <div id="contenedor-anuncios-dashboard" class="carrusel-anuncios-wrap oculto">
+        <div id="pista-anuncios" class="pista-anuncios"></div>
+      </div>
 
       <section id="zona-resultado" class="oculto">
         <div class="resultado-header">
@@ -948,53 +961,52 @@ btnIngresar.addEventListener("click", intentarIngresar);
 let intervaloAutoScrollAnuncios = null;
 
 function renderizarAnuncios(idContenedor, anuncios) {
-  const pista = document.getElementById(idContenedor);
-  const contenedorPadre = document.getElementById("contenedor-anuncios-dashboard");
-  if (!pista || !contenedorPadre) return;
+  const contenedor = document.getElementById(idContenedor);
+  if (!contenedor) return;
+  
+  // Detectar si estamos dibujando en el login o en el dashboard interior
+  const esLogin = idContenedor === "zona-anuncios-login";
+  const contenedorPadre = esLogin ? contenedor : document.getElementById("contenedor-anuncios-dashboard");
 
   if (!anuncios || anuncios.length === 0) {
-    contenedorPadre.classList.add("oculto");
-    pista.innerHTML = "";
-    if(intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
+    if(contenedorPadre && !esLogin) contenedorPadre.classList.add("oculto");
+    contenedor.innerHTML = "";
+    if(!esLogin && intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
     return;
   }
 
-  // Dibuja las tarjetas conservando el visor de imágenes (onclick)
-  pista.innerHTML = anuncios.map(function (a) {
-    const clase = a.urgente ? "anuncio-card urgente" : "anuncio-card";
-    const badge = a.urgente ? '<span class="badge-urgente">Urgente</span>' : "";
+  contenedor.innerHTML = anuncios.map(function (a) {
+    let clase = a.urgente ? "anuncio-card urgente" : "anuncio-card";
     const urlSegura = a.imagenUrl ? escaparHtml(a.imagenUrl) : "";
+    const badge = a.urgente ? '<span class="badge-urgente">Urgente</span>' : "";
+    
+    // MAGIA: Si no tiene imagen, le agregamos la clase especial
+    if (!urlSegura) clase += " solo-texto";
+
     const imagen = urlSegura 
       ? '<img src="' + urlSegura + '" alt="Imagen del anuncio" loading="lazy" onerror="this.remove();" onclick="abrirVisorImagen(\'' + urlSegura + '\')">'
       : "";
     return '<div class="' + clase + '">' + imagen + '<h4>' + escaparHtml(a.titulo) + badge + '</h4><p>' + escaparHtml(a.texto) + '</p></div>';
   }).join("");
 
-  contenedorPadre.classList.remove("oculto");
+  if(contenedorPadre && !esLogin) contenedorPadre.classList.remove("oculto");
 
-  // ============================================
-  // LÓGICA DE AUTO-SCROLL HORIZONTAL
-  // ============================================
-  if(intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
-  
-  intervaloAutoScrollAnuncios = setInterval(() => {
-    // Si no hay suficientes anuncios para hacer scroll, no hace nada
-    if (pista.scrollWidth <= pista.clientWidth) return; 
-    
-    const anchoTarjeta = pista.children[0].offsetWidth + 16; // Ancho + el gap
-    const maxScroll = pista.scrollWidth - pista.clientWidth;
-    
-    // Si llega al final, vuelve al inicio
-    if (pista.scrollLeft >= maxScroll - 10) {
-      pista.scrollLeft = 0; 
-    } else {
-      pista.scrollBy({ left: anchoTarjeta, behavior: 'smooth' });
-    }
-  }, 4000); // Se desplaza cada 4 segundos
-
-  // Pausar el movimiento si el usuario pone el mouse o toca la pantalla
-  pista.addEventListener("mouseenter", () => clearInterval(intervaloAutoScrollAnuncios));
-  pista.addEventListener("touchstart", () => clearInterval(intervaloAutoScrollAnuncios), {passive: true});
+  // El Auto-scroll se activa únicamente en la pista del dashboard
+  if (!esLogin) {
+    if(intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
+    intervaloAutoScrollAnuncios = setInterval(() => {
+      if (contenedor.scrollWidth <= contenedor.clientWidth) return; 
+      const anchoTarjeta = contenedor.children[0].offsetWidth + 16;
+      const maxScroll = contenedor.scrollWidth - contenedor.clientWidth;
+      if (contenedor.scrollLeft >= maxScroll - 10) {
+        contenedor.scrollLeft = 0; 
+      } else {
+        contenedor.scrollBy({ left: anchoTarjeta, behavior: 'smooth' });
+      }
+    }, 4000);
+    contenedor.addEventListener("mouseenter", () => clearInterval(intervaloAutoScrollAnuncios));
+    contenedor.addEventListener("touchstart", () => clearInterval(intervaloAutoScrollAnuncios), {passive: true});
+  }
 }
 
 function escaparHtml(texto) {
@@ -1455,9 +1467,16 @@ function renderizarHorarioEstudiante(periodos) {
 function mostrarZonaResultado() {
   if (zonaHorario) zonaHorario.classList.add("oculto");
   if (zonaResultado) zonaResultado.classList.remove("oculto");
-  const anunciosEl = document.getElementById("zona-anuncios-estudiante");
-  const hayAnuncios = anunciosEl && !anunciosEl.classList.contains("oculto");
+  
+  // Ocultar anuncios al ver resultados
+  const contenedorAnuncios = document.getElementById("contenedor-anuncios-dashboard");
+  if (contenedorAnuncios) contenedorAnuncios.classList.add("oculto");
+
+  const anunciosEl = document.getElementById("pista-anuncios");
+  const hayAnuncios = anunciosEl && anunciosEl.innerHTML.trim() !== "";
   const hayHorario = horarioEstudianteActual && horarioEstudianteActual.length > 0;
+  
+  // Mostrar el botón si hay horario O si hay anuncios para regresar a ver
   if ((hayHorario || hayAnuncios) && btnVerHorario) {
     btnVerHorario.classList.remove("oculto");
   }
@@ -1468,6 +1487,13 @@ function mostrarZonaHorario() {
   if (zonaHorario) {
     zonaHorario.classList.remove("oculto");
     zonaHorario.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  
+  // Volver a mostrar anuncios si existían
+  const contenedorAnuncios = document.getElementById("contenedor-anuncios-dashboard");
+  const pistaAnuncios = document.getElementById("pista-anuncios");
+  if (contenedorAnuncios && pistaAnuncios && pistaAnuncios.innerHTML.trim() !== "") {
+    contenedorAnuncios.classList.remove("oculto");
   }
 }
 
