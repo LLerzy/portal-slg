@@ -121,8 +121,26 @@
   }
   .anuncio-card p{ margin:0; font-size:13.5px; color:var(--gris); line-height:1.5; }
   .anuncio-card img{
-    display:block; width:100%; max-height:280px; object-fit:cover; border-radius:8px;
-    margin-bottom:10px; background:var(--crema-2);
+    display:block; width:100%; max-height:280px; object-fit:contain; border-radius:8px;
+    margin-bottom:10px; background:var(--crema-2); cursor:pointer; transition:opacity 0.15s ease;
+  }
+  .anuncio-card img:hover { opacity:0.85; }
+  
+  /* ---------- Visor de imágenes para anuncios ---------- */
+  .modal-visor {
+    display:none; position:fixed; z-index:9999; top:0; left:0; width:100%; height:100%;
+    background:rgba(36, 28, 20, 0.9); align-items:center; justify-content:center;
+    padding:20px; backdrop-filter:blur(3px); opacity:0; transition:opacity 0.25s ease;
+  }
+  .modal-visor.activo { display:flex; opacity:1; }
+  .modal-visor img {
+    max-width:100%; max-height:100%; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,0.5);
+    object-fit:contain; transform:scale(0.95); transition:transform 0.25s ease;
+  }
+  .modal-visor.activo img { transform:scale(1); }
+  .modal-visor-cerrar {
+    position:absolute; top:20px; right:30px; color:#fff; font-size:40px; font-weight:700;
+    cursor:pointer; line-height:1; user-select:none;
   }
 
   .btn-hamburguesa{
@@ -596,6 +614,11 @@
       <p>Generado automáticamente — Sistema de Resultados Educativos de Lleto · Institución Educativa San Luis Gonzaga</p>
     </div>
   </footer>
+  <!-- Visor de imágenes (Modal) -->
+<div id="modal-visor-img" class="modal-visor">
+  <span class="modal-visor-cerrar" id="btn-cerrar-visor" aria-label="Cerrar visor">&times;</span>
+  <img id="img-visor" src="" alt="Vista ampliada del anuncio">
+</div>
 
 <script>
 const CONFIG_REPORTES = {
@@ -911,9 +934,10 @@ function renderizarAnuncios(idContenedor, anuncios) {
   contenedor.innerHTML = anuncios.map(function (a) {
     const clase = a.urgente ? "anuncio-card urgente" : "anuncio-card";
     const badge = a.urgente ? '<span class="badge-urgente">Urgente</span>' : "";
-    const imagen = a.imagenUrl
-      ? '<img src="' + escaparHtml(a.imagenUrl) + '" alt="" loading="lazy" onerror="this.remove();">'
-      : "";
+    const urlSegura = a.imagenUrl ? escaparHtml(a.imagenUrl) : "";
+    const imagen = urlSegura 
+    ? '<img src="' + urlSegura + '" alt="Imagen del anuncio" loading="lazy" onerror="this.remove();" onclick="abrirVisorImagen(\'' + urlSegura + '\')">'
+    : "";
     return '<div class="' + clase + '">' + imagen + '<h4>' + escaparHtml(a.titulo) + badge + '</h4><p>' + escaparHtml(a.texto) + '</p></div>';
   }).join("");
   contenedor.classList.remove("oculto");
@@ -1587,6 +1611,36 @@ document.querySelectorAll("#toggle-vista-interfaz button").forEach(function (bot
     aplicarVistaInterfaz();
   });
 });
+
+/* ============================================================
+ * VISOR DE IMÁGENES (Modal)
+ * ============================================================ */
+const modalVisor = document.getElementById("modal-visor-img");
+const imgVisor = document.getElementById("img-visor");
+const btnCerrarVisor = document.getElementById("btn-cerrar-visor");
+
+function abrirVisorImagen(url) {
+  if (!modalVisor || !imgVisor) return;
+  imgVisor.src = url;
+  modalVisor.classList.add("activo");
+  document.body.style.overflow = "hidden"; // Bloquea el scroll de fondo
+}
+
+function cerrarVisorImagen() {
+  if (!modalVisor) return;
+  modalVisor.classList.remove("activo");
+  document.body.style.overflow = ""; // Restaura el scroll
+  setTimeout(() => { imgVisor.src = ""; }, 250); // Limpia la imagen tras la animación
+}
+
+if (btnCerrarVisor) btnCerrarVisor.addEventListener("click", cerrarVisorImagen);
+
+// Cierra el visor también si tocan el fondo negro fuera de la imagen
+if (modalVisor) {
+  modalVisor.addEventListener("click", function (e) {
+    if (e.target === modalVisor) cerrarVisorImagen();
+  });
+}
 </script>
 
 </body>
