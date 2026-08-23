@@ -334,6 +334,26 @@
   .horario-vacio.horario-dia-actual { background:#fffdf0; border:2px dashed var(--dorado); border-radius:8px; }
   .horario-celda-hora.horario-dia-actual{ background:#fdf3d8; }
   .horario-descanso { grid-column: 1 / -1; background:#f2ede1; border:1px dashed var(--linea); border-radius:8px; padding:8px; text-align:center; font-weight:bold; color:#888; font-style:italic; }
+
+  /* ---------- Carrusel Automático de Anuncios ---------- */
+  .carrusel-anuncios-wrap {
+    margin: 10px 0 24px 0; width: 100%;
+  }
+  .pista-anuncios {
+    display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px; scrollbar-width: none; /* Oculta scroll en Firefox */
+  }
+  .pista-anuncios::-webkit-scrollbar { display: none; } /* Oculta scroll en Chrome/Safari */
+  
+  .pista-anuncios .anuncio-card {
+    flex: 0 0 320px; /* Ancho fijo para cada tarjeta */
+    scroll-snap-align: start; margin-bottom: 0; 
+    display: flex; flex-direction: column;
+  }
+  @media (max-width: 400px) {
+     .pista-anuncios .anuncio-card { flex: 0 0 88vw; }
+  }
 </style>
 </head>
 <body>
@@ -586,12 +606,15 @@
         </div>
       </section>
 
-      <div id="zona-anuncios-docente" class="zona-anuncios oculto"></div>
-
+      <!-- === ZONA ÚNICA DE ANUNCIOS (Carrusel Auto-Scroll) === -->
+      <div id="contenedor-anuncios-dashboard" class="carrusel-anuncios-wrap oculto">
+        <div id="pista-anuncios" class="pista-anuncios"></div>
+      </div>
+      
+      <!-- === ZONA DE HORARIO === -->
       <section id="zona-horario" class="oculto">
         <h2 id="horario-titulo">Mi horario</h2>
         <div id="horario-grid" class="horario-grid"></div>
-        <div id="zona-anuncios-estudiante" class="zona-anuncios oculto"></div>
       </section>
 
       <section id="zona-resultado" class="oculto">
@@ -766,7 +789,7 @@ function mostrarPantallaDashboard(sesion) {
     if (zonaHorario) zonaHorario.classList.add("oculto");
     configurarBotonDashboard(enlaceDashboard, CONFIG_DASHBOARD_URL, "Abrir Dashboard de Simulacros ↗", "CONFIG_DASHBOARD_URL");
     configurarBotonDashboard(enlaceDashboardArtefactos, CONFIG_DASHBOARD_ARTEFACTOS_URL, "Abrir Dashboard de Artefactos ↗", "CONFIG_DASHBOARD_ARTEFACTOS_URL");
-    renderizarAnuncios("zona-anuncios-docente", sesion.anuncios);
+    
   } else {
     saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
     saludoGrupo.style.display = sesion.grupo ? "inline-block" : "none";
@@ -791,7 +814,6 @@ function mostrarPantallaDashboard(sesion) {
       if (tieneHorario) renderizarHorarioEstudiante(horarioEstudianteActual);
       else horarioGrid.innerHTML = "";
 
-      renderizarAnuncios("zona-anuncios-estudiante", sesion.anuncios);
 
       if (tieneHorario || tieneAnuncios) {
         mostrarZonaHorario();
@@ -803,6 +825,8 @@ function mostrarPantallaDashboard(sesion) {
       if (zonaHorario) zonaHorario.classList.add("oculto");
     }
   }
+  // Renderizar anuncios para cualquier rol en el carrusel superior
+  renderizarAnuncios("pista-anuncios", sesion.anuncios);
 
   esDocenteActual = esDocente;
   aplicarVistaInterfaz();
@@ -921,26 +945,56 @@ btnIngresar.addEventListener("click", intentarIngresar);
 /* ============================================================
  * ANUNCIOS / CIRCULARES
  * ============================================================ */
+let intervaloAutoScrollAnuncios = null;
+
 function renderizarAnuncios(idContenedor, anuncios) {
-  const contenedor = document.getElementById(idContenedor);
-  if (!contenedor) return;
+  const pista = document.getElementById(idContenedor);
+  const contenedorPadre = document.getElementById("contenedor-anuncios-dashboard");
+  if (!pista || !contenedorPadre) return;
 
   if (!anuncios || anuncios.length === 0) {
-    contenedor.classList.add("oculto");
-    contenedor.innerHTML = "";
+    contenedorPadre.classList.add("oculto");
+    pista.innerHTML = "";
+    if(intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
     return;
   }
 
-  contenedor.innerHTML = anuncios.map(function (a) {
+  // Dibuja las tarjetas conservando el visor de imágenes (onclick)
+  pista.innerHTML = anuncios.map(function (a) {
     const clase = a.urgente ? "anuncio-card urgente" : "anuncio-card";
     const badge = a.urgente ? '<span class="badge-urgente">Urgente</span>' : "";
     const urlSegura = a.imagenUrl ? escaparHtml(a.imagenUrl) : "";
     const imagen = urlSegura 
-    ? '<img src="' + urlSegura + '" alt="Imagen del anuncio" loading="lazy" onerror="this.remove();" onclick="abrirVisorImagen(\'' + urlSegura + '\')">'
-    : "";
+      ? '<img src="' + urlSegura + '" alt="Imagen del anuncio" loading="lazy" onerror="this.remove();" onclick="abrirVisorImagen(\'' + urlSegura + '\')">'
+      : "";
     return '<div class="' + clase + '">' + imagen + '<h4>' + escaparHtml(a.titulo) + badge + '</h4><p>' + escaparHtml(a.texto) + '</p></div>';
   }).join("");
-  contenedor.classList.remove("oculto");
+
+  contenedorPadre.classList.remove("oculto");
+
+  // ============================================
+  // LÓGICA DE AUTO-SCROLL HORIZONTAL
+  // ============================================
+  if(intervaloAutoScrollAnuncios) clearInterval(intervaloAutoScrollAnuncios);
+  
+  intervaloAutoScrollAnuncios = setInterval(() => {
+    // Si no hay suficientes anuncios para hacer scroll, no hace nada
+    if (pista.scrollWidth <= pista.clientWidth) return; 
+    
+    const anchoTarjeta = pista.children[0].offsetWidth + 16; // Ancho + el gap
+    const maxScroll = pista.scrollWidth - pista.clientWidth;
+    
+    // Si llega al final, vuelve al inicio
+    if (pista.scrollLeft >= maxScroll - 10) {
+      pista.scrollLeft = 0; 
+    } else {
+      pista.scrollBy({ left: anchoTarjeta, behavior: 'smooth' });
+    }
+  }, 4000); // Se desplaza cada 4 segundos
+
+  // Pausar el movimiento si el usuario pone el mouse o toca la pantalla
+  pista.addEventListener("mouseenter", () => clearInterval(intervaloAutoScrollAnuncios));
+  pista.addEventListener("touchstart", () => clearInterval(intervaloAutoScrollAnuncios), {passive: true});
 }
 
 function escaparHtml(texto) {
