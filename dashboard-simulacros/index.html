@@ -280,10 +280,27 @@
 <body>
 <script>
 (function () {
-  const sesion = sessionStorage.getItem("slg_sesion");
-  if (!sesion) {
+  const sesionRaw = sessionStorage.getItem("slg_sesion");
+  if (!sesionRaw) {
     window.location.href = "https://llerzy.github.io/portal-slg/";
+    return;
   }
+
+  // Registro de vista en el LogConsultas central — silencioso, no bloquea
+  // la carga del dashboard si falla.
+  try {
+    const sesion = JSON.parse(sesionRaw);
+    const params = new URLSearchParams({
+      accion: "registrarVista",
+      doc: sesion.documento || "",
+      nombre: sesion.nombre || "",
+      grupo: sesion.grupoAsignado || sesion.grupo || "",
+      rol: sesion.rol || "",
+      origen: "GitHub",
+      tipoVista: "Vista Dashboard Simulacros"
+    });
+    fetch("https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec?" + params.toString(), { mode: "no-cors" }).catch(function(){});
+  } catch (e) { /* silencioso */ }
 })();
 </script>
 
