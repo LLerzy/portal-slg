@@ -367,6 +367,30 @@
   .anuncio-card.solo-texto p {
     font-size: 15.5px; color: var(--tinta);
   }
+
+  /* ---------- Flechas y puntos del carrusel de anuncios ---------- */
+  .carrusel-anuncios-inner{ position:relative; }
+  .flecha-anuncios{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--linea);
+    background:#fff; box-shadow:var(--sombra); cursor:pointer; font-size:16px;
+    color:var(--rojo); display:flex; align-items:center; justify-content:center;
+    line-height:1; padding:0;
+  }
+  .flecha-anuncios:hover{ background:var(--crema-2); }
+  .flecha-anuncios.izquierda{ left:-6px; }
+  .flecha-anuncios.derecha{ right:-6px; }
+  @media (max-width:640px){ .flecha-anuncios{ display:none; } }
+
+  .puntos-anuncios{
+    display:flex; justify-content:center; align-items:center; gap:7px; margin-top:10px;
+  }
+  .puntos-anuncios .punto{
+    width:8px; height:8px; border-radius:50%; background:var(--linea);
+    border:none; padding:0; cursor:pointer; transition:background .15s ease, transform .15s ease;
+  }
+  .puntos-anuncios .punto:hover{ background:#d8cfc2; }
+  .puntos-anuncios .punto.activo{ background:var(--rojo); transform:scale(1.25); }
 </style>
 </head>
 <body>
@@ -451,7 +475,12 @@
       <!-- === ZONA DE ANUNCIOS LOGIN (Carrusel Auto-Scroll) === -->
       <div id="zona-anuncios-login-wrap" class="carrusel-anuncios-wrap oculto" style="margin-top: 24px;">
         <h2 style="font-size:18px; color:var(--rojo); margin-bottom:12px; text-align:center;">Anuncios / Circulares Académicas</h2>
-        <div id="zona-anuncios-login" class="pista-anuncios"></div>
+        <div class="carrusel-anuncios-inner">
+          <button type="button" class="flecha-anuncios izquierda" id="flecha-izq-zona-anuncios-login" aria-label="Anuncio anterior">‹</button>
+          <button type="button" class="flecha-anuncios derecha" id="flecha-der-zona-anuncios-login" aria-label="Anuncio siguiente">›</button>
+          <div id="zona-anuncios-login" class="pista-anuncios"></div>
+        </div>
+        <div class="puntos-anuncios" id="puntos-zona-anuncios-login"></div>
       </div>
     </section>
 
@@ -631,7 +660,13 @@
       
       <!-- === ZONA ÚNICA DE ANUNCIOS (Carrusel Auto-Scroll) === -->
       <div id="contenedor-anuncios-dashboard" class="carrusel-anuncios-wrap oculto">
-        <div id="pista-anuncios" class="pista-anuncios"></div>
+        <h2 style="font-size:18px; color:var(--rojo); margin-bottom:12px; text-align:center;">Anuncios / Circulares Académicas</h2>
+        <div class="carrusel-anuncios-inner">
+          <button type="button" class="flecha-anuncios izquierda" id="flecha-izq-pista-anuncios" aria-label="Anuncio anterior">‹</button>
+          <button type="button" class="flecha-anuncios derecha" id="flecha-der-pista-anuncios" aria-label="Anuncio siguiente">›</button>
+          <div id="pista-anuncios" class="pista-anuncios"></div>
+        </div>
+        <div class="puntos-anuncios" id="puntos-pista-anuncios"></div>
       </div>
 
       <section id="zona-resultado" class="oculto">
@@ -994,6 +1029,78 @@ function renderizarAnuncios(idContenedor, anuncios) {
   }).join("");
 
   if (contenedorPadre) contenedorPadre.classList.remove("oculto");
+
+  // --- Puntos de navegación (uno por anuncio) ---
+  const flechaIzq = document.getElementById("flecha-izq-" + idContenedor);
+  const flechaDer = document.getElementById("flecha-der-" + idContenedor);
+  const puntosEl = document.getElementById("puntos-" + idContenedor);
+
+  if (puntosEl) {
+    puntosEl.innerHTML = anuncios.map(function (_, i) {
+      return '<button type="button" class="punto" data-indice="' + i + '" aria-label="Ir al anuncio ' + (i + 1) + '"></button>';
+    }).join("");
+    puntosEl.style.display = anuncios.length > 1 ? "flex" : "none";
+  }
+
+  function tarjetasAnuncios() { return Array.from(pista.children); }
+
+  function indiceActualAnuncio() {
+    const tarjetas = tarjetasAnuncios();
+    if (!tarjetas.length) return 0;
+    let mejorIndice = 0, mejorDistancia = Infinity;
+    tarjetas.forEach(function (tarjeta, i) {
+      const distancia = Math.abs(tarjeta.offsetLeft - pista.scrollLeft);
+      if (distancia < mejorDistancia) { mejorDistancia = distancia; mejorIndice = i; }
+    });
+    return mejorIndice;
+  }
+
+  function actualizarPuntosAnuncios() {
+    if (!puntosEl) return;
+    const activo = indiceActualAnuncio();
+    Array.from(puntosEl.children).forEach(function (punto, i) {
+      punto.classList.toggle("activo", i === activo);
+    });
+  }
+
+  function irATarjetaAnuncio(i) {
+    const tarjetas = tarjetasAnuncios();
+    if (!tarjetas.length) return;
+    const indice = Math.max(0, Math.min(tarjetas.length - 1, i));
+    pista.scrollTo({ left: tarjetas[indice].offsetLeft, behavior: "smooth" });
+  }
+
+  if (puntosEl) {
+    Array.from(puntosEl.children).forEach(function (punto) {
+      punto.addEventListener("click", function () {
+        clearInterval(intervalosAutoScrollAnuncios[idContenedor]);
+        irATarjetaAnuncio(parseInt(punto.dataset.indice, 10));
+      });
+    });
+  }
+
+  // El nodo "pista" persiste entre renders (solo cambia su innerHTML), así
+  // que las flechas y el listener de scroll se enlazan una única vez.
+  if (!pista.dataset.scrollBound) {
+    pista.addEventListener("scroll", actualizarPuntosAnuncios);
+    pista.dataset.scrollBound = "1";
+  }
+  actualizarPuntosAnuncios();
+
+  if (flechaIzq && !flechaIzq.dataset.bound) {
+    flechaIzq.addEventListener("click", function () {
+      clearInterval(intervalosAutoScrollAnuncios[idContenedor]);
+      irATarjetaAnuncio(indiceActualAnuncio() - 1);
+    });
+    flechaIzq.dataset.bound = "1";
+  }
+  if (flechaDer && !flechaDer.dataset.bound) {
+    flechaDer.addEventListener("click", function () {
+      clearInterval(intervalosAutoScrollAnuncios[idContenedor]);
+      irATarjetaAnuncio(indiceActualAnuncio() + 1);
+    });
+    flechaDer.dataset.bound = "1";
+  }
 
   // Activar Auto-scroll para CUALQUIER carrusel (login o dashboard)
   if(intervalosAutoScrollAnuncios[idContenedor]) clearInterval(intervalosAutoScrollAnuncios[idContenedor]);
