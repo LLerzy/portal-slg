@@ -406,7 +406,27 @@ const VERSION_ARTEFACTO = "v1"; // súbelo manualmente si algún día cambias la
 const AREA_ARTEFACTO = "Ciencias Naturales";
 let inicioIntento = Date.now(); // se define al cargar la página
 let numeroIntentoActual = 1; // valor por defecto si falla la consulta o es el primer intento
+// Registro de apertura del artefacto en el LogConsultas central — antes
+// de responder nada, distinto del registro de intento completado que ya
+// existe en IntentosArtefactos. Silencioso, no bloquea el artefacto.
+(function registrarAperturaArtefacto() {
+  try {
+    const sesionRaw = sessionStorage.getItem("slg_sesion");
+    const sesion = JSON.parse(sesionRaw || "{}");
+    if (!sesion.documento) return;
 
+    const params = new URLSearchParams({
+      accion: "registrarVista",
+      doc: sesion.documento || "",
+      nombre: sesion.nombre || "",
+      grupo: sesion.grupoAsignado || sesion.grupo || "",
+      rol: sesion.rol || "",
+      origen: "GitHub",
+      tipoVista: "Apertura Artefacto — " + AREA_ARTEFACTO
+    });
+    fetch("https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec?" + params.toString(), { mode: "no-cors" }).catch(function(){});
+  } catch (e) { /* silencioso */ }
+})();
 function miniTable(rows){
   const body = rows.map(([nota,n]) => `<tr><td>${nota}</td><td>${n}</td></tr>`).join('');
   return `<table class="mini-table"><tr><th>Nota</th><th># Niños</th></tr>${body}</table>`;
