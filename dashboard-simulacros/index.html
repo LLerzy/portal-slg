@@ -555,7 +555,11 @@ function setStatus(ok, text){
 function loadFromUrl(url, silencioso){
   if (!url) return;
   setStatus(false, "Cargando…");
-  fetch(url)
+
+  // Cache-busting: evita que Brave sirva una copia vieja del CSV
+  const urlConCacheBuster = url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
+
+  fetch(urlConCacheBuster, { cache: "no-store" })
     .then(r => { if(!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
     .then(csv => parseCsv(csv))
     .catch(err => {
