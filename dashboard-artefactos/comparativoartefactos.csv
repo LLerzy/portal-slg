@@ -1,11 +1,11 @@
 Grupo,Grado,Área,TipoAgrupación,Etiqueta,NumeroIntentos,PromedioPorcentaje
-1001,10°,Matemáticas,categoria,Estadística,4,33.9
-1001,10°,Matemáticas,categoria,Álgebra y cálculo,4,63.2
-1001,10°,Matemáticas,competencia,Interpretación y representación,4,37.8
-1001,10°,Matemáticas,total,Total,4,46.9
-1001,10°,Matemáticas,categoria,Geometría,4,77.8
-1001,10°,Matemáticas,competencia,Formulación y ejecución,4,66.7
-1001,10°,Matemáticas,competencia,Argumentación,4,16.7
+1001,10°,Matemáticas,categoria,Estadística,6,21.1
+1001,10°,Matemáticas,categoria,Álgebra y cálculo,6,48
+1001,10°,Matemáticas,competencia,Interpretación y representación,6,25.4
+1001,10°,Matemáticas,total,Total,6,31.3
+1001,10°,Matemáticas,categoria,Geometría,6,46.7
+1001,10°,Matemáticas,competencia,Formulación y ejecución,6,40
+1001,10°,Matemáticas,competencia,Argumentación,6,10
 1001,10°,Ciencias Naturales,categoria,Física,2,18.8
 1001,10°,Ciencias Naturales,categoria,Biología,2,36.4
 1001,10°,Ciencias Naturales,categoria,Química,2,20
