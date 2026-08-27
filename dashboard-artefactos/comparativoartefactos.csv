@@ -55,3 +55,10 @@ Grupo,Grado,Área,TipoAgrupación,Etiqueta,NumeroIntentos,PromedioPorcentaje
 1004,10°,Matemáticas,competencia,Formulación y ejecución,2,27.8
 1004,10°,Matemáticas,competencia,Argumentación,2,12.5
 1004,10°,Matemáticas,total,Total,2,16.7
+1005,10°,Ciencias Naturales,categoria,Química,1,20
+1005,10°,Ciencias Naturales,categoria,Física,1,0
+1005,10°,Ciencias Naturales,categoria,Biología,1,0
+1005,10°,Ciencias Naturales,competencia,Uso comprensivo del conocimiento científico,1,7.7
+1005,10°,Ciencias Naturales,competencia,Explicación de fenómenos,1,0
+1005,10°,Ciencias Naturales,competencia,Indagación,1,0
+1005,10°,Ciencias Naturales,total,Total,1,4.2
