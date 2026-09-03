@@ -624,6 +624,16 @@
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
+        <article class="reporte tarjeta oculto" id="tarjeta-cuentas-1001" data-endpoint="cuentasFiestas">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">💰</div>
+            <h3>Cuentas Fiestas Antioqueñas</h3>
+            <p class="desc">Consulta el dinero que has aportado, los compromisos institucionales adquiridos y el saldo restante o faltante. (Solo grupo 10-01)</p>
+            <button type="button" class="btn btn-consultar">Consultar</button>
+            <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
+          </div>
+        </article>
         <article class="reporte tarjeta" id="ficha-artefactos">
           <div class="listón"></div>
           <div class="contenido">
@@ -733,6 +743,10 @@ const CONFIG_REPORTES = {
   boletinSena: {
     scriptUrl: "https://script.google.com/macros/s/AKfycbzJyQwPGT6owGQ49Aq0TubWXSxgfN-FiZhkz9MoGUcYv8AP0ZH2Wz9J85VtEVv-fws4/exec",
     necesitaHoja: true
+  },
+  cuentasFiestas: {
+    scriptUrl: "https://script.google.com/macros/s/AKfycbz95oOQY1M_F5RIfnebjyoMpYleRd3tqJTGGJIAeB3mSngjyyaBxaB-Ebqi5JcMiBpT/exec",
+    necesitaHoja: false
   }
 };
 
@@ -877,6 +891,19 @@ function mostrarPantallaDashboard(sesion) {
 
     const contenedorHorario = document.getElementById("seccion-horario");
     if (contenedorHorario) contenedorHorario.classList.add("oculto");
+
+    // --- Ficha de Cuentas Fiestas Antioqueñas: exclusiva del grupo 10-01 ---
+    const tarjetaCuentas1001 = document.getElementById("tarjeta-cuentas-1001");
+    if (tarjetaCuentas1001) {
+      const esGrupo1001 = (sesion.grupo || "").toString().trim() === "1001";
+      tarjetaCuentas1001.classList.toggle("oculto", !esGrupo1001);
+    }
+    // La vista de lista se reconstruye para reflejar la tarjeta anterior
+    // (aparece u oculta según el grupo del estudiante que acaba de entrar).
+    construirYRenderizarMenuEstudiante();
+    // Mostrar/ocultar la tarjeta cambia el ancho total del carrusel — se
+    // recalcula la pista de scroll para que no quede desalineada.
+    if (actualizarCarruselEstudiante) setTimeout(actualizarCarruselEstudiante, 50);
 
     try {
       horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
@@ -1654,9 +1681,13 @@ const CLAVE_VISTA_INTERFAZ = "slg_vista_interfaz";
 
 // Cada categoría: { icono, nombre, subitems: [{etiqueta, accion}] }
 // o, si no tiene sub-ítems, { icono, nombre, accionDirecta } (fila clickeable sin desplegar).
+// Las tarjetas ocultas (class="oculto", ej. la ficha de Cuentas 10-01 cuando el
+// estudiante no pertenece a ese grupo) se excluyen del menú de lista.
 function construirCategoriasReportes(idRejilla) {
   const categorias = [];
   document.querySelectorAll("#" + idRejilla + " .reporte[data-endpoint]").forEach(function (tarjeta) {
+    if (tarjeta.classList.contains("oculto")) return;
+
     const clave = tarjeta.dataset.endpoint;
     const iconoEl = tarjeta.querySelector(".icono");
     const icono = iconoEl ? iconoEl.textContent.trim() : "";
@@ -1747,9 +1778,17 @@ function renderizarMenuLista(idContenedor, categorias) {
   });
 }
 
-const categoriasEstudiante = construirCategoriasReportes("rejilla-reportes")
-  .concat([construirCategoriaArtefactos("selector-artefacto", "estado-artefacto")].filter(Boolean));
-renderizarMenuLista("menu-lista-estudiante", categoriasEstudiante);
+// Construye y renderiza el menú de lista del ESTUDIANTE. Se llama una vez al
+// cargar la página (con la ficha de Cuentas 10-01 aún oculta por defecto) y
+// de nuevo cada vez que un estudiante entra a su dashboard, para reflejar si
+// le corresponde ver la ficha de Cuentas 10-01 o no.
+function construirYRenderizarMenuEstudiante() {
+  const categoriasEstudiante = construirCategoriasReportes("rejilla-reportes")
+    .concat([construirCategoriaArtefactos("selector-artefacto", "estado-artefacto")].filter(Boolean));
+  renderizarMenuLista("menu-lista-estudiante", categoriasEstudiante);
+}
+
+construirYRenderizarMenuEstudiante();
 
 const categoriasDocente = [
   { icono: "📈", nombre: "Dashboard de resultados de simulacros", accionDirecta: function () { if (enlaceDashboard.dataset.url) window.open(enlaceDashboard.dataset.url, "_blank"); } }
