@@ -1250,6 +1250,43 @@ function escaparHtml(texto) {
     });
 })();
 
+/**
+ * ============================================================
+ * FETCH CON TIEMPO DE ESPERA Y REINTENTO AUTOMÁTICO
+ * ============================================================
+ * Apps Script a veces tarda mucho en responder la PRIMERA vez que
+ * se le pide algo (caché vacía, "cold start"...). Antes, si eso
+ * pasaba, la persona tenía que darse cuenta, cerrar y volver a
+ * entrar manualmente — el segundo intento sí llegaba rápido porque
+ * ya encontraba todo "tibio". Esta función hace ese mismo segundo
+ * intento automáticamente: si la respuesta no llega dentro del
+ * tiempo dado (o falla la red), reintenta una vez más sin que el
+ * estudiante tenga que hacer nada.
+ * ============================================================ */
+function fetchConReintento(url, opciones) {
+  opciones = opciones || {};
+  const intentosRestantes = opciones.intentos !== undefined ? opciones.intentos : 1;
+  const timeoutMs = opciones.timeoutMs || 12000;
+  const alReintentar = opciones.alReintentar;
+
+  const controlador = new AbortController();
+  const temporizador = setTimeout(function () { controlador.abort(); }, timeoutMs);
+
+  return fetch(url, { signal: controlador.signal })
+    .then(function (res) {
+      clearTimeout(temporizador);
+      return res;
+    })
+    .catch(function (err) {
+      clearTimeout(temporizador);
+      if (intentosRestantes > 0) {
+        if (alReintentar) alReintentar();
+        return fetchConReintento(url, { intentos: intentosRestantes - 1, timeoutMs: timeoutMs, alReintentar: alReintentar });
+      }
+      throw err;
+    });
+}
+
 function intentarIngresar() {
   const doc = campoDocumento.value.trim();
 
@@ -1281,7 +1318,14 @@ function intentarIngresar() {
   params.set("doc", doc);
   params.set("origen", ORIGEN_CONSULTA);
 
-  fetch(CONFIG_VERIFICACION.scriptUrl + "?" + params.toString())
+  fetchConReintento(CONFIG_VERIFICACION.scriptUrl + "?" + params.toString(), {
+    intentos: 1,
+    timeoutMs: 12000,
+    alReintentar: function () {
+      estadoDoc.textContent = "La primera solicitud tardó más de lo normal, reintentando...";
+      estadoDoc.className = "estado-doc";
+    }
+  })
     .then(function (res) { return res.text(); })
     .then(function (texto) {
       let datos;
@@ -1426,7 +1470,14 @@ function consultar(url) {
     '<div class="cargando"><span class="spinner"></span> Consultando información, por favor espera un momento...</div>';
   zonaResultado.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  fetch(url)
+  fetchConReintento(url, {
+    intentos: 1,
+    timeoutMs: 12000,
+    alReintentar: function () {
+      resultadoCaja.innerHTML =
+        '<div class="cargando"><span class="spinner"></span> La primera solicitud tardó más de lo normal, reintentando...</div>';
+    }
+  })
     .then(function (res) { return res.text(); })
     .then(function (html) { resultadoCaja.innerHTML = html; })
     .catch(function () { mostrarError("No fue posible realizar la consulta. Intenta nuevamente en unos minutos."); });
