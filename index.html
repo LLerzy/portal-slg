@@ -1276,11 +1276,24 @@ function escaparHtml(texto) {
  * intento automáticamente: si la respuesta no llega dentro del
  * tiempo dado (o falla la red), reintenta una vez más sin que el
  * estudiante tenga que hacer nada.
+ *
+ * IMPORTANTE sobre el valor de timeoutMs: un "cold start" real de
+ * Apps Script puede tardar legítimamente 15-20 segundos, sobre
+ * todo si además hay que leer varias hojas (roster, horarios,
+ * anuncios) en la misma solicitud. Un límite corto (se probó con
+ * 12s) MATA a la fuerza una solicitud que iba a responder bien —
+ * y como el reintento vuelve a empezar de cero, también puede
+ * necesitar un tiempo similar y también morir, obligando a la
+ * persona a reintentar manualmente 2-3 veces — exactamente lo que
+ * esta función debía evitar. 25 segundos da margen real para que
+ * un cold-start legítimo termine solo, sin abortarlo a mitad de
+ * camino; el reintento automático sigue existiendo como respaldo
+ * ante fallos de red genuinos, no como mecanismo principal.
  * ============================================================ */
 function fetchConReintento(url, opciones) {
   opciones = opciones || {};
   const intentosRestantes = opciones.intentos !== undefined ? opciones.intentos : 1;
-  const timeoutMs = opciones.timeoutMs || 12000;
+  const timeoutMs = opciones.timeoutMs || 25000;
   const alReintentar = opciones.alReintentar;
 
   const controlador = new AbortController();
@@ -1334,7 +1347,7 @@ function intentarIngresar() {
 
   fetchConReintento(CONFIG_VERIFICACION.scriptUrl + "?" + params.toString(), {
     intentos: 1,
-    timeoutMs: 12000,
+    timeoutMs: 25000,
     alReintentar: function () {
       estadoDoc.textContent = "La primera solicitud tardó más de lo normal, reintentando...";
       estadoDoc.className = "estado-doc";
@@ -1486,7 +1499,7 @@ function consultar(url) {
 
   fetchConReintento(url, {
     intentos: 1,
-    timeoutMs: 12000,
+    timeoutMs: 25000,
     alReintentar: function () {
       resultadoCaja.innerHTML =
         '<div class="cargando"><span class="spinner"></span> La primera solicitud tardó más de lo normal, reintentando...</div>';
