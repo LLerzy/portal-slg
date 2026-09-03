@@ -14,7 +14,10 @@
 <meta name="apple-mobile-web-app-title" content="Portal SLG">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
   :root{
     --rojo: #c40016;
@@ -31,7 +34,6 @@
     --sombra: 0 10px 30px rgba(36,28,20,0.10);
   }
 
-  
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
@@ -1184,8 +1186,36 @@ function escaparHtml(texto) {
 }
 
 // Anuncios públicos en la pantalla de login (antes de identificar a nadie)
+//
+// Optimización: los anuncios se guardan en sessionStorage por 3 minutos.
+// Si el estudiante recarga la página o vuelve a la pantalla de login poco
+// después, se pintan al instante desde la caché mientras se refrescan en
+// segundo plano — solo la primera visita de la sesión paga el viaje
+// completo a Apps Script. Si no hay nada en caché, se muestra un aviso
+// breve de "Cargando..." en vez de dejar la zona vacía/oculta, que es lo
+// que hacía parecer que los anuncios "no cargaban".
 (function cargarAnunciosLogin() {
   if (!CONFIG_VERIFICACION.scriptUrl || CONFIG_VERIFICACION.scriptUrl.indexOf("PEGA_AQUI") === 0) return;
+
+  const CLAVE_CACHE_ANUNCIOS = "slg_anuncios_cache_v1";
+  const TTL_CACHE_ANUNCIOS_MS = 3 * 60 * 1000; // 3 minutos
+  const wrap = document.getElementById("zona-anuncios-login-wrap");
+
+  let pintadoDesdeCache = false;
+  try {
+    const cacheado = JSON.parse(sessionStorage.getItem(CLAVE_CACHE_ANUNCIOS) || "null");
+    if (cacheado && (Date.now() - cacheado.marca) < TTL_CACHE_ANUNCIOS_MS) {
+      renderizarAnuncios("zona-anuncios-login", cacheado.anuncios);
+      pintadoDesdeCache = true;
+    }
+  } catch (err) { /* sessionStorage no disponible o dato corrupto: seguimos con la red */ }
+
+  if (!pintadoDesdeCache && wrap) {
+    const pista = document.getElementById("zona-anuncios-login");
+    if (pista) pista.innerHTML = '<div style="padding:14px 18px; color:#6b675f; font-size:13.5px;">Cargando anuncios…</div>';
+    wrap.classList.remove("oculto");
+  }
+
   const params = new URLSearchParams();
   params.set("accion", "anuncios");
   fetch(CONFIG_VERIFICACION.scriptUrl + "?" + params.toString())
@@ -1193,8 +1223,15 @@ function escaparHtml(texto) {
     .then(function (texto) {
       const datos = JSON.parse(texto);
       renderizarAnuncios("zona-anuncios-login", datos.anuncios);
+      try {
+        sessionStorage.setItem(CLAVE_CACHE_ANUNCIOS, JSON.stringify({ anuncios: datos.anuncios, marca: Date.now() }));
+      } catch (err) { /* sin espacio o no disponible: no pasa nada, solo no se cachea */ }
     })
-    .catch(function () { /* falla silenciosa: el login funciona igual sin anuncios */ });
+    .catch(function () {
+      // Si habíamos mostrado "Cargando..." sin nada real detrás, lo
+      // quitamos para no dejar un mensaje colgado ante un fallo de red.
+      if (!pintadoDesdeCache && wrap) wrap.classList.add("oculto");
+    });
 })();
 
 function intentarIngresar() {
