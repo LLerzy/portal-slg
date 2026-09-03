@@ -1001,6 +1001,14 @@ btnSalir.addEventListener("click", function () {
   const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
+  // Opera (móvil y escritorio, ambos basados en Chromium) no dispara de forma
+  // confiable el evento beforeinstallprompt — es una limitación conocida del
+  // propio navegador, no del sitio (en Chrome/Brave/Edge sí funciona con este
+  // mismo código). Por eso a Opera se le muestran instrucciones manuales,
+  // pero con la ruta exacta de SU menú ("Añadir a > Pantalla de inicio"),
+  // que es distinta a la de Chrome ("Instalar aplicación").
+  const esOpera = /OPR\/|OPX\/|Opera/i.test(navigator.userAgent);
+
   let eventoInstalacion = null;
 
   btnCerrar.addEventListener("click", function () {
@@ -1009,8 +1017,9 @@ btnSalir.addEventListener("click", function () {
   });
 
   function mostrarInstruccionesManuales() {
-    textoInstalar.textContent =
-      "Abre el menú (⋮) de tu navegador y toca \"Instalar aplicación\" o \"Agregar a pantalla de inicio\".";
+    textoInstalar.textContent = esOpera
+      ? "Este navegador no permite instalarlo automáticamente. Toca el ícono ⋮ junto a la barra de direcciones, luego \"Añadir a\" y selecciona \"Pantalla de inicio\"."
+      : "Abre el menú (⋮) de tu navegador y toca \"Instalar aplicación\" o \"Agregar a pantalla de inicio\".";
     btnInstalar.style.display = "none";
     banner.classList.remove("oculto");
   }
@@ -1039,9 +1048,14 @@ btnSalir.addEventListener("click", function () {
       });
     });
 
+    // IMPORTANTE: aquí solo se oculta el banner para esta sesión — a
+    // propósito NO se guarda el descarte permanente (localStorage). Si se
+    // guardara, alguien que instala la app y MÁS ADELANTE la desinstala
+    // nunca volvería a ver el banner al visitar el sitio de nuevo, porque
+    // "yaInstalado" (display-mode: standalone) ya no lo detectaría como
+    // instalado, pero "yaDescartado" seguiría bloqueándolo para siempre.
     window.addEventListener("appinstalled", function () {
       banner.classList.add("oculto");
-      localStorage.setItem(CLAVE_DESCARTADO, "1");
     });
 
     setTimeout(function () {
