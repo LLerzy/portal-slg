@@ -555,6 +555,15 @@
             <button type="button" class="btn" id="enlace-dashboard-artefactos">Abrir Dashboard de Artefactos ↗</button>
           </div>
         </article>
+        <article class="reporte tarjeta">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">💰</div>
+            <h3>Reporte de Cuentas 10-01</h3>
+            <p class="desc">Activa la compra de cada compromiso institucional y define costos pendientes. (Solo Director de Grupo 10-01)</p>
+            <button type="button" class="btn" id="enlace-reporte-cuentas-director">Abrir Reporte de Cuentas ↗</button>
+          </div>
+        </article>
         </div>
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno-docente"></div></div>
       </div>
@@ -759,6 +768,11 @@ const CONFIG_VERIFICACION = {
 
 const CONFIG_DASHBOARD_URL = "https://llerzy.github.io/portal-slg/dashboard-simulacros/";
 const CONFIG_DASHBOARD_ARTEFACTOS_URL = "https://llerzy.github.io/portal-slg/dashboard-artefactos/";
+// El reporte del director reutiliza la misma URL del Web App de Cuentas,
+// solo que con accion=reporteDirector — no necesita una constante propia.
+const CONFIG_REPORTE_CUENTAS_DIRECTOR_URL = CONFIG_REPORTES.cuentasFiestas.scriptUrl
+  ? CONFIG_REPORTES.cuentasFiestas.scriptUrl + "?accion=reporteDirector"
+  : "";
 
 const CONFIG_ARTEFACTOS = {
   matematicas: "artefactos/matematicas.html",
@@ -793,6 +807,7 @@ const carruselWrap = document.getElementById("carrusel-wrap");
 const carruselWrapDocente = document.getElementById("carrusel-wrap-docente");
 const enlaceDashboard = document.getElementById("enlace-dashboard");
 const enlaceDashboardArtefactos = document.getElementById("enlace-dashboard-artefactos");
+const enlaceReporteCuentasDirector = document.getElementById("enlace-reporte-cuentas-director");
 
 function inicializarCarrusel(idCarrusel, idFlechaIzq, idFlechaDer, idPistaRelleno) {
   const carrusel = document.getElementById(idCarrusel);
@@ -879,6 +894,7 @@ function mostrarPantallaDashboard(sesion) {
     if (zonaHorario) zonaHorario.classList.add("oculto");
     configurarBotonDashboard(enlaceDashboard, CONFIG_DASHBOARD_URL, "Abrir Dashboard de Simulacros ↗", "CONFIG_DASHBOARD_URL");
     configurarBotonDashboard(enlaceDashboardArtefactos, CONFIG_DASHBOARD_ARTEFACTOS_URL, "Abrir Dashboard de Artefactos ↗", "CONFIG_DASHBOARD_ARTEFACTOS_URL");
+    configurarBotonDashboard(enlaceReporteCuentasDirector, CONFIG_REPORTE_CUENTAS_DIRECTOR_URL, "Abrir Reporte de Cuentas ↗", "CONFIG_REPORTES.cuentasFiestas");
     
   } else {
     saludoGrupo.textContent = sesion.grupo ? ("Grupo " + sesion.grupo) : "";
@@ -1396,7 +1412,7 @@ function configurarBotonDashboard(boton, url, textoHabilitado, nombreConstante) 
   }
 }
 
-[enlaceDashboard, enlaceDashboardArtefactos].forEach(function (boton) {
+[enlaceDashboard, enlaceDashboardArtefactos, enlaceReporteCuentasDirector].forEach(function (boton) {
   boton.addEventListener("click", function () {
     const url = boton.dataset.url;
     if (!url) return;
