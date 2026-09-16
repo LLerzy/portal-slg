@@ -946,7 +946,10 @@ function mostrarPantallaDashboard(sesion) {
     }
   }
   // Renderizar anuncios para cualquier rol en el carrusel superior
-  renderizarAnuncios("pista-anuncios", sesion.anuncios);
+  obtenerAnuncios().then(function (anuncios) {
+    const rolFiltro = sesion.rol.indexOf("docente") === 0 ? "docente" : "estudiante";
+    renderizarAnuncios("pista-anuncios", filtrarAnunciosPorRol(anuncios, rolFiltro));
+  });
 
   esDocenteActual = esDocente;
   aplicarVistaInterfaz();
@@ -1217,52 +1220,44 @@ function escaparHtml(texto) {
 }
 
 // Anuncios públicos en la pantalla de login (antes de identificar a nadie)
-//
-// Optimización: los anuncios se guardan en sessionStorage por 3 minutos.
-// Si el estudiante recarga la página o vuelve a la pantalla de login poco
-// después, se pintan al instante desde la caché mientras se refrescan en
-// segundo plano — solo la primera visita de la sesión paga el viaje
-// completo a Apps Script. Si no hay nada en caché, se muestra un aviso
-// breve de "Cargando..." en vez de dejar la zona vacía/oculta, que es lo
-// que hacía parecer que los anuncios "no cargaban".
-(function cargarAnunciosLogin() {
-  if (!CONFIG_VERIFICACION.scriptUrl || CONFIG_VERIFICACION.scriptUrl.indexOf("PEGA_AQUI") === 0) return;
+const RUTA_ANUNCIOS_JSON = "ads/anuncios.json";
 
-  const CLAVE_CACHE_ANUNCIOS = "slg_anuncios_cache_v1";
-  const TTL_CACHE_ANUNCIOS_MS = 3 * 60 * 1000; // 3 minutos
-  const wrap = document.getElementById("zona-anuncios-login-wrap");
+let anunciosCacheados = null; // evita pedir el archivo dos veces en la misma carga de página
 
-  let pintadoDesdeCache = false;
-  try {
-    const cacheado = JSON.parse(sessionStorage.getItem(CLAVE_CACHE_ANUNCIOS) || "null");
-    if (cacheado && (Date.now() - cacheado.marca) < TTL_CACHE_ANUNCIOS_MS) {
-      renderizarAnuncios("zona-anuncios-login", cacheado.anuncios);
-      pintadoDesdeCache = true;
-    }
-  } catch (err) { /* sessionStorage no disponible o dato corrupto: seguimos con la red */ }
-
-  if (!pintadoDesdeCache && wrap) {
-    const pista = document.getElementById("zona-anuncios-login");
-    if (pista) pista.innerHTML = '<div style="padding:14px 18px; color:#6b675f; font-size:13.5px;">Cargando anuncios…</div>';
-    wrap.classList.remove("oculto");
-  }
-
-  const params = new URLSearchParams();
-  params.set("accion", "anuncios");
-  fetch(CONFIG_VERIFICACION.scriptUrl + "?" + params.toString())
-    .then(function (res) { return res.text(); })
-    .then(function (texto) {
-      const datos = JSON.parse(texto);
-      renderizarAnuncios("zona-anuncios-login", datos.anuncios);
-      try {
-        sessionStorage.setItem(CLAVE_CACHE_ANUNCIOS, JSON.stringify({ anuncios: datos.anuncios, marca: Date.now() }));
-      } catch (err) { /* sin espacio o no disponible: no pasa nada, solo no se cachea */ }
+function obtenerAnuncios() {
+  if (anunciosCacheados) return Promise.resolve(anunciosCacheados);
+  return fetch(RUTA_ANUNCIOS_JSON, { cache: "no-store" })
+    .then(function (res) { return res.json(); })
+    .then(function (datos) {
+      anunciosCacheados = Array.isArray(datos) ? datos : [];
+      return anunciosCacheados;
     })
     .catch(function () {
-      // Si habíamos mostrado "Cargando..." sin nada real detrás, lo
-      // quitamos para no dejar un mensaje colgado ante un fallo de red.
-      if (!pintadoDesdeCache && wrap) wrap.classList.add("oculto");
+      return []; // si falla, simplemente no se muestran anuncios; no bloquea nada
     });
+}
+
+function filtrarAnunciosPorRol(anuncios, rolFiltro) {
+  return anuncios.filter(function (a) {
+    if (a.publicoObjetivo === "todos") return true;
+    if (!rolFiltro) return false; // pantalla de login: solo "todos"
+    if (rolFiltro === "estudiante") return a.publicoObjetivo === "estudiantes";
+    if (rolFiltro === "docente") return a.publicoObjetivo === "docentes";
+    return false;
+  });
+}
+
+(function cargarAnunciosLogin() {
+  const wrap = document.getElementById("zona-anuncios-login-wrap");
+  const pista = document.getElementById("zona-anuncios-login");
+  if (pista) pista.innerHTML = '<div style="padding:14px 18px; color:#6b675f; font-size:13.5px;">Cargando anuncios…</div>';
+  if (wrap) wrap.classList.remove("oculto");
+
+  obtenerAnuncios().then(function (anuncios) {
+    const publicos = filtrarAnunciosPorRol(anuncios, null);
+    if (!publicos.length) { if (wrap) wrap.classList.add("oculto"); return; }
+    renderizarAnuncios("zona-anuncios-login", publicos);
+  });
 })();
 
 /**
@@ -1382,8 +1377,8 @@ function intentarIngresar() {
         grado: datos.grado || "",
         director: datos.director || "",
         grupoAsignado: datos.grupoAsignado || "",
-        horario: datos.horario || [],
-        anuncios: datos.anuncios || []
+        horario: datos.horario || []
+        // ya no incluye "anuncios" — ahora se piden por separado desde obtenerAnuncios()
       };
       sessionStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
       estadoDoc.textContent = "Documento verificado.";
