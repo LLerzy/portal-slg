@@ -1,0 +1,37 @@
+[
+  {
+    "titulo": "Matrícula del grado preescolar",
+    "texto": "El 1 de septiembre, inicia el proceso de matrícula del grado preescolar.",
+    "publicoObjetivo": "todos",
+    "urgente": false,
+    "imagenUrl": ""
+  },
+  {
+    "titulo": "Cierre en plataforma",
+    "texto": "El 10 de septiembre reporte rápido para realización de consolidados.",
+    "publicoObjetivo": "todos",
+    "urgente": false,
+    "imagenUrl": ""
+  },
+  {
+    "titulo": "Reporte de Notas",
+    "texto": "El 17 de septiembre, Informe parcial de notas sede Bachillerato.",
+    "publicoObjetivo": "todos",
+    "urgente": false,
+    "imagenUrl": ""
+  },
+  {
+    "titulo": "Porte de Uniforme",
+    "texto": "Desde el 30 de Julio, porte del uniforme por grado y grupo.",
+    "publicoObjetivo": "todos",
+    "urgente": true,
+    "imagenUrl": "https://llerzy.github.io/portal-slg/ads/uniformes-240826.jpeg"
+  },
+  {
+    "titulo": "Renovación Matricula",
+    "texto": "El día martes 3 de Noviembre es el turno para el grupo 10-01",
+    "publicoObjetivo": "todos",
+    "urgente": true,
+    "imagenUrl": "https://llerzy.github.io/portal-slg/ads/310826-Comunicado-Renovación-Matriculas-1001.jpeg"
+  }
+]
