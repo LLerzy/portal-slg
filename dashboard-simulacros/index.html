@@ -113,18 +113,23 @@
 
   /* ---------- Filter bar ---------- */
   .filterbar{
-    display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;
+    display:flex; gap:14px 18px; flex-wrap:wrap; align-items:flex-end;
     background:var(--surface); border:1px solid var(--border); border-radius:12px;
     padding:16px 18px; margin-bottom:22px; box-shadow:var(--shadow);
   }
-  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field{ display:flex; flex-direction:column; gap:6px; flex:0 1 170px; min-width:150px; }
   .field label{ font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
   .field select{
-    padding:9px 32px 9px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px;
+    width:100%; padding:9px 32px 9px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px;
     font-family:'Inter', sans-serif; background:var(--surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%236f6a63"/></svg>') no-repeat right 12px center;
-    appearance:none; min-width:170px; cursor:pointer;
+    appearance:none; min-width:150px; cursor:pointer; box-sizing:border-box;
   }
-  .filterbar .spacer{ flex:1; }
+  .filterbar .spacer{ flex:1 1 0; min-width:0; }
+  @media (max-width:860px){
+    .filterbar{ flex-direction:column; align-items:stretch; gap:16px; padding:14px 16px; }
+    .filterbar .field{ width:100%; min-width:0; flex:1 1 auto; }
+    .filterbar .spacer{ display:none; }
+  }
   .aviso-alcance{
     background:#eef4fb; border:1px solid #cdd9ef; border-left:4px solid var(--red);
     border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:13.5px; color:var(--ink);
@@ -195,8 +200,8 @@
   .chart-box{ position:relative; height:320px; }
 
   /* ---------- Chips de Grado y atajos de parejas ---------- */
-  .field-grados, .field-presets{ min-width:220px; }
-  .grado-chips, .grado-presets{ display:flex; flex-wrap:wrap; gap:6px; max-width:420px; }
+  .field-grados, .field-presets{ flex:1 1 240px; min-width:220px; }
+  .grado-chips, .grado-presets{ display:flex; flex-wrap:wrap; gap:6px; max-width:100%; }
   .chip-grado{
     font-size:12.5px; padding:6px 12px; border:1px solid var(--border); background:var(--surface);
     border-radius:999px; cursor:pointer; color:var(--ink); font-family:'Inter', sans-serif; font-weight:600;
@@ -210,6 +215,9 @@
     transition:border-color .12s, color .12s;
   }
   .chip-preset:hover{ border-color:var(--gold); color:var(--ink); }
+  @media (max-width:860px){
+    .field-grados, .field-presets{ width:100%; min-width:0; }
+  }
 
   /* ---------- Honor board (signature element) ---------- */
   .honor-board{
@@ -351,14 +359,14 @@
   <div class="setup-card" id="setupCard">
     <h2>Conectar la fuente de datos</h2>
     <p style="margin:0; font-size:14.5px; line-height:1.7;">
-      Este panel busca automáticamente un archivo llamado <code>comparativosimulacros.csv</code> en la
+      Este panel busca automáticamente un archivo llamado <code>comparativosimulacros-2026.csv</code> en la
       misma carpeta que <code>index.html</code>. Si estás viendo este mensaje, ese archivo todavía no está
       ahí (o estás probando el archivo localmente con doble clic, donde el navegador bloquea esa lectura
       por seguridad — pruébalo ya publicado en GitHub Pages).
     </p>
     <ol>
       <li>En Google Sheets, abre la hoja <strong>Comparativosimulacros</strong> → <code>Archivo → Descargar → Valores separados por comas (.csv)</code>.</li>
-      <li>Renombra el archivo descargado a exactamente <code>comparativosimulacros.csv</code>.</li>
+      <li>Renombra el archivo descargado a exactamente <code>comparativosimulacros-2026.csv</code>.</li>
       <li>Súbelo a tu repositorio de GitHub, en la misma carpeta que <code>index.html</code>. Cada vez que actualices resultados, repite estos pasos y reemplaza el archivo en GitHub.</li>
     </ol>
     <p style="margin:14px 0 0; font-size:13px; color:var(--muted);">
@@ -442,7 +450,7 @@
           <div class="honor-list" id="honorList"></div>
         </div>
         <div id="honorCol2">
-          <div class="honor-col-title">Top 10 Estudiantes</div>
+          <div class="honor-col-title">Todos los Estudiantes</div>
           <div class="honor-list" id="honorStudentList"></div>
         </div>
       </div>
@@ -542,15 +550,17 @@
  * propios datos (no viene en la hoja Comparativosimulacros).
  * ============================================================ */
 const CONFIG = {
-  csvUrl: "comparativosimulacros.csv",
+  csvUrl: "comparativosimulacros-2026.csv",
   // Mapa Año -> archivo CSV, para el Seguimiento de Cohorte (comparar el
-  // mismo grupo de estudiantes entre dos años). El año en curso (2026) se
-  // deja apuntando al archivo de siempre (comparativosimulacros.csv) para
-  // no romper la carga automática ya en producción; los años anteriores
-  // usan el patrón "comparativosimulacros-AAAA.csv". Agrega aquí cada año
-  // nuevo que quieras poder consultar (ej. "2027": "comparativosimulacros-2027.csv").
+  // mismo grupo de estudiantes entre dos años). Todos los años, incluido
+  // el año en curso, siguen el mismo patrón "comparativosimulacros-AAAA.csv".
+  // IMPORTANTE: en el repositorio de GitHub, el archivo que antes se
+  // llamaba "comparativosimulacros.csv" debe renombrarse a
+  // "comparativosimulacros-2026.csv" para que el dashboard lo encuentre.
+  // Agrega aquí cada año nuevo que quieras poder consultar
+  // (ej. "2027": "comparativosimulacros-2027.csv").
   anios: {
-    "2026": "comparativosimulacros.csv",
+    "2026": "comparativosimulacros-2026.csv",
     "2025": "comparativosimulacros-2025.csv",
   },
   directores: {
@@ -1482,10 +1492,10 @@ function renderHonorBoard(students, modo, grupoSel){
   if (grupoSel !== "todos"){
     columns.classList.add("single");
     col2.style.display = "none";
-    title1.textContent = "Top 10 del grupo";
+    title1.textContent = "Todos los estudiantes del grupo";
     boardTitle.textContent = "Cuadro de Honor — Grupo " + grupoSel;
-    boardSub.textContent = "Top 10 estudiantes del grupo por Puntaje Global, según el simulacro seleccionado.";
-    renderStudentList("honorList", students, modo, { showGroup:false, limit:10 });
+    boardSub.textContent = "Todos los estudiantes del grupo, ordenados por Puntaje Global, según el simulacro seleccionado.";
+    renderStudentList("honorList", students, modo, { showGroup:false, scroll:true });
   } else {
     columns.classList.remove("single");
     col2.style.display = "";
@@ -1493,7 +1503,7 @@ function renderHonorBoard(students, modo, grupoSel){
     boardTitle.textContent = "Cuadro de Honor";
     boardSub.textContent = "Ranking por grupo y por estudiante, según el simulacro seleccionado.";
     renderGroupList(students, modo);
-    renderStudentList("honorStudentList", students, modo, { showGroup:true, limit:10, scroll:false });
+    renderStudentList("honorStudentList", students, modo, { showGroup:true, scroll:true });
   }
 }
 
