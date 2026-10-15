@@ -194,6 +194,23 @@
   .view-toggle button.active{ background:var(--red); color:#fff; border-color:var(--red); }
   .chart-box{ position:relative; height:320px; }
 
+  /* ---------- Chips de Grado y atajos de parejas ---------- */
+  .field-grados, .field-presets{ min-width:220px; }
+  .grado-chips, .grado-presets{ display:flex; flex-wrap:wrap; gap:6px; max-width:420px; }
+  .chip-grado{
+    font-size:12.5px; padding:6px 12px; border:1px solid var(--border); background:var(--surface);
+    border-radius:999px; cursor:pointer; color:var(--ink); font-family:'Inter', sans-serif; font-weight:600;
+    transition:background .12s, color .12s, border-color .12s;
+  }
+  .chip-grado:hover{ border-color:var(--gold); }
+  .chip-grado.active{ background:var(--red); color:#fff; border-color:var(--red); }
+  .chip-preset{
+    font-size:11.5px; padding:5px 10px; border:1px dashed var(--border); background:var(--surface);
+    border-radius:8px; cursor:pointer; color:var(--muted); font-family:'Inter', sans-serif; font-weight:600;
+    transition:border-color .12s, color .12s;
+  }
+  .chip-preset:hover{ border-color:var(--gold); color:var(--ink); }
+
   /* ---------- Honor board (signature element) ---------- */
   .honor-board{
     background: radial-gradient(120% 140% at 10% 0%, #24352f 0%, var(--board) 55%);
@@ -363,6 +380,10 @@
 
     <div class="filterbar">
       <div class="field">
+        <label for="fAnio">Año</label>
+        <select id="fAnio"></select>
+      </div>
+      <div class="field">
         <label for="fSimulacro">Simulacro</label>
         <select id="fSimulacro">
           <option value="comparativo">Comparativo (S1 vs S2)</option>
@@ -370,11 +391,13 @@
           <option value="s2">Segundo Simulacro</option>
         </select>
       </div>
-      <div class="field">
-        <label for="fGrado">Grado</label>
-        <select id="fGrado">
-          <option value="todos">Todos</option>
-        </select>
+      <div class="field field-grados">
+        <label>Grado</label>
+        <div class="grado-chips" id="gradoChips"></div>
+      </div>
+      <div class="field field-presets">
+        <label>Comparar parejas</label>
+        <div class="grado-presets" id="gradoPresets"></div>
       </div>
       <div class="field">
         <label for="fGrupo">Grupo</label>
@@ -436,6 +459,51 @@
       </div>
     </div>
 
+    <div class="section" id="cohorteSection">
+      <h2>Seguimiento de Cohorte</h2>
+      <div class="section-sub">
+        Compara el mismo grupo de estudiantes entre dos años (ej. Sexto en 2025 frente a Séptimo en 2026).
+        El cruce se hace por nombre normalizado, no por documento — revisa las notas de confianza del resultado.
+      </div>
+      <div class="filterbar" style="margin-bottom:14px;">
+        <div class="field">
+          <label for="cohorteAnioBase">Año base</label>
+          <select id="cohorteAnioBase"></select>
+        </div>
+        <div class="field">
+          <label for="cohorteGradoBase">Grado base</label>
+          <select id="cohorteGradoBase"></select>
+        </div>
+        <div class="field">
+          <label for="cohorteAnioDestino">Año destino</label>
+          <select id="cohorteAnioDestino"></select>
+        </div>
+        <div class="field">
+          <label for="cohorteGradoDestino">Grado destino</label>
+          <select id="cohorteGradoDestino"></select>
+        </div>
+        <div class="spacer"></div>
+        <button class="primary" id="btnCompararCohorte">Comparar</button>
+      </div>
+      <div id="cohorteEstado" style="font-size:13.5px; color:var(--muted); margin-bottom:14px;"></div>
+      <div class="kpi-grid" id="cohorteKpiGrid"></div>
+      <div style="overflow-x:auto;">
+        <table class="results" id="cohorteTable" style="display:none;">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Grupo base</th>
+              <th>Global año base</th>
+              <th>Grupo destino</th>
+              <th>Global año destino</th>
+              <th>Variación</th>
+            </tr>
+          </thead>
+          <tbody id="cohorteTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <div class="facimate-card">
@@ -475,6 +543,16 @@
  * ============================================================ */
 const CONFIG = {
   csvUrl: "comparativosimulacros.csv",
+  // Mapa Año -> archivo CSV, para el Seguimiento de Cohorte (comparar el
+  // mismo grupo de estudiantes entre dos años). El año en curso (2026) se
+  // deja apuntando al archivo de siempre (comparativosimulacros.csv) para
+  // no romper la carga automática ya en producción; los años anteriores
+  // usan el patrón "comparativosimulacros-AAAA.csv". Agrega aquí cada año
+  // nuevo que quieras poder consultar (ej. "2027": "comparativosimulacros-2027.csv").
+  anios: {
+    "2026": "comparativosimulacros.csv",
+    "2025": "comparativosimulacros-2025.csv",
+  },
   directores: {
     "1001": "Llerzy Torres",
     "1002": "Carolina Bedoya",
@@ -549,7 +627,8 @@ function aplicarPreseleccionDocente() {
   if (!grupoPreseleccionado) return; // directivo, estudiante, o sin grupo: se deja el default normal
 
   const grado = inferirGrado(grupoPreseleccionado);
-  document.getElementById("fGrado").value = grado;
+  selectedGrados = new Set([grado]);
+  renderGradoChips();
   populateGrupoFilter(); // repuebla el selector de Grupo según el grado recién elegido
 
   const selGrupo = document.getElementById("fGrupo");
@@ -592,7 +671,14 @@ function loadFromUrl(url, silencioso){
 function parseCsv(csvText){
   const parsed = Papa.parse(csvText, { skipEmptyLines: false });
   const rows = parsed.data;
-  STUDENTS = buildStudents(rows);
+  aplicarEstudiantesCargados(buildStudents(rows));
+}
+
+// Común entre "cargar CSV manualmente/por URL" (parseCsv) y "cargar un
+// año conocido del dashboard principal" (cargarAnioPrincipal), para no
+// duplicar el paso de mostrar el dashboard, poblar filtros, etc.
+function aplicarEstudiantesCargados(estudiantes){
+  STUDENTS = estudiantes;
   if (STUDENTS.length === 0){
     setStatus(false, "El archivo no tiene filas de estudiantes reconocibles");
     alert("Se leyó el archivo pero no se encontraron estudiantes. Verifica que sea la hoja Comparativosimulacros y que la fila 4 sea la primera fila de datos.");
@@ -602,7 +688,7 @@ function parseCsv(csvText){
   document.getElementById("updatedAt").textContent = "Actualizado: " + new Date().toLocaleString("es-CO");
   document.getElementById("setupCard").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
-  populateGradoFilter();
+  renderGradoChips();
   populateGrupoFilter();
   aplicarPreseleccionDocente();
   renderAll();
@@ -667,27 +753,72 @@ function buildStudents(rows){
 /* ============================================================
  * FILTROS
  * ============================================================ */
-function populateGradoFilter(){
-  const sel = document.getElementById("fGrado");
-  const previamenteSeleccionado = sel.value || "todos";
-  const presentes = [...new Set(STUDENTS.map(s => s.grado))];
-  const ordenados = ORDEN_GRADOS.filter(g => presentes.includes(g))
-    .concat(presentes.filter(g => !ORDEN_GRADOS.includes(g)).sort());
+// Selección múltiple de grados: vacío significa "Todos" (sin filtrar por
+// grado). Reemplaza al antiguo <select> de un solo valor para poder
+// comparar 2 o más grados a la vez (ej. Sexto y Séptimo).
+let selectedGrados = new Set();
 
-  sel.innerHTML = '<option value="todos">Todos</option>' +
-    ordenados.map(g => `<option value="${g}">${g}</option>`).join("");
+// Atajos para las comparaciones que de verdad se hacen en la práctica.
+// Si algún grado del par no tiene datos todavía en el CSV cargado, ese
+// atajo simplemente no se muestra (ver renderGradoChips).
+const GRADO_PAIR_PRESETS = [
+  { label: "6°-7°", grados: ["Sexto", "Séptimo"] },
+  { label: "8°-9°", grados: ["Octavo", "Noveno"] },
+  { label: "9°-Caminar", grados: ["Noveno", "Caminar"] },
+  { label: "10°-11°", grados: ["Décimo", "Undécimo"] },
+];
 
-  sel.value = ordenados.includes(previamenteSeleccionado) ? previamenteSeleccionado : "todos";
+function renderGradoChips(){
+  const presentes = ORDEN_GRADOS.filter(g => STUDENTS.some(s => s.grado === g));
+
+  const chipsEl = document.getElementById("gradoChips");
+  const todosBtn = `<button type="button" class="chip-grado ${selectedGrados.size === 0 ? "active" : ""}" data-grado="__todos__">Todos</button>`;
+  const gradoBtns = presentes.map(g =>
+    `<button type="button" class="chip-grado ${selectedGrados.has(g) ? "active" : ""}" data-grado="${g}">${g}</button>`
+  ).join("");
+  chipsEl.innerHTML = todosBtn + gradoBtns;
+
+  const presetsEl = document.getElementById("gradoPresets");
+  presetsEl.innerHTML = GRADO_PAIR_PRESETS
+    .filter(p => p.grados.every(g => presentes.includes(g)))
+    .map(p => `<button type="button" class="chip-preset" data-preset="${p.label}">${p.label}</button>`)
+    .join("") || '<span style="font-size:11.5px;color:var(--muted);">Sin parejas disponibles con los datos actuales</span>';
 }
+
+document.getElementById("gradoChips").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-grado]");
+  if (!btn) return;
+  const g = btn.dataset.grado;
+  if (g === "__todos__"){
+    selectedGrados.clear();
+  } else if (selectedGrados.has(g)){
+    selectedGrados.delete(g);
+  } else {
+    selectedGrados.add(g);
+  }
+  renderGradoChips();
+  populateGrupoFilter();
+  renderAll();
+});
+
+document.getElementById("gradoPresets").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-preset]");
+  if (!btn) return;
+  const preset = GRADO_PAIR_PRESETS.find(p => p.label === btn.dataset.preset);
+  if (!preset) return;
+  selectedGrados = new Set(preset.grados);
+  renderGradoChips();
+  populateGrupoFilter();
+  renderAll();
+});
 
 function populateGrupoFilter(){
   const sel = document.getElementById("fGrupo");
-  const grado = document.getElementById("fGrado").value;
   const previamenteSeleccionado = sel.value || "todos";
 
   const grupos = [...new Set(
     STUDENTS
-      .filter(s => grado === "todos" || s.grado === grado)
+      .filter(s => selectedGrados.size === 0 || selectedGrados.has(s.grado))
       .map(s => s.grupo)
   )].sort();
 
@@ -700,10 +831,9 @@ function populateGrupoFilter(){
 }
 
 function getFiltered(){
-  const grado = document.getElementById("fGrado").value;
   const grupo = document.getElementById("fGrupo").value;
   return STUDENTS.filter(s =>
-    (grado === "todos" || s.grado === grado) &&
+    (selectedGrados.size === 0 || selectedGrados.has(s.grado)) &&
     (grupo === "todos" || s.grupo === grupo)
   );
 }
@@ -743,6 +873,14 @@ let chartAreas, chartGrupos;
 
 function renderKPIs(students, modo){
   const kpi = document.getElementById("kpiGrid");
+
+  // Con 2+ grados elegidos explícitamente (comparación de parejas), lo útil
+  // no es un solo número mezclado sino ver cada grado por separado.
+  if (selectedGrados.size >= 2){
+    renderKPIsComparacionGrados(kpi, students, modo);
+    return;
+  }
+
   const cards = [];
 
   cards.push(kpiCard("Estudiantes en el filtro", students.length, ""));
@@ -780,6 +918,29 @@ function kpiCard(label, value, sub, deltaForColor, tono){
 }
 
 function fmt(n){ return n === null || n === undefined ? "—" : (Math.round(n*100)/100).toString(); }
+
+// Una tarjeta de Puntaje Global por cada grado seleccionado, en vez de un
+// único número mezclado — así "6°-7°" realmente compara, no promedia.
+function renderKPIsComparacionGrados(kpi, students, modo){
+  const grados = ORDEN_GRADOS.filter(g => selectedGrados.has(g));
+  const cards = grados.map(g => {
+    const subset = students.filter(s => s.grado === g);
+    if (modo === "comparativo"){
+      const a1 = aggregate(subset, "s1"), a2 = aggregate(subset, "s2");
+      const dif = (a1.global !== null && a2.global !== null) ? (a2.global - a1.global) : null;
+      const sub = a1.count + a1.count === 0 ? "" : (a2.count + "/" + a2.totalEstudiantes + " con datos S2");
+      return kpiCard(
+        g + " · Global S1 → S2",
+        fmt(a1.global) + " → " + fmt(a2.global),
+        dif !== null ? ((dif >= 0 ? "+" : "") + fmt(dif) + " pts") : sub,
+        dif
+      );
+    }
+    const a = aggregate(subset, modo);
+    return kpiCard(g + " · Puntaje Global", fmt(a.global), a.count + "/" + a.totalEstudiantes + " con datos");
+  });
+  kpi.innerHTML = cards.join("");
+}
 
 /* ============================================================
  * RENDER: Niveles de Desempeño por área (barras apiladas al 100%)
@@ -1035,8 +1196,7 @@ function renderCharts(students, modo){
   const gold = "#c9a24b", red = "#c40016";
 
   const context = syncToggles();
-  const grado = document.getElementById("fGrado").value;
-  const gradoLabel = grado !== "todos" ? grado : "Todos";
+  const gradoLabel = selectedGrados.size === 1 ? [...selectedGrados][0] : "Todos";
 
   renderAreasChart(ctxA, students, modo, gold, red, vistaAreas, context);
   renderBoxplotChart(ctxG, students, modo, gold, red, vistaBox, context, gradoLabel);
@@ -1154,11 +1314,13 @@ const OPCIONES_TODOTODO_BOX = [
 ];
 
 function currentDistribContext(){
-  const grado = document.getElementById("fGrado").value;
   const grupoSel = document.getElementById("fGrupo").value;
   if (grupoSel !== "todos") return "grupoEspecifico"; // un solo grupo: sin selector
-  if (grado === "todos") return "todoTodo";
-  return "gradoEspecifico";
+  if (selectedGrados.size === 1) return "gradoEspecifico";
+  // 0 grados (= Todos) o 2+ grados (comparación explícita): en ambos casos
+  // las vistas "por grado" ya recorren dinámicamente los grados presentes
+  // en los estudiantes filtrados, así que reutilizan la misma rama.
+  return "todoTodo";
 }
 
 function renderToggleButtons(containerId, options, current){
@@ -1543,7 +1705,6 @@ function showChartUnavailable(){
 }
 
 document.getElementById("fSimulacro").addEventListener("change", renderAll);
-document.getElementById("fGrado").addEventListener("change", () => { populateGrupoFilter(); renderAll(); });
 document.getElementById("fGrupo").addEventListener("change", renderAll);
 document.getElementById("btnConnect").addEventListener("click", () => {
   const url = document.getElementById("csvUrlInput").value.trim();
@@ -1560,10 +1721,216 @@ document.getElementById("fileInput").addEventListener("change", (e) => {
   reader.readAsText(file, "UTF-8");
 });
 
-// Auto-carga si CONFIG.csvUrl ya está configurado. Silenciosa: si el
-// archivo aún no existe (por ejemplo, recién publicado y falta subir el
-// CSV), simplemente se queda en la pantalla de conexión sin alertas.
-if (CONFIG.csvUrl) loadFromUrl(CONFIG.csvUrl, true);
+/* ============================================================
+ * SEGUIMIENTO DE COHORTE (comparar el mismo grupo de estudiantes
+ * entre dos años, ej. Sexto-2025 vs Séptimo-2026)
+ * ============================================================
+ * Cruce por NOMBRE normalizado (no por Documento, por restricción de
+ * datos personales). Esto es menos confiable que un cruce por
+ * documento, así que:
+ *   - Si el mismo nombre normalizado aparece más de una vez dentro del
+ *     mismo grado/año, esos estudiantes se excluyen del cruce
+ *     automático y se cuentan aparte como "ambiguos".
+ *   - El resultado siempre muestra cuántos estudiantes del grado base
+ *     lograron cruce confiable, para que se sepa qué tan representativo
+ *     es el promedio mostrado.
+ *
+ * NOTA: esta sección todavía no se ha probado contra un CSV real de un
+ * año anterior (ej. 2025) — la estructura de comparativosimulacros.csv
+ * se asume idéntica entre años, pero conviene confirmarlo con datos
+ * reales antes de confiar en el resultado en producción.
+ * ============================================================ */
+const CACHE_ANIOS = {}; // Año -> array de estudiantes (mismo formato que STUDENTS)
+
+function normalizarNombre(nombre){
+  return (nombre || "")
+    .toString()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quita tildes
+    .toUpperCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function cargarAnio(anio){
+  if (CACHE_ANIOS[anio]) return Promise.resolve(CACHE_ANIOS[anio]);
+  const archivo = CONFIG.anios[anio];
+  if (!archivo) return Promise.reject(new Error("No hay archivo configurado para el año " + anio));
+  const url = archivo + (archivo.includes("?") ? "&" : "?") + "t=" + Date.now();
+  return fetch(url, { cache: "no-store" })
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status + " al leer " + archivo); return r.text(); })
+    .then(csv => {
+      const rows = Papa.parse(csv, { skipEmptyLines: false }).data;
+      const estudiantes = buildStudents(rows);
+      CACHE_ANIOS[anio] = estudiantes;
+      return estudiantes;
+    });
+}
+
+function poblarSelectsCohorte(){
+  const anios = Object.keys(CONFIG.anios).sort().reverse(); // más reciente primero
+  const optsAnios = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  const optsGrados = ORDEN_GRADOS.map(g => `<option value="${g}">${g}</option>`).join("");
+
+  document.getElementById("cohorteAnioBase").innerHTML = optsAnios;
+  document.getElementById("cohorteAnioDestino").innerHTML = optsAnios;
+  document.getElementById("cohorteGradoBase").innerHTML = optsGrados;
+  document.getElementById("cohorteGradoDestino").innerHTML = optsGrados;
+
+  // Default razonable: año más antiguo disponible como base, el más
+  // reciente como destino, y "un grado más" como grado destino cuando
+  // existe en la lista (ej. Sexto -> Séptimo).
+  if (anios.length >= 2){
+    document.getElementById("cohorteAnioBase").value = anios[anios.length - 1];
+    document.getElementById("cohorteAnioDestino").value = anios[0];
+  }
+  document.getElementById("cohorteGradoBase").value = ORDEN_GRADOS[0];
+  const idxSiguiente = Math.min(1, ORDEN_GRADOS.length - 1);
+  document.getElementById("cohorteGradoDestino").value = ORDEN_GRADOS[idxSiguiente];
+}
+
+function compararCohorte(){
+  const anioBase = document.getElementById("cohorteAnioBase").value;
+  const gradoBase = document.getElementById("cohorteGradoBase").value;
+  const anioDestino = document.getElementById("cohorteAnioDestino").value;
+  const gradoDestino = document.getElementById("cohorteGradoDestino").value;
+
+  const estadoEl = document.getElementById("cohorteEstado");
+  const kpiEl = document.getElementById("cohorteKpiGrid");
+  const tabla = document.getElementById("cohorteTable");
+  const tbody = document.getElementById("cohorteTableBody");
+
+  estadoEl.textContent = "Cargando datos de " + anioBase + " y " + anioDestino + "…";
+  kpiEl.innerHTML = "";
+  tabla.style.display = "none";
+  tbody.innerHTML = "";
+
+  Promise.all([cargarAnio(anioBase), cargarAnio(anioDestino)])
+    .then(([estudiantesBase, estudiantesDestino]) => {
+      const poolBase = estudiantesBase.filter(s => s.grado === gradoBase);
+      const poolDestino = estudiantesDestino.filter(s => s.grado === gradoDestino);
+
+      // Detectar nombres normalizados duplicados dentro de cada pool —
+      // esos estudiantes no se emparejan automáticamente (ver nota arriba).
+      const contarNombres = (pool) => {
+        const conteo = {};
+        pool.forEach(s => {
+          const n = normalizarNombre(s.nombre);
+          conteo[n] = (conteo[n] || 0) + 1;
+        });
+        return conteo;
+      };
+      const conteoBase = contarNombres(poolBase);
+      const conteoDestino = contarNombres(poolDestino);
+
+      const mapaDestino = {};
+      poolDestino.forEach(s => { mapaDestino[normalizarNombre(s.nombre)] = s; });
+
+      let emparejados = [], sinPareja = 0, ambiguos = 0;
+
+      poolBase.forEach(s => {
+        const n = normalizarNombre(s.nombre);
+        if (conteoBase[n] > 1 || (conteoDestino[n] || 0) > 1){
+          ambiguos++;
+          return;
+        }
+        const match = mapaDestino[n];
+        if (!match){
+          sinPareja++;
+          return;
+        }
+        emparejados.push({ base: s, destino: match });
+      });
+
+      // Puntaje Global de referencia por año: Segundo Simulacro (el dato
+      // más completo/reciente de cada año), igual criterio que usa el
+      // Cuadro de Honor en modo Comparativo.
+      const globalBase = (s) => s.s2 ? s.s2.global : null;
+      const globalDestino = (s) => s.s2 ? s.s2.global : null;
+
+      const conAmbosPuntajes = emparejados.filter(p => globalBase(p.base) !== null && globalDestino(p.destino) !== null);
+      const promedioBase = avg(conAmbosPuntajes.map(p => globalBase(p.base)));
+      const promedioDestino = avg(conAmbosPuntajes.map(p => globalDestino(p.destino)));
+      const variacion = (promedioBase !== null && promedioDestino !== null) ? (promedioDestino - promedioBase) : null;
+
+      estadoEl.textContent =
+        poolBase.length + " estudiantes en " + gradoBase + " (" + anioBase + ") · " +
+        emparejados.length + " emparejados con confianza · " +
+        sinPareja + " sin pareja en " + gradoDestino + " (" + anioDestino + ") · " +
+        ambiguos + " ambiguos (nombre repetido, excluidos del cruce)";
+
+      kpiEl.innerHTML = [
+        kpiCard(gradoBase + " " + anioBase + " · Global promedio", fmt(promedioBase), conAmbosPuntajes.length + " estudiantes con dato"),
+        kpiCard(gradoDestino + " " + anioDestino + " · Global promedio", fmt(promedioDestino), conAmbosPuntajes.length + " estudiantes con dato"),
+        kpiCard("Variación del cohorte", variacion !== null ? ((variacion >= 0 ? "+" : "") + fmt(variacion)) : "—", "", variacion),
+      ].join("");
+
+      if (emparejados.length){
+        tabla.style.display = "";
+        tbody.innerHTML = emparejados
+          .sort((a, b) => a.base.nombre.localeCompare(b.base.nombre))
+          .map(p => {
+            const gb = globalBase(p.base), gd = globalDestino(p.destino);
+            const dif = (gb !== null && gd !== null) ? (gd - gb) : null;
+            const cls = dif === null ? "flat" : (dif > 0 ? "up" : (dif < 0 ? "down" : "flat"));
+            const arrow = dif === null ? "" : (dif > 0 ? "▲" : (dif < 0 ? "▼" : "＝"));
+            return `<tr>
+              <td>${p.base.nombre}</td>
+              <td>${p.base.grupo}</td>
+              <td class="num">${fmt(gb)}</td>
+              <td>${p.destino.grupo}</td>
+              <td class="num">${fmt(gd)}</td>
+              <td class="num"><span class="delta-chip ${cls}">${arrow} ${dif===null?"—":fmt(Math.abs(dif))}</span></td>
+            </tr>`;
+          }).join("");
+      }
+    })
+    .catch(err => {
+      estadoEl.textContent = "No se pudo completar la comparación: " + err.message;
+      console.error(err);
+    });
+}
+
+poblarSelectsCohorte();
+document.getElementById("btnCompararCohorte").addEventListener("click", compararCohorte);
+
+/* ============================================================
+ * SELECTOR DE AÑO DEL DASHBOARD PRINCIPAL
+ * ============================================================
+ * Permite navegar cada año de forma individual (no solo comparar en el
+ * Seguimiento de Cohorte). Usa la misma caché (CACHE_ANIOS) que el
+ * Seguimiento de Cohorte, así que si ya cargaste un año ahí, aquí no se
+ * vuelve a descargar. Al abrir el dashboard, se selecciona y carga
+ * automáticamente el año más reciente configurado en CONFIG.anios.
+ * ============================================================ */
+function poblarSelectorAnioPrincipal(){
+  const anios = Object.keys(CONFIG.anios).sort().reverse(); // más reciente primero
+  const sel = document.getElementById("fAnio");
+  sel.innerHTML = anios.map(a => `<option value="${a}">${a}</option>`).join("");
+  return anios;
+}
+
+function cargarAnioPrincipal(anio, silencioso){
+  setStatus(false, "Cargando " + anio + "…");
+  cargarAnio(anio)
+    .then(estudiantes => aplicarEstudiantesCargados(estudiantes))
+    .catch(err => {
+      setStatus(false, "Sin datos cargados");
+      console.error(err);
+      if (!silencioso){
+        alert("No fue posible cargar los datos de " + anio + ".\n\n" + err.message);
+      }
+    });
+}
+
+document.getElementById("fAnio").addEventListener("change", (e) => {
+  cargarAnioPrincipal(e.target.value, false);
+});
+
+const aniosPrincipal = poblarSelectorAnioPrincipal();
+if (aniosPrincipal.length){
+  document.getElementById("fAnio").value = aniosPrincipal[0]; // el más reciente
+  cargarAnioPrincipal(aniosPrincipal[0], true);
+}
 </script>
 </body>
 </html>
