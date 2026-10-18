@@ -29,6 +29,9 @@
   
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  /* Red de seguridad: evita que un tooltip ancho (gráfico de cajas,
+     sobre todo) empuje la página entera a hacer scroll horizontal. */
+  html, body{ overflow-x:hidden; max-width:100%; }
   body{
     margin:0;
     background:var(--paper);
@@ -209,6 +212,8 @@
   }
   .chip-grado:hover{ border-color:var(--gold); }
   .chip-grado.active{ background:var(--red); color:#fff; border-color:var(--red); }
+  .chip-grado:disabled{ opacity:0.38; cursor:not-allowed; }
+  .chip-grado:disabled:hover{ border-color:var(--border); }
   .chip-preset{
     font-size:11.5px; padding:5px 10px; border:1px dashed var(--border); background:var(--surface);
     border-radius:8px; cursor:pointer; color:var(--muted); font-family:'Inter', sans-serif; font-weight:600;
@@ -579,6 +584,7 @@ const CONFIG = {
   anios: {
     "2026": "comparativosimulacros-2026.csv",
     "2025": "comparativosimulacros-2025.csv",
+    "2024": "comparativosimulacros-2024.csv",
   },
   directores: {
     "1001": "Llerzy Torres",
@@ -841,15 +847,32 @@ const GRADO_PAIR_PRESETS = [
 
 function renderGradoChips(){
   const presentes = ORDEN_GRADOS.filter(g => STUDENTS.some(s => s.grado === g));
-
   const chipsEl = document.getElementById("gradoChips");
+  const presetsEl = document.getElementById("gradoPresets");
+
+  // La Prueba Saber 11 real solo existe para Undécimo: en ese modo los
+  // demás grados (y "Todos") se muestran deshabilitados en vez de
+  // simplemente ocultos, para que quede claro que existen pero no
+  // aplican aquí, en lugar de desaparecer sin explicación.
+  const modoSaber11 = document.getElementById("fSimulacro").value === "saber11";
+  if (modoSaber11){
+    const motivo = 'title="La Prueba Saber 11 real solo aplica a Undécimo"';
+    const todosBtn = `<button type="button" class="chip-grado" data-grado="__todos__" disabled ${motivo}>Todos</button>`;
+    const gradoBtns = presentes.map(g => {
+      const esUndecimo = g === "Undécimo";
+      return `<button type="button" class="chip-grado ${esUndecimo ? "active" : ""}" data-grado="${g}" ${esUndecimo ? "" : "disabled " + motivo}>${g}</button>`;
+    }).join("");
+    chipsEl.innerHTML = todosBtn + gradoBtns;
+    presetsEl.innerHTML = '<span style="font-size:11.5px;color:var(--muted);">No disponible en este modo (solo Undécimo)</span>';
+    return;
+  }
+
   const todosBtn = `<button type="button" class="chip-grado ${selectedGrados.size === 0 ? "active" : ""}" data-grado="__todos__">Todos</button>`;
   const gradoBtns = presentes.map(g =>
     `<button type="button" class="chip-grado ${selectedGrados.has(g) ? "active" : ""}" data-grado="${g}">${g}</button>`
   ).join("");
   chipsEl.innerHTML = todosBtn + gradoBtns;
 
-  const presetsEl = document.getElementById("gradoPresets");
   presetsEl.innerHTML = GRADO_PAIR_PRESETS
     .filter(p => p.grados.every(g => presentes.includes(g)))
     .map(p => `<button type="button" class="chip-preset" data-preset="${p.label}">${p.label}</button>`)
@@ -858,7 +881,7 @@ function renderGradoChips(){
 
 document.getElementById("gradoChips").addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-grado]");
-  if (!btn) return;
+  if (!btn || btn.disabled) return;
   const g = btn.dataset.grado;
   if (g === "__todos__"){
     selectedGrados.clear();
@@ -867,6 +890,11 @@ document.getElementById("gradoChips").addEventListener("click", (e) => {
   } else {
     selectedGrados.add(g);
   }
+  // Con 2+ grados seleccionados, el Grupo se reinicia a "Todos": un grupo
+  // específico solo pertenece a UNO de los grados, así que dejarlo fijo
+  // en un grupo del grado anterior ocultaba por completo los datos del
+  // grado recién agregado, sin ninguna pista de por qué no cargaba nada.
+  if (selectedGrados.size >= 2) document.getElementById("fGrupo").value = "todos";
   renderGradoChips();
   populateGrupoFilter();
   renderAll();
@@ -878,6 +906,7 @@ document.getElementById("gradoPresets").addEventListener("click", (e) => {
   const preset = GRADO_PAIR_PRESETS.find(p => p.label === btn.dataset.preset);
   if (!preset) return;
   selectedGrados = new Set(preset.grados);
+  document.getElementById("fGrupo").value = "todos"; // ver nota arriba
   renderGradoChips();
   populateGrupoFilter();
   renderAll();
@@ -1454,8 +1483,10 @@ function currentDistribContext(){
 function renderToggleButtons(containerId, options, current){
   const el = document.getElementById(containerId);
   if (!options){ el.classList.remove("visible"); el.innerHTML = ""; return; }
+  // "title" es opcional: cuando el botón lo trae, se muestra como tooltip
+  // nativo al pasar el puntero (PC) o mantener presionado (móvil).
   el.innerHTML = options.map(o =>
-    `<button type="button" data-view="${o.value}" class="${o.value === current ? "active" : ""}">${o.label}</button>`
+    `<button type="button" data-view="${o.value}" class="${o.value === current ? "active" : ""}" ${o.title ? `title="${o.title}"` : ""}>${o.label}</button>`
   ).join("");
   el.classList.add("visible");
 }
@@ -1501,6 +1532,24 @@ function median(arr){
   const s = [...arr].sort((a,b) => a-b);
   const mid = Math.floor(s.length/2);
   return s.length % 2 ? s[mid] : (s[mid-1] + s[mid]) / 2;
+}
+
+// Tooltip corto (varias líneas cortas) para el diagrama de cajas, en vez
+// del resumen de 5 números en una sola línea larga que trae la librería
+// por defecto (se sale de la pantalla). item.raw trae {min,q1,median,q3,max,mean}
+// cuando el punto corresponde a una caja; si la forma cambiara en una
+// futura versión de la librería, se cae a un texto corto genérico en vez
+// de romper el gráfico.
+function tooltipBoxplotLabel(item){
+  const r = item.raw;
+  if (!r || typeof r.min !== "number" || typeof r.max !== "number"){
+    return item.dataset.label + ": " + fmt(item.parsed && item.parsed.y);
+  }
+  return [
+    item.dataset.label + ":",
+    "Mín " + fmt(r.min) + " · Q1 " + fmt(r.q1) + " · Mediana " + fmt(r.median),
+    "Q3 " + fmt(r.q3) + " · Máx " + fmt(r.max) + " · Media " + fmt(r.mean)
+  ];
 }
 
 function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, gradoLabel){
@@ -1569,7 +1618,15 @@ function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, grad
       options: {
         responsive: true, maintainAspectRatio: false,
         scales: { y: { min: yMin, max: yMax, grid:{ color:"#eee" } }, x: { grid:{ display:false } } },
-        plugins: { legend: { display: modo === "comparativo", position: "top" } }
+        plugins: {
+          legend: { display: modo === "comparativo", position: "top" },
+          // El tooltip por defecto del boxplot arma una sola línea muy
+          // larga ("min: X, 25% quantile: Y, median: Z, mean: W, 75%
+          // quantile: V, max: U") que se sale de la pantalla en PC y en
+          // móvil. Se reparte en varias líneas cortas para que el tooltip
+          // quede angosto y no se desborde.
+          tooltip: { callbacks: { label: tooltipBoxplotLabel } }
+        }
       }
     });
   } catch (err){
@@ -1868,10 +1925,14 @@ function actualizarAvisoModo(modo, students){
  * encabezado de la tabla.
  */
 let chartEstrategias;
-let vistaEstrategiaTraslape = "incluir"; // "incluir" | "exclusivo"
+let vistaEstrategiaTraslape = "incluir"; // "incluir" | "exclusivo" | "combinadas"
 const OPCIONES_ESTRATEGIA_TRASLAPE = [
-  { value: "incluir", label: "Todos los asistentes" },
-  { value: "exclusivo", label: "Solo asistentes exclusivos" },
+  { value: "incluir", label: "Todos los asistentes",
+    title: "Cada estrategia incluye a todos los que asistieron a ella, aunque también hayan asistido a otra al mismo tiempo." },
+  { value: "exclusivo", label: "Solo exclusivos",
+    title: "Cada estrategia incluye solo a quienes asistieron a ESA y a ninguna otra a la vez: se excluye a quienes combinaron 2 o más estrategias simultáneamente." },
+  { value: "combinadas", label: "Varias a la vez",
+    title: "Compara a quienes combinaron 2 o más estrategias de forma simultánea, frente a quienes asistieron a una sola y a quienes no asistieron a ninguna." },
 ];
 
 function renderEstrategiasSection(){
@@ -1892,24 +1953,37 @@ function renderEstrategiasSection(){
 
   document.getElementById("estrategiasSub").textContent =
     "Compara el Puntaje Global promedio (" + nombreMetrica + ") de los estudiantes de Undécimo según la estrategia de preparación en la que participaron, frente a quienes no participaron en ninguna. " +
-    "Un estudiante puede haber asistido a más de una estrategia a la vez.";
+    "Un estudiante puede haber asistido a más de una estrategia a la vez — usa los botones de abajo para decidir cómo tratar esos casos (pasa el puntero o mantén presionado cada uno para ver qué significa).";
 
   renderToggleButtons("toggleEstrategiaTraslape", OPCIONES_ESTRATEGIA_TRASLAPE, vistaEstrategiaTraslape);
-  const exclusivo = vistaEstrategiaTraslape === "exclusivo";
 
   const ninguna = undecimo.filter(s => s.estrategias.cantidad === 0);
-
-  const grupos = ESTRATEGIAS_INFO.map(e => {
-    let subset = undecimo.filter(s => s.estrategias[e.id]);
-    if (exclusivo) subset = subset.filter(s => s.estrategias.cantidad === 1);
-    const a = aggregate(subset, bloqueMetrica);
-    return { id: e.id, label: e.label, n: subset.length, conDatos: a.count, promedio: a.global };
-  });
-
   const aNinguna = aggregate(ninguna, bloqueMetrica);
   const baseline = { id: "ninguna", label: "Ninguna estrategia", n: ninguna.length, conDatos: aNinguna.count, promedio: aNinguna.global };
 
-  const filas = [...grupos, baseline];
+  let filas;
+  if (vistaEstrategiaTraslape === "combinadas"){
+    // Compara directamente el efecto de combinar varias estrategias a la
+    // vez, en lugar de desglosar por cada estrategia individual.
+    const combinaron = undecimo.filter(s => s.estrategias.cantidad >= 2);
+    const unaSola = undecimo.filter(s => s.estrategias.cantidad === 1);
+    const aComb = aggregate(combinaron, bloqueMetrica);
+    const aUna = aggregate(unaSola, bloqueMetrica);
+    filas = [
+      { id: "combinadas", label: "Combinó 2+ estrategias", n: combinaron.length, conDatos: aComb.count, promedio: aComb.global },
+      { id: "unaSola", label: "Una sola estrategia", n: unaSola.length, conDatos: aUna.count, promedio: aUna.global },
+      baseline
+    ];
+  } else {
+    const exclusivo = vistaEstrategiaTraslape === "exclusivo";
+    const grupos = ESTRATEGIAS_INFO.map(e => {
+      let subset = undecimo.filter(s => s.estrategias[e.id]);
+      if (exclusivo) subset = subset.filter(s => s.estrategias.cantidad === 1);
+      const a = aggregate(subset, bloqueMetrica);
+      return { id: e.id, label: e.label, n: subset.length, conDatos: a.count, promedio: a.global };
+    });
+    filas = [...grupos, baseline];
+  }
 
   if (chartEstrategias) chartEstrategias.destroy();
   if (typeof Chart !== "undefined"){
@@ -1987,13 +2061,17 @@ function showChartUnavailable(){
 
 document.getElementById("fSimulacro").addEventListener("change", (e) => {
   // La Prueba Saber 11 real solo existe para Undécimo: al elegir ese modo,
-  // se enfoca el filtro de Grado automáticamente para evitar una vista
-  // "Todos" llena de grupos sin datos. El usuario puede volver a cambiarlo.
+  // se enfoca el filtro de Grado automáticamente y se deshabilitan los
+  // demás grados (ver renderGradoChips) para evitar una vista "Todos"
+  // llena de grupos sin datos. Al salir del modo, los chips se vuelven a
+  // habilitar normalmente. renderGradoChips() y populateGrupoFilter() se
+  // llaman siempre, entrando o saliendo del modo, para que los chips
+  // reflejen correctamente el modo activo en ambos sentidos.
   if (e.target.value === "saber11" && !(selectedGrados.size === 1 && selectedGrados.has("Undécimo"))){
     selectedGrados = new Set(["Undécimo"]);
-    renderGradoChips();
-    populateGrupoFilter();
   }
+  renderGradoChips();
+  populateGrupoFilter();
   renderAll();
 });
 document.getElementById("fGrupo").addEventListener("change", renderAll);
