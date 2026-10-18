@@ -32,6 +32,24 @@
   /* Red de seguridad: evita que un tooltip ancho (gráfico de cajas,
      sobre todo) empuje la página entera a hacer scroll horizontal. */
   html, body{ overflow-x:hidden; max-width:100%; }
+  /* Tooltip "externo" del diagrama de cajas y alambres: en vez del
+     tooltip nativo de Chart.js (que se dibuja dentro del canvas y puede
+     salirse de la pantalla si el punto está cerca de un borde), este es
+     un <div> normal fijado con position:fixed y recortado (clamp) para
+     que SIEMPRE quede dentro del viewport, sin importar en qué parte
+     del gráfico esté el cursor. */
+  .chart-tooltip{
+    position:fixed; z-index:9999; pointer-events:none;
+    background:rgba(26,22,20,0.95); color:#fff;
+    padding:9px 12px; border-radius:8px;
+    font-family:'Inter', system-ui, sans-serif;
+    font-size:12.5px; line-height:1.55;
+    max-width:min(260px, 86vw);
+    box-shadow:0 4px 16px rgba(0,0,0,.28);
+    opacity:0; transition:opacity .08s ease-out;
+  }
+  .chart-tooltip .ct-title{ font-weight:700; margin-bottom:3px; }
+  .chart-tooltip .ct-line{ white-space:normal; }
   body{
     margin:0;
     background:var(--paper);
@@ -492,8 +510,9 @@
     <div class="section" id="cohorteSection">
       <h2>Seguimiento de Cohorte</h2>
       <div class="section-sub">
-        Compara el mismo grupo de estudiantes entre dos años (ej. Sexto en 2025 frente a Séptimo en 2026).
-        El cruce se hace por nombre normalizado, no por documento — revisa las notas de confianza del resultado.
+        Compara el <strong>Segundo Simulacro</strong> del año base contra el <strong>Segundo Simulacro</strong>
+        del año destino, para el mismo grupo de estudiantes entre dos años (ej. Sexto en 2025 frente a Séptimo
+        en 2026). El cruce se hace por nombre normalizado, no por documento — revisa las notas de confianza del resultado.
       </div>
       <div class="filterbar" style="margin-bottom:14px;">
         <div class="field">
@@ -517,16 +536,26 @@
       </div>
       <div id="cohorteEstado" style="font-size:13.5px; color:var(--muted); margin-bottom:14px;"></div>
       <div class="kpi-grid" id="cohorteKpiGrid"></div>
+      <div class="filterbar" id="cohorteFiltrosResultado" style="display:none; margin:14px 0;">
+        <div class="field">
+          <label for="cohorteFiltroGrupoBase">Filtrar grupo (año base)</label>
+          <select id="cohorteFiltroGrupoBase"><option value="todos">Todos</option></select>
+        </div>
+        <div class="field">
+          <label for="cohorteFiltroGrupoDestino">Filtrar grupo (año destino)</label>
+          <select id="cohorteFiltroGrupoDestino"><option value="todos">Todos</option></select>
+        </div>
+      </div>
       <div style="overflow-x:auto;">
         <table class="results" id="cohorteTable" style="display:none;">
           <thead>
-            <tr>
-              <th>Estudiante</th>
-              <th>Grupo base</th>
-              <th>Global año base</th>
-              <th>Grupo destino</th>
-              <th>Global año destino</th>
-              <th>Variación</th>
+            <tr id="cohorteTableHead">
+              <th data-key="nombre">Estudiante</th>
+              <th data-key="grupoBase">Grupo base</th>
+              <th data-key="globalBase">Global año base</th>
+              <th data-key="grupoDestino">Grupo destino</th>
+              <th data-key="globalDestino">Global año destino</th>
+              <th data-key="variacion">Variación</th>
             </tr>
           </thead>
           <tbody id="cohorteTableBody"></tbody>
@@ -741,6 +770,22 @@ function aplicarEstudiantesCargados(estudiantes){
   renderGradoChips();
   populateGrupoFilter();
   aplicarPreseleccionDocente();
+
+  // Causa real del bug "cambio de año no actualiza en Prueba Saber 11
+  // real": aplicarPreseleccionDocente() de arriba puede reasignar
+  // selectedGrados al grupo propio del docente (ej. Décimo) cada vez que
+  // se cargan datos, incluido un cambio de año — eso saca al filtro de
+  // Undécimo sin que nada lo avise, y el panel queda mostrando "0
+  // estudiantes" hasta que se vuelve a elegir "Prueba Saber 11 (real)" a
+  // mano. Como esa prueba solo existe para Undécimo, se vuelve a fijar
+  // aquí si el modo activo sigue siendo ese.
+  if (document.getElementById("fSimulacro").value === "saber11" &&
+      !(selectedGrados.size === 1 && selectedGrados.has("Undécimo"))){
+    selectedGrados = new Set(["Undécimo"]);
+    renderGradoChips();
+    populateGrupoFilter();
+  }
+
   renderAll();
 }
 
@@ -1546,10 +1591,70 @@ function tooltipBoxplotLabel(item){
     return item.dataset.label + ": " + fmt(item.parsed && item.parsed.y);
   }
   return [
-    item.dataset.label + ":",
-    "Mín " + fmt(r.min) + " · Q1 " + fmt(r.q1) + " · Mediana " + fmt(r.median),
-    "Q3 " + fmt(r.q3) + " · Máx " + fmt(r.max) + " · Media " + fmt(r.mean)
+    "Mín " + fmt(r.min) + " · Q1 " + fmt(r.q1),
+    "Mediana " + fmt(r.median),
+    "Q3 " + fmt(r.q3) + " · Máx " + fmt(r.max)
   ];
+}
+
+function escaparHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[c]));
+}
+
+function obtenerTooltipEl(){
+  let el = document.getElementById("chartTooltipEl");
+  if (!el){
+    el = document.createElement("div");
+    el.id = "chartTooltipEl";
+    el.className = "chart-tooltip";
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+// Handler de tooltip "externo" de Chart.js: en vez de que la librería
+// dibuje el tooltip dentro del <canvas> (lo que puede salirse de la
+// pantalla cerca de los bordes), dibujamos un <div> normal con
+// position:fixed y lo recortamos (clamp) a las dimensiones reales de la
+// ventana, así el recuadro SIEMPRE se ve completo sin cortes, tanto en
+// PC como en móvil. El contenido (título + líneas) lo sigue armando el
+// callback normal de Chart.js (tooltip.title / tooltip.body).
+function externalTooltipHandler(context){
+  const { chart, tooltip } = context;
+  const el = obtenerTooltipEl();
+
+  if (!tooltip || tooltip.opacity === 0){
+    el.style.opacity = "0";
+    return;
+  }
+
+  const titleLines = tooltip.title || [];
+  const bodyLines = (tooltip.body || []).flatMap(b => b.lines);
+
+  let html = "";
+  titleLines.forEach(t => { html += '<div class="ct-title">' + escaparHtml(t) + "</div>"; });
+  bodyLines.forEach(l => { html += '<div class="ct-line">' + escaparHtml(l) + "</div>"; });
+  el.innerHTML = html;
+
+  const canvasRect = chart.canvas.getBoundingClientRect();
+  el.style.opacity = "1";
+  el.style.left = "0px";
+  el.style.top = "0px";
+  const tw = el.offsetWidth, th = el.offsetHeight;
+
+  let x = canvasRect.left + tooltip.caretX + 12;
+  let y = canvasRect.top + tooltip.caretY - th - 10;
+
+  const margen = 8;
+  const maxX = window.innerWidth - tw - margen;
+  const maxY = window.innerHeight - th - margen;
+  x = Math.min(Math.max(x, margen), Math.max(margen, maxX));
+  y = Math.min(Math.max(y, margen), Math.max(margen, maxY));
+
+  el.style.left = x + "px";
+  el.style.top = y + "px";
 }
 
 function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, gradoLabel){
@@ -1623,9 +1728,11 @@ function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, grad
           // El tooltip por defecto del boxplot arma una sola línea muy
           // larga ("min: X, 25% quantile: Y, median: Z, mean: W, 75%
           // quantile: V, max: U") que se sale de la pantalla en PC y en
-          // móvil. Se reparte en varias líneas cortas para que el tooltip
-          // quede angosto y no se desborde.
-          tooltip: { callbacks: { label: tooltipBoxplotLabel } }
+          // móvil. Se desactiva el dibujo nativo (enabled:false) y se usa
+          // un tooltip HTML externo (externalTooltipHandler) que se
+          // recorta siempre dentro de la ventana; el contenido de cada
+          // línea lo sigue decidiendo tooltipBoxplotLabel.
+          tooltip: { enabled: false, external: externalTooltipHandler, callbacks: { label: tooltipBoxplotLabel } }
         }
       }
     });
@@ -1644,7 +1751,10 @@ function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, grad
       options: {
         indexAxis:"y", responsive:true, maintainAspectRatio:false,
         scales: { x:{ min:yMin, max:yMax, grid:{ color:"#eee" } }, y:{ grid:{ display:false } } },
-        plugins: { legend: { display: modo === "comparativo", position:"top" } }
+        plugins: {
+          legend: { display: modo === "comparativo", position:"top" },
+          tooltip: { enabled: false, external: externalTooltipHandler }
+        }
       }
     });
   }
@@ -2157,6 +2267,82 @@ function poblarSelectsCohorte(){
   document.getElementById("cohorteGradoDestino").value = ORDEN_GRADOS[idxSiguiente];
 }
 
+// Estado del resultado de la última comparación, para poder re-filtrar y
+// re-ordenar sin tener que volver a cargar/cruzar los datos cada vez.
+let cohorteEmparejados = [];
+let cohorteSort = { key: "variacion", dir: "desc" };
+
+function poblarFiltrosGrupoCohorte(emparejados){
+  const selBase = document.getElementById("cohorteFiltroGrupoBase");
+  const selDestino = document.getElementById("cohorteFiltroGrupoDestino");
+  const gruposBase = [...new Set(emparejados.map(p => p.base.grupo))].sort();
+  const gruposDestino = [...new Set(emparejados.map(p => p.destino.grupo))].sort();
+
+  selBase.innerHTML = '<option value="todos">Todos</option>' +
+    gruposBase.map(g => `<option value="${g}">${g}</option>`).join("");
+  selDestino.innerHTML = '<option value="todos">Todos</option>' +
+    gruposDestino.map(g => `<option value="${g}">${g}</option>`).join("");
+
+  document.getElementById("cohorteFiltrosResultado").style.display = emparejados.length ? "" : "none";
+}
+
+// Vuelve a dibujar SOLO la tabla (filtrada por los selects de grupo y
+// ordenada por la columna activa), sin re-cargar ni re-cruzar los datos.
+// Se llama tanto al terminar compararCohorte() como cada vez que el
+// usuario cambia un filtro de grupo o hace clic en un encabezado.
+function renderCohorteTabla(){
+  const tabla = document.getElementById("cohorteTable");
+  const tbody = document.getElementById("cohorteTableBody");
+  const filtroBase = document.getElementById("cohorteFiltroGrupoBase").value;
+  const filtroDestino = document.getElementById("cohorteFiltroGrupoDestino").value;
+
+  if (!cohorteEmparejados.length){
+    tabla.style.display = "none";
+    tbody.innerHTML = "";
+    return;
+  }
+
+  const globalBase = (s) => s.s2 ? s.s2.global : null;
+  const globalDestino = (s) => s.s2 ? s.s2.global : null;
+
+  let filas = cohorteEmparejados
+    .filter(p => filtroBase === "todos" || p.base.grupo === filtroBase)
+    .filter(p => filtroDestino === "todos" || p.destino.grupo === filtroDestino)
+    .map(p => {
+      const gb = globalBase(p.base), gd = globalDestino(p.destino);
+      const dif = (gb !== null && gd !== null) ? (gd - gb) : null;
+      return { nombre: p.base.nombre, grupoBase: p.base.grupo, globalBase: gb, grupoDestino: p.destino.grupo, globalDestino: gd, variacion: dif };
+    });
+
+  filas.sort((a, b) => {
+    let av = a[cohorteSort.key], bv = b[cohorteSort.key];
+    if (av === null || av === undefined) av = -Infinity;
+    if (bv === null || bv === undefined) bv = -Infinity;
+    if (typeof av === "string") return cohorteSort.dir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
+    return cohorteSort.dir === "asc" ? av - bv : bv - av;
+  });
+
+  document.querySelectorAll("#cohorteTableHead th").forEach(th => {
+    const arrow = th.dataset.key === cohorteSort.key ? `<span class="arrow">${cohorteSort.dir === "asc" ? "↑" : "↓"}</span>` : "";
+    th.innerHTML = th.textContent.replace(/[↑↓]/g, "").trim() + arrow;
+  });
+
+  tabla.style.display = filas.length ? "" : "none";
+  tbody.innerHTML = filas.map(r => {
+    const dif = r.variacion;
+    const cls = dif === null ? "flat" : (dif > 0 ? "up" : (dif < 0 ? "down" : "flat"));
+    const arrow = dif === null ? "" : (dif > 0 ? "▲" : (dif < 0 ? "▼" : "＝"));
+    return `<tr>
+      <td>${r.nombre}</td>
+      <td>${r.grupoBase}</td>
+      <td class="num">${fmt(r.globalBase)}</td>
+      <td>${r.grupoDestino}</td>
+      <td class="num">${fmt(r.globalDestino)}</td>
+      <td class="num"><span class="delta-chip ${cls}">${arrow} ${dif===null?"—":fmt(Math.abs(dif))}</span></td>
+    </tr>`;
+  }).join("");
+}
+
 function compararCohorte(){
   const anioBase = document.getElementById("cohorteAnioBase").value;
   const gradoBase = document.getElementById("cohorteGradoBase").value;
@@ -2172,6 +2358,7 @@ function compararCohorte(){
   kpiEl.innerHTML = "";
   tabla.style.display = "none";
   tbody.innerHTML = "";
+  document.getElementById("cohorteFiltrosResultado").style.display = "none";
 
   Promise.all([cargarAnio(anioBase), cargarAnio(anioDestino)])
     .then(([estudiantesBase, estudiantesDestino]) => {
@@ -2233,34 +2420,30 @@ function compararCohorte(){
         kpiCard("Variación del cohorte", variacion !== null ? ((variacion >= 0 ? "+" : "") + fmt(variacion)) : "—", "", variacion),
       ].join("");
 
-      if (emparejados.length){
-        tabla.style.display = "";
-        tbody.innerHTML = emparejados
-          .sort((a, b) => a.base.nombre.localeCompare(b.base.nombre))
-          .map(p => {
-            const gb = globalBase(p.base), gd = globalDestino(p.destino);
-            const dif = (gb !== null && gd !== null) ? (gd - gb) : null;
-            const cls = dif === null ? "flat" : (dif > 0 ? "up" : (dif < 0 ? "down" : "flat"));
-            const arrow = dif === null ? "" : (dif > 0 ? "▲" : (dif < 0 ? "▼" : "＝"));
-            return `<tr>
-              <td>${p.base.nombre}</td>
-              <td>${p.base.grupo}</td>
-              <td class="num">${fmt(gb)}</td>
-              <td>${p.destino.grupo}</td>
-              <td class="num">${fmt(gd)}</td>
-              <td class="num"><span class="delta-chip ${cls}">${arrow} ${dif===null?"—":fmt(Math.abs(dif))}</span></td>
-            </tr>`;
-          }).join("");
-      }
+      cohorteEmparejados = emparejados;
+      poblarFiltrosGrupoCohorte(emparejados);
+      renderCohorteTabla();
     })
     .catch(err => {
       estadoEl.textContent = "No se pudo completar la comparación: " + err.message;
       console.error(err);
+      cohorteEmparejados = [];
+      poblarFiltrosGrupoCohorte([]);
     });
 }
 
 poblarSelectsCohorte();
 document.getElementById("btnCompararCohorte").addEventListener("click", compararCohorte);
+document.getElementById("cohorteFiltroGrupoBase").addEventListener("change", renderCohorteTabla);
+document.getElementById("cohorteFiltroGrupoDestino").addEventListener("change", renderCohorteTabla);
+document.querySelectorAll("#cohorteTableHead th").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    if (cohorteSort.key === key) cohorteSort.dir = cohorteSort.dir === "asc" ? "desc" : "asc";
+    else { cohorteSort = { key, dir: "desc" }; }
+    renderCohorteTabla();
+  });
+});
 
 /* ============================================================
  * SELECTOR DE AÑO DEL DASHBOARD PRINCIPAL
