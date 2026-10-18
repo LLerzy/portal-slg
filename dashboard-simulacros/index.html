@@ -385,6 +385,7 @@
   <div id="dashboard" style="display:none;">
 
     <p class="aviso-alcance" id="avisoAlcance"></p>
+    <p class="aviso-alcance" id="avisoModo"></p>
 
     <div class="filterbar">
       <div class="field">
@@ -397,6 +398,7 @@
           <option value="comparativo">Comparativo (S1 vs S2)</option>
           <option value="s1">Primer Simulacro</option>
           <option value="s2">Segundo Simulacro</option>
+          <option value="saber11">Prueba Saber 11 (real)</option>
         </select>
       </div>
       <div class="field field-grados">
@@ -463,6 +465,21 @@
         <table class="results" id="resultsTable">
           <thead><tr id="tableHead"></tr></thead>
           <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="estrategiasSection" style="display:none;">
+      <h2>Comparación de Estrategias de Preparación (Undécimo)</h2>
+      <div class="section-sub" id="estrategiasSub"></div>
+      <div class="view-toggle visible" id="toggleEstrategiaTraslape" style="margin-bottom:14px;"></div>
+      <div class="chart-grid single">
+        <div class="chart-box"><canvas id="chartEstrategias"></canvas></div>
+      </div>
+      <div style="overflow-x:auto; margin-top:18px;">
+        <table class="results" id="tablaEstrategias">
+          <thead><tr id="estrategiasTableHead"></tr></thead>
+          <tbody id="tablaEstrategiasBody"></tbody>
         </table>
       </div>
     </div>
@@ -591,6 +608,23 @@ const BLOQUES = [
   { id:"s2", nombre:"Segundo Simulacro", col:24 },
 ];
 const FILA_INICIO_DATOS = 3; // fila 4 del Sheet (índice 0-based)
+
+// ---- Prueba Saber 11 real aplicada (solo Undécimo) ----
+// Bloque distinto a los de arriba: no trae posición ni niveles de
+// desempeño, solo Puntaje Global, las 5 áreas y la diferencia ya
+// calculada en el Sheet frente al Segundo Simulacro. Columnas fijas
+// (no usan BLOQUE_ANCHO porque no es un bloque de 14 columnas).
+const COL_SABER11 = { GLOBAL:53, AREA_INICIO:54, DIFERENCIA:59 };
+
+// ---- Estrategias de preparación (solo Undécimo) ----
+// Columnas booleanas ("Sí" / vacío) + un campo de texto libre. Un
+// estudiante puede marcar más de una estrategia a la vez.
+const COL_ESTRATEGIA = { MUNICIPAL:60, SEMESTRE_CERO:61, INTENSIVO:62, OTRA:63 };
+const ESTRATEGIAS_INFO = [
+  { id:"municipal",    label:"Preicfes municipal",  col:COL_ESTRATEGIA.MUNICIPAL },
+  { id:"semestreCero", label:"Semestre cero",       col:COL_ESTRATEGIA.SEMESTRE_CERO },
+  { id:"intensivo",    label:"Preicfes intensivo",  col:COL_ESTRATEGIA.INTENSIVO },
+];
 
 // Orden pedagógico de los grados, usado para poblar el filtro y para las
 // vistas "Por grado" (en vez de asumir que solo existen Décimo/Undécimo).
@@ -728,6 +762,31 @@ function extraerBloque(fila, colInicio){
   return hayDatos ? bloque : null;
 }
 
+// Prueba Saber 11 real (solo Undécimo). No es un bloque de 14 columnas
+// como los simulacros: no trae posición ni niveles de desempeño, solo
+// puntaje global, 5 áreas y la diferencia ya calculada en el Sheet.
+// Devuelve null si el estudiante todavía no tiene resultado real
+// cargado (lo normal mientras el ICFES no publique resultados).
+function extraerSaber11(fila){
+  const areas = [];
+  for (let k=0;k<5;k++) areas.push(leerNum(fila[COL_SABER11.AREA_INICIO + k]));
+  const global = leerNum(fila[COL_SABER11.GLOBAL]);
+  const hayDatos = global !== null || areas.some(a => a !== null);
+  if (!hayDatos) return null;
+  return { global, areas, diferencia: leerNum(fila[COL_SABER11.DIFERENCIA]) };
+}
+
+// Estrategias de preparación (solo Undécimo). Un estudiante puede estar
+// marcado en más de una a la vez (no son excluyentes).
+function extraerEstrategias(fila){
+  const marcado = v => (v || "").toString().trim().toLowerCase() === "sí" || (v || "").toString().trim().toLowerCase() === "si";
+  const estr = {};
+  ESTRATEGIAS_INFO.forEach(e => { estr[e.id] = marcado(fila[e.col]); });
+  estr.otra = (fila[COL_ESTRATEGIA.OTRA] || "").toString().trim();
+  estr.cantidad = ESTRATEGIAS_INFO.reduce((n, e) => n + (estr[e.id] ? 1 : 0), 0);
+  return estr;
+}
+
 // Clasifica el grupo del estudiante en su grado, a partir del código
 // numérico (o "CM" para Caminar). Décimo/Undécimo usan códigos de 4
 // dígitos (10xx/11xx); Sexto a Noveno usan 3 dígitos (6xx-9xx); Caminar
@@ -755,6 +814,8 @@ function buildStudents(rows){
 
     const rec = { grupo, grado: inferirGrado(grupo), documento, nombre };
     BLOQUES.forEach(b => { rec[b.id] = extraerBloque(fila, b.col); });
+    rec.saber11 = extraerSaber11(fila);
+    rec.estrategias = extraerEstrategias(fila);
     out.push(rec);
   }
   return out;
@@ -867,6 +928,23 @@ function aggregate(students, bloqueId){
   };
 }
 
+// Nombre legible de un "modo" (s1/s2/saber11) para leyendas y títulos.
+// "comparativo" no pasa por aquí: cada sitio que lo usa ya tiene su
+// propio manejo especial para ese caso.
+function nombreModo(modo){
+  if (modo === "saber11") return "Prueba Saber 11 Real";
+  const b = BLOQUES.find(x => x.id === modo);
+  return b ? b.nombre : modo;
+}
+
+// true si TODOS los estudiantes del filtro actual son de Undécimo (y hay
+// al menos uno). Se usa para decidir si el modo "Comparativo" debe sumar
+// la Prueba Saber 11 real como una tercera serie, ya que esa prueba solo
+// aplica a este grado.
+function esSoloUndecimo(students){
+  return students.length > 0 && students.every(s => s.grado === "Undécimo");
+}
+
 function aggregateByGrupo(students, bloqueId){
   const grupos = [...new Set(students.map(s => s.grupo))].sort();
   return grupos.map(g => {
@@ -902,6 +980,18 @@ function renderKPIs(students, modo){
     cards.push(kpiCard("Puntaje Global · S1", fmt(a1.global), a1.count + "/" + a1.totalEstudiantes + " con datos"));
     cards.push(kpiCard("Puntaje Global · S2", fmt(a2.global), a2.count + "/" + a2.totalEstudiantes + " con datos"));
     cards.push(kpiCard("Variación S1 → S2", dif !== null ? (dif>=0?"+":"") + fmt(dif) : "—", "", dif));
+
+    // Para Undécimo, el Comparativo suma la Prueba Saber 11 real como
+    // tercera columna (solo aplica a este grado, y solo una vez que haya
+    // resultados cargados).
+    if (esSoloUndecimo(students)){
+      const a3 = aggregate(students, "saber11");
+      if (a3.count > 0){
+        const difReal = (a2.global !== null && a3.global !== null) ? (a3.global - a2.global) : null;
+        cards.push(kpiCard("Puntaje Global · Saber 11 Real", fmt(a3.global), a3.count + "/" + a3.totalEstudiantes + " con datos"));
+        cards.push(kpiCard("Variación S2 → Saber 11 Real", difReal !== null ? (difReal>=0?"+":"") + fmt(difReal) : "—", "", difReal));
+      }
+    }
   } else {
     const a = aggregate(students, modo);
     cards.push(kpiCard("Puntaje Global promedio", fmt(a.global), a.count + "/" + a.totalEstudiantes + " con datos"));
@@ -1070,9 +1160,24 @@ document.getElementById("toggleNiveles").addEventListener("click", (e) => {
 });
 
 function renderNivelesCharts(students, modo){
+  const grid = document.getElementById("nivelesGrid");
+
+  // La Prueba Saber 11 real no trae niveles de desempeño en el Sheet
+  // (solo puntajes), así que esta sección no aplica en ese modo.
+  if (modo === "saber11"){
+    document.getElementById("nivelesLegend").innerHTML = "";
+    renderToggleButtons("toggleNiveles", null, null);
+    grid.className = "chart-grid single";
+    grid.innerHTML = '<p style="color:var(--muted); font-size:13.5px; text-align:center; padding:30px 10px;">' +
+      'El Sheet de la Prueba Saber 11 real solo trae puntajes (Global y por área), no niveles de desempeño. ' +
+      'Esta sección no aplica en este modo — consulta los niveles en el Primer o Segundo Simulacro.</p>';
+    nivelesChartInstances.forEach(c => c.destroy());
+    nivelesChartInstances = [];
+    return;
+  }
+
   renderNivelLegend();
 
-  const grid = document.getElementById("nivelesGrid");
   const context = currentDistribContext();
   const opcionesToggle = context === "gradoEspecifico" ? OPCIONES_GRADO_ESPECIFICO
     : context === "todoTodo" ? OPCIONES_TODOTODO_AREAS
@@ -1189,7 +1294,7 @@ function renderNivelesCharts(students, modo){
     grid.className = "chart-grid single";
     grid.innerHTML = `
       <div>
-        <div class="honor-col-title" style="color:var(--muted);">${BLOQUES.find(b => b.id === modo).nombre}</div>
+        <div class="honor-col-title" style="color:var(--muted);">${nombreModo(modo)}</div>
         <div class="chart-box"><canvas id="chartNiveles1"></canvas></div>
       </div>
     `;
@@ -1255,6 +1360,7 @@ function renderAreasChart(ctx, students, modo, gold, red, vista, context){
       // Cada grupo conserva su color de siempre; el Segundo Simulacro usa
       // el mismo color en versión más clara, así el par S1/S2 de un mismo
       // grupo se identifica de un vistazo aunque haya varios grupos.
+      const sumarSaber11 = esSoloUndecimo(students);
       datasets = [];
       grupos.forEach((g, idx) => {
         const color = GRUPO_COLORS[idx % GRUPO_COLORS.length];
@@ -1262,6 +1368,12 @@ function renderAreasChart(ctx, students, modo, gold, red, vista, context){
         const a1 = aggregate(subset, "s1"), a2 = aggregate(subset, "s2");
         datasets.push({ label: "Grupo " + g + " · S1", data: a1.areas, backgroundColor: color, borderRadius: 4 });
         datasets.push({ label: "Grupo " + g + " · S2", data: a2.areas, backgroundColor: hexToRgba(color, 0.5), borderRadius: 4 });
+        if (sumarSaber11){
+          const a3 = aggregate(subset, "saber11");
+          if (a3.count > 0){
+            datasets.push({ label: "Grupo " + g + " · Saber 11 Real", data: a3.areas, backgroundColor: hexToRgba(color, 0.22), borderRadius: 4 });
+          }
+        }
       });
     } else {
       const porGrupo = aggregateByGrupo(students, modo);
@@ -1279,10 +1391,16 @@ function renderAreasChart(ctx, students, modo, gold, red, vista, context){
       { label: "Primer Simulacro", data: a1.areas, backgroundColor: gold, borderRadius: 4 },
       { label: "Segundo Simulacro", data: a2.areas, backgroundColor: red, borderRadius: 4 },
     ];
+    if (esSoloUndecimo(students)){
+      const a3 = aggregate(students, "saber11");
+      if (a3.count > 0){
+        datasets.push({ label: "Prueba Saber 11 Real", data: a3.areas, backgroundColor: "#2f6f4f", borderRadius: 4 });
+      }
+    }
     mostrarLeyenda = true;
   } else {
     const a = aggregate(students, modo);
-    datasets = [{ label: BLOQUES.find(b=>b.id===modo).nombre, data: a.areas, backgroundColor: red, borderRadius: 4 }];
+    datasets = [{ label: nombreModo(modo), data: a.areas, backgroundColor: red, borderRadius: 4 }];
     mostrarLeyenda = false;
   }
 
@@ -1419,8 +1537,14 @@ function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, grad
       { label:"Primer Simulacro", backgroundColor:"rgba(201,162,75,0.35)", borderColor: gold, borderWidth:1.5, data: dataFor("s1") },
       { label:"Segundo Simulacro", backgroundColor:"rgba(196,0,22,0.30)", borderColor: red, borderWidth:1.5, data: dataFor("s2") },
     ];
+    if (esSoloUndecimo(students)){
+      const datosSaber11 = dataFor("saber11");
+      if (datosSaber11.some(arr => arr.length > 0)){
+        datasets.push({ label:"Prueba Saber 11 Real", backgroundColor:"rgba(47,111,79,0.28)", borderColor:"#2f6f4f", borderWidth:1.5, data: datosSaber11 });
+      }
+    }
   } else {
-    datasets = [{ label: BLOQUES.find(b=>b.id===modo).nombre, backgroundColor:"rgba(196,0,22,0.30)", borderColor: red, borderWidth:1.5, data: dataFor(modo) }];
+    datasets = [{ label: nombreModo(modo), backgroundColor:"rgba(196,0,22,0.30)", borderColor: red, borderWidth:1.5, data: dataFor(modo) }];
   }
 
   if (chartGrupos) chartGrupos.destroy();
@@ -1602,28 +1726,42 @@ let tableSort = { key: "global2", dir: "desc" };
 function renderTable(students, modo){
   const byGrupoS1 = aggregateByGrupo(students, "s1");
   const byGrupoS2 = aggregateByGrupo(students, "s2");
+  const byGrupoSaber11 = modo === "saber11" ? aggregateByGrupo(students, "saber11") : null;
   const grupos = [...new Set(students.map(s => s.grupo))].sort();
 
   let rows = grupos.map(g => {
     const s1 = byGrupoS1.find(x => x.grupo === g);
     const s2 = byGrupoS2.find(x => x.grupo === g);
     const dif = (s1.global !== null && s2.global !== null) ? (s2.global - s1.global) : null;
+    const sb11 = byGrupoSaber11 ? byGrupoSaber11.find(x => x.grupo === g) : null;
     return {
       grupo: g, grado: inferirGrado(g),
       director: CONFIG.directores[g] || "—",
       total: students.filter(s => s.grupo === g).length,
       global1: s1.global, global2: s2.global, dif,
+      globalSaber11: sb11 ? sb11.global : null,
       areas1: s1.areas, areas2: s2.areas
     };
   });
 
   const headers = modo === "comparativo"
     ? ["Grupo","Grado","Director","Estudiantes","Global S1","Global S2","Variación"]
+    : modo === "saber11"
+    ? ["Grupo","Grado","Director","Estudiantes","Global Saber 11 Real"]
     : ["Grupo","Grado","Director","Estudiantes", modo === "s1" ? "Global S1" : "Global S2"];
 
   const keys = modo === "comparativo"
     ? ["grupo","grado","director","total","global1","global2","dif"]
+    : modo === "saber11"
+    ? ["grupo","grado","director","total","globalSaber11"]
     : ["grupo","grado","director","total", modo === "s1" ? "global1" : "global2"];
+
+  // Si se cambió de modo y la columna de orden activa ya no existe en esta
+  // tabla (ej. "globalSaber11" al volver a S1/S2), se reinicia a un orden
+  // razonable en vez de ordenar por una columna que no se muestra.
+  if (!keys.includes(tableSort.key)){
+    tableSort = { key: keys[keys.length - 1], dir: "desc" };
+  }
 
   document.getElementById("tableHead").innerHTML = headers.map((h, i) => {
     const arrow = tableSort.key === keys[i] ? `<span class="arrow">${tableSort.dir === "asc" ? "↑" : "↓"}</span>` : "";
@@ -1645,6 +1783,8 @@ function renderTable(students, modo){
       const arrow = r.dif === null ? "" : (r.dif > 0 ? "▲" : (r.dif < 0 ? "▼" : "＝"));
       cells += `<td class="num">${fmt(r.global1)}</td><td class="num">${fmt(r.global2)}</td>
         <td class="num"><span class="delta-chip ${cls}">${arrow} ${r.dif===null?"—":fmt(Math.abs(r.dif))}</span></td>`;
+    } else if (modo === "saber11"){
+      cells += `<td class="num">${fmt(r.globalSaber11)}</td>`;
     } else {
       cells += `<td class="num">${fmt(modo==="s1"?r.global1:r.global2)}</td>`;
     }
@@ -1679,6 +1819,7 @@ function renderAll(){
   const modo = document.getElementById("fSimulacro").value;
   const grupoSel = document.getElementById("fGrupo").value;
   const students = getFiltered();
+  actualizarAvisoModo(modo, students);
   safeRender(() => renderKPIs(students, modo), "KPIs");
   ensureChartJs(() => {
     safeRender(() => renderCharts(students, modo), "gráficos de puntaje");
@@ -1686,7 +1827,137 @@ function renderAll(){
   });
   safeRender(() => renderHonorBoard(students, modo, grupoSel), "cuadro de honor");
   safeRender(() => renderTable(students, modo), "tabla");
+  safeRender(() => renderEstrategiasSection(), "comparación de estrategias de preparación");
 }
+
+// Aviso contextual propio de esta sección (no toca #avisoAlcance, que ya
+// se usa para la preselección de grupo del docente). Explica por qué la
+// Prueba Saber 11 real está vacía o restringida a Undécimo, y avisa
+// cuando el modo "Comparativo" está sumando esa prueba como tercera serie.
+function actualizarAvisoModo(modo, students){
+  const aviso = document.getElementById("avisoModo");
+  if (modo === "saber11"){
+    const conDatos = students.filter(s => s.saber11).length;
+    if (students.length === 0){
+      aviso.textContent = "La Prueba Saber 11 real solo aplica a Undécimo, y no hay estudiantes de ese grado en los datos cargados.";
+    } else if (conDatos === 0){
+      aviso.textContent = "Todavía no hay resultados de la Prueba Saber 11 real cargados para Undécimo (suelen publicarse varios meses después de aplicada la prueba). En cuanto los agregues al CSV, aparecerán aquí automáticamente.";
+    } else {
+      aviso.textContent = "Mostrando la Prueba Saber 11 real: " + conDatos + " de " + students.length + " estudiantes de Undécimo con resultado ya cargado.";
+    }
+    aviso.classList.add("mostrar");
+  } else if (modo === "comparativo" && esSoloUndecimo(students) && students.some(s => s.saber11)){
+    aviso.textContent = "Para Undécimo, el Comparativo incluye también la Prueba Saber 11 real junto a Primer y Segundo Simulacro.";
+    aviso.classList.add("mostrar");
+  } else {
+    aviso.classList.remove("mostrar");
+  }
+}
+
+/* ============================================================
+ * RENDER: Comparación de Estrategias de Preparación (Undécimo)
+ * ============================================================ * Independiente del filtro principal de Grado/Grupo/Simulacro:
+ * siempre analiza TODO Undécimo del año cargado, porque la pregunta
+ * ("¿qué estrategia funcionó mejor?") es a nivel de grado, no de un
+ * grupo o filtro puntual. Si no hay estudiantes de Undécimo en el
+ * año cargado, la sección se oculta.
+ *
+ * Métrica: usa la Prueba Saber 11 real en cuanto haya al menos un
+ * resultado cargado; mientras tanto usa el Segundo Simulacro como
+ * aproximación, y lo deja explícito en el subtítulo y en el
+ * encabezado de la tabla.
+ */
+let chartEstrategias;
+let vistaEstrategiaTraslape = "incluir"; // "incluir" | "exclusivo"
+const OPCIONES_ESTRATEGIA_TRASLAPE = [
+  { value: "incluir", label: "Todos los asistentes" },
+  { value: "exclusivo", label: "Solo asistentes exclusivos" },
+];
+
+function renderEstrategiasSection(){
+  const section = document.getElementById("estrategiasSection");
+  const undecimo = STUDENTS.filter(s => s.grado === "Undécimo");
+
+  if (undecimo.length === 0){
+    section.style.display = "none";
+    return;
+  }
+  section.style.display = "";
+
+  const usaSaber11 = undecimo.some(s => s.saber11 && s.saber11.global !== null);
+  const bloqueMetrica = usaSaber11 ? "saber11" : "s2";
+  const nombreMetrica = usaSaber11
+    ? "Prueba Saber 11 Real"
+    : "Segundo Simulacro (aproximación — aún no hay resultados reales de Saber 11)";
+
+  document.getElementById("estrategiasSub").textContent =
+    "Compara el Puntaje Global promedio (" + nombreMetrica + ") de los estudiantes de Undécimo según la estrategia de preparación en la que participaron, frente a quienes no participaron en ninguna. " +
+    "Un estudiante puede haber asistido a más de una estrategia a la vez.";
+
+  renderToggleButtons("toggleEstrategiaTraslape", OPCIONES_ESTRATEGIA_TRASLAPE, vistaEstrategiaTraslape);
+  const exclusivo = vistaEstrategiaTraslape === "exclusivo";
+
+  const ninguna = undecimo.filter(s => s.estrategias.cantidad === 0);
+
+  const grupos = ESTRATEGIAS_INFO.map(e => {
+    let subset = undecimo.filter(s => s.estrategias[e.id]);
+    if (exclusivo) subset = subset.filter(s => s.estrategias.cantidad === 1);
+    const a = aggregate(subset, bloqueMetrica);
+    return { id: e.id, label: e.label, n: subset.length, conDatos: a.count, promedio: a.global };
+  });
+
+  const aNinguna = aggregate(ninguna, bloqueMetrica);
+  const baseline = { id: "ninguna", label: "Ninguna estrategia", n: ninguna.length, conDatos: aNinguna.count, promedio: aNinguna.global };
+
+  const filas = [...grupos, baseline];
+
+  if (chartEstrategias) chartEstrategias.destroy();
+  if (typeof Chart !== "undefined"){
+    const ctx = document.getElementById("chartEstrategias").getContext("2d");
+    chartEstrategias = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: filas.map(f => f.label),
+        datasets: [{
+          label: "Promedio · " + nombreMetrica,
+          data: filas.map(f => f.promedio),
+          backgroundColor: filas.map(f => f.id === "ninguna" ? "#8a8a8a" : "#c40016"),
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: false, grid: { color: "#eee" } }, x: { grid: { display:false } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+
+  document.getElementById("estrategiasTableHead").innerHTML =
+    ["Estrategia","Estudiantes","Con dato de " + (usaSaber11 ? "Saber 11" : "S2"),"Promedio","Diferencia vs. Ninguna"]
+      .map(h => `<th>${h}</th>`).join("");
+
+  document.getElementById("tablaEstrategiasBody").innerHTML = filas.map(f => {
+    const esBaseline = f.id === "ninguna";
+    const dif = (!esBaseline && f.promedio !== null && baseline.promedio !== null) ? (f.promedio - baseline.promedio) : null;
+    const cls = dif === null ? "" : (dif > 0 ? "up" : (dif < 0 ? "down" : "flat"));
+    const arrow = dif === null ? "" : (dif > 0 ? "▲" : (dif < 0 ? "▼" : "＝"));
+    return `<tr>
+      <td>${f.label}</td>
+      <td class="num">${f.n}</td>
+      <td class="num">${f.conDatos}/${f.n}</td>
+      <td class="num">${fmt(f.promedio)}</td>
+      <td class="num">${dif === null ? "—" : `<span class="delta-chip ${cls}">${arrow} ${fmt(Math.abs(dif))}</span>`}</td>
+    </tr>`;
+  }).join("");
+}
+
+document.getElementById("toggleEstrategiaTraslape").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-view]");
+  if (!btn) return;
+  vistaEstrategiaTraslape = btn.dataset.view;
+  renderEstrategiasSection();
+});
 
 // Si Chart.js no cargó desde el primer CDN (sin internet, bloqueo, etc.),
 // intenta un segundo CDN antes de rendirse. Si ambos fallan, muestra un
@@ -1714,7 +1985,17 @@ function showChartUnavailable(){
   });
 }
 
-document.getElementById("fSimulacro").addEventListener("change", renderAll);
+document.getElementById("fSimulacro").addEventListener("change", (e) => {
+  // La Prueba Saber 11 real solo existe para Undécimo: al elegir ese modo,
+  // se enfoca el filtro de Grado automáticamente para evitar una vista
+  // "Todos" llena de grupos sin datos. El usuario puede volver a cambiarlo.
+  if (e.target.value === "saber11" && !(selectedGrados.size === 1 && selectedGrados.has("Undécimo"))){
+    selectedGrados = new Set(["Undécimo"]);
+    renderGradoChips();
+    populateGrupoFilter();
+  }
+  renderAll();
+});
 document.getElementById("fGrupo").addEventListener("change", renderAll);
 document.getElementById("btnConnect").addEventListener("click", () => {
   const url = document.getElementById("csvUrlInput").value.trim();
