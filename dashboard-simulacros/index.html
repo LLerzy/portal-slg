@@ -39,7 +39,7 @@
      que SIEMPRE quede dentro del viewport, sin importar en qué parte
      del gráfico esté el cursor. */
   .chart-tooltip{
-    position:fixed; z-index:9999; pointer-events:none;
+    position:absolute; z-index:9999; pointer-events:none;
     background:rgba(26,22,20,0.95); color:#fff;
     padding:9px 12px; border-radius:8px;
     font-family:'Inter', system-ui, sans-serif;
@@ -49,7 +49,15 @@
     opacity:0; transition:opacity .08s ease-out;
   }
   .chart-tooltip .ct-title{ font-weight:700; margin-bottom:3px; }
+  .chart-tooltip .ct-head{ font-weight:700; color:var(--gold); margin-bottom:2px; }
   .chart-tooltip .ct-line{ white-space:normal; }
+  .chart-tooltip.pinned{ padding-right:30px; }
+  .chart-tooltip .ct-close{
+    position:absolute; top:6px; right:6px; width:20px; height:20px;
+    border:0; border-radius:50%; background:rgba(255,255,255,.18); color:#fff;
+    font-size:11px; line-height:20px; padding:0; cursor:pointer;
+  }
+  .chart-tooltip .ct-close:hover{ background:rgba(255,255,255,.35); }
   body{
     margin:0;
     background:var(--paper);
@@ -560,6 +568,43 @@
           </thead>
           <tbody id="cohorteTableBody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="section" id="undecimoAniosSection">
+      <h2>Comparativo de Undécimos entre años</h2>
+      <div class="section-sub">
+        Compara a los estudiantes de <strong>Undécimo</strong> de distintos años: Primer Simulacro, Segundo Simulacro
+        y <strong>Prueba Saber 11 real</strong> (cuando ya esté cargada en el CSV de ese año). Cada año se lee de su propio
+        archivo, así que esta sección no depende de los filtros de grado, grupo o año de más arriba.
+      </div>
+      <div class="filterbar" style="margin-bottom:14px;">
+        <div class="field" style="flex:1 1 320px;">
+          <label>Años a comparar</label>
+          <div class="grado-chips" id="undAniosChips"></div>
+        </div>
+        <div class="spacer"></div>
+        <button class="primary" id="btnCompararUndecimos">Comparar</button>
+      </div>
+      <div id="undEstado" style="font-size:13.5px; color:var(--muted); margin-bottom:14px;"></div>
+      <div id="undResultados" style="display:none;">
+        <div class="chart-grid">
+          <div>
+            <div class="section-sub" style="margin-bottom:6px;"><strong>Puntaje Global promedio por año</strong></div>
+            <div class="chart-box"><canvas id="chartUndGlobal"></canvas></div>
+          </div>
+          <div>
+            <div class="section-sub" style="margin-bottom:6px;"><strong>Puntaje por área</strong> (un color por año)</div>
+            <div class="view-toggle visible" id="toggleUndMetrica" style="margin-bottom:8px;"></div>
+            <div class="chart-box"><canvas id="chartUndAreas"></canvas></div>
+          </div>
+        </div>
+        <div style="overflow-x:auto; margin-top:18px;">
+          <table class="results" id="tablaUndecimos">
+            <thead><tr id="undTableHead"></tr></thead>
+            <tbody id="undTableBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -1586,21 +1631,51 @@ function median(arr){
 // futura versión de la librería, se cae a un texto corto genérico en vez
 // de romper el gráfico.
 function tooltipBoxplotLabel(item){
-  const r = item.raw;
+  // En el gráfico de cajas, la librería entrega los 5 números en
+  // item.parsed ({min,q1,median,q3,max,mean}); item.raw es solo el arreglo
+  // de datos originales. (Antes se leía item.raw y por eso solo aparecía
+  // la mediana, que es el único valor que viene en parsed.y.)
+  const r = item.parsed;
+  const cabecera = "# " + item.dataset.label;
   if (!r || typeof r.min !== "number" || typeof r.max !== "number"){
-    return item.dataset.label + ": " + fmt(item.parsed && item.parsed.y);
+    return [cabecera, "Valor: " + fmt(r && r.y)];
   }
-  return [
-    "Mín " + fmt(r.min) + " · Q1 " + fmt(r.q1),
-    "Mediana " + fmt(r.median),
-    "Q3 " + fmt(r.q3) + " · Máx " + fmt(r.max)
+  const n = Array.isArray(item.raw) ? item.raw.length : null;
+  const lineas = [
+    cabecera,
+    "Mínimo: " + fmt(r.min),
+    "Q1 (25%): " + fmt(r.q1),
+    "Mediana: " + fmt(r.median),
+    "Q3 (75%): " + fmt(r.q3),
+    "Máximo: " + fmt(r.max),
   ];
+  if (typeof r.mean === "number") lineas.push("Media: " + fmt(r.mean));
+  if (n !== null) lineas.push("Estudiantes: " + n);
+  return lineas;
 }
 
 function escaparHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({
     "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
   }[c]));
+}
+
+// Estado del recuadro: "fijado" = el usuario hizo clic/tap sobre una caja y
+// el recuadro se queda visible (con botón de cerrar) hasta que se cierre con
+// la X, con Escape o haciendo clic en otro lugar. "pendiente" = acaba de
+// hacerse clic y el siguiente render del tooltip debe quedar fijado.
+let tooltipFijado = false;
+let tooltipPendienteFijar = false;
+
+function cerrarTooltipBoxplot(){
+  tooltipFijado = false;
+  tooltipPendienteFijar = false;
+  const el = document.getElementById("chartTooltipEl");
+  if (el){
+    el.style.opacity = "0";
+    el.style.pointerEvents = "none";
+    el.classList.remove("pinned");
+  }
 }
 
 function obtenerTooltipEl(){
@@ -1610,33 +1685,83 @@ function obtenerTooltipEl(){
     el.id = "chartTooltipEl";
     el.className = "chart-tooltip";
     document.body.appendChild(el);
+    // El botón se vuelve a crear en cada render (innerHTML), por eso se
+    // usa delegación de eventos.
+    el.addEventListener("click", (e) => {
+      if (e.target.closest(".ct-close")) { e.stopPropagation(); cerrarTooltipBoxplot(); }
+    });
+    // Clic en cualquier otro lugar (fuera del recuadro y fuera del propio
+    // gráfico de cajas, cuyo clic maneja onClick) cierra el recuadro fijado.
+    document.addEventListener("click", (e) => {
+      if (!tooltipFijado) return;
+      if (el.contains(e.target)) return;
+      if (chartGrupos && e.target === chartGrupos.canvas) return;
+      cerrarTooltipBoxplot();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") cerrarTooltipBoxplot();
+    });
   }
   return el;
 }
 
+// onClick de Chart.js para el gráfico de cajas: clic sobre una caja = fijar
+// el recuadro; clic en un espacio vacío del gráfico = cerrarlo.
+function onClickBoxplot(evt, elementos, chart){
+  if (elementos && elementos.length){
+    tooltipPendienteFijar = true;
+    // Chart.js solo llama al handler externo cuando CAMBIA el elemento
+    // activo; si el cursor ya estaba sobre esta caja (caso típico en PC),
+    // no habría nuevo render, así que se fija de inmediato con el estado
+    // actual. En móvil (primer toque, sin hover previo) el tooltip aún no
+    // está activo: queda pendiente y se fija en el render que sigue.
+    if (chart && chart.tooltip && chart.tooltip.opacity !== 0){
+      externalTooltipHandler({ chart, tooltip: chart.tooltip });
+    }
+  } else {
+    cerrarTooltipBoxplot();
+  }
+}
+
 // Handler de tooltip "externo" de Chart.js: en vez de que la librería
 // dibuje el tooltip dentro del <canvas> (lo que puede salirse de la
-// pantalla cerca de los bordes), dibujamos un <div> normal con
-// position:fixed y lo recortamos (clamp) a las dimensiones reales de la
-// ventana, así el recuadro SIEMPRE se ve completo sin cortes, tanto en
-// PC como en móvil. El contenido (título + líneas) lo sigue armando el
-// callback normal de Chart.js (tooltip.title / tooltip.body).
+// pantalla cerca de los bordes), dibujamos un <div> normal y lo
+// recortamos (clamp) a la ventana visible, así el recuadro SIEMPRE se ve
+// completo sin cortes, tanto en PC como en móvil. Usa coordenadas de
+// página (position:absolute) para que, una vez fijado, se desplace con el
+// gráfico en vez de quedarse flotando sobre otra sección.
 function externalTooltipHandler(context){
   const { chart, tooltip } = context;
   const el = obtenerTooltipEl();
 
+  // Fijado: se ignoran los eventos de hover hasta que el usuario lo cierre
+  // o haga clic en otra caja.
+  if (tooltipFijado && !tooltipPendienteFijar) return;
+
   if (!tooltip || tooltip.opacity === 0){
-    el.style.opacity = "0";
+    if (!tooltipFijado){
+      el.style.opacity = "0";
+      el.style.pointerEvents = "none";
+    }
     return;
   }
 
   const titleLines = tooltip.title || [];
   const bodyLines = (tooltip.body || []).flatMap(b => b.lines);
 
+  const fijar = tooltipPendienteFijar;
+  if (fijar){ tooltipFijado = true; tooltipPendienteFijar = false; }
+
   let html = "";
+  if (tooltipFijado) html += '<button type="button" class="ct-close" aria-label="Cerrar">✕</button>';
   titleLines.forEach(t => { html += '<div class="ct-title">' + escaparHtml(t) + "</div>"; });
-  bodyLines.forEach(l => { html += '<div class="ct-line">' + escaparHtml(l) + "</div>"; });
+  bodyLines.forEach(l => {
+    if (l.startsWith("# ")) html += '<div class="ct-head">' + escaparHtml(l.slice(2)) + "</div>";
+    else html += '<div class="ct-line">' + escaparHtml(l) + "</div>";
+  });
   el.innerHTML = html;
+  el.classList.toggle("pinned", tooltipFijado);
+  el.style.pointerEvents = tooltipFijado ? "auto" : "none";
 
   const canvasRect = chart.canvas.getBoundingClientRect();
   el.style.opacity = "1";
@@ -1644,17 +1769,16 @@ function externalTooltipHandler(context){
   el.style.top = "0px";
   const tw = el.offsetWidth, th = el.offsetHeight;
 
+  // Coordenadas en la ventana visible...
   let x = canvasRect.left + tooltip.caretX + 12;
   let y = canvasRect.top + tooltip.caretY - th - 10;
-
   const margen = 8;
-  const maxX = window.innerWidth - tw - margen;
-  const maxY = window.innerHeight - th - margen;
-  x = Math.min(Math.max(x, margen), Math.max(margen, maxX));
-  y = Math.min(Math.max(y, margen), Math.max(margen, maxY));
+  x = Math.min(Math.max(x, margen), Math.max(margen, window.innerWidth - tw - margen));
+  y = Math.min(Math.max(y, margen), Math.max(margen, window.innerHeight - th - margen));
 
-  el.style.left = x + "px";
-  el.style.top = y + "px";
+  // ...convertidas a coordenadas de página.
+  el.style.left = (x + window.scrollX) + "px";
+  el.style.top = (y + window.scrollY) + "px";
 }
 
 function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, gradoLabel){
@@ -1701,6 +1825,7 @@ function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, grad
     datasets = [{ label: nombreModo(modo), backgroundColor:"rgba(196,0,22,0.30)", borderColor: red, borderWidth:1.5, data: dataFor(modo) }];
   }
 
+  cerrarTooltipBoxplot();
   if (chartGrupos) chartGrupos.destroy();
 
   // El Puntaje Global no está en escala 0-100 (esa escala aplica solo a
@@ -1721,7 +1846,7 @@ function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, grad
       type: "boxplot",
       data: { labels: order, datasets },
       options: {
-        responsive: true, maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false, onClick: onClickBoxplot,
         scales: { y: { min: yMin, max: yMax, grid:{ color:"#eee" } }, x: { grid:{ display:false } } },
         plugins: {
           legend: { display: modo === "comparativo", position: "top" },
@@ -1749,7 +1874,7 @@ function renderBoxplotChart(ctx, students, modo, gold, red, vista, context, grad
       type: "bar",
       data: { labels: order, datasets: fallbackDatasets },
       options: {
-        indexAxis:"y", responsive:true, maintainAspectRatio:false,
+        indexAxis:"y", responsive:true, maintainAspectRatio:false, onClick: onClickBoxplot,
         scales: { x:{ min:yMin, max:yMax, grid:{ color:"#eee" } }, y:{ grid:{ display:false } } },
         plugins: {
           legend: { display: modo === "comparativo", position:"top" },
@@ -2049,7 +2174,12 @@ function renderEstrategiasSection(){
   const section = document.getElementById("estrategiasSection");
   const undecimo = STUDENTS.filter(s => s.grado === "Undécimo");
 
-  if (undecimo.length === 0){
+  // Solo se activa cuando el filtro de grado es EXACTAMENTE Undécimo (sin
+  // "Todos" y sin otro grado junto): las estrategias de preparación solo
+  // existen para ese grado y mezclarlo con otros confunde la lectura.
+  const soloUndecimo = selectedGrados.size === 1 && selectedGrados.has("Undécimo");
+
+  if (!soloUndecimo || undecimo.length === 0){
     section.style.display = "none";
     return;
   }
@@ -2444,6 +2574,142 @@ document.querySelectorAll("#cohorteTableHead th").forEach(th => {
     renderCohorteTabla();
   });
 });
+
+/* ============================================================
+ * COMPARATIVO DE UNDÉCIMOS ENTRE AÑOS
+ * ============================================================
+ * Para cada año elegido se toman SOLO los estudiantes de Undécimo de su
+ * CSV (vía cargarAnio / CACHE_ANIOS, la misma caché del Seguimiento de
+ * Cohorte) y se promedian Primer Simulacro, Segundo Simulacro y, si ya
+ * existe, la Prueba Saber 11 real. Un año sin resultados reales de Saber 11
+ * se muestra con "—" en vez de un 0 que engañe.
+ */
+let undAniosSel = new Set();
+let undDatos = [];          // [{anio, n, s1, s2, saber11}] con aggregate() por bloque
+let undMetricaAreas = "s2";
+let chartUndGlobal, chartUndAreas;
+const COLORES_ANIOS = ["#c9a24b", "#c40016", "#2f6f4f", "#4a6fa5", "#8a5a9e"];
+const OPCIONES_UND_METRICA = [
+  { value: "s1", label: "Primer Simulacro" },
+  { value: "s2", label: "Segundo Simulacro" },
+  { value: "saber11", label: "Prueba Saber 11 real" },
+];
+
+function renderUndAniosChips(){
+  const anios = Object.keys(CONFIG.anios).sort();
+  if (undAniosSel.size === 0) anios.forEach(a => undAniosSel.add(a));
+  document.getElementById("undAniosChips").innerHTML = anios.map(a =>
+    `<button type="button" class="chip-grado ${undAniosSel.has(a) ? "active" : ""}" data-anio="${a}">${a}</button>`
+  ).join("");
+}
+
+function renderUndGraficos(){
+  if (!undDatos.length) return;
+  const gold = "#c9a24b", red = "#c40016", verde = "#2f6f4f";
+  const labels = undDatos.map(d => d.anio);
+  const hayS11 = undDatos.some(d => d.saber11.global !== null);
+
+  const datasetsG = [
+    { label:"Primer Simulacro", backgroundColor: gold, borderRadius:4, data: undDatos.map(d => d.s1.global) },
+    { label:"Segundo Simulacro", backgroundColor: red, borderRadius:4, data: undDatos.map(d => d.s2.global) },
+  ];
+  if (hayS11) datasetsG.push({ label:"Prueba Saber 11 real", backgroundColor: verde, borderRadius:4, data: undDatos.map(d => d.saber11.global) });
+
+  const vals = datasetsG.flatMap(d => d.data).filter(v => v !== null);
+  const yMin = vals.length ? Math.max(0, Math.floor((Math.min(...vals) - 20) / 10) * 10) : 0;
+
+  if (chartUndGlobal) chartUndGlobal.destroy();
+  chartUndGlobal = new Chart(document.getElementById("chartUndGlobal").getContext("2d"), {
+    type: "bar",
+    data: { labels, datasets: datasetsG },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales: { y: { min: yMin, grid:{ color:"#eee" } }, x: { grid:{ display:false } } },
+      plugins: { legend: { position:"top" } }
+    }
+  });
+
+  // Por área: una serie por año para la métrica elegida.
+  const datasetsA = undDatos.map((d, i) => ({
+    label: d.anio, backgroundColor: COLORES_ANIOS[i % COLORES_ANIOS.length], borderRadius:4,
+    data: d[undMetricaAreas].areas
+  }));
+  if (chartUndAreas) chartUndAreas.destroy();
+  chartUndAreas = new Chart(document.getElementById("chartUndAreas").getContext("2d"), {
+    type: "bar",
+    data: { labels: AREAS_CORTAS, datasets: datasetsA },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales: { y: { min:0, max:100, grid:{ color:"#eee" } }, x: { grid:{ display:false } } },
+      plugins: { legend: { position:"top" } }
+    }
+  });
+  renderToggleButtons("toggleUndMetrica", OPCIONES_UND_METRICA, undMetricaAreas);
+
+  document.getElementById("undTableHead").innerHTML =
+    ["Año","Estudiantes","Global S1","Global S2","Variación S2−S1","Saber 11 real (con dato)","Global Saber 11","Saber 11 − S2"]
+      .map(h => `<th>${h}</th>`).join("");
+  document.getElementById("undTableBody").innerHTML = undDatos.map(d => {
+    const v = (d.s1.global !== null && d.s2.global !== null) ? d.s2.global - d.s1.global : null;
+    const vs = (d.saber11.global !== null && d.s2.global !== null) ? d.saber11.global - d.s2.global : null;
+    const chip = (x) => {
+      if (x === null) return "—";
+      const cls = x > 0 ? "up" : (x < 0 ? "down" : "flat");
+      return `<span class="delta-chip ${cls}">${x > 0 ? "▲" : (x < 0 ? "▼" : "＝")} ${fmt(Math.abs(x))}</span>`;
+    };
+    return `<tr><td>${d.anio}</td><td class="num">${d.n}</td><td class="num">${fmt(d.s1.global)}</td>
+      <td class="num">${fmt(d.s2.global)}</td><td class="num">${chip(v)}</td>
+      <td class="num">${d.saber11.global !== null ? d.saber11.count : "Pendiente"}</td>
+      <td class="num">${fmt(d.saber11.global)}</td><td class="num">${chip(vs)}</td></tr>`;
+  }).join("");
+}
+
+function compararUndecimos(){
+  const anios = [...undAniosSel].sort();
+  const estadoEl = document.getElementById("undEstado");
+  const resEl = document.getElementById("undResultados");
+  if (!anios.length){
+    estadoEl.textContent = "Elige al menos un año para comparar.";
+    resEl.style.display = "none";
+    return;
+  }
+  estadoEl.textContent = "Cargando datos de " + anios.join(", ") + "…";
+  Promise.all(anios.map(cargarAnio)).then(listas => {
+    undDatos = anios.map((anio, i) => {
+      const und = listas[i].filter(s => s.grado === "Undécimo");
+      return { anio, n: und.length, s1: aggregate(und, "s1"), s2: aggregate(und, "s2"), saber11: aggregate(und, "saber11") };
+    }).filter(d => d.n > 0);
+    if (!undDatos.length){
+      estadoEl.textContent = "Ninguno de los años elegidos tiene estudiantes de Undécimo.";
+      resEl.style.display = "none";
+      return;
+    }
+    const sinS11 = undDatos.filter(d => d.saber11.global === null).map(d => d.anio);
+    estadoEl.textContent = "Años comparados: " + undDatos.map(d => d.anio + " (" + d.n + " estudiantes)").join(" · ") +
+      (sinS11.length ? ". Sin resultados reales de Saber 11 todavía: " + sinS11.join(", ") + "." : "");
+    resEl.style.display = "";
+    renderUndGraficos();
+  }).catch(err => {
+    estadoEl.textContent = "No se pudo completar la comparación: " + err.message;
+    console.error(err);
+  });
+}
+
+renderUndAniosChips();
+document.getElementById("undAniosChips").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-anio]");
+  if (!btn) return;
+  const a = btn.dataset.anio;
+  if (undAniosSel.has(a)) undAniosSel.delete(a); else undAniosSel.add(a);
+  renderUndAniosChips();
+});
+document.getElementById("toggleUndMetrica").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-view]");
+  if (!btn) return;
+  undMetricaAreas = btn.dataset.view;
+  renderUndGraficos();
+});
+document.getElementById("btnCompararUndecimos").addEventListener("click", compararUndecimos);
 
 /* ============================================================
  * SELECTOR DE AÑO DEL DASHBOARD PRINCIPAL
