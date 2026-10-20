@@ -419,7 +419,7 @@
     <p class="aviso-alcance" id="avisoModo"></p>
 
     <div class="filterbar">
-      <div class="field">
+      <div class="field" data-solo-normal>
         <label for="fAnio">Año</label>
         <select id="fAnio"></select>
       </div>
@@ -430,23 +430,25 @@
           <option value="s1">Primer Simulacro</option>
           <option value="s2">Segundo Simulacro</option>
           <option value="saber11">Prueba Saber 11 (real)</option>
+          <option value="undAnios">Comparativo Undécimo (varios años)</option>
         </select>
       </div>
-      <div class="field field-grados">
+      <div class="field field-grados" data-solo-normal>
         <label>Grado</label>
         <div class="grado-chips" id="gradoChips"></div>
       </div>
-      <div class="field field-presets">
+      <div class="field field-presets" data-solo-normal>
         <label>Comparar parejas</label>
         <div class="grado-presets" id="gradoPresets"></div>
       </div>
-      <div class="field">
+      <div class="field" data-solo-normal>
         <label for="fGrupo">Grupo</label>
         <select id="fGrupo"><option value="todos">Todos</option></select>
       </div>
       <div class="spacer"></div>
     </div>
 
+    <div id="vistaNormal">
     <div class="kpi-grid" id="kpiGrid"></div>
 
     <div class="section">
@@ -461,7 +463,7 @@
         <div>
           <div class="honor-col-title" style="color:var(--muted);">Distribución de Puntaje Global</div>
           <div class="view-toggle" id="toggleBox"></div>
-          <div class="chart-box"><canvas id="chartGrupos"></canvas></div>
+          <div class="chart-box"><canvas id="chartGrupos" data-pin-tooltip="1"></canvas></div>
         </div>
       </div>
     </div>
@@ -571,42 +573,88 @@
       </div>
     </div>
 
-    <div class="section" id="undecimoAniosSection">
-      <h2>Comparativo de Undécimos entre años</h2>
-      <div class="section-sub">
-        Compara a los estudiantes de <strong>Undécimo</strong> de distintos años: Primer Simulacro, Segundo Simulacro
-        y <strong>Prueba Saber 11 real</strong> (cuando ya esté cargada en el CSV de ese año). Cada año se lee de su propio
-        archivo, así que esta sección no depende de los filtros de grado, grupo o año de más arriba.
-      </div>
-      <div class="filterbar" style="margin-bottom:14px;">
-        <div class="field" style="flex:1 1 320px;">
-          <label>Años a comparar</label>
-          <div class="grado-chips" id="undAniosChips"></div>
+    </div><!-- /vistaNormal -->
+
+    <div id="vistaUndAnios" style="display:none;">
+      <div class="section">
+        <h2>Comparativo de Undécimos entre años</h2>
+        <div class="section-sub">
+          Compara a los estudiantes de <strong>Undécimo</strong> de distintos años con el Primer Simulacro, el Segundo
+          Simulacro y la <strong>Prueba Saber 11 real</strong> (cuando ya esté cargada en el CSV de ese año). Cada año se lee
+          de su propio archivo, así que esta vista no usa los filtros de año, grado ni grupo.
         </div>
-        <div class="spacer"></div>
-        <button class="primary" id="btnCompararUndecimos">Comparar</button>
+        <div class="filterbar" style="margin-bottom:10px;">
+          <div class="field" style="flex:1 1 320px;">
+            <label>Años a comparar</label>
+            <div class="grado-chips" id="undAniosChips"></div>
+          </div>
+          <div class="spacer"></div>
+          <button class="primary" id="btnCompararUndecimos">Comparar</button>
+        </div>
+        <div id="undEstado" style="font-size:13.5px; color:var(--muted);"></div>
       </div>
-      <div id="undEstado" style="font-size:13.5px; color:var(--muted); margin-bottom:14px;"></div>
+
       <div id="undResultados" style="display:none;">
-        <div class="chart-grid">
-          <div>
-            <div class="section-sub" style="margin-bottom:6px;"><strong>Puntaje Global promedio por año</strong></div>
-            <div class="chart-box"><canvas id="chartUndGlobal"></canvas></div>
-          </div>
-          <div>
-            <div class="section-sub" style="margin-bottom:6px;"><strong>Puntaje por área</strong> (un color por año)</div>
-            <div class="view-toggle visible" id="toggleUndMetrica" style="margin-bottom:8px;"></div>
-            <div class="chart-box"><canvas id="chartUndAreas"></canvas></div>
+        <div class="section">
+          <h2>Resumen por año</h2>
+          <div style="overflow-x:auto;">
+            <table class="results" id="tablaUndecimos">
+              <thead><tr id="undTableHead"></tr></thead>
+              <tbody id="undTableBody"></tbody>
+            </table>
           </div>
         </div>
-        <div style="overflow-x:auto; margin-top:18px;">
-          <table class="results" id="tablaUndecimos">
-            <thead><tr id="undTableHead"></tr></thead>
-            <tbody id="undTableBody"></tbody>
-          </table>
+
+        <div class="section">
+          <h2>Distribución del Puntaje Global</h2>
+          <div class="section-sub">Diagrama de cajas y alambres por año: una caja por cada simulacro y, si existe, por la Prueba Saber 11 real. Haz clic sobre una caja para fijar el detalle (mínimo, cuartiles, máximo).</div>
+          <div class="chart-box"><canvas id="chartUndBox" data-pin-tooltip="1"></canvas></div>
+        </div>
+
+        <div class="section">
+          <h2>Puntaje por área, niveles y rankings</h2>
+          <div class="section-sub">Elige la medida que quieres analizar en las áreas, los niveles de desempeño y los rankings de abajo.</div>
+          <div class="view-toggle visible" id="toggleUndMetrica" style="margin-bottom:14px;"></div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Promedio por área — <span class="undMetricaNombre"></span></div>
+          <div class="chart-box" style="margin-bottom:22px;"><canvas id="chartUndAreas"></canvas></div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Niveles de desempeño (% de estudiantes) — <span class="undMetricaNombre"></span></div>
+          <div class="niveles-legend" style="margin:6px 0 10px;">Cada gráfico compara los años en los Niveles 1 (más bajo) a 4 (más alto).</div>
+          <div class="chart-grid" id="undNivelesGrid"></div>
+        </div>
+
+        <div class="section">
+          <h2>Rankings</h2>
+          <div class="section-sub">Basados en el Puntaje Global de: <strong class="undMetricaNombre"></strong>.</div>
+          <div class="filterbar" style="margin-bottom:14px;">
+            <div class="field">
+              <label for="undFiltroAnio">Año en los rankings de grupos y estudiantes</label>
+              <select id="undFiltroAnio"><option value="todos">Todos los años</option></select>
+            </div>
+          </div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Ranking de Undécimo por año</div>
+          <div style="overflow-x:auto; margin-bottom:22px;">
+            <table class="results"><thead><tr><th>#</th><th>Año</th><th>Estudiantes con dato</th><th>Promedio</th></tr></thead>
+            <tbody id="undRankAniosBody"></tbody></table>
+          </div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Ranking de grupos</div>
+          <div style="overflow-x:auto; margin-bottom:22px;">
+            <table class="results"><thead><tr><th>#</th><th>Año</th><th>Grupo</th><th>Director de grupo</th><th>Estudiantes con dato</th><th>Promedio</th></tr></thead>
+            <tbody id="undRankGruposBody"></tbody></table>
+          </div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Ranking de estudiantes <span id="undRankEstNota" style="font-weight:400;"></span></div>
+          <div style="overflow-x:auto;">
+            <table class="results"><thead><tr><th>#</th><th>Estudiante</th><th>Grupo</th><th>Año</th><th>Director de grupo</th><th>Puntaje Global</th></tr></thead>
+            <tbody id="undRankEstBody"></tbody></table>
+          </div>
         </div>
       </div>
     </div>
+
 
   </div>
 
@@ -660,6 +708,13 @@ const CONFIG = {
     "2025": "comparativosimulacros-2025.csv",
     "2024": "comparativosimulacros-2024.csv",
   },
+  // Directores de grupo POR AÑO: se leen del archivo directores.csv
+  // (columnas: Anio,Grupo,Director). Si ese archivo no existe o no trae
+  // el grupo/año consultado, solo para el año de abajo se usa el mapa
+  // "directores" de más adelante como respaldo; para los demás años
+  // se muestra "—" en vez de un director equivocado.
+  directoresCsv: "directores.csv",
+  anioDirectoresPorDefecto: "2026",
   directores: {
     "1001": "Llerzy Torres",
     "1002": "Carolina Bedoya",
@@ -1695,7 +1750,7 @@ function obtenerTooltipEl(){
     document.addEventListener("click", (e) => {
       if (!tooltipFijado) return;
       if (el.contains(e.target)) return;
-      if (chartGrupos && e.target === chartGrupos.canvas) return;
+      if (e.target.tagName === "CANVAS" && e.target.dataset.pinTooltip) return;
       cerrarTooltipBoxplot();
     });
     document.addEventListener("keydown", (e) => {
@@ -1942,7 +1997,7 @@ function renderGroupList(students, modo){
 
   const html = sorted.map((g, idx) => {
     const medalClass = (g.global !== null && idx < 3) ? medals[idx] : "";
-    const director = CONFIG.directores[g.grupo] || "Director por asignar";
+    const director = directorDe(g.grupo, anioPrincipal()) || "Director por asignar";
     let deltaHtml = "";
     if (modo === "comparativo" && g.global !== null){
       const prev = byGrupoS1.find(x => x.grupo === g.grupo);
@@ -2028,7 +2083,7 @@ function renderTable(students, modo){
     const sb11 = byGrupoSaber11 ? byGrupoSaber11.find(x => x.grupo === g) : null;
     return {
       grupo: g, grado: inferirGrado(g),
-      director: CONFIG.directores[g] || "—",
+      director: directorDe(g, anioPrincipal()) || "—",
       total: students.filter(s => s.grupo === g).length,
       global1: s1.global, global2: s2.global, dif,
       globalSaber11: sb11 ? sb11.global : null,
@@ -2107,8 +2162,24 @@ function safeRender(fn, label){
   }
 }
 
+// Muestra la vista que corresponde al modo: el modo "undAnios" (comparativo
+// de Undécimos entre años) reemplaza todo el contenido del dashboard de un
+// solo año y oculta los filtros que no le aplican.
+function aplicarVistaPorModo(modo){
+  const und = modo === "undAnios";
+  document.getElementById("vistaNormal").style.display = und ? "none" : "";
+  document.getElementById("vistaUndAnios").style.display = und ? "" : "none";
+  document.querySelectorAll("[data-solo-normal]").forEach(el => { el.style.display = und ? "none" : ""; });
+  if (und) document.getElementById("avisoModo").classList.remove("mostrar");
+}
+
 function renderAll(){
   const modo = document.getElementById("fSimulacro").value;
+  aplicarVistaPorModo(modo);
+  if (modo === "undAnios"){
+    renderUndAniosVista();
+    return;
+  }
   const grupoSel = document.getElementById("fGrupo").value;
   const students = getFiltered();
   actualizarAvisoModo(modo, students);
@@ -2576,19 +2647,87 @@ document.querySelectorAll("#cohorteTableHead th").forEach(th => {
 });
 
 /* ============================================================
- * COMPARATIVO DE UNDÉCIMOS ENTRE AÑOS
+ * DIRECTORES DE GRUPO POR AÑO
+ * ============================================================
+ * Los directores de grupo cambian de un año a otro, así que ya no basta
+ * con un mapa fijo Grupo -> Director. Se leen de un archivo aparte,
+ * directores.csv, en formato "largo" (una fila por año y grupo):
+ *
+ *     Anio,Grupo,Director
+ *     2026,1101,Evely Uribe
+ *     2025,1101,Nombre del director de ese año
+ *
+ * El archivo es opcional: si no existe, o falta un grupo/año, el nombre
+ * simplemente no aparece (solo el año en CONFIG.anioDirectoresPorDefecto
+ * usa el mapa CONFIG.directores como respaldo). Para llenarlo desde Google
+ * Sheets, basta con una pestaña con esas 3 columnas, publicada como CSV
+ * o descargada como directores.csv y subida al repositorio.
+ * ============================================================ */
+let DIRECTORES_POR_ANIO = {};   // { "2026": { "1101": "Nombre" } }
+let _directoresPromesa = null;
+
+function _normClave(t){
+  return (t || "").toString().normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+}
+
+function parsearDirectoresCsv(texto){
+  const res = Papa.parse(texto, { header: true, skipEmptyLines: true });
+  const mapa = {};
+  (res.data || []).forEach(fila => {
+    const f = {};
+    Object.keys(fila).forEach(k => { f[_normClave(k)] = (fila[k] || "").toString().trim(); });
+    const anio = f.anio || f.ano || f.year;
+    const grupo = f.grupo;
+    const director = f.director || f.nombre || f["director de grupo"];
+    if (!anio || !grupo || !director) return;
+    (mapa[anio] = mapa[anio] || {})[grupo] = director;
+  });
+  return mapa;
+}
+
+function cargarDirectores(){
+  if (_directoresPromesa) return _directoresPromesa;
+  const archivo = CONFIG.directoresCsv;
+  if (!archivo){ _directoresPromesa = Promise.resolve(DIRECTORES_POR_ANIO); return _directoresPromesa; }
+  const url = archivo + (archivo.includes("?") ? "&" : "?") + "t=" + Date.now();
+  _directoresPromesa = fetch(url, { cache: "no-store" })
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+    .then(txt => { DIRECTORES_POR_ANIO = parsearDirectoresCsv(txt); return DIRECTORES_POR_ANIO; })
+    .catch(err => {
+      console.info("directores.csv no disponible (se usa el mapa de respaldo):", err.message);
+      return DIRECTORES_POR_ANIO;
+    });
+  return _directoresPromesa;
+}
+
+function directorDe(grupo, anio){
+  const porAnio = DIRECTORES_POR_ANIO[String(anio)];
+  if (porAnio && porAnio[grupo]) return porAnio[grupo];
+  if (String(anio) === String(CONFIG.anioDirectoresPorDefecto) && CONFIG.directores[grupo]) return CONFIG.directores[grupo];
+  return null;
+}
+
+// Año que se está viendo en la vista normal del dashboard.
+function anioPrincipal(){
+  const el = document.getElementById("fAnio");
+  return (el && el.value) || CONFIG.anioDirectoresPorDefecto;
+}
+
+/* ============================================================
+ * COMPARATIVO DE UNDÉCIMOS ENTRE AÑOS (modo "undAnios" del Simulacro)
  * ============================================================
  * Para cada año elegido se toman SOLO los estudiantes de Undécimo de su
  * CSV (vía cargarAnio / CACHE_ANIOS, la misma caché del Seguimiento de
- * Cohorte) y se promedian Primer Simulacro, Segundo Simulacro y, si ya
- * existe, la Prueba Saber 11 real. Un año sin resultados reales de Saber 11
- * se muestra con "—" en vez de un 0 que engañe.
+ * Cohorte). Un año sin resultados reales de Saber 11 se muestra con "—" o
+ * "Pendiente" en vez de un 0 que engañe.
  */
 let undAniosSel = new Set();
-let undDatos = [];          // [{anio, n, s1, s2, saber11}] con aggregate() por bloque
-let undMetricaAreas = "s2";
-let chartUndGlobal, chartUndAreas;
+let undDatos = [];            // [{anio, estudiantes, n, s1, s2, saber11}]
+let undMetrica = "s2";
+let undCargando = false;
+let chartUndBox, chartUndAreas, chartsUndNiveles = [];
 const COLORES_ANIOS = ["#c9a24b", "#c40016", "#2f6f4f", "#4a6fa5", "#8a5a9e"];
+const NOMBRE_METRICA = { s1: "Primer Simulacro", s2: "Segundo Simulacro", saber11: "Prueba Saber 11 real" };
 const OPCIONES_UND_METRICA = [
   { value: "s1", label: "Primer Simulacro" },
   { value: "s2", label: "Segundo Simulacro" },
@@ -2603,65 +2742,203 @@ function renderUndAniosChips(){
   ).join("");
 }
 
-function renderUndGraficos(){
-  if (!undDatos.length) return;
-  const gold = "#c9a24b", red = "#c40016", verde = "#2f6f4f";
-  const labels = undDatos.map(d => d.anio);
-  const hayS11 = undDatos.some(d => d.saber11.global !== null);
+function valoresGlobales(estudiantes, bloqueId){
+  return estudiantes.filter(s => s[bloqueId] && s[bloqueId].global !== null).map(s => s[bloqueId].global);
+}
 
-  const datasetsG = [
-    { label:"Primer Simulacro", backgroundColor: gold, borderRadius:4, data: undDatos.map(d => d.s1.global) },
-    { label:"Segundo Simulacro", backgroundColor: red, borderRadius:4, data: undDatos.map(d => d.s2.global) },
-  ];
-  if (hayS11) datasetsG.push({ label:"Prueba Saber 11 real", backgroundColor: verde, borderRadius:4, data: undDatos.map(d => d.saber11.global) });
+function chipDelta(x){
+  if (x === null) return "—";
+  const cls = x > 0 ? "up" : (x < 0 ? "down" : "flat");
+  return `<span class="delta-chip ${cls}">${x > 0 ? "▲" : (x < 0 ? "▼" : "＝")} ${fmt(Math.abs(x))}</span>`;
+}
 
-  const vals = datasetsG.flatMap(d => d.data).filter(v => v !== null);
-  const yMin = vals.length ? Math.max(0, Math.floor((Math.min(...vals) - 20) / 10) * 10) : 0;
-
-  if (chartUndGlobal) chartUndGlobal.destroy();
-  chartUndGlobal = new Chart(document.getElementById("chartUndGlobal").getContext("2d"), {
-    type: "bar",
-    data: { labels, datasets: datasetsG },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      scales: { y: { min: yMin, grid:{ color:"#eee" } }, x: { grid:{ display:false } } },
-      plugins: { legend: { position:"top" } }
-    }
-  });
-
-  // Por área: una serie por año para la métrica elegida.
-  const datasetsA = undDatos.map((d, i) => ({
-    label: d.anio, backgroundColor: COLORES_ANIOS[i % COLORES_ANIOS.length], borderRadius:4,
-    data: d[undMetricaAreas].areas
-  }));
-  if (chartUndAreas) chartUndAreas.destroy();
-  chartUndAreas = new Chart(document.getElementById("chartUndAreas").getContext("2d"), {
-    type: "bar",
-    data: { labels: AREAS_CORTAS, datasets: datasetsA },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      scales: { y: { min:0, max:100, grid:{ color:"#eee" } }, x: { grid:{ display:false } } },
-      plugins: { legend: { position:"top" } }
-    }
-  });
-  renderToggleButtons("toggleUndMetrica", OPCIONES_UND_METRICA, undMetricaAreas);
-
+function renderUndResumen(){
   document.getElementById("undTableHead").innerHTML =
     ["Año","Estudiantes","Global S1","Global S2","Variación S2−S1","Saber 11 real (con dato)","Global Saber 11","Saber 11 − S2"]
       .map(h => `<th>${h}</th>`).join("");
   document.getElementById("undTableBody").innerHTML = undDatos.map(d => {
     const v = (d.s1.global !== null && d.s2.global !== null) ? d.s2.global - d.s1.global : null;
     const vs = (d.saber11.global !== null && d.s2.global !== null) ? d.saber11.global - d.s2.global : null;
-    const chip = (x) => {
-      if (x === null) return "—";
-      const cls = x > 0 ? "up" : (x < 0 ? "down" : "flat");
-      return `<span class="delta-chip ${cls}">${x > 0 ? "▲" : (x < 0 ? "▼" : "＝")} ${fmt(Math.abs(x))}</span>`;
-    };
     return `<tr><td>${d.anio}</td><td class="num">${d.n}</td><td class="num">${fmt(d.s1.global)}</td>
-      <td class="num">${fmt(d.s2.global)}</td><td class="num">${chip(v)}</td>
+      <td class="num">${fmt(d.s2.global)}</td><td class="num">${chipDelta(v)}</td>
       <td class="num">${d.saber11.global !== null ? d.saber11.count : "Pendiente"}</td>
-      <td class="num">${fmt(d.saber11.global)}</td><td class="num">${chip(vs)}</td></tr>`;
+      <td class="num">${fmt(d.saber11.global)}</td><td class="num">${chipDelta(vs)}</td></tr>`;
   }).join("");
+}
+
+function renderUndBoxplot(){
+  const gold = "#c9a24b", red = "#c40016", verde = "#2f6f4f";
+  const labels = undDatos.map(d => d.anio);
+  const serie = (label, color, fill, bloque) => ({
+    label, backgroundColor: fill, borderColor: color, borderWidth: 1.5,
+    data: undDatos.map(d => valoresGlobales(d.estudiantes, bloque))
+  });
+  const datasets = [
+    serie("Primer Simulacro", gold, "rgba(201,162,75,0.35)", "s1"),
+    serie("Segundo Simulacro", red, "rgba(196,0,22,0.30)", "s2"),
+  ];
+  if (undDatos.some(d => d.saber11.global !== null)){
+    datasets.push(serie("Prueba Saber 11 Real", verde, "rgba(47,111,79,0.28)", "saber11"));
+  }
+
+  const todos = datasets.flatMap(d => d.data.flat());
+  let yMin = 0, yMax = 500;
+  if (todos.length){
+    const dMin = Math.min(...todos), dMax = Math.max(...todos);
+    const pad = Math.max((dMax - dMin) * 0.12, 5);
+    yMin = Math.max(0, Math.floor((dMin - pad) / 5) * 5);
+    yMax = Math.ceil((dMax + pad) / 5) * 5;
+  }
+
+  cerrarTooltipBoxplot();
+  if (chartUndBox) chartUndBox.destroy();
+  const ctx = document.getElementById("chartUndBox").getContext("2d");
+  try {
+    chartUndBox = new Chart(ctx, {
+      type: "boxplot",
+      data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false, onClick: onClickBoxplot,
+        scales: { y: { min: yMin, max: yMax, grid: { color: "#eee" } }, x: { grid: { display: false } } },
+        plugins: {
+          legend: { position: "top" },
+          tooltip: { enabled: false, external: externalTooltipHandler, callbacks: { label: tooltipBoxplotLabel } }
+        }
+      }
+    });
+  } catch (err){
+    console.warn("Diagrama de cajas no disponible, se usa barras de respaldo.", err);
+    chartUndBox = new Chart(ctx, {
+      type: "bar",
+      data: { labels, datasets: datasets.map(d => ({
+        label: d.label + " (promedio)", backgroundColor: d.borderColor, borderRadius: 4,
+        data: d.data.map(v => avg(v))
+      })) },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: yMin, max: yMax } } }
+    });
+  }
+}
+
+function renderUndAreas(){
+  const datasets = undDatos.map((d, i) => ({
+    label: d.anio, backgroundColor: COLORES_ANIOS[i % COLORES_ANIOS.length], borderRadius: 4,
+    data: d[undMetrica].areas
+  }));
+  if (chartUndAreas) chartUndAreas.destroy();
+  chartUndAreas = new Chart(document.getElementById("chartUndAreas").getContext("2d"), {
+    type: "bar",
+    data: { labels: AREAS_CORTAS, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { min: 0, max: 100, grid: { color: "#eee" } }, x: { grid: { display: false } } },
+      plugins: { legend: { position: "top" } }
+    }
+  });
+}
+
+// Barras agrupadas por año: para cada área, el % de estudiantes en cada
+// Nivel de Desempeño (1 a 4). Solo existe para Primer y Segundo Simulacro.
+function renderUndNiveles(){
+  const grid = document.getElementById("undNivelesGrid");
+  chartsUndNiveles.forEach(c => c.destroy());
+  chartsUndNiveles = [];
+  if (undMetrica === "saber11"){
+    grid.className = "";
+    grid.innerHTML = '<div class="section-sub">La Prueba Saber 11 real no trae niveles de desempeño en el CSV. Elige Primer o Segundo Simulacro para ver este comparativo.</div>';
+    return;
+  }
+  grid.className = "chart-grid";
+  grid.innerHTML = AREAS.map((a, i) =>
+    `<div><div class="honor-col-title" style="color:var(--muted);">${a}</div>
+     <div class="chart-box small"><canvas id="undNiv_${i}"></canvas></div></div>`
+  ).join("");
+  AREAS.forEach((_, i) => {
+    const datasets = undDatos.map((d, j) => {
+      const vals = d.estudiantes
+        .filter(s => s[undMetrica] && s[undMetrica].niveles[i] !== null)
+        .map(s => s[undMetrica].niveles[i]);
+      const tot = vals.length;
+      return {
+        label: d.anio, backgroundColor: COLORES_ANIOS[j % COLORES_ANIOS.length], borderRadius: 3,
+        data: [1, 2, 3, 4].map(n => tot ? Math.round(vals.filter(v => v === n).length / tot * 1000) / 10 : null)
+      };
+    });
+    chartsUndNiveles.push(new Chart(document.getElementById("undNiv_" + i).getContext("2d"), {
+      type: "bar",
+      data: { labels: ["Nivel 1", "Nivel 2", "Nivel 3", "Nivel 4"], datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { min: 0, max: 100, ticks: { callback: v => v + "%" }, grid: { color: "#eee" } }, x: { grid: { display: false } } },
+        plugins: { legend: { position: "top" } }
+      }
+    }));
+  });
+}
+
+function ordenarDesc(arr, clave){
+  return [...arr].sort((a, b) => {
+    if (a[clave] === null && b[clave] === null) return 0;
+    if (a[clave] === null) return 1;
+    if (b[clave] === null) return -1;
+    return b[clave] - a[clave];
+  });
+}
+
+function renderUndRankings(){
+  const filtro = document.getElementById("undFiltroAnio").value;
+  const bloque = undMetrica;
+  const filtrados = filtro === "todos" ? undDatos : undDatos.filter(d => d.anio === filtro);
+
+  // 1) Ranking de Undécimo por año (siempre con todos los años comparados)
+  const porAnio = ordenarDesc(undDatos.map(d => {
+    const v = valoresGlobales(d.estudiantes, bloque);
+    return { anio: d.anio, n: v.length, prom: avg(v) };
+  }), "prom");
+  document.getElementById("undRankAniosBody").innerHTML = porAnio.map((r, i) =>
+    `<tr><td class="num">${r.prom !== null ? i + 1 : "—"}</td><td>${r.anio}</td><td class="num">${r.n}</td><td class="num">${fmt(r.prom)}</td></tr>`
+  ).join("");
+
+  // 2) Ranking de grupos (año + grupo), con el director de ESE año
+  const grupos = [];
+  filtrados.forEach(d => {
+    [...new Set(d.estudiantes.map(s => s.grupo))].forEach(g => {
+      const v = valoresGlobales(d.estudiantes.filter(s => s.grupo === g), bloque);
+      if (v.length) grupos.push({ anio: d.anio, grupo: g, director: directorDe(g, d.anio) || "—", n: v.length, prom: avg(v) });
+    });
+  });
+  document.getElementById("undRankGruposBody").innerHTML = ordenarDesc(grupos, "prom").map((r, i) =>
+    `<tr><td class="num">${i + 1}</td><td>${r.anio}</td><td>${escaparHtml(r.grupo)}</td><td>${escaparHtml(r.director)}</td><td class="num">${r.n}</td><td class="num">${fmt(r.prom)}</td></tr>`
+  ).join("") || '<tr><td colspan="6" style="color:var(--muted);">Sin datos para esta medida.</td></tr>';
+
+  // 3) Ranking de todos los estudiantes, señalando grupo y año
+  const LIMITE = 50;
+  const est = [];
+  filtrados.forEach(d => d.estudiantes.forEach(s => {
+    if (s[bloque] && s[bloque].global !== null){
+      est.push({ nombre: s.nombre, grupo: s.grupo, anio: d.anio, director: directorDe(s.grupo, d.anio) || "—", puntaje: s[bloque].global });
+    }
+  }));
+  const topEst = ordenarDesc(est, "puntaje");
+  document.getElementById("undRankEstNota").textContent =
+    topEst.length ? "(" + Math.min(LIMITE, topEst.length) + " mejores de " + topEst.length + ")" : "";
+  document.getElementById("undRankEstBody").innerHTML = topEst.slice(0, LIMITE).map((r, i) =>
+    `<tr><td class="num">${i + 1}</td><td>${escaparHtml(r.nombre)}</td><td>${escaparHtml(r.grupo)}</td><td>${r.anio}</td><td>${escaparHtml(r.director)}</td><td class="num">${fmt(r.puntaje)}</td></tr>`
+  ).join("") || '<tr><td colspan="6" style="color:var(--muted);">Sin datos para esta medida.</td></tr>';
+}
+
+function renderUndSegunMetrica(){
+  document.querySelectorAll(".undMetricaNombre").forEach(el => { el.textContent = NOMBRE_METRICA[undMetrica]; });
+  renderToggleButtons("toggleUndMetrica", OPCIONES_UND_METRICA, undMetrica);
+  safeRender(renderUndAreas, "áreas Undécimos");
+  safeRender(renderUndNiveles, "niveles Undécimos");
+  safeRender(renderUndRankings, "rankings Undécimos");
+}
+
+function renderUndGraficos(){
+  if (!undDatos.length) return;
+  safeRender(renderUndResumen, "resumen Undécimos");
+  safeRender(renderUndBoxplot, "cajas Undécimos");
+  renderUndSegunMetrica();
 }
 
 function compararUndecimos(){
@@ -2671,13 +2948,15 @@ function compararUndecimos(){
   if (!anios.length){
     estadoEl.textContent = "Elige al menos un año para comparar.";
     resEl.style.display = "none";
-    return;
+    return Promise.resolve();
   }
+  undCargando = true;
   estadoEl.textContent = "Cargando datos de " + anios.join(", ") + "…";
-  Promise.all(anios.map(cargarAnio)).then(listas => {
+  return Promise.all([cargarDirectores(), ...anios.map(cargarAnio)]).then(res => {
+    const listas = res.slice(1);
     undDatos = anios.map((anio, i) => {
       const und = listas[i].filter(s => s.grado === "Undécimo");
-      return { anio, n: und.length, s1: aggregate(und, "s1"), s2: aggregate(und, "s2"), saber11: aggregate(und, "saber11") };
+      return { anio, estudiantes: und, n: und.length, s1: aggregate(und, "s1"), s2: aggregate(und, "s2"), saber11: aggregate(und, "saber11") };
     }).filter(d => d.n > 0);
     if (!undDatos.length){
       estadoEl.textContent = "Ninguno de los años elegidos tiene estudiantes de Undécimo.";
@@ -2687,12 +2966,26 @@ function compararUndecimos(){
     const sinS11 = undDatos.filter(d => d.saber11.global === null).map(d => d.anio);
     estadoEl.textContent = "Años comparados: " + undDatos.map(d => d.anio + " (" + d.n + " estudiantes)").join(" · ") +
       (sinS11.length ? ". Sin resultados reales de Saber 11 todavía: " + sinS11.join(", ") + "." : "");
+
+    const sel = document.getElementById("undFiltroAnio");
+    const previo = sel.value;
+    sel.innerHTML = '<option value="todos">Todos los años</option>' +
+      undDatos.map(d => `<option value="${d.anio}">${d.anio}</option>`).join("");
+    sel.value = undDatos.some(d => d.anio === previo) ? previo : "todos";
+
     resEl.style.display = "";
-    renderUndGraficos();
+    ensureChartJs(renderUndGraficos);
   }).catch(err => {
     estadoEl.textContent = "No se pudo completar la comparación: " + err.message;
     console.error(err);
-  });
+  }).then(() => { undCargando = false; });
+}
+
+// Se llama desde renderAll() cuando el Simulacro es "Comparativo Undécimo".
+function renderUndAniosVista(){
+  renderUndAniosChips();
+  if (undDatos.length) ensureChartJs(renderUndGraficos);
+  else if (!undCargando) compararUndecimos();
 }
 
 renderUndAniosChips();
@@ -2706,10 +2999,15 @@ document.getElementById("undAniosChips").addEventListener("click", (e) => {
 document.getElementById("toggleUndMetrica").addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-view]");
   if (!btn) return;
-  undMetricaAreas = btn.dataset.view;
-  renderUndGraficos();
+  undMetrica = btn.dataset.view;
+  renderUndSegunMetrica();
 });
+document.getElementById("undFiltroAnio").addEventListener("change", renderUndRankings);
 document.getElementById("btnCompararUndecimos").addEventListener("click", compararUndecimos);
+
+// Los directores se cargan una vez al abrir; al llegar, se refresca la
+// vista para que aparezcan los nombres del año correspondiente.
+cargarDirectores().then(() => { if (STUDENTS.length) renderAll(); });
 
 /* ============================================================
  * SELECTOR DE AÑO DEL DASHBOARD PRINCIPAL
