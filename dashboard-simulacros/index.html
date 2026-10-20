@@ -2906,11 +2906,17 @@ function renderUndNiveles(){
   leyenda.innerHTML = NIVEL_LABELS.map((label, idx) =>
     `<span class="item"><span class="swatch" style="background:${NIVEL_COLORS[idx]}"></span>${label}</span>`
   ).join("");
-  grid.className = "chart-grid";
-  grid.innerHTML = AREAS.map((a, i) =>
-    `<div><div class="honor-col-title" style="color:var(--muted);">${a}</div>
-     <div class="chart-box small"><canvas id="undNiv_${i}"></canvas></div></div>`
-  ).join("");
+  // Carrusel horizontal (una tarjeta por área), igual que los niveles de
+  // Primer y Segundo Simulacro: en pantallas angostas se desliza de a una
+  // y en pantallas anchas caben varias a la vez (ver CSS .niveles-slide).
+  grid.className = "niveles-slider-wrap";
+  grid.innerHTML = '<div class="niveles-slider-hint">Desliza para ver las demás áreas →</div>' +
+    '<div class="niveles-slider">' + AREAS.map((a, i) =>
+      `<div class="niveles-slide">
+         <div class="honor-col-title" style="color:var(--muted); text-align:center;">${a}</div>
+         <div class="chart-box small"><canvas id="undNiv_${i}"></canvas></div>
+       </div>`
+    ).join("") + '</div>';
   const anios = undDatos.map(d => d.anio);
   AREAS.forEach((_, i) => {
     // Un dataset por nivel; cada posición del arreglo es un año.
