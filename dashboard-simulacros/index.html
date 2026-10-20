@@ -620,7 +620,7 @@
           <div class="chart-box" style="margin-bottom:22px;"><canvas id="chartUndAreas"></canvas></div>
 
           <div class="honor-col-title" style="color:var(--muted);">Niveles de desempeño (% de estudiantes) — <span class="undMetricaNombre"></span></div>
-          <div class="niveles-legend" style="margin:6px 0 10px;">Cada gráfico compara los años en los Niveles 1 (más bajo) a 4 (más alto).</div>
+          <div class="niveles-legend" id="undNivelesLegend" style="margin:6px 0 10px;"></div>
           <div class="chart-grid" id="undNivelesGrid"></div>
         </div>
 
@@ -2836,41 +2836,65 @@ function renderUndAreas(){
   });
 }
 
-// Barras agrupadas por año: para cada área, el % de estudiantes en cada
-// Nivel de Desempeño (1 a 4). Solo existe para Primer y Segundo Simulacro.
+// Barras apiladas: para cada área, el eje horizontal son los años y cada
+// año tiene UNA sola barra dividida por los Niveles de Desempeño (1 a 4),
+// con el mismo estilo (colores, % dentro de cada tramo) que los niveles de
+// los simulacros. Solo existe para Primer y Segundo Simulacro.
 function renderUndNiveles(){
   const grid = document.getElementById("undNivelesGrid");
+  const leyenda = document.getElementById("undNivelesLegend");
   chartsUndNiveles.forEach(c => c.destroy());
   chartsUndNiveles = [];
   if (undMetrica === "saber11"){
+    leyenda.innerHTML = "";
     grid.className = "";
-    grid.innerHTML = '<div class="section-sub">La Prueba Saber 11 real no trae niveles de desempeño en el CSV. Elige Primer o Segundo Simulacro para ver este comparativo.</div>';
+    grid.innerHTML = '<div class="section-sub">La Prueba Saber 11 real no trae niveles de desempeño en el CSV, solo puntajes. Elige Primer o Segundo Simulacro para ver este comparativo.</div>';
     return;
   }
+  leyenda.innerHTML = NIVEL_LABELS.map((label, idx) =>
+    `<span class="item"><span class="swatch" style="background:${NIVEL_COLORS[idx]}"></span>${label}</span>`
+  ).join("");
   grid.className = "chart-grid";
   grid.innerHTML = AREAS.map((a, i) =>
     `<div><div class="honor-col-title" style="color:var(--muted);">${a}</div>
      <div class="chart-box small"><canvas id="undNiv_${i}"></canvas></div></div>`
   ).join("");
+  const anios = undDatos.map(d => d.anio);
   AREAS.forEach((_, i) => {
-    const datasets = undDatos.map((d, j) => {
-      const vals = d.estudiantes
-        .filter(s => s[undMetrica] && s[undMetrica].niveles[i] !== null)
-        .map(s => s[undMetrica].niveles[i]);
-      const tot = vals.length;
-      return {
-        label: d.anio, backgroundColor: COLORES_ANIOS[j % COLORES_ANIOS.length], borderRadius: 3,
-        data: [1, 2, 3, 4].map(n => tot ? Math.round(vals.filter(v => v === n).length / tot * 1000) / 10 : null)
-      };
+    // Un dataset por nivel; cada posición del arreglo es un año.
+    const porAnio = undDatos.map(d => {
+      const counts = [0, 0, 0, 0];
+      let total = 0;
+      d.estudiantes.forEach(s => {
+        const b = s[undMetrica];
+        const nivel = b && b.niveles ? b.niveles[i] : null;
+        if (nivel === null || nivel === undefined) return;
+        const lvl = Math.round(nivel);
+        if (lvl >= 1 && lvl <= 4){ counts[lvl - 1]++; total++; }
+      });
+      return { counts, total };
     });
+    const datasets = [0, 1, 2, 3].map(li => ({
+      label: NIVEL_LABELS[li],
+      backgroundColor: NIVEL_COLORS[li],
+      stack: "niveles",
+      data: porAnio.map(a => a.total ? (a.counts[li] / a.total * 100) : 0)
+    }));
     chartsUndNiveles.push(new Chart(document.getElementById("undNiv_" + i).getContext("2d"), {
       type: "bar",
-      data: { labels: ["Nivel 1", "Nivel 2", "Nivel 3", "Nivel 4"], datasets },
+      data: { labels: anios, datasets },
       options: {
         responsive: true, maintainAspectRatio: false,
-        scales: { y: { min: 0, max: 100, ticks: { callback: v => v + "%" }, grid: { color: "#eee" } }, x: { grid: { display: false } } },
-        plugins: { legend: { position: "top" } }
-      }
+        scales: {
+          x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 } } },
+          y: { stacked: true, min: 0, max: 100, ticks: { callback: v => v + "%", font: { size: 10.5 } }, grid: { color: "#eee" } }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: (item) => item.dataset.label + ": " + Math.round(item.raw) + "%" } }
+        }
+      },
+      plugins: [STACK_LABEL_PLUGIN]
     }));
   });
 }
