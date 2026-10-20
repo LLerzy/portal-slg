@@ -745,20 +745,23 @@ const BLOQUES = [
 const FILA_INICIO_DATOS = 3; // fila 4 del Sheet (índice 0-based)
 
 // ---- Prueba Saber 11 real aplicada (solo Undécimo) ----
-// Bloque distinto a los de arriba: no trae posición ni niveles de
-// desempeño, solo Puntaje Global, las 5 áreas y la diferencia ya
-// calculada en el Sheet frente al Segundo Simulacro. Columnas fijas
-// (no usan BLOQUE_ANCHO porque no es un bloque de 14 columnas).
-const COL_SABER11 = { GLOBAL:53, AREA_INICIO:54, DIFERENCIA:59 };
+// Bloque distinto a los de arriba: no trae posición, solo Puntaje Global,
+// las 5 áreas, los Niveles de Desempeño por área (desde que se agregaron
+// al Sheet) y la diferencia ya calculada frente al Segundo Simulacro. No
+// usa BLOQUE_ANCHO porque no es un bloque de 14 columnas.
+// Los valores de abajo son el diseño ANTERIOR (sin niveles); en cada carga
+// de CSV, detectarLayoutExtras() los reemplaza leyendo los encabezados, así
+// que sirven tanto los años con el diseño viejo como los del nuevo.
+let COL_SABER11 = { GLOBAL:53, AREA_INICIO:54, NIVEL_INICIO:null, DIFERENCIA:59 };
 
 // ---- Estrategias de preparación (solo Undécimo) ----
 // Columnas booleanas ("Sí" / vacío) + un campo de texto libre. Un
 // estudiante puede marcar más de una estrategia a la vez.
-const COL_ESTRATEGIA = { MUNICIPAL:60, SEMESTRE_CERO:61, INTENSIVO:62, OTRA:63 };
+let COL_ESTRATEGIA = { MUNICIPAL:60, SEMESTRE_CERO:61, INTENSIVO:62, OTRA:63 };
 const ESTRATEGIAS_INFO = [
-  { id:"municipal",    label:"Preicfes municipal",  col:COL_ESTRATEGIA.MUNICIPAL },
-  { id:"semestreCero", label:"Semestre cero",       col:COL_ESTRATEGIA.SEMESTRE_CERO },
-  { id:"intensivo",    label:"Preicfes intensivo",  col:COL_ESTRATEGIA.INTENSIVO },
+  { id:"municipal",    label:"Preicfes municipal",  key:"MUNICIPAL" },
+  { id:"semestreCero", label:"Semestre cero",       key:"SEMESTRE_CERO" },
+  { id:"intensivo",    label:"Preicfes intensivo",  key:"INTENSIVO" },
 ];
 
 // Orden pedagógico de los grados, usado para poblar el filtro y para las
@@ -922,9 +925,15 @@ function extraerSaber11(fila){
   const areas = [];
   for (let k=0;k<5;k++) areas.push(leerNum(fila[COL_SABER11.AREA_INICIO + k]));
   const global = leerNum(fila[COL_SABER11.GLOBAL]);
-  const hayDatos = global !== null || areas.some(a => a !== null);
+  // Niveles de desempeño por área (1 a 4): solo existen en los CSV con el
+  // diseño nuevo; en los anteriores quedan en null y el panel lo avisa.
+  const niveles = [];
+  for (let k=0;k<5;k++){
+    niveles.push(COL_SABER11.NIVEL_INICIO === null ? null : leerNum(fila[COL_SABER11.NIVEL_INICIO + k]));
+  }
+  const hayDatos = global !== null || areas.some(a => a !== null) || niveles.some(n => n !== null);
   if (!hayDatos) return null;
-  return { global, areas, diferencia: leerNum(fila[COL_SABER11.DIFERENCIA]) };
+  return { global, areas, niveles, diferencia: leerNum(fila[COL_SABER11.DIFERENCIA]) };
 }
 
 // Estrategias de preparación (solo Undécimo). Un estudiante puede estar
@@ -932,7 +941,7 @@ function extraerSaber11(fila){
 function extraerEstrategias(fila){
   const marcado = v => (v || "").toString().trim().toLowerCase() === "sí" || (v || "").toString().trim().toLowerCase() === "si";
   const estr = {};
-  ESTRATEGIAS_INFO.forEach(e => { estr[e.id] = marcado(fila[e.col]); });
+  ESTRATEGIAS_INFO.forEach(e => { estr[e.id] = marcado(fila[COL_ESTRATEGIA[e.key]]); });
   estr.otra = (fila[COL_ESTRATEGIA.OTRA] || "").toString().trim();
   estr.cantidad = ESTRATEGIAS_INFO.reduce((n, e) => n + (estr[e.id] ? 1 : 0), 0);
   return estr;
@@ -951,7 +960,45 @@ function inferirGrado(grupo){
   return nombres[num] || "Otro";
 }
 
+// Lee los encabezados (filas 1 a 3 del Sheet) para ubicar las columnas del
+// bloque de Prueba Saber 11 real y de Estrategias, en vez de depender de
+// posiciones fijas: así funcionan igual los CSV de años anteriores (sin
+// niveles de desempeño) y los nuevos (con 5 columnas de niveles que
+// desplazan lo que viene después). Si no encuentra un encabezado, deja la
+// posición del diseño anterior.
+function detectarLayoutExtras(rows){
+  const norm = t => (t || "").toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  const enc = [0, 1, 2].map(i => (rows[i] || []).map(norm));
+  const buscar = (fila, desde, pred) => {
+    for (let c = desde; c < enc[fila].length; c++) if (enc[fila][c] && pred(enc[fila][c])) return c;
+    return -1;
+  };
+  const buscarEnTodas = (desde, pred) => {
+    for (let f = 0; f < 3; f++){ const c = buscar(f, desde, pred); if (c >= 0) return c; }
+    return -1;
+  };
+
+  const inicio = (() => { const c = buscarEnTodas(40, t => t.includes("saber 11 real")); return c >= 0 ? c : 53; })();
+  const global = (() => { const c = buscar(2, inicio, t => t.includes("puntaje global")); return c >= 0 ? c : inicio; })();
+  const niv = buscarEnTodas(global + 6, t => t.includes("niveles de desempe"));
+  const dif = buscar(2, global + 6, t => t.includes("diferencia"));
+  const col = (texto, defecto) => { const c = buscar(2, inicio, t => t.includes(texto)); return c >= 0 ? c : defecto; };
+
+  COL_SABER11 = {
+    GLOBAL: global, AREA_INICIO: global + 1,
+    NIVEL_INICIO: niv >= 0 ? niv : null,
+    DIFERENCIA: dif >= 0 ? dif : 59
+  };
+  COL_ESTRATEGIA = {
+    MUNICIPAL: col("preicfes municipal", 60),
+    SEMESTRE_CERO: col("semestre cero", 61),
+    INTENSIVO: col("preicfes intensivo", 62),
+    OTRA: col("otra estrategia", 63)
+  };
+}
+
 function buildStudents(rows){
+  detectarLayoutExtras(rows);
   const out = [];
   for (let i=FILA_INICIO_DATOS; i<rows.length; i++){
     const fila = rows[i];
@@ -1333,18 +1380,23 @@ document.getElementById("toggleNiveles").addEventListener("click", (e) => {
   renderAll();
 });
 
+// ¿Hay al menos un nivel de desempeño real de Saber 11 en estos estudiantes?
+function hayNivelesSaber11(estudiantes){
+  return estudiantes.some(s => s.saber11 && s.saber11.niveles && s.saber11.niveles.some(n => n !== null));
+}
+
 function renderNivelesCharts(students, modo){
   const grid = document.getElementById("nivelesGrid");
 
-  // La Prueba Saber 11 real no trae niveles de desempeño en el Sheet
-  // (solo puntajes), así que esta sección no aplica en ese modo.
-  if (modo === "saber11"){
+  // Los niveles de la Prueba Saber 11 real existen solo en los CSV con el
+  // diseño nuevo del Sheet; si no hay ninguno cargado, se avisa.
+  if (modo === "saber11" && !hayNivelesSaber11(students)){
     document.getElementById("nivelesLegend").innerHTML = "";
     renderToggleButtons("toggleNiveles", null, null);
     grid.className = "chart-grid single";
     grid.innerHTML = '<p style="color:var(--muted); font-size:13.5px; text-align:center; padding:30px 10px;">' +
-      'El Sheet de la Prueba Saber 11 real solo trae puntajes (Global y por área), no niveles de desempeño. ' +
-      'Esta sección no aplica en este modo — consulta los niveles en el Primer o Segundo Simulacro.</p>';
+      'Todavía no hay niveles de desempeño de la Prueba Saber 11 real cargados para estos estudiantes (o este CSV es de un año ' +
+      'anterior al diseño que los incluye). Mientras tanto, consulta los niveles en el Primer o Segundo Simulacro.</p>';
     nivelesChartInstances.forEach(c => c.destroy());
     nivelesChartInstances = [];
     return;
@@ -2845,10 +2897,10 @@ function renderUndNiveles(){
   const leyenda = document.getElementById("undNivelesLegend");
   chartsUndNiveles.forEach(c => c.destroy());
   chartsUndNiveles = [];
-  if (undMetrica === "saber11"){
+  if (undMetrica === "saber11" && !undDatos.some(d => hayNivelesSaber11(d.estudiantes))){
     leyenda.innerHTML = "";
     grid.className = "";
-    grid.innerHTML = '<div class="section-sub">La Prueba Saber 11 real no trae niveles de desempeño en el CSV, solo puntajes. Elige Primer o Segundo Simulacro para ver este comparativo.</div>';
+    grid.innerHTML = '<div class="section-sub">Todavía no hay niveles de desempeño de la Prueba Saber 11 real en los CSV de los años elegidos. Elige Primer o Segundo Simulacro mientras tanto.</div>';
     return;
   }
   leyenda.innerHTML = NIVEL_LABELS.map((label, idx) =>
