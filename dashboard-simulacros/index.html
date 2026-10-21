@@ -431,6 +431,7 @@
           <option value="s2">Segundo Simulacro</option>
           <option value="saber11">Prueba Saber 11 (real)</option>
           <option value="undAnios">Comparativo Undécimo (varios años)</option>
+          <option value="udeaAnios">Simulacro Universidad de Antioquia (varios años)</option>
         </select>
       </div>
       <div class="field field-grados" data-solo-normal>
@@ -513,6 +514,17 @@
         <table class="results" id="tablaEstrategias">
           <thead><tr id="estrategiasTableHead"></tr></thead>
           <tbody id="tablaEstrategiasBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="promocionSection">
+      <h2>Estudiantes promovidos en el año</h2>
+      <div class="section-sub" id="promocionSub"></div>
+      <div style="overflow-x:auto;">
+        <table class="results" id="tablaPromocion">
+          <thead><tr id="promocionTableHead"></tr></thead>
+          <tbody id="promocionTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -655,6 +667,78 @@
       </div>
     </div>
 
+    <div id="vistaUdea" style="display:none;">
+      <div class="section">
+        <h2>Simulacro de ingreso a la Universidad de Antioquia — comparativo por años</h2>
+        <div class="section-sub">
+          Resultados del simulacro de ingreso a la Universidad de Antioquia presentado por algunos estudiantes de
+          <strong>Undécimo</strong>: Razonamiento Lógico (RL), Lectura Crítica (LC) y Puntaje total (0–100). Cada año se lee de su
+          propio archivo, así que esta vista no usa los filtros de año, grado ni grupo. Los años cuyo CSV aún no trae
+          esas columnas aparecen sin datos.
+        </div>
+        <div class="filterbar" style="margin-bottom:10px;">
+          <div class="field" style="flex:1 1 320px;">
+            <label>Años a comparar</label>
+            <div class="grado-chips" id="udeaAniosChips"></div>
+          </div>
+          <div class="spacer"></div>
+          <button class="primary" id="btnCompararUdea">Comparar</button>
+        </div>
+        <div id="udeaEstado" style="font-size:13.5px; color:var(--muted);"></div>
+      </div>
+
+      <div id="udeaResultados" style="display:none;">
+        <div class="section">
+          <h2>Resumen por año</h2>
+          <div style="overflow-x:auto;">
+            <table class="results">
+              <thead><tr id="udeaTableHead"></tr></thead>
+              <tbody id="udeaTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Distribución de los puntajes</h2>
+          <div class="section-sub">Diagrama de cajas y alambres por año: una caja para el Puntaje total, otra para Razonamiento Lógico y otra para Lectura Crítica. Haz clic sobre una caja para fijar el detalle (mínimo, cuartiles, máximo).</div>
+          <div class="chart-box"><canvas id="chartUdeaBox" data-pin-tooltip="1"></canvas></div>
+        </div>
+
+        <div class="section">
+          <h2>Promedio por componente</h2>
+          <div class="section-sub">Barras agrupadas: un color por año.</div>
+          <div class="chart-box"><canvas id="chartUdeaComp"></canvas></div>
+        </div>
+
+        <div class="section">
+          <h2>Rankings (Puntaje total)</h2>
+          <div class="filterbar" style="margin-bottom:14px;">
+            <div class="field">
+              <label for="udeaFiltroAnio">Año en los rankings de grupos y estudiantes</label>
+              <select id="udeaFiltroAnio"><option value="todos">Todos los años</option></select>
+            </div>
+          </div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Ranking por año</div>
+          <div style="overflow-x:auto; margin-bottom:22px;">
+            <table class="results"><thead><tr><th>#</th><th>Año</th><th>Estudiantes con dato</th><th>Promedio total</th></tr></thead>
+            <tbody id="udeaRankAniosBody"></tbody></table>
+          </div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Ranking de grupos</div>
+          <div style="overflow-x:auto; margin-bottom:22px;">
+            <table class="results"><thead><tr><th>#</th><th>Año</th><th>Grupo</th><th>Director de grupo</th><th>Estudiantes con dato</th><th>Promedio total</th></tr></thead>
+            <tbody id="udeaRankGruposBody"></tbody></table>
+          </div>
+
+          <div class="honor-col-title" style="color:var(--muted);">Ranking de estudiantes <span id="udeaRankEstNota" style="font-weight:400;"></span></div>
+          <div style="overflow-x:auto;">
+            <table class="results"><thead><tr><th>#</th><th>Estudiante</th><th>Grupo</th><th>Año</th><th>Director de grupo</th><th>RL</th><th>LC</th><th>Total</th></tr></thead>
+            <tbody id="udeaRankEstBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -757,6 +841,13 @@ let COL_SABER11 = { GLOBAL:53, AREA_INICIO:54, NIVEL_INICIO:null, DIFERENCIA:59 
 // ---- Estrategias de preparación (solo Undécimo) ----
 // Columnas booleanas ("Sí" / vacío) + un campo de texto libre. Un
 // estudiante puede marcar más de una estrategia a la vez.
+// Simulacro de ingreso a la Universidad de Antioquia (algunos Undécimos):
+// Razonamiento Lógico, Lectura Crítica y Puntaje total (0-100). null si el
+// CSV es de un año que todavía no trae esas columnas. COL_PROMO = columna
+// "Posible promoción" (promoción anticipada durante el año), -1 si no existe.
+let COL_UDEA = null;
+let COL_PROMO = -1;
+const COL_SEXO = 3;
 let COL_ESTRATEGIA = { MUNICIPAL:60, SEMESTRE_CERO:61, INTENSIVO:62, OTRA:63 };
 const ESTRATEGIAS_INFO = [
   { id:"municipal",    label:"Preicfes municipal",  key:"MUNICIPAL" },
@@ -936,6 +1027,14 @@ function extraerSaber11(fila){
   return { global, areas, niveles, diferencia: leerNum(fila[COL_SABER11.DIFERENCIA]) };
 }
 
+function extraerUdea(fila){
+  if (!COL_UDEA) return null;
+  const rl = leerNum(fila[COL_UDEA.RL]), lc = leerNum(fila[COL_UDEA.LC]);
+  let total = leerNum(fila[COL_UDEA.TOTAL]);
+  if (total === null && rl !== null && lc !== null) total = (rl + lc) / 2;
+  return (rl === null && lc === null && total === null) ? null : { rl, lc, total };
+}
+
 // Estrategias de preparación (solo Undécimo). Un estudiante puede estar
 // marcado en más de una a la vez (no son excluyentes).
 function extraerEstrategias(fila){
@@ -989,6 +1088,17 @@ function detectarLayoutExtras(rows){
     NIVEL_INICIO: niv >= 0 ? niv : null,
     DIFERENCIA: dif >= 0 ? dif : 59
   };
+  const ud = buscarEnTodas(40, t => t.includes("universidad de antioquia"));
+  if (ud >= 0){
+    const rl = buscar(2, ud, t => t.includes("razonamiento"));
+    const lc = buscar(2, ud, t => t.includes("lectura critica"));
+    const tot = buscar(2, ud, t => t.includes("puntaje total"));
+    COL_UDEA = { RL: rl >= 0 ? rl : ud, LC: lc >= 0 ? lc : ud + 1, TOTAL: tot >= 0 ? tot : ud + 2 };
+  } else {
+    COL_UDEA = null;
+  }
+  COL_PROMO = buscar(2, 40, t => t.includes("promocion"));
+
   COL_ESTRATEGIA = {
     MUNICIPAL: col("preicfes municipal", 60),
     SEMESTRE_CERO: col("semestre cero", 61),
@@ -1010,7 +1120,12 @@ function buildStudents(rows){
     const nombre = [fila[COL.NOMBRE1], fila[COL.NOMBRE2], fila[COL.APELLIDO1], fila[COL.APELLIDO2]]
       .filter(p => p && p.toString().trim()).join(" ") || "Estudiante";
 
-    const rec = { grupo, grado: inferirGrado(grupo), documento, nombre };
+    const sx = (fila[COL_SEXO] || "").toString().trim().toLowerCase();
+    const sexo = sx.startsWith("f") ? "Femenino" : (sx.startsWith("m") ? "Masculino" : null);
+    const promo = COL_PROMO >= 0 ? (fila[COL_PROMO] || "").toString().trim().toLowerCase() : "";
+    const rec = { grupo, grado: inferirGrado(grupo), documento, nombre, sexo,
+                  promocion: promo === "sí" || promo === "si" };
+    rec.udea = extraerUdea(fila);
     BLOQUES.forEach(b => { rec[b.id] = extraerBloque(fila, b.col); });
     rec.saber11 = extraerSaber11(fila);
     rec.estrategias = extraerEstrategias(fila);
@@ -2218,11 +2333,13 @@ function safeRender(fn, label){
 // de Undécimos entre años) reemplaza todo el contenido del dashboard de un
 // solo año y oculta los filtros que no le aplican.
 function aplicarVistaPorModo(modo){
-  const und = modo === "undAnios";
-  document.getElementById("vistaNormal").style.display = und ? "none" : "";
+  const und = modo === "undAnios", udea = modo === "udeaAnios";
+  const otra = und || udea; // vistas que reemplazan el dashboard de un solo año
+  document.getElementById("vistaNormal").style.display = otra ? "none" : "";
   document.getElementById("vistaUndAnios").style.display = und ? "" : "none";
-  document.querySelectorAll("[data-solo-normal]").forEach(el => { el.style.display = und ? "none" : ""; });
-  if (und) document.getElementById("avisoModo").classList.remove("mostrar");
+  document.getElementById("vistaUdea").style.display = udea ? "" : "none";
+  document.querySelectorAll("[data-solo-normal]").forEach(el => { el.style.display = otra ? "none" : ""; });
+  if (otra) document.getElementById("avisoModo").classList.remove("mostrar");
 }
 
 function renderAll(){
@@ -2230,6 +2347,10 @@ function renderAll(){
   aplicarVistaPorModo(modo);
   if (modo === "undAnios"){
     renderUndAniosVista();
+    return;
+  }
+  if (modo === "udeaAnios"){
+    renderUdeaVista();
     return;
   }
   const grupoSel = document.getElementById("fGrupo").value;
@@ -2243,6 +2364,7 @@ function renderAll(){
   safeRender(() => renderHonorBoard(students, modo, grupoSel), "cuadro de honor");
   safeRender(() => renderTable(students, modo), "tabla");
   safeRender(() => renderEstrategiasSection(), "comparación de estrategias de preparación");
+  safeRender(() => renderPromocionSection(), "estudiantes promovidos");
 }
 
 // Aviso contextual propio de esta sección (no toca #avisoAlcance, que ya
@@ -3090,6 +3212,237 @@ document.getElementById("btnCompararUndecimos").addEventListener("click", compar
 // Los directores se cargan una vez al abrir; al llegar, se refresca la
 // vista para que aparezcan los nombres del año correspondiente.
 cargarDirectores().then(() => { if (STUDENTS.length) renderAll(); });
+
+/* ============================================================
+ * ESTUDIANTES PROMOVIDOS EN EL AÑO
+ * ============================================================
+ * La columna "Posible promoción" del Sheet marca con "Sí" a los
+ * estudiantes que pasaron de un grado a otro DURANTE el año: por eso
+ * aparecen dos veces en el CSV (una fila con su grupo de origen y otra con
+ * el de destino). Aquí se juntan las dos filas por nombre para verlos en
+ * una sola línea. Ojo: mientras sigan duplicados en el CSV, cuentan en los
+ * promedios de ambos grupos.
+ */
+function renderPromocionSection(){
+  const marcados = STUDENTS.filter(s => s.promocion);
+  const porNombre = new Map();
+  marcados.forEach(s => {
+    const k = normalizarNombre(s.nombre);
+    if (!porNombre.has(k)) porNombre.set(k, []);
+    porNombre.get(k).push(s);
+  });
+
+  document.getElementById("promocionSub").textContent = marcados.length
+    ? "Estudiantes con la marca \"Posible promoción\" en el CSV de " + anioPrincipal() + ": " + porNombre.size +
+      ". Se muestran con su grupo de origen y el de destino (las dos filas del CSV unidas por nombre)."
+    : "No hay estudiantes marcados como promovidos en el CSV de " + anioPrincipal() + " (columna \"Posible promoción\").";
+
+  document.getElementById("promocionTableHead").innerHTML =
+    ["Estudiante","Sexo","Grupo origen","Global S1","Grupo destino","Global S2","Saber 11 real","Simulacro UdeA (total)"]
+      .map(h => `<th>${h}</th>`).join("");
+  document.getElementById("promocionTableBody").innerHTML = [...porNombre.values()].map(regs => {
+    const ord = [...regs].sort((a, b) => ORDEN_GRADOS.indexOf(a.grado) - ORDEN_GRADOS.indexOf(b.grado));
+    const origen = ord[0], destino = ord.length > 1 ? ord[ord.length - 1] : null;
+    const g = (r, b) => r && r[b] ? r[b].global : null;
+    const sexo = (destino && destino.sexo) || origen.sexo || "—";
+    return `<tr><td>${escaparHtml(origen.nombre)}</td><td>${sexo}</td>
+      <td>${escaparHtml(origen.grupo)}</td><td class="num">${fmt(g(origen, "s1"))}</td>
+      <td>${destino ? escaparHtml(destino.grupo) : "—"}</td><td class="num">${fmt(destino ? g(destino, "s2") : g(origen, "s2"))}</td>
+      <td class="num">${fmt(g(destino || origen, "saber11"))}</td>
+      <td class="num">${fmt((destino || origen).udea ? (destino || origen).udea.total : null)}</td></tr>`;
+  }).join("") || '<tr><td colspan="8" style="color:var(--muted);">Sin estudiantes marcados.</td></tr>';
+}
+
+/* ============================================================
+ * SIMULACRO UNIVERSIDAD DE ANTIOQUIA — COMPARATIVO POR AÑOS
+ * (modo "udeaAnios" del Simulacro; mismo esquema que Undécimo/Saber 11)
+ * ============================================================ */
+let udeaAniosSel = new Set();
+let udeaDatos = [];           // [{anio, estudiantes, n, presentaron}]
+let udeaCargando = false;
+let chartUdeaBox, chartUdeaComp;
+const UDEA_CAMPOS = [
+  { campo: "total", label: "Puntaje total" },
+  { campo: "rl", label: "Razonamiento Lógico (RL)" },
+  { campo: "lc", label: "Lectura Crítica (LC)" },
+];
+
+function valoresUdea(estudiantes, campo){
+  return estudiantes.filter(s => s.udea && s.udea[campo] !== null).map(s => s.udea[campo]);
+}
+
+function renderUdeaAniosChips(){
+  const anios = Object.keys(CONFIG.anios).sort();
+  if (udeaAniosSel.size === 0) anios.forEach(a => udeaAniosSel.add(a));
+  document.getElementById("udeaAniosChips").innerHTML = anios.map(a =>
+    `<button type="button" class="chip-grado ${udeaAniosSel.has(a) ? "active" : ""}" data-anio="${a}">${a}</button>`
+  ).join("");
+}
+
+function renderUdeaResumen(){
+  document.getElementById("udeaTableHead").innerHTML =
+    ["Año","Estudiantes de Undécimo","Presentaron el simulacro","Participación","Prom. RL","Prom. LC","Prom. total","Mín. total","Máx. total"]
+      .map(h => `<th>${h}</th>`).join("");
+  document.getElementById("udeaTableBody").innerHTML = udeaDatos.map(d => {
+    const tot = valoresUdea(d.estudiantes, "total");
+    const hay = tot.length > 0;
+    return `<tr><td>${d.anio}</td><td class="num">${d.n}</td><td class="num">${hay ? tot.length : "Sin datos"}</td>
+      <td class="num">${hay ? fmt(tot.length / d.n * 100) + "%" : "—"}</td>
+      <td class="num">${fmt(avg(valoresUdea(d.estudiantes, "rl")))}</td><td class="num">${fmt(avg(valoresUdea(d.estudiantes, "lc")))}</td>
+      <td class="num">${fmt(avg(tot))}</td>
+      <td class="num">${hay ? fmt(Math.min(...tot)) : "—"}</td><td class="num">${hay ? fmt(Math.max(...tot)) : "—"}</td></tr>`;
+  }).join("");
+}
+
+function renderUdeaBoxplot(){
+  const colores = [["#c40016", "rgba(196,0,22,0.30)"], ["#c9a24b", "rgba(201,162,75,0.35)"], ["#2f6f4f", "rgba(47,111,79,0.28)"]];
+  const labels = udeaDatos.map(d => d.anio);
+  const datasets = UDEA_CAMPOS.map((c, i) => ({
+    label: c.label, borderColor: colores[i][0], backgroundColor: colores[i][1], borderWidth: 1.5,
+    data: udeaDatos.map(d => valoresUdea(d.estudiantes, c.campo))
+  }));
+  cerrarTooltipBoxplot();
+  if (chartUdeaBox) chartUdeaBox.destroy();
+  const ctx = document.getElementById("chartUdeaBox").getContext("2d");
+  try {
+    chartUdeaBox = new Chart(ctx, {
+      type: "boxplot",
+      data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false, onClick: onClickBoxplot,
+        scales: { y: { min: 0, max: 100, grid: { color: "#eee" } }, x: { grid: { display: false } } },
+        plugins: {
+          legend: { position: "top" },
+          tooltip: { enabled: false, external: externalTooltipHandler, callbacks: { label: tooltipBoxplotLabel } }
+        }
+      }
+    });
+  } catch (err){
+    console.warn("Diagrama de cajas no disponible, se usa barras de respaldo.", err);
+    chartUdeaBox = new Chart(ctx, {
+      type: "bar",
+      data: { labels, datasets: datasets.map(d => ({ label: d.label + " (promedio)", backgroundColor: d.borderColor, data: d.data.map(v => avg(v)) })) },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
+    });
+  }
+}
+
+function renderUdeaComponentes(){
+  const datasets = udeaDatos.map((d, i) => ({
+    label: d.anio, backgroundColor: COLORES_ANIOS[i % COLORES_ANIOS.length], borderRadius: 4,
+    data: UDEA_CAMPOS.map(c => avg(valoresUdea(d.estudiantes, c.campo)))
+  }));
+  if (chartUdeaComp) chartUdeaComp.destroy();
+  chartUdeaComp = new Chart(document.getElementById("chartUdeaComp").getContext("2d"), {
+    type: "bar",
+    data: { labels: UDEA_CAMPOS.map(c => c.label), datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { min: 0, max: 100, grid: { color: "#eee" } }, x: { grid: { display: false } } },
+      plugins: { legend: { position: "top" } }
+    }
+  });
+}
+
+function renderUdeaRankings(){
+  const filtro = document.getElementById("udeaFiltroAnio").value;
+  const filtrados = filtro === "todos" ? udeaDatos : udeaDatos.filter(d => d.anio === filtro);
+
+  const porAnio = ordenarDesc(udeaDatos.map(d => {
+    const v = valoresUdea(d.estudiantes, "total");
+    return { anio: d.anio, n: v.length, prom: avg(v) };
+  }), "prom");
+  document.getElementById("udeaRankAniosBody").innerHTML = porAnio.map((r, i) =>
+    `<tr><td class="num">${r.prom !== null ? i + 1 : "—"}</td><td>${r.anio}</td><td class="num">${r.n}</td><td class="num">${fmt(r.prom)}</td></tr>`
+  ).join("");
+
+  const grupos = [];
+  filtrados.forEach(d => {
+    [...new Set(d.estudiantes.map(s => s.grupo))].forEach(g => {
+      const v = valoresUdea(d.estudiantes.filter(s => s.grupo === g), "total");
+      if (v.length) grupos.push({ anio: d.anio, grupo: g, director: directorDe(g, d.anio) || "—", n: v.length, prom: avg(v) });
+    });
+  });
+  document.getElementById("udeaRankGruposBody").innerHTML = ordenarDesc(grupos, "prom").map((r, i) =>
+    `<tr><td class="num">${i + 1}</td><td>${r.anio}</td><td>${escaparHtml(r.grupo)}</td><td>${escaparHtml(r.director)}</td><td class="num">${r.n}</td><td class="num">${fmt(r.prom)}</td></tr>`
+  ).join("") || '<tr><td colspan="6" style="color:var(--muted);">Sin datos del simulacro.</td></tr>';
+
+  const LIMITE = 50, est = [];
+  filtrados.forEach(d => d.estudiantes.forEach(s => {
+    if (s.udea && s.udea.total !== null){
+      est.push({ nombre: s.nombre, grupo: s.grupo, anio: d.anio, director: directorDe(s.grupo, d.anio) || "—", rl: s.udea.rl, lc: s.udea.lc, total: s.udea.total });
+    }
+  }));
+  const top = ordenarDesc(est, "total");
+  document.getElementById("udeaRankEstNota").textContent = top.length ? "(" + Math.min(LIMITE, top.length) + " mejores de " + top.length + ")" : "";
+  document.getElementById("udeaRankEstBody").innerHTML = top.slice(0, LIMITE).map((r, i) =>
+    `<tr><td class="num">${i + 1}</td><td>${escaparHtml(r.nombre)}</td><td>${escaparHtml(r.grupo)}</td><td>${r.anio}</td><td>${escaparHtml(r.director)}</td><td class="num">${fmt(r.rl)}</td><td class="num">${fmt(r.lc)}</td><td class="num">${fmt(r.total)}</td></tr>`
+  ).join("") || '<tr><td colspan="8" style="color:var(--muted);">Sin datos del simulacro.</td></tr>';
+}
+
+function renderUdeaGraficos(){
+  if (!udeaDatos.length) return;
+  safeRender(renderUdeaResumen, "resumen UdeA");
+  safeRender(renderUdeaBoxplot, "cajas UdeA");
+  safeRender(renderUdeaComponentes, "componentes UdeA");
+  safeRender(renderUdeaRankings, "rankings UdeA");
+}
+
+function compararUdea(){
+  const anios = [...udeaAniosSel].sort();
+  const estadoEl = document.getElementById("udeaEstado");
+  const resEl = document.getElementById("udeaResultados");
+  if (!anios.length){
+    estadoEl.textContent = "Elige al menos un año para comparar.";
+    resEl.style.display = "none";
+    return Promise.resolve();
+  }
+  udeaCargando = true;
+  estadoEl.textContent = "Cargando datos de " + anios.join(", ") + "…";
+  return Promise.all([cargarDirectores(), ...anios.map(cargarAnio)]).then(res => {
+    const listas = res.slice(1);
+    udeaDatos = anios.map((anio, i) => {
+      const und = listas[i].filter(s => s.grado === "Undécimo");
+      return { anio, estudiantes: und, n: und.length, presentaron: und.filter(s => s.udea && s.udea.total !== null).length };
+    }).filter(d => d.n > 0);
+    if (!udeaDatos.length){
+      estadoEl.textContent = "Ninguno de los años elegidos tiene estudiantes de Undécimo.";
+      resEl.style.display = "none";
+      return;
+    }
+    const sin = udeaDatos.filter(d => d.presentaron === 0).map(d => d.anio);
+    estadoEl.textContent = "Años comparados: " + udeaDatos.map(d => d.anio + " (" + d.presentaron + " de " + d.n + " presentaron)").join(" · ") +
+      (sin.length ? ". Sin resultados del simulacro UdeA: " + sin.join(", ") + "." : "");
+
+    const sel = document.getElementById("udeaFiltroAnio");
+    const previo = sel.value;
+    sel.innerHTML = '<option value="todos">Todos los años</option>' + udeaDatos.map(d => `<option value="${d.anio}">${d.anio}</option>`).join("");
+    sel.value = udeaDatos.some(d => d.anio === previo) ? previo : "todos";
+
+    resEl.style.display = "";
+    ensureChartJs(renderUdeaGraficos);
+  }).catch(err => {
+    estadoEl.textContent = "No se pudo completar la comparación: " + err.message;
+    console.error(err);
+  }).then(() => { udeaCargando = false; });
+}
+
+function renderUdeaVista(){
+  renderUdeaAniosChips();
+  if (udeaDatos.length) ensureChartJs(renderUdeaGraficos);
+  else if (!udeaCargando) compararUdea();
+}
+
+renderUdeaAniosChips();
+document.getElementById("udeaAniosChips").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-anio]");
+  if (!btn) return;
+  const a = btn.dataset.anio;
+  if (udeaAniosSel.has(a)) udeaAniosSel.delete(a); else udeaAniosSel.add(a);
+  renderUdeaAniosChips();
+});
+document.getElementById("udeaFiltroAnio").addEventListener("change", renderUdeaRankings);
+document.getElementById("btnCompararUdea").addEventListener("click", compararUdea);
 
 /* ============================================================
  * SELECTOR DE AÑO DEL DASHBOARD PRINCIPAL
