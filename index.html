@@ -953,20 +953,49 @@ function mostrarPantallaDashboard(sesion) {
     if (actualizarCarruselEstudiante) setTimeout(actualizarCarruselEstudiante, 50);
 
     try {
-      horarioEstudianteActual = Array.isArray(sesion.horario) ? sesion.horario : [];
-      const tieneHorario = horarioEstudianteActual.length > 0;
-      const tieneAnuncios = Array.isArray(sesion.anuncios) && sesion.anuncios.length > 0;
+      const grupoSesion = (sesion.grupo || "").toString().trim();
+      // Respaldo: horario que todavía envía el servidor (se retirará en la Fase 2c).
+      const respaldoServidor = Array.isArray(sesion.horario) ? sesion.horario : [];
 
-      horarioTitulo.textContent = "Mi horario — Grupo " + (sesion.grupo || "");
-      if (tieneHorario) renderizarHorarioEstudiante(horarioEstudianteActual);
-      else horarioGrid.innerHTML = "";
+      horarioEstudianteActual = [];
+      horarioTitulo.textContent = "Mi horario — Grupo " + grupoSesion;
+      horarioGrid.innerHTML = "";
+      if (zonaHorario) zonaHorario.classList.add("oculto");
 
+      // Prioridad: archivo data/horarios-grupos.json del repositorio.
+      // El tablero ya está visible; el horario se completa cuando el archivo está listo
+      // (normalmente ya llegó, porque se pide al cargar la página).
+      obtenerHorariosGrupos().then(function (datosArchivo) {
+        if (!sesionVigente(sesion)) return; // salió o entró otro estudiante mientras llegaba
 
-      if (tieneHorario || tieneAnuncios) {
-        mostrarZonaHorario();
-      } else {
-        if (zonaHorario) zonaHorario.classList.add("oculto");
-      }
+        const filasArchivo = (datosArchivo && datosArchivo.grupos && Array.isArray(datosArchivo.grupos[grupoSesion]))
+          ? datosArchivo.grupos[grupoSesion] : [];
+
+        let filas = [];
+        let origen = "ninguno";
+        if (filasArchivo.length > 0) {
+          filas = filasArchivo;
+          origen = "archivo GitHub (generado " + (datosArchivo.generado || "sin fecha") + ")";
+        } else if (respaldoServidor.length > 0) {
+          filas = respaldoServidor;
+          origen = datosArchivo ? "servidor (respaldo: el archivo no trae el grupo " + grupoSesion + ")"
+                                : "servidor (respaldo: no se pudo leer el archivo)";
+        }
+        window.__origenHorario = origen;
+        console.info("[Horario] origen: " + origen);
+
+        if (filas.length === 0) return;
+        horarioEstudianteActual = filas;
+        renderizarHorarioEstudiante(filas);
+
+        const viendoResultado = zonaResultado && !zonaResultado.classList.contains("oculto");
+        if (viendoResultado) {
+          // El estudiante ya abrió un reporte: no se lo reemplaza, solo se habilita el botón.
+          if (btnVerHorario) btnVerHorario.classList.remove("oculto");
+        } else {
+          mostrarZonaHorario(false); // sin desplazamiento: el scroll lo controla el inicio de sesión
+        }
+      });
     } catch (errHorario) {
       console.error("No se pudo mostrar el horario de estudiante:", errHorario);
       if (zonaHorario) zonaHorario.classList.add("oculto");
@@ -1263,6 +1292,45 @@ function obtenerAnuncios() {
       return []; // si falla, simplemente no se muestran anuncios; no bloquea nada
     });
 }
+
+// ------------------------------------------------------------
+// Horarios de grupo: archivo estático publicado desde la hoja
+// (Portal SLG ▸ Publicar horarios de grupos). Mismo patrón que los anuncios.
+// ------------------------------------------------------------
+const RUTA_HORARIOS_GRUPOS_JSON = "data/horarios-grupos.json";
+let horariosGruposPromesa = null;
+
+function obtenerHorariosGrupos() {
+  if (!horariosGruposPromesa) {
+    horariosGruposPromesa = fetch(RUTA_HORARIOS_GRUPOS_JSON, { cache: "no-store" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (datos) {
+        return (datos && datos.grupos && typeof datos.grupos === "object") ? datos : null;
+      })
+      .catch(function () { return null; })
+      .then(function (datos) {
+        if (!datos) horariosGruposPromesa = null; // si falló, se reintenta en el siguiente inicio de sesión
+        return datos;
+      });
+  }
+  return horariosGruposPromesa;
+}
+
+// ¿Sigue activa la sesión de este estudiante? (evita pintar un horario viejo tras cerrar sesión)
+function sesionVigente(sesion) {
+  try {
+    const guardada = JSON.parse(sessionStorage.getItem(CLAVE_SESION) || "null");
+    return !!guardada && guardada.documento === sesion.documento;
+  } catch (err) {
+    return false;
+  }
+}
+
+// Se pide al cargar la página para que ya esté listo cuando el estudiante inicie sesión.
+obtenerHorariosGrupos();
 
 function filtrarAnunciosPorRol(anuncios, rolFiltro) {
   return anuncios.filter(function (a) {
@@ -1806,11 +1874,12 @@ function mostrarZonaResultado() {
   }
 }
 
-function mostrarZonaHorario() {
+function mostrarZonaHorario(desplazar) {
+  // Como oyente de clic recibe el evento: solo "false" explícito evita el desplazamiento.
   if (zonaResultado) zonaResultado.classList.add("oculto");
   if (zonaHorario) {
     zonaHorario.classList.remove("oculto");
-    zonaHorario.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (desplazar !== false) zonaHorario.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   
   // Volver a mostrar anuncios si existían
