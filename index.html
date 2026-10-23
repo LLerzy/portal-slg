@@ -591,7 +591,7 @@
         <button type="button" class="flecha-carrusel izquierda" id="flecha-izq" aria-label="Reporte anterior">‹</button>
         <button type="button" class="flecha-carrusel derecha" id="flecha-der" aria-label="Reporte siguiente">›</button>
         <div class="carrusel" id="rejilla-reportes">
-        <article class="reporte tarjeta" data-endpoint="notasParciales">
+        <article class="reporte tarjeta" data-endpoint="notasParciales" data-ficha="notasParciales">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">📝</div>
@@ -607,7 +607,7 @@
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-        <article class="reporte tarjeta" data-endpoint="simulacros">
+        <article class="reporte tarjeta" data-endpoint="simulacros" data-ficha="simulacros">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">📊</div>
@@ -622,7 +622,7 @@
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-        <article class="reporte tarjeta" data-endpoint="boletinesPeriodo">
+        <article class="reporte tarjeta" data-endpoint="boletinesPeriodo" data-ficha="boletinesPeriodo">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">📄</div>
@@ -636,7 +636,7 @@
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-        <article class="reporte tarjeta" data-endpoint="boletinSena">
+        <article class="reporte tarjeta" data-endpoint="boletinSena" data-ficha="boletinSena">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">🎓</div>
@@ -650,7 +650,7 @@
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-        <article class="reporte tarjeta oculto" id="tarjeta-cuentas-1001" data-endpoint="cuentasFiestas">
+        <article class="reporte tarjeta oculto" id="tarjeta-cuentas-1001" data-endpoint="cuentasFiestas" data-ficha="cuentasFiestas">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">💰</div>
@@ -660,7 +660,7 @@
             <p class="nota-config">Falta configurar la URL de este Apps Script en CONFIG_REPORTES.</p>
           </div>
         </article>
-        <article class="reporte tarjeta" id="ficha-artefactos">
+        <article class="reporte tarjeta" id="ficha-artefactos" data-ficha="artefactos">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">🧩</div>
@@ -677,7 +677,7 @@
             <p class="estado-doc" id="estado-artefacto"></p>
           </div>
         </article>
-        <article class="reporte tarjeta" id="ficha-artefactos-periodo">
+        <article class="reporte tarjeta" id="ficha-artefactos-periodo" data-ficha="artefactosPeriodo">
           <div class="listón"></div>
           <div class="contenido">
             <div class="icono">📝</div>
@@ -886,6 +886,173 @@ function formatoDocumentoValido(doc) {
   return /^\d+$/.test(doc);
 }
 
+// ============================================================
+// FICHAS DEL ESTUDIANTE CONFIGURABLES  (data/fichas.json)
+// ------------------------------------------------------------
+// El docente decide desde la hoja ConfigFichas qué fichas y opciones ve
+// cada estudiante (por grado, grupo y fechas) y las publica con el botón
+// Portal SLG ▸ Publicar. Esto ORGANIZA lo que se muestra; no protege datos
+// (las consultas siguen validando el documento en cada Apps Script).
+// Sin fila para una ficha u opción = visible, salvo Cuentas Fiestas, que por
+// defecto sigue siendo solo del grupo 1001 como antes.
+// ============================================================
+const RUTA_FICHAS_JSON = "data/fichas.json";
+const CLAVE_CACHE_FICHAS = "slg_fichas_config";
+const FICHAS_ESTUDIANTE = ["notasParciales", "simulacros", "boletinesPeriodo", "boletinSena",
+                           "cuentasFiestas", "artefactos", "artefactosPeriodo"];
+const NOMBRES_GRADOS_FICHAS = {
+  primero: "1", segundo: "2", tercero: "3", cuarto: "4", quinto: "5", sexto: "6",
+  septimo: "7", octavo: "8", noveno: "9", decimo: "10", undecimo: "11", once: "11"
+};
+
+function normalizarClaveFicha(texto) {
+  let t = String(texto == null ? "" : texto).toLowerCase();
+  if (t.normalize) t = t.normalize("NFD").replace(/[̀-ͯ]/g, "");
+  return t.replace(/[^a-z0-9]/g, "");
+}
+
+// "Décimo", "decimo", "10", "10°" -> "10". "" si no se reconoce.
+function normalizarGradoFicha(texto) {
+  const k = normalizarClaveFicha(texto);
+  if (!k) return "";
+  if (NOMBRES_GRADOS_FICHAS[k]) return NOMBRES_GRADOS_FICHAS[k];
+  if (/^\d{1,2}$/.test(k)) { const n = Number(k); if (n >= 1 && n <= 11) return String(n); }
+  return "";
+}
+
+function tarjetaFicha(ficha) {
+  return document.querySelector('#rejilla-reportes [data-ficha="' + ficha + '"]');
+}
+
+// Copia de las opciones originales de cada selector, para poder volver a
+// aplicar la configuración cuando entra otro estudiante en la misma carga.
+const opcionesOriginalesFichas = {};
+FICHAS_ESTUDIANTE.forEach(function (ficha) {
+  const tarjeta = tarjetaFicha(ficha);
+  const sel = tarjeta ? tarjeta.querySelector(".selector-hoja") : null;
+  if (!sel) return;
+  opcionesOriginalesFichas[ficha] = Array.from(sel.options).map(function (o) {
+    return { value: o.value, texto: o.textContent };
+  });
+});
+
+function leerConfigFichasGuardada() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CLAVE_CACHE_FICHAS) || "null");
+    return (c && Array.isArray(c.reglas)) ? c : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+let configFichas = leerConfigFichasGuardada(); // última configuración conocida (o null)
+let configFichasAplicada = null;               // reglas (texto) con las que se pintó la pantalla
+let fichasPromesa = null;
+let fichasPromesaHora = 0;
+
+// Pide data/fichas.json sin caché del navegador. Reutiliza la petición si es de hace
+// menos de 30 s (la del arranque y la del inicio de sesión no se duplican).
+function obtenerFichasConfig() {
+  if (fichasPromesa && (Date.now() - fichasPromesaHora) < 30000) return fichasPromesa;
+  fichasPromesaHora = Date.now();
+  fichasPromesa = fetch(RUTA_FICHAS_JSON, { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(function (datos) {
+      if (!datos || !Array.isArray(datos.reglas)) return null;
+      configFichas = datos;
+      try { localStorage.setItem(CLAVE_CACHE_FICHAS, JSON.stringify(datos)); } catch (err) { /* sin almacenamiento */ }
+      return datos;
+    })
+    .catch(function () { fichasPromesa = null; return null; });
+  return fichasPromesa;
+}
+
+function fechaLocalISO() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+// ¿Esta regla alcanza a este estudiante hoy? (vacío = todos)
+function reglaAplicaFicha(r, est, hoy) {
+  if (r.grados && r.grados.length && r.grados.indexOf(est.grado) < 0) return false;
+  if (r.grupos && r.grupos.length && r.grupos.indexOf(est.grupo) < 0) return false;
+  if (r.desde && hoy < r.desde) return false;
+  if (r.hasta && hoy > r.hasta) return false;
+  return true;
+}
+
+// Reglas de UNA ficha u opción:
+//  - sin reglas: el valor por defecto;
+//  - alguna regla que aplica dice No: oculto (un "No" explícito manda);
+//  - alguna que aplica dice Si: visible;
+//  - ninguna aplica: si hay reglas "Si" (una lista de permitidos que no incluye
+//    al estudiante o que aún no empieza) queda oculto; si solo hay "No", visible.
+function visibleSegunReglas(reglas, est, hoy, defecto) {
+  if (!reglas.length) return defecto;
+  const aplicables = reglas.filter(function (r) { return reglaAplicaFicha(r, est, hoy); });
+  if (aplicables.some(function (r) { return !r.activo; })) return false;
+  if (aplicables.some(function (r) { return r.activo; })) return true;
+  return !reglas.some(function (r) { return r.activo; });
+}
+
+function aplicarFichasEstudiante(sesion) {
+  const est = { grado: normalizarGradoFicha(sesion.grado), grupo: normalizarClaveFicha(sesion.grupo) };
+  const hoy = fechaLocalISO();
+  const reglas = (configFichas && Array.isArray(configFichas.reglas)) ? configFichas.reglas : [];
+
+  FICHAS_ESTUDIANTE.forEach(function (ficha) {
+    const tarjeta = tarjetaFicha(ficha);
+    if (!tarjeta) return;
+
+    const defectoFicha = (ficha === "cuentasFiestas") ? (est.grupo === "1001") : true;
+    let visible = visibleSegunReglas(
+      reglas.filter(function (r) { return r.ficha === ficha && !r.opcion; }), est, hoy, defectoFicha);
+
+    const originales = opcionesOriginalesFichas[ficha];
+    if (originales) {
+      const sel = tarjeta.querySelector(".selector-hoja");
+      const valorPrevio = sel.value;
+      sel.innerHTML = "";
+      originales.forEach(function (o) {
+        const reglasOpcion = reglas.filter(function (r) { return r.ficha === ficha && r.opcion === o.value; });
+        if (visibleSegunReglas(reglasOpcion, est, hoy, true)) {
+          const op = document.createElement("option");
+          op.value = o.value;
+          op.textContent = o.texto;
+          sel.appendChild(op);
+        }
+      });
+      if (valorPrevio && Array.from(sel.options).some(function (o) { return o.value === valorPrevio; })) sel.value = valorPrevio;
+      if (sel.options.length === 0) visible = false; // sin opciones visibles, la ficha se oculta
+    }
+
+    tarjeta.classList.toggle("oculto", !visible);
+  });
+
+  // Ayuda para el docente: reglas con una opción que el portal no tiene.
+  reglas.forEach(function (r) {
+    if (r.opcion && opcionesOriginalesFichas[r.ficha] &&
+        !opcionesOriginalesFichas[r.ficha].some(function (o) { return o.value === r.opcion; })) {
+      console.warn("[Fichas] La opción \"" + r.opcion + "\" de " + r.ficha + " no existe en el portal.");
+    }
+  });
+
+  configFichasAplicada = JSON.stringify(reglas);
+}
+
+// Reaplica y reconstruye lo que depende de las fichas visibles (menú de lista y carrusel).
+function refrescarFichasEstudiante(sesion) {
+  aplicarFichasEstudiante(sesion);
+  construirYRenderizarMenuEstudiante();
+  if (actualizarCarruselEstudiante) setTimeout(actualizarCarruselEstudiante, 50);
+}
+
+// Se pide al cargar la página para que ya esté lista al iniciar sesión.
+obtenerFichasConfig();
+
 function mostrarPantallaLogin() {
   pantallaDashboard.classList.add("oculto");
   barraSesion.classList.add("oculto");
@@ -939,14 +1106,16 @@ function mostrarPantallaDashboard(sesion) {
     const contenedorHorario = document.getElementById("seccion-horario");
     if (contenedorHorario) contenedorHorario.classList.add("oculto");
 
-    // --- Ficha de Cuentas Fiestas Institucionales: exclusiva del grupo 10-01 ---
-    const tarjetaCuentas1001 = document.getElementById("tarjeta-cuentas-1001");
-    if (tarjetaCuentas1001) {
-      const esGrupo1001 = (sesion.grupo || "").toString().trim() === "1001";
-      tarjetaCuentas1001.classList.toggle("oculto", !esGrupo1001);
-    }
-    // La vista de lista se reconstruye para reflejar la tarjeta anterior
-    // (aparece u oculta según el grupo del estudiante que acaba de entrar).
+    // --- Fichas y opciones visibles según la configuración publicada (data/fichas.json) ---
+    // Sin configuración disponible se conserva el comportamiento anterior
+    // (todo visible; Cuentas Fiestas solo para el grupo 1001).
+    aplicarFichasEstudiante(sesion);
+    obtenerFichasConfig().then(function (cfg) {
+      if (!cfg || !sesionVigente(sesion)) return;
+      if (JSON.stringify(cfg.reglas) !== configFichasAplicada) refrescarFichasEstudiante(sesion);
+    });
+    // La vista de lista se reconstruye para reflejar las fichas visibles
+    // del estudiante que acaba de entrar.
     construirYRenderizarMenuEstudiante();
     // Mostrar/ocultar la tarjeta cambia el ancho total del carrusel — se
     // recalcula la pista de scroll para que no quede desalineada.
@@ -1942,6 +2111,11 @@ function construirCategoriasReportes(idRejilla) {
 function construirCategoriaArtefactos(idSelectorArtefacto, idEstado, nombreCategoria) {
   const selectorOriginal = document.getElementById(idSelectorArtefacto);
   if (!selectorOriginal) return null;
+
+  // Ficha del estudiante oculta (o sin opciones visibles): no aparece en el menú.
+  const tarjetaFichaEst = selectorOriginal.closest(".reporte[data-ficha]");
+  if (tarjetaFichaEst && tarjetaFichaEst.classList.contains("oculto")) return null;
+  if (selectorOriginal.options.length === 0) return null;
 
   return {
     icono: "🧩",
