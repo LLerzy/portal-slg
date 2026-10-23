@@ -1,64 +1,7 @@
-Grupo,Grado,Área,TipoAgrupación,Etiqueta,NumeroIntentos,PromedioPorcentaje
-1001,10°,Matemáticas,categoria,Estadística,6,21.1
-1001,10°,Matemáticas,categoria,Álgebra y cálculo,6,48
-1001,10°,Matemáticas,competencia,Interpretación y representación,6,25.4
-1001,10°,Matemáticas,total,Total,6,31.3
-1001,10°,Matemáticas,categoria,Geometría,6,46.7
-1001,10°,Matemáticas,competencia,Formulación y ejecución,6,40
-1001,10°,Matemáticas,competencia,Argumentación,6,10
-1001,10°,Ciencias Naturales,categoria,Física,3,12.5
-1001,10°,Ciencias Naturales,categoria,Biología,3,24.2
-1001,10°,Ciencias Naturales,categoria,Química,3,13.3
-1001,10°,Ciencias Naturales,competencia,Indagación,3,0
-1001,10°,Ciencias Naturales,competencia,Explicación de fenómenos,3,16.7
-1001,10°,Ciencias Naturales,competencia,Uso comprensivo del conocimiento científico,3,23.1
-1001,10°,Ciencias Naturales,total,Total,3,18.1
-1001,10°,Lectura Crítica,categoria,Texto narrativo,1,60
-1001,10°,Lectura Crítica,categoria,Texto informativo,1,14.3
-1001,10°,Lectura Crítica,categoria,Texto argumentativo,1,14.3
-1001,10°,Lectura Crítica,competencia,Comprensión global,1,40
-1001,10°,Lectura Crítica,competencia,Identificación de información,1,25
-1001,10°,Lectura Crítica,competencia,Reflexión y evaluación,1,33.3
-1001,10°,Lectura Crítica,total,Total,1,33.3
-1001,10°,Sociales y Ciudadanas,categoria,Constitución y participación,1,33.3
-1001,10°,Sociales y Ciudadanas,categoria,Conflicto y memoria histórica,1,30
-1001,10°,Sociales y Ciudadanas,categoria,Economía y desarrollo,1,0
-1001,10°,Sociales y Ciudadanas,competencia,Pensamiento social,1,25
-1001,10°,Sociales y Ciudadanas,competencia,Interpretación y análisis de perspectivas,1,16.7
-1001,10°,Sociales y Ciudadanas,competencia,Pensamiento reflexivo y sistémico,1,40
-1001,10°,Sociales y Ciudadanas,total,Total,1,26.3
-1001,10°,Inglés,categoria,Vocabulario,1,40
-1001,10°,Inglés,categoria,Comprensión de lectura,1,61.5
-1001,10°,Inglés,categoria,Comunicación funcional,1,16.7
-1001,10°,Inglés,competencia,Nivel A1,1,50
-1001,10°,Inglés,competencia,Nivel A2,1,16.7
-1001,10°,Inglés,competencia,Nivel B1,1,62.5
-1001,10°,Inglés,total,Total,1,45.8
-1003,10°,Matemáticas,categoria,Estadística,4,52.8
-1003,10°,Matemáticas,categoria,Álgebra y cálculo,4,58.3
-1003,10°,Matemáticas,categoria,Geometría,4,66.7
-1003,10°,Matemáticas,competencia,Interpretación y representación,4,50
-1003,10°,Matemáticas,competencia,Formulación y ejecución,4,61.1
-1003,10°,Matemáticas,competencia,Argumentación,4,56.3
-1003,10°,Matemáticas,total,Total,4,55.2
-1005,10°,Matemáticas,categoria,Estadística,1,44.4
-1005,10°,Matemáticas,categoria,Álgebra y cálculo,1,33.3
-1005,10°,Matemáticas,categoria,Geometría,1,33.3
-1005,10°,Matemáticas,competencia,Interpretación y representación,1,45.5
-1005,10°,Matemáticas,competencia,Formulación y ejecución,1,44.4
-1005,10°,Matemáticas,competencia,Argumentación,1,25
-1005,10°,Matemáticas,total,Total,1,41.7
-1004,10°,Matemáticas,categoria,Estadística,2,16.7
-1004,10°,Matemáticas,categoria,Álgebra y cálculo,2,16.7
-1004,10°,Matemáticas,categoria,Geometría,2,16.7
-1004,10°,Matemáticas,competencia,Interpretación y representación,2,9.1
-1004,10°,Matemáticas,competencia,Formulación y ejecución,2,27.8
-1004,10°,Matemáticas,competencia,Argumentación,2,12.5
-1004,10°,Matemáticas,total,Total,2,16.7
-1005,10°,Ciencias Naturales,categoria,Química,1,20
-1005,10°,Ciencias Naturales,categoria,Física,1,0
-1005,10°,Ciencias Naturales,categoria,Biología,1,0
-1005,10°,Ciencias Naturales,competencia,Uso comprensivo del conocimiento científico,1,7.7
-1005,10°,Ciencias Naturales,competencia,Explicación de fenómenos,1,0
-1005,10°,Ciencias Naturales,competencia,Indagación,1,0
-1005,10°,Ciencias Naturales,total,Total,1,4.2
+Grupo,Grado,Área,TipoArtefacto,Periodo,TipoAgrupación,Etiqueta,NumeroIntentos,PromedioPorcentaje
+1001,10°,Matemáticas,practica,,categoria,Estadística,1,80
+1001,10°,Matemáticas,practica,,categoria,Álgebra y cálculo,1,70
+1001,10°,Matemáticas,practica,,competencia,Interpretación y representación,1,75
+1001,10°,Matemáticas,practica,,total,Total,1,70.8
+1001,10°,Matemáticas,periodo,P1,categoria,Preguntas tipo cuadernillo,1,60
+1001,10°,Matemáticas,periodo,P1,total,Total,1,60
