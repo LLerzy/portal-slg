@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prueba de Periodo Matemáticas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+/* Concepto: libreta de examen. Ticket de encabezado, hoja de burbujas y una tarjeta por pregunta,
+   sobre papel cálido. Misma identidad visual de los cuadernillos SLG; un solo tema (claro) a propósito. */
+:root{
+  --paper:#EAE3D3; --paper-dark:#DDD4BE; --card:#F6F1E6; --card-hi:#FBF8F1;
+  --ink:#232A3B; --ink-soft:#4B5266; --rule:#B9AD8F;
+  --gold:#B8862E; --gold-ink:#7E5A12;
+  --green:#2E6B4F; --green-bg:#DDEBE1; --red:#A6323E; --red-bg:#F3DEDD;
+  --shadow:0 10px 30px rgba(35,42,59,.14);
+  --f-display:'Fraunces',Georgia,serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none!important;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--f-body); color:var(--ink); background-color:var(--paper);
+  background-image:radial-gradient(circle at 1px 1px, rgba(35,42,59,.05) 1px, transparent 0);
+  background-size:14px 14px;
+  padding-block:28px 60px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  min-height:100vh; line-height:1.45;
+}
+.wrap{max-width:980px; margin:0 auto;}
+
+/* ---------- ticket ---------- */
+.ticket{background:var(--ink); color:var(--paper); border-radius:14px; padding:22px 26px 26px; position:relative; box-shadow:var(--shadow); overflow:hidden;}
+.ticket::after{content:""; position:absolute; left:0; right:0; bottom:-1px; height:14px;
+  background-image:radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px); background-size:20px 14px; background-repeat:repeat-x;}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.ticket-id{display:flex; gap:14px; align-items:center; min-width:0; flex:1 1 320px;}
+.logos{display:flex; gap:8px; flex:none;}
+.logo-chip{width:54px; height:54px; border-radius:10px; background:var(--card); display:flex; align-items:center; justify-content:center; padding:5px;}
+.logo-chip img{max-width:100%; max-height:100%; object-fit:contain;}
+.eyebrow{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#C9BFA0; margin:0 0 6px;}
+.ticket h1{font-family:var(--f-display); font-weight:600; font-size:clamp(24px,4vw,36px); margin:0; line-height:1.08; text-wrap:balance;}
+.ticket .sub{font-family:var(--f-display); font-style:italic; font-weight:500; color:#D8CFB2; font-size:16px; margin-top:4px;}
+.stamp{border:2px solid var(--gold); color:#E2B95B; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; padding:6px 10px; border-radius:6px; transform:rotate(4deg); white-space:nowrap;}
+.ticket-meta{display:flex; gap:8px 20px; margin-top:18px; flex-wrap:wrap; font-family:var(--f-mono); font-size:12px; color:#C9BFA0;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+.timer{font-variant-numeric:tabular-nums;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:14px; color:var(--ink-soft); line-height:1.55; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+
+/* ---------- navegador ---------- */
+.nav-strip{background:var(--card); border-radius:12px; margin-top:14px; padding:14px 16px; box-shadow:var(--shadow);}
+.label{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{font-family:var(--f-mono); font-size:12px; font-weight:600; border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft); padding:8px 14px; border-radius:20px; cursor:pointer; transition:background .15s, border-color .15s, color .15s;}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{width:32px; height:32px; border-radius:50%; border:2px solid var(--rule); background:transparent; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:600; font-size:12px; color:var(--ink-soft); cursor:pointer; padding:0; transition:transform .15s, background .2s, border-color .2s, color .2s;}
+.bub:hover{transform:translateY(-2px);}
+.bub.answered{background:var(--ink-soft); border-color:var(--ink-soft); color:#fff;}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+.bub.current{border-color:var(--ink); box-shadow:0 0 0 3px rgba(184,134,46,.45);}
+.bub.answered.current,.bub.correct.current,.bub.incorrect.current{border-color:var(--ink);}
+.progress-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:1px dashed var(--rule);}
+.progress{font-family:var(--f-mono); font-size:12.5px; color:var(--ink-soft);}
+.progress b{color:var(--ink);}
+
+/* ---------- botones ---------- */
+.btn{font-family:var(--f-mono); font-weight:600; font-size:13px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); padding:10px 18px; border-radius:8px; cursor:pointer; transition:background .15s, color .15s;}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn:disabled:hover{background:transparent; color:var(--ink);}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#3a4360;}
+.btn.small{padding:8px 14px; font-size:12px; border-radius:20px;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+
+/* ---------- tarjeta de pregunta ---------- */
+.card{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); overflow:hidden;}
+.card-inner{padding:24px 26px 28px;}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
+.q-num{width:42px; height:42px; min-width:42px; border-radius:50%; background:var(--ink); color:var(--paper); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:16px;}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap; min-width:0;}
+.tag{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:20px; border:1px solid var(--rule); color:var(--ink-soft);}
+.tag-comp{border-color:var(--gold); color:var(--gold-ink); background:rgba(184,134,46,.1);}
+.meta-doc{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft); margin:-4px 0 14px; padding:6px 10px; background:var(--paper); border-radius:6px; border:1px dashed var(--rule);}
+
+.context{margin:0 0 18px; padding:14px 16px 16px; background:var(--paper-dark); border-radius:8px; font-size:14.5px; line-height:1.5; color:var(--ink);}
+.ctx-title{font-family:var(--f-display); font-weight:600; font-size:19px; line-height:1.2; margin:0 0 8px; color:var(--red); text-wrap:balance;}
+.context p{margin:0 0 8px;}
+.context p:last-child{margin-bottom:0;}
+.context .datos,.context .recordatorio,.context .formula-destacada,.context .formula-general,
+.context .tarjeta-afirmacion,.context .afirmacion,.context .secuencia,.context .flujo,
+.context .escenario,.context .figura,.context .grafica-principal,.context .parametro{
+  background:var(--card-hi); border:1px solid var(--rule); border-radius:8px; padding:9px 12px; margin:10px 0 0;
+}
+.context .recordatorio,.context .formula-destacada,.context .formula-general,.context .flujo{text-align:center;}
+.context .formula-destacada,.context .formula-general{overflow-x:auto;}
+.context .formula-general .titulo-formula{display:block; margin-bottom:4px; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--red);}
+.context .flujo{font-weight:600; font-size:14px;}
+.context .datos ul{margin:5px 0 0 18px; padding:0;}
+.context .datos li{margin-bottom:3px;}
+.context .tarjeta-afirmacion strong{color:var(--red);}
+.context .parametros{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:6px; margin-top:10px;}
+.context .parametros .parametro{margin:0; font-size:14px; padding:6px 10px;}
+.context .escenarios{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px; margin-top:10px;}
+.context .escenario{margin:0; min-width:0;}
+.context .escenario h3{margin:0 0 4px; font-family:var(--f-display); font-size:16px; color:var(--red);}
+.context .escenario p{font-size:14px;}
+.context .escenario .figura{border:0; padding:2px; margin:6px 0 0; background:transparent;}
+.context .figura,.context .grafica-principal{text-align:center;}
+.context svg.grafico-svg{display:block; width:100%; max-width:520px; height:auto; margin:0 auto;}
+.context .escenario svg.grafico-svg{max-height:190px;}
+.nota{margin-top:4px; font-size:12px; line-height:1.3; color:var(--ink-soft); text-align:center;}
+.context table{border-collapse:collapse; width:100%; margin-top:10px; font-size:13.5px; background:var(--card-hi);}
+.context th,.context td{border:1px solid var(--rule); padding:5px 8px; text-align:center;}
+.context th{background:var(--ink); color:var(--paper); font-weight:600;}
+.table-scroll{overflow-x:auto;}
+
+.stmt{margin:0 0 18px; font-size:17px; line-height:1.55; font-weight:600;}
+.options{display:grid; grid-template-columns:1fr; gap:10px;}
+.options.cols2{grid-template-columns:1fr 1fr;}
+.opt{display:flex; align-items:flex-start; gap:12px; border:1.5px solid var(--rule); border-radius:9px; padding:10px 14px; cursor:pointer; background:var(--card); font-size:15px; line-height:1.45; transition:border-color .15s, background .15s; min-width:0;}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{width:28px; height:28px; min-width:28px; border-radius:50%; border:2px solid var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:12.5px; transition:background .2s, color .2s; margin-top:1px;}
+.opt .txt{min-width:0; flex:1; overflow-x:auto; padding-block:2px;}
+.opt.selected{border-color:var(--ink); background:#EFE8D6;}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #545f7a, var(--ink) 70%); color:var(--paper);}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+.opt.opt-graph{align-items:flex-start;}
+.opt.opt-graph .txt{overflow:visible;}
+.opt svg.grafico-svg{display:block; width:100%; height:auto; max-height:190px;}
+
+.card-actions{margin-top:14px; display:flex; justify-content:flex-end;}
+.feedback{margin-top:16px; padding:14px 16px; border-radius:9px; font-size:14.5px; line-height:1.6;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback.info{background:var(--card-hi); color:var(--ink); border:1px solid var(--gold);}
+.feedback b{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;}
+.feedback .mark{width:20px; height:20px; flex:none;}
+.feedback .mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.feedback .mark.ok path{stroke:var(--green);} .feedback .mark.bad path{stroke:var(--red);} .feedback .mark.info path{stroke:var(--gold-ink);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+@media (prefers-reduced-motion:reduce){.feedback .mark path{animation:none; stroke-dashoffset:0;} *{transition:none!important;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.score-pill{font-family:var(--f-mono); font-size:13px; font-weight:600; background:var(--card); border:1.5px solid var(--gold); color:var(--gold-ink); padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);}
+
+.finish-warn{margin-top:14px; background:var(--card); border:1.5px solid var(--gold); border-radius:10px; padding:14px 16px; box-shadow:var(--shadow); font-size:14.5px;}
+.finish-warn .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+
+/* ---------- panel de clave y resumen ---------- */
+.keypanel,.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:24px 26px;}
+.keypanel h2,.summary h2{font-family:var(--f-display); font-size:26px; margin:0 0 4px; font-weight:600;}
+.summary .big{font-family:var(--f-display); font-size:54px; font-weight:700; color:var(--gold-ink); margin:10px 0 0; line-height:1;}
+.summary .pct{font-family:var(--f-mono); font-size:13px; color:var(--ink-soft); margin-top:4px;}
+.caption{font-family:var(--f-mono); font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; margin:0 0 4px;}
+.bars{margin-top:6px;}
+.bars .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.bars .cname{width:210px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden; min-width:60px;}
+.fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cnum{font-family:var(--f-mono); font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.chips{display:flex; flex-wrap:wrap; gap:8px;}
+.chip{font-size:13px; border:1px solid var(--red); background:var(--red-bg); color:#5E1B23; border-radius:20px; padding:4px 12px; cursor:pointer; font-family:var(--f-body);}
+.summary .btn{margin-top:22px; margin-right:8px;}
+.keytable{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:10px; min-width:520px;}
+.keytable th,.keytable td{border:1px solid var(--rule); padding:6px 9px; text-align:left;}
+.keytable th{background:var(--ink); color:var(--paper); font-weight:600;}
+.keytable td.k{font-family:var(--f-mono); font-weight:700; text-align:center; color:var(--green);}
+.keytable td.n{font-family:var(--f-mono); text-align:center;}
+.sec-gap{margin-top:24px;}
+
+mjx-container[jax="SVG"]{margin:0 .05em!important; font-size:100%!important;}
+.stmt mjx-container,.opt mjx-container,.context p mjx-container,.context .datos mjx-container,.context li mjx-container,
+.context .formula-destacada mjx-container,.context .formula-general mjx-container,.context td mjx-container,
+.context th mjx-container,.context .afirmacion mjx-container,.context .parametro mjx-container,
+.context .recordatorio mjx-container,.context .nota mjx-container,.feedback mjx-container{display:inline-block!important; vertical-align:-.08em;}
+
+@media (max-width:640px){
+  .card-inner{padding:18px 14px 22px;}
+  .options.cols2{grid-template-columns:1fr;}
+  .ticket{padding:18px 16px 24px;}
+  .bars .row{flex-wrap:wrap;}
+  .bars .cname{width:100%;}
+  .keypanel,.summary{padding:20px 14px;}
+  .stmt{font-size:16px;}
+}
+
+/* ---------- portal, vista previa y banner de historial ---------- */
+.portal-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+.portal-link{display:inline-flex; align-items:center; gap:6px; background:var(--card-hi); border:1px solid var(--rule); border-radius:999px; padding:7px 14px; font-size:12.5px; font-weight:700; color:var(--red); text-decoration:none;}
+.portal-link:hover{background:var(--card);}
+.preview-bar{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft);}
+.preview-bar b{color:var(--ink);}
+.gate{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:28px 26px; margin:40px auto 0; max-width:580px;}
+.gate h1{font-family:var(--f-display); font-size:26px; line-height:1.15; margin:0; font-weight:600; text-wrap:balance;}
+.gate .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;}
+.hist-banner{background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:12px 16px; margin-bottom:14px; font-size:13.5px; box-shadow:var(--shadow);}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <section class="gate" id="roleGate" hidden>
+    <p class="eyebrow" style="color:var(--ink-soft)">Vista previa fuera del portal</p>
+    <h1>Preparación Segunda Prueba de Periodo</h1>
+    <p style="margin:8px 0 0; font-size:14.5px; color:var(--ink-soft); line-height:1.55">
+      En el portal, el rol se toma de la sesión iniciada. Aquí no hay sesión, así que elige cómo quieres ver el cuadernillo.
+    </p>
+    <div class="row">
+      <button type="button" class="btn primary" id="pickEst">Ver como estudiante</button>
+      <button type="button" class="btn" id="pickDoc">Ver como docente</button>
+    </div>
+  </section>
+
+  <div id="app" hidden>
+
+  <div class="portal-row">
+    <a class="portal-link" href="https://llerzy.github.io/portal-slg/">← Volver al portal</a>
+    <div class="preview-bar" id="previewBar" hidden>
+      <span>Vista previa: <b id="previewRole"></b></span>
+      <button type="button" class="btn small" id="switchRole">Cambiar vista</button>
+    </div>
+  </div>
+
+  <header class="ticket">
+    <div class="ticket-top">
+      <div class="ticket-id">
+        <div class="logos">
+          <div class="logo-chip"><img src="https://i.imgur.com/Ld5BbX3.png" alt="Logo Institución Educativa San Luis Gonzaga" onerror="this.parentNode.remove()"></div>
+          <div class="logo-chip"><img src="https://i.imgur.com/Os2RUbW.png" alt="Logo FACIMATE" onerror="this.parentNode.remove()"></div>
+        </div>
+        <div style="min-width:0">
+          <p class="eyebrow">Facimate · I.E. San Luis Gonzaga</p>
+          <h1>Preparación Segunda Prueba de Periodo</h1>
+          <div class="sub">Matemáticas — Grado 10°</div>
+        </div>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Temas</b> Trigonometría · Plan Lector</span>
+      <span><b>Docente</b> Llerzy Esneider Torres Ome Ph.D.</span>
+      <span><b>Modo</b> <span id="modo"></span></span>
+      <span id="timerWrap" hidden><b>Tiempo</b> <span class="timer" id="timer">00:00</span></span>
+    </div>
+  </header>
+
+  <div class="intro-note" id="introNote"></div>
+
+  <section class="nav-strip">
+    <div class="order-row" id="orderRow" hidden>
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button type="button" class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button type="button" class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button type="button" class="btn small" id="reshuffleBtn" hidden>↻ Mezclar de nuevo</button>
+        <button type="button" class="order-btn" id="keyBtn">📋 Clave de respuestas</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+    <div class="progress-row">
+      <span class="progress" id="progress"></span>
+      <button type="button" class="btn small primary" id="finishBtn">Ver resultados</button>
+    </div>
+  </section>
+
+  <section class="keypanel" id="keyPanel" hidden>
+    <p class="caption">Solo docente</p>
+    <h2>Clave de respuestas</h2>
+    <p style="margin:0; font-size:13.5px; color:var(--ink-soft)">Las letras corresponden al orden original de las opciones del banco de preguntas.</p>
+    <div class="table-scroll" id="keyTable"></div>
+  </section>
+
+  <div id="quizBody">
+    <article class="card"><div class="card-inner" id="cardInner"></div></article>
+    <div class="finish-warn" id="finishWarn" hidden></div>
+    <div class="footer-nav">
+      <button type="button" class="btn" id="prevBtn">← Anterior</button>
+      <span class="score-pill" id="scorePill">0 / 20 correctas</span>
+      <button type="button" class="btn primary" id="nextBtn">Siguiente →</button>
+    </div>
+  </div>
+
+  <section class="summary" id="summary" hidden></section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+/* ===== Configuración del portal (mismos servicios que los demás cuadernillos) ===== */
+const PORTAL = "https://llerzy.github.io/portal-slg/";
+const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec";
+const VERSION_ARTEFACTO = "pp2-v1"; // súbelo manualmente si cambias las preguntas de este cuadernillo
+const AREA_ARTEFACTO = "Matemáticas · Prueba de periodo 2";
+
+const Q = [{"id": 1, "tema": "Circunferencia trigonométrica", "subtema": "Coordenadas de ángulos notables en distintos cuadrantes", "pens": "Pensamiento espacial y sistemas geométricos", "comp": "Interpretación y representación", "correct": "B", "explain": "Las simetrías de \\(P=\\left(\\frac12,\\frac{\\sqrt3}{2}\\right)\\) conservan el ángulo de referencia de \\(60^\\circ\\) y solo cambian los signos según el cuadrante. En \\(120^\\circ\\) (II): \\(\\left(-\\frac12,\\frac{\\sqrt3}{2}\\right)\\). En \\(240^\\circ\\) (III): \\(\\left(-\\frac12,-\\frac{\\sqrt3}{2}\\right)\\). En \\(300^\\circ\\) (IV): \\(\\left(\\frac12,-\\frac{\\sqrt3}{2}\\right)\\).", "titulo": "Simetrías desde un ángulo de 60°", "ctx": "<p>\nEn una aplicación de navegación se marca sobre la circunferencia trigonométrica el punto\n\\(P=\\left(\\frac12,\\frac{\\sqrt3}{2}\\right)\\), asociado a \\(60^\\circ\\).\nEl sistema debe completar los puntos simétricos correspondientes a \\(120^\\circ\\), \\(240^\\circ\\) y \\(300^\\circ\\).\n<\/p>\n<div class=\"figura\">\n<svg aria-label=\"Circunferencia trigonométrica con ángulos de 60, 120, 240 y 300 grados\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 520 330\">\n<line stroke=\"#333\" stroke-width=\"2\" x1=\"50\" x2=\"470\" y1=\"165\" y2=\"165\"><\/line>\n<line stroke=\"#333\" stroke-width=\"2\" x1=\"260\" x2=\"260\" y1=\"25\" y2=\"305\"><\/line>\n<circle cx=\"260\" cy=\"165\" fill=\"none\" r=\"125\" stroke=\"#555\" stroke-width=\"2.5\"><\/circle>\n<line stroke=\"#bbb\" stroke-dasharray=\"5,4\" x1=\"260\" x2=\"322.5\" y1=\"165\" y2=\"56.7\"><\/line>\n<line stroke=\"#bbb\" stroke-dasharray=\"5,4\" x1=\"260\" x2=\"197.5\" y1=\"165\" y2=\"56.7\"><\/line>\n<line stroke=\"#bbb\" stroke-dasharray=\"5,4\" x1=\"260\" x2=\"197.5\" y1=\"165\" y2=\"273.3\"><\/line>\n<line stroke=\"#bbb\" stroke-dasharray=\"5,4\" x1=\"260\" x2=\"322.5\" y1=\"165\" y2=\"273.3\"><\/line>\n<circle cx=\"322.5\" cy=\"56.7\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<circle cx=\"197.5\" cy=\"56.7\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<circle cx=\"197.5\" cy=\"273.3\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<circle cx=\"322.5\" cy=\"273.3\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"332\" y=\"54\">60°<\/text>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"145\" y=\"54\">120°<\/text>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"142\" y=\"294\">240°<\/text>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"332\" y=\"294\">300°<\/text>\n<text fill=\"#777\" font-size=\"14\" x=\"345\" y=\"88\">I<\/text>\n<text fill=\"#777\" font-size=\"14\" x=\"160\" y=\"88\">II<\/text>\n<text fill=\"#777\" font-size=\"14\" x=\"160\" y=\"250\">III<\/text>\n<text fill=\"#777\" font-size=\"14\" x=\"345\" y=\"250\">IV<\/text>\n<\/svg>\n<div class=\"nota\">Los cuatro puntos tienen el mismo ángulo de referencia: \\(60^\\circ\\).<\/div>\n<\/div>\n<div class=\"recordatorio\">\nCada punto de la circunferencia trigonométrica tiene la forma\n\\((\\cos\\theta,\\sin\\theta)\\).\n<\/div>", "text": "¿Qué coordenadas corresponden, en ese orden, a los puntos de \\(120^\\circ\\), \\(240^\\circ\\) y \\(300^\\circ\\)?", "opts": {"A": "\\(\\left(\\frac12,-\\frac{\\sqrt3}{2}\\right)\\), \\(\\left(-\\frac12,-\\frac{\\sqrt3}{2}\\right)\\) y \\(\\left(-\\frac12,\\frac{\\sqrt3}{2}\\right)\\)", "B": "\\(\\left(-\\frac12,\\frac{\\sqrt3}{2}\\right)\\), \\(\\left(-\\frac12,-\\frac{\\sqrt3}{2}\\right)\\) y \\(\\left(\\frac12,-\\frac{\\sqrt3}{2}\\right)\\)", "C": "\\(\\left(-\\frac{\\sqrt3}{2},\\frac12\\right)\\), \\(\\left(-\\frac{\\sqrt3}{2},-\\frac12\\right)\\) y \\(\\left(\\frac{\\sqrt3}{2},-\\frac12\\right)\\)", "D": "\\(\\left(\\frac12,\\frac{\\sqrt3}{2}\\right)\\), \\(\\left(-\\frac12,\\frac{\\sqrt3}{2}\\right)\\) y \\(\\left(-\\frac12,-\\frac{\\sqrt3}{2}\\right)\\)"}}, {"id": 2, "tema": "Circunferencia trigonométrica", "subtema": "Componentes faltantes en puntos de distintos cuadrantes", "pens": "Pensamiento espacial y sistemas geométricos", "comp": "Interpretación y representación", "correct": "D", "explain": "Con ángulo de referencia \\(30^\\circ\\), las magnitudes son \\(\\frac{\\sqrt3}{2}\\) (componente x) y \\(\\frac12\\) (componente y). En \\(150^\\circ\\) (II) la x es negativa: \\(a=-\\frac{\\sqrt3}{2}\\). En \\(210^\\circ\\) (III) la y es negativa: \\(b=-\\frac12\\). En \\(330^\\circ\\) (IV) la x es positiva: \\(c=\\frac{\\sqrt3}{2}\\).", "titulo": "Coordenadas perdidas en un simulador", "ctx": "<p>\nUn simulador de movimiento circular registra cuatro posiciones asociadas al ángulo de referencia \\(30^\\circ\\).\nAlgunas componentes de los puntos se perdieron durante la transmisión de datos.\n<\/p>\n<table class=\"tabla-coordenadas\">\n<tr><th>Ángulo<\/th><th>Cuadrante<\/th><th>Punto registrado<\/th><\/tr>\n<tr><td>\\(30^\\circ\\)<\/td><td>I<\/td><td>\\(\\left(\\frac{\\sqrt3}{2},\\frac12\\right)\\)<\/td><\/tr>\n<tr><td>\\(150^\\circ\\)<\/td><td>II<\/td><td>\\(\\left(a,\\frac12\\right)\\)<\/td><\/tr>\n<tr><td>\\(210^\\circ\\)<\/td><td>III<\/td><td>\\(\\left(-\\frac{\\sqrt3}{2},b\\right)\\)<\/td><\/tr>\n<tr><td>\\(330^\\circ\\)<\/td><td>IV<\/td><td>\\(\\left(c,-\\frac12\\right)\\)<\/td><\/tr>\n<\/table>\n<div class=\"figura\">\n<svg aria-label=\"Circunferencia trigonométrica con ángulos de 30, 150, 210 y 330 grados\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 520 285\">\n<line stroke=\"#333333\" stroke-width=\"2\" x1=\"55\" x2=\"465\" y1=\"142\" y2=\"142\"><\/line>\n<line stroke=\"#333333\" stroke-width=\"2\" x1=\"260\" x2=\"260\" y1=\"15\" y2=\"270\"><\/line>\n<circle cx=\"260\" cy=\"142\" fill=\"none\" r=\"112\" stroke=\"#555555\" stroke-width=\"2.5\"><\/circle>\n<line stroke=\"#bbbbbb\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"260\" x2=\"357\" y1=\"142\" y2=\"86\"><\/line>\n<line stroke=\"#bbbbbb\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"260\" x2=\"163\" y1=\"142\" y2=\"86\"><\/line>\n<line stroke=\"#bbbbbb\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"260\" x2=\"163\" y1=\"142\" y2=\"198\"><\/line>\n<line stroke=\"#bbbbbb\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"260\" x2=\"357\" y1=\"142\" y2=\"198\"><\/line>\n<circle cx=\"357\" cy=\"86\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<circle cx=\"163\" cy=\"86\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<circle cx=\"163\" cy=\"198\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<circle cx=\"357\" cy=\"198\" fill=\"#A6323E\" r=\"5\"><\/circle>\n<text fill=\"#A6323E\" font-size=\"15\" font-weight=\"bold\" x=\"366\" y=\"81\">30°<\/text>\n<text fill=\"#A6323E\" font-size=\"15\" font-weight=\"bold\" x=\"114\" y=\"81\">150°<\/text>\n<text fill=\"#A6323E\" font-size=\"15\" font-weight=\"bold\" x=\"112\" y=\"220\">210°<\/text>\n<text fill=\"#A6323E\" font-size=\"15\" font-weight=\"bold\" x=\"366\" y=\"220\">330°<\/text>\n<text fill=\"#777777\" font-size=\"14\" x=\"384\" y=\"112\">(+,+)<\/text>\n<text fill=\"#777777\" font-size=\"14\" x=\"92\" y=\"112\">(−,+)<\/text>\n<text fill=\"#777777\" font-size=\"14\" x=\"90\" y=\"180\">(−,−)<\/text>\n<text fill=\"#777777\" font-size=\"14\" x=\"384\" y=\"180\">(+,−)<\/text>\n<\/svg>\n<div class=\"nota\">\nLos cuatro ángulos tienen como referencia \\(30^\\circ\\); por ello se conservan las magnitudes y cambian los signos según el cuadrante.\n<\/div>\n<\/div>", "text": "¿Cuáles valores deben reemplazar \\(a\\), \\(b\\) y \\(c\\) para reconstruir correctamente la información?", "opts": {"A": "\\(a=\\frac{\\sqrt3}{2}\\), \\(b=-\\frac12\\), \\(c=-\\frac{\\sqrt3}{2}\\)", "B": "\\(a=-\\frac12\\), \\(b=-\\frac{\\sqrt3}{2}\\), \\(c=\\frac12\\)", "C": "\\(a=-\\frac{\\sqrt3}{2}\\), \\(b=\\frac12\\), \\(c=\\frac{\\sqrt3}{2}\\)", "D": "\\(a=-\\frac{\\sqrt3}{2}\\), \\(b=-\\frac12\\), \\(c=\\frac{\\sqrt3}{2}\\)"}}, {"id": 3, "tema": "Identidades trigonométricas", "subtema": "Identidades recíprocas y ángulos notables", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Interpretación y representación", "correct": "A", "explain": "Como \\(\\cos225^\\circ=\\sin225^\\circ=-\\frac{\\sqrt2}{2}\\): \\(\\sec225^\\circ=\\frac{1}{-\\sqrt2/2}=-\\sqrt2\\), \\(\\csc225^\\circ=-\\sqrt2\\) y \\(\\cot225^\\circ=\\frac{\\cos}{\\sin}=1\\), porque el cociente de dos números negativos iguales es positivo.", "titulo": "Razones recíprocas en el tercer cuadrante", "ctx": "<p>\nEn una práctica de geometría analítica se ubica el ángulo\n\\(\\theta=225^\\circ\\), cuyo punto en la circunferencia trigonométrica es\n\\(\\left(-\\frac{\\sqrt2}{2},-\\frac{\\sqrt2}{2}\\right)\\).\n<\/p>\n<div class=\"datos\">\n<strong>Información disponible<\/strong>\n<ul>\n<li>\\(\\cos225^\\circ=-\\frac{\\sqrt2}{2}\\)<\/li>\n<li>\\(\\sin225^\\circ=-\\frac{\\sqrt2}{2}\\)<\/li>\n<li>\\(\\sec\\theta=\\frac1{\\cos\\theta}\\)<\/li>\n<li>\\(\\csc\\theta=\\frac1{\\sin\\theta}\\)<\/li>\n<li>\\(\\cot\\theta=\\frac{\\cos\\theta}{\\sin\\theta}\\)<\/li>\n<\/ul>\n<\/div>\n<table class=\"tabla-matematica\">\n<tr><th>Razón<\/th><th>Interpretación<\/th><\/tr>\n<tr><td>\\(\\sec\\theta\\)<\/td><td>Recíproca del coseno<\/td><\/tr>\n<tr><td>\\(\\csc\\theta\\)<\/td><td>Recíproca del seno<\/td><\/tr>\n<tr><td>\\(\\cot\\theta\\)<\/td><td>Razón coseno/seno<\/td><\/tr>\n<\/table>", "text": "¿Cuál conjunto representa correctamente \\(\\sec225^\\circ\\), \\(\\csc225^\\circ\\) y \\(\\cot225^\\circ\\)?", "opts": {"A": "\\(\\sec225^\\circ=-\\sqrt2\\), \\(\\csc225^\\circ=-\\sqrt2\\) y \\(\\cot225^\\circ=1\\)", "B": "\\(\\sec225^\\circ=\\sqrt2\\), \\(\\csc225^\\circ=\\sqrt2\\) y \\(\\cot225^\\circ=-1\\)", "C": "\\(\\sec225^\\circ=-\\frac{\\sqrt2}{2}\\), \\(\\csc225^\\circ=-\\frac{\\sqrt2}{2}\\) y \\(\\cot225^\\circ=1\\)", "D": "\\(\\sec225^\\circ=-\\sqrt2\\), \\(\\csc225^\\circ=\\sqrt2\\) y \\(\\cot225^\\circ=-1\\)"}}, {"id": 4, "tema": "Identidades trigonométricas", "subtema": "Identidad de resta de ángulos y ángulos notables", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Formulación y ejecución", "correct": "C", "explain": "Se aplica \\(\\sin(45^\\circ-30^\\circ)=\\sin45^\\circ\\cos30^\\circ-\\cos45^\\circ\\sin30^\\circ=\\frac{\\sqrt2}{2}\\cdot\\frac{\\sqrt3}{2}-\\frac{\\sqrt2}{2}\\cdot\\frac12=\\frac{\\sqrt6-\\sqrt2}{4}\\). Entonces \\(h=10\\cdot\\frac{\\sqrt6-\\sqrt2}{4}=\\frac52(\\sqrt6-\\sqrt2)\\). La opción A suma en lugar de restar; B y D no usan la identidad.", "titulo": "Altura de un soporte inclinado", "ctx": "<p>\nUn soporte metálico de \\(10\\,\\text{m}\\) forma un ángulo de \\(15^\\circ\\) con la horizontal.\nPara determinar su componente vertical se utiliza \\(h=10\\sin15^\\circ\\).\n<\/p>\n<div class=\"datos\">\n<strong>Ángulos notables<\/strong>\n<ul>\n<li>\\(15^\\circ=45^\\circ-30^\\circ\\)<\/li>\n<li>\\(\\sin45^\\circ=\\frac{\\sqrt2}{2}\\), \\(\\cos45^\\circ=\\frac{\\sqrt2}{2}\\)<\/li>\n<li>\\(\\sin30^\\circ=\\frac12\\), \\(\\cos30^\\circ=\\frac{\\sqrt3}{2}\\)<\/li>\n<\/ul>\n<\/div>\n<div class=\"formula-destacada\">\n\\(\\sin(\\alpha-\\beta)=\\sin\\alpha\\cos\\beta-\\cos\\alpha\\sin\\beta\\)\n<\/div>", "text": "¿Qué procedimiento permite hallar correctamente el valor exacto de \\(h\\)?", "opts": {"A": "\\(h=10\\left(\\frac{\\sqrt2}{2}\\frac{\\sqrt3}{2}+\\frac{\\sqrt2}{2}\\frac12\\right)=\\frac52(\\sqrt6+\\sqrt2)\\)", "B": "\\(h=10\\left(\\frac{\\sqrt2}{2}-\\frac12\\right)=5(\\sqrt2-1)\\)", "C": "\\(h=10\\left(\\frac{\\sqrt2}{2}\\frac{\\sqrt3}{2}-\\frac{\\sqrt2}{2}\\frac12\\right)=\\frac52(\\sqrt6-\\sqrt2)\\)", "D": "\\(h=10\\left(\\frac{\\sqrt3}{2}-\\frac12\\right)=5(\\sqrt3-1)\\)"}}, {"id": 5, "tema": "Identidades trigonométricas", "subtema": "Identidad de ángulo doble", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Argumentación", "correct": "B", "explain": "El Estudiante 1 se equivoca: para \\(x=60^\\circ\\), \\(2\\cos60^\\circ=1\\) y \\(\\cos120^\\circ=-\\frac12\\). El Estudiante 2 aplica bien la identidad de suma con ángulos iguales: \\(\\cos^260^\\circ-\\sin^260^\\circ=\\frac14-\\frac34=-\\frac12\\), que coincide con \\(\\cos120^\\circ\\). La identidad de suma sí vale cuando los dos ángulos son iguales.", "titulo": "Dos afirmaciones sobre el coseno doble", "ctx": "<p>En clase, dos estudiantes proponen expresiones distintas para calcular \\(\\cos(2x)\\).<\/p>\n<div class=\"tarjeta-afirmacion\">\n<strong>Estudiante 1:<\/strong><br/>\n“Si el ángulo se duplica, entonces \\(\\cos(2x)=2\\cos x\\)”.\n<\/div>\n<div class=\"tarjeta-afirmacion\">\n<strong>Estudiante 2:<\/strong><br/>\n“Como \\(2x=x+x\\), puede aplicarse la identidad de suma de ángulos”.\n<\/div>\n<div class=\"formula-destacada\">\n\\(\\cos(x+x)=\\cos x\\cos x-\\sin x\\sin x=\\cos^2x-\\sin^2x\\)\n<\/div>\n<div class=\"datos\">\n<strong>Para revisar las afirmaciones puede considerarse \\(x=60^\\circ\\):<\/strong>\n<ul>\n<li>\\(\\cos120^\\circ=-\\frac12\\)<\/li>\n<li>\\(\\cos60^\\circ=\\frac12\\)<\/li>\n<li>\\(\\sin60^\\circ=\\frac{\\sqrt3}{2}\\)<\/li>\n<\/ul>\n<\/div>", "text": "¿Cuál argumento permite evaluar correctamente las dos afirmaciones?", "opts": {"A": "El Estudiante 1 tiene razón, porque \\(2\\cos60^\\circ=1\\) y al duplicar el ángulo el coseno también debe duplicar su valor", "B": "El Estudiante 1 se equivoca, porque \\(2\\cos60^\\circ=1\\neq-\\frac12\\); el Estudiante 2 obtiene \\(\\frac14-\\frac34=-\\frac12\\), que coincide con \\(\\cos120^\\circ\\)", "C": "Ambos estudiantes tienen razón, porque \\(2\\cos x\\) y \\(\\cos^2x-\\sin^2x\\) representan dos formas equivalentes de calcular cualquier ángulo doble", "D": "El Estudiante 2 se equivoca, porque la identidad de suma solo puede aplicarse a ángulos diferentes y no puede utilizarse cuando aparece \\(x+x\\)"}}, {"id": 6, "tema": "Funciones seno y coseno", "subtema": "Amplitud, frecuencia, periodo, desfase horizontal y línea media", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Interpretación y representación", "correct": "D", "explain": "Al comparar \\(h(t)=7\\cos\\left(\\frac{\\pi}{6}(t-2)\\right)+11\\) con \\(f(x)=A\\cos(F(x-H))+D\\): \\(A=7\\), \\(F=\\frac{\\pi}{6}\\), \\(H=2\\) y \\(D=11\\). El periodo es \\(P=\\frac{2\\pi}{F}=\\frac{2\\pi}{\\pi/6}=12\\) minutos.", "titulo": "Nivel de agua en un tanque de prueba", "ctx": "<p>\nDurante una prueba automática, el nivel del agua se modela mediante\n\\(\\displaystyle h(t)=7\\cos\\left(\\frac{\\pi}{6}(t-2)\\right)+11\\),\ndonde \\(h\\) está en metros y \\(t\\) en minutos.\n<\/p>\n<div class=\"formula-general\">\n<span class=\"titulo-formula\">Forma utilizada para una función coseno<\/span>\n\\(\\displaystyle f(x)=A\\cos(F(x-H))+D\\)<br/>\ncon \\(\\displaystyle P=\\frac{2\\pi}{|F|}\\).\n<\/div>\n<div class=\"parametros\">\n<div class=\"parametro\"><strong>\\(A\\)<\/strong>: amplitud.<\/div>\n<div class=\"parametro\"><strong>\\(F\\)<\/strong>: frecuencia angular.<\/div>\n<div class=\"parametro\"><strong>\\(P\\)<\/strong>: periodo.<\/div>\n<div class=\"parametro\"><strong>\\(H\\)<\/strong>: desfase horizontal.<\/div>\n<div class=\"parametro\"><strong>\\(D\\)<\/strong>: línea media.<\/div>\n<\/div>\n<div class=\"figura\">\n<svg aria-label=\"Representación de una función coseno con amplitud 7, línea media 11, periodo 12 y máximo en t igual a 2\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 560 235\">\n<rect fill=\"#fff\" height=\"180\" stroke=\"#ddd\" width=\"470\" x=\"55\" y=\"18\"><\/rect>\n<line stroke=\"#888\" stroke-dasharray=\"7,6\" stroke-width=\"2\" x1=\"55\" x2=\"525\" y1=\"108\" y2=\"108\"><\/line>\n<line stroke=\"#333\" stroke-width=\"2\" x1=\"55\" x2=\"525\" y1=\"198\" y2=\"198\"><\/line>\n<line stroke=\"#333\" stroke-width=\"2\" x1=\"55\" x2=\"55\" y1=\"18\" y2=\"198\"><\/line>\n<path d=\"M75 108 C95 108,110 48,135 48\n           C170 48,190 108,215 108\n           C240 108,255 168,275 168\n           C310 168,330 108,355 108\n           C380 108,395 48,415 48\n           C455 48,475 108,505 108\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"4\"><\/path>\n<circle cx=\"135\" cy=\"48\" fill=\"#A6323E\" r=\"4.5\"><\/circle>\n<circle cx=\"415\" cy=\"48\" fill=\"#A6323E\" r=\"4.5\"><\/circle>\n<circle cx=\"275\" cy=\"168\" fill=\"#A6323E\" r=\"4.5\"><\/circle>\n<line stroke=\"#c4c4c4\" stroke-dasharray=\"4,4\" stroke-width=\"1.5\" x1=\"135\" x2=\"135\" y1=\"48\" y2=\"198\"><\/line>\n<line stroke=\"#1F1F1F\" stroke-width=\"1.5\" x1=\"135\" x2=\"415\" y1=\"28\" y2=\"28\"><\/line>\n<line stroke=\"#1F1F1F\" stroke-width=\"1.5\" x1=\"135\" x2=\"135\" y1=\"23\" y2=\"33\"><\/line>\n<line stroke=\"#1F1F1F\" stroke-width=\"1.5\" x1=\"415\" x2=\"415\" y1=\"23\" y2=\"33\"><\/line>\n<text font-size=\"15\" font-weight=\"bold\" x=\"260\" y=\"22\">P = 12 min<\/text>\n<text fill=\"#555\" font-size=\"14\" x=\"64\" y=\"102\">D = 11 m<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"118\" y=\"218\">t = 2<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"402\" y=\"218\">t = 14<\/text>\n<\/svg>\n<div class=\"nota\">La gráfica esquemática resalta la línea media, el periodo y el desplazamiento horizontal.<\/div>\n<\/div>", "text": "¿Cuál interpretación identifica correctamente todos los parámetros del modelo?", "opts": {"A": "\\(A=11\\), \\(F=\\frac{\\pi}{6}\\), \\(P=6\\), \\(H=2\\) y \\(D=7\\)", "B": "\\(A=7\\), \\(F=6\\), \\(P=\\frac{\\pi}{3}\\), \\(H=-2\\) y \\(D=11\\)", "C": "\\(A=7\\), \\(F=\\frac{\\pi}{6}\\), \\(P=6\\), \\(H=-2\\) y \\(D=11\\)", "D": "\\(A=7\\), \\(F=\\frac{\\pi}{6}\\), \\(P=12\\), \\(H=2\\) y \\(D=11\\)"}}, {"id": 7, "tema": "Funciones seno y coseno", "subtema": "Construcción de un modelo periódico a partir de sus parámetros", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Formulación y ejecución", "correct": "A", "explain": "\\(A=12\\) y \\(D=66\\) ya están calculados. Como el periodo es 8 h, \\(F=\\frac{2\\pi}{8}=\\frac{\\pi}{4}\\). El primer máximo ocurre en \\(t=1\\), así que \\(h=1\\) y \\(H(t)=12\\cos\\left(\\frac{\\pi}{4}(t-1)\\right)+66\\). La opción C usa \\(F=\\frac{\\pi}{8}\\) y desfase \\(t+1\\).", "titulo": "Humedad en un invernadero", "ctx": "<p>\nLa humedad relativa de un invernadero presenta un comportamiento periódico que será modelado mediante\n\\(\\displaystyle H(t)=A\\cos(F(t-h))+D\\).\n<\/p>\n<table class=\"tabla-datos\">\n<tr><th>Característica<\/th><th>Dato<\/th><\/tr>\n<tr><td>Máximo<\/td><td>\\(78\\%\\)<\/td><\/tr>\n<tr><td>Mínimo<\/td><td>\\(54\\%\\)<\/td><\/tr>\n<tr><td>Periodo<\/td><td>\\(8\\) horas<\/td><\/tr>\n<tr><td>Primer máximo<\/td><td>\\(t=1\\) hora<\/td><\/tr>\n<\/table>\n<div class=\"datos\">\n<strong>Relaciones que pueden utilizarse<\/strong>\n<ul>\n<li>\\(\\displaystyle A=\\frac{\\max-\\min}{2}\\)<\/li>\n<li>\\(\\displaystyle D=\\frac{\\max+\\min}{2}\\)<\/li>\n<li>\\(\\displaystyle F=\\frac{2\\pi}{P}\\)<\/li>\n<\/ul>\n<\/div>\n<div class=\"formula-general\">\nDe los registros se obtiene\n\\(\\displaystyle A=\\frac{78-54}{2}=12\\),\n\\(\\displaystyle D=\\frac{78+54}{2}=66\\)\ny \\(P=8\\) horas.\n<\/div>", "text": "¿Cuál función modela correctamente la humedad observada?", "opts": {"A": "\\(\\displaystyle H(t)=12\\cos\\left(\\frac{\\pi}{4}(t-1)\\right)+66\\)", "B": "\\(\\displaystyle H(t)=24\\cos\\left(\\frac{\\pi}{8}(t-1)\\right)+54\\)", "C": "\\(\\displaystyle H(t)=12\\cos\\left(\\frac{\\pi}{8}(t+1)\\right)+66\\)", "D": "\\(\\displaystyle H(t)=66\\cos\\left(\\frac{\\pi}{4}(t-1)\\right)+12\\)"}}, {"id": 8, "tema": "Funciones seno y coseno", "subtema": "Identificación gráfica de amplitud, desfase horizontal y línea media", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Interpretación y representación", "correct": "C", "explain": "Como \\(\\sin\\left(\\theta+\\frac{\\pi}{2}\\right)=\\cos\\theta\\), el modelo es \\(y=4\\cos\\theta+6\\): en \\(\\theta=0\\) vale 10 (máximo), en \\(\\theta=\\pi\\) vale 2 (mínimo) y en \\(2\\pi\\) vuelve a 10. Solo la gráfica C inicia en el máximo y mantiene amplitud 4 con línea media 6. A y B no inician en el máximo; D tiene amplitud 6 (va de 0 a 12).", "titulo": "Oscilación de un brazo mecánico", "ctx": "<p>\nLa posición vertical de un brazo mecánico se modela mediante\n\\(\\displaystyle y(\\theta)=4\\sin\\left(\\theta+\\frac{\\pi}{2}\\right)+6\\),\npara \\(0\\leq\\theta\\leq2\\pi\\).\n<\/p>\n<div class=\"datos\">\n<strong>Características del modelo<\/strong>\n<ul>\n<li>Amplitud: \\(A=4\\).<\/li>\n<li>Línea media: \\(D=6\\).<\/li>\n<li>Periodo: \\(2\\pi\\).<\/li>\n<li>Desfase horizontal: \\(\\frac{\\pi}{2}\\) hacia la izquierda.<\/li>\n<\/ul>\n<\/div>\n<div class=\"formula-destacada\">\nComo \\(\\sin\\left(\\theta+\\frac{\\pi}{2}\\right)=\\cos\\theta\\),\nla gráfica debe iniciar en un máximo cuando \\(\\theta=0\\).\n<\/div>", "text": "¿Cuál de las siguientes gráficas representa correctamente el modelo?", "opts": {"A": "<svg aria-label=\"Gráfica candidata A\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 330 185\">\n<rect fill=\"#fff\" height=\"145\" stroke=\"#ddd\" width=\"275\" x=\"40\" y=\"10\"><\/rect>\n<line stroke=\"#999\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"82\" y2=\"82\"><\/line>\n<line stroke=\"#333\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"155\" y2=\"155\"><\/line>\n<path d=\"M 40 82 C 70 82,88 40,108 40 C 139 40,157 82,177 82 C 198 82,216 124,246 124 C 277 124,295 82,315 82\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"3.5\"><\/path>\n<text font-size=\"11\" x=\"37\" y=\"173\">0<\/text>\n<text font-size=\"11\" x=\"98\" y=\"173\">π/2<\/text>\n<text font-size=\"11\" x=\"173\" y=\"173\">π<\/text>\n<text font-size=\"11\" x=\"233\" y=\"173\">3π/2<\/text>\n<text font-size=\"11\" x=\"302\" y=\"173\">2π<\/text>\n<text font-size=\"11\" x=\"13\" y=\"44\">10<\/text>\n<text font-size=\"11\" x=\"13\" y=\"86\">6<\/text>\n<text font-size=\"11\" x=\"13\" y=\"128\">2<\/text>\n<\/svg>", "B": "<svg aria-label=\"Gráfica candidata B\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 330 185\">\n<rect fill=\"#fff\" height=\"145\" stroke=\"#ddd\" width=\"275\" x=\"40\" y=\"10\"><\/rect>\n<line stroke=\"#999\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"82\" y2=\"82\"><\/line>\n<line stroke=\"#333\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"155\" y2=\"155\"><\/line>\n<path d=\"M 40 124 C 70 124,88 82,108 82 C 139 82,157 40,177 40 C 208 40,226 82,246 82 C 277 82,295 124,315 124\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"3.5\"><\/path>\n<text font-size=\"11\" x=\"37\" y=\"173\">0<\/text>\n<text font-size=\"11\" x=\"98\" y=\"173\">π/2<\/text>\n<text font-size=\"11\" x=\"173\" y=\"173\">π<\/text>\n<text font-size=\"11\" x=\"233\" y=\"173\">3π/2<\/text>\n<text font-size=\"11\" x=\"302\" y=\"173\">2π<\/text>\n<text font-size=\"11\" x=\"13\" y=\"44\">10<\/text>\n<text font-size=\"11\" x=\"13\" y=\"86\">6<\/text>\n<text font-size=\"11\" x=\"13\" y=\"128\">2<\/text>\n<\/svg>", "C": "<svg aria-label=\"Gráfica candidata C\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 330 185\">\n<rect fill=\"#fff\" height=\"145\" stroke=\"#ddd\" width=\"275\" x=\"40\" y=\"10\"><\/rect>\n<line stroke=\"#999\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"82\" y2=\"82\"><\/line>\n<line stroke=\"#333\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"155\" y2=\"155\"><\/line>\n<path d=\"M 40 40 C 70 40,88 82,108 82 C 139 82,157 124,177 124 C 208 124,226 82,246 82 C 277 82,295 40,315 40\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"3.5\"><\/path>\n<text font-size=\"11\" x=\"37\" y=\"173\">0<\/text>\n<text font-size=\"11\" x=\"98\" y=\"173\">π/2<\/text>\n<text font-size=\"11\" x=\"173\" y=\"173\">π<\/text>\n<text font-size=\"11\" x=\"233\" y=\"173\">3π/2<\/text>\n<text font-size=\"11\" x=\"302\" y=\"173\">2π<\/text>\n<text font-size=\"11\" x=\"13\" y=\"44\">10<\/text>\n<text font-size=\"11\" x=\"13\" y=\"86\">6<\/text>\n<text font-size=\"11\" x=\"13\" y=\"128\">2<\/text>\n<\/svg>", "D": "<svg aria-label=\"Gráfica candidata D\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 330 185\">\n<rect fill=\"#fff\" height=\"145\" stroke=\"#ddd\" width=\"275\" x=\"40\" y=\"10\"><\/rect>\n<line stroke=\"#999\" stroke-dasharray=\"5,4\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"82\" y2=\"82\"><\/line>\n<line stroke=\"#333\" stroke-width=\"1.5\" x1=\"40\" x2=\"315\" y1=\"155\" y2=\"155\"><\/line>\n<path d=\"M 40 30 C 70 30,88 82,108 82 C 139 82,157 134,177 134 C 208 134,226 82,246 82 C 277 82,295 30,315 30\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"3.5\"><\/path>\n<text font-size=\"11\" x=\"37\" y=\"173\">0<\/text>\n<text font-size=\"11\" x=\"98\" y=\"173\">π/2<\/text>\n<text font-size=\"11\" x=\"173\" y=\"173\">π<\/text>\n<text font-size=\"11\" x=\"233\" y=\"173\">3π/2<\/text>\n<text font-size=\"11\" x=\"302\" y=\"173\">2π<\/text>\n<text font-size=\"11\" x=\"13\" y=\"44\">12<\/text>\n<text font-size=\"11\" x=\"13\" y=\"86\">6<\/text>\n<text font-size=\"11\" x=\"13\" y=\"128\">0<\/text>\n<\/svg>"}}, {"id": 9, "tema": "Funciones seno y coseno", "subtema": "Modelación a partir de amplitud, desfase horizontal y línea media", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Formulación y ejecución", "correct": "B", "explain": "El máximo es 22 y el mínimo 14: \\(A=\\frac{22-14}{2}=4\\) y \\(D=\\frac{22+14}{2}=18\\). El máximo ocurre en \\(\\theta=\\pi\\), entonces \\(H=\\pi\\): \\(h(\\theta)=4\\cos(\\theta-\\pi)+18\\). La opción A usa \\(D=14\\); C intercambia amplitud y línea media; D desplaza el máximo a \\(\\frac{\\pi}{2}\\).", "titulo": "Movimiento vertical de una plataforma", "ctx": "<p>\nLa gráfica muestra la altura de una plataforma que oscila periódicamente durante una prueba.\n<\/p>\n<div class=\"grafica-principal\">\n<svg aria-label=\"Gráfica cosenoidal con línea media 18, máximo 22 y mínimo 14\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 560 260\">\n<rect fill=\"#fff\" height=\"195\" stroke=\"#ddd\" width=\"465\" x=\"60\" y=\"18\"><\/rect>\n<line stroke=\"#777\" stroke-dasharray=\"7,6\" stroke-width=\"2\" x1=\"60\" x2=\"525\" y1=\"115\" y2=\"115\"><\/line>\n<line stroke=\"#333\" stroke-width=\"2\" x1=\"60\" x2=\"525\" y1=\"213\" y2=\"213\"><\/line>\n<line stroke=\"#333\" stroke-width=\"2\" x1=\"60\" x2=\"60\" y1=\"18\" y2=\"213\"><\/line>\n<path d=\"M60.0 165.0 L66.5 164.8 L72.9 164.2 L79.4 163.3 L85.8 162.0 L92.3 160.3 L98.8 158.3 L105.2 156.0 L111.7 153.3 L118.1 150.4 L124.6 147.1 L131.0 143.7 L137.5 140.0 L144.0 136.1 L150.4 132.1 L156.9 127.9 L163.3 123.7 L169.8 119.4 L176.2 115.0 L182.7 110.6 L189.2 106.3 L195.6 102.1 L202.1 97.9 L208.5 93.9 L215.0 90.0 L221.5 86.3 L227.9 82.9 L234.4 79.6 L240.8 76.7 L247.3 74.0 L253.7 71.7 L260.2 69.7 L266.7 68.0 L273.1 66.7 L279.6 65.8 L286.0 65.2 L292.5 65.0 L299.0 65.2 L305.4 65.8 L311.9 66.7 L318.3 68.0 L324.8 69.7 L331.2 71.7 L337.7 74.0 L344.2 76.7 L350.6 79.6 L357.1 82.9 L363.5 86.3 L370.0 90.0 L376.5 93.9 L382.9 97.9 L389.4 102.1 L395.8 106.3 L402.3 110.6 L408.8 115.0 L415.2 119.4 L421.7 123.7 L428.1 127.9 L434.6 132.1 L441.0 136.1 L447.5 140.0 L454.0 143.7 L460.4 147.1 L466.9 150.4 L473.3 153.3 L479.8 156.0 L486.3 158.3 L492.7 160.3 L499.2 162.0 L505.6 163.3 L512.1 164.2 L518.5 164.8 L525.0 165.0\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"4\"><\/path>\n<circle cx=\"60\" cy=\"165\" fill=\"#A6323E\" r=\"4\"><\/circle>\n<circle cx=\"292\" cy=\"65\" fill=\"#A6323E\" r=\"4\"><\/circle>\n<circle cx=\"525\" cy=\"165\" fill=\"#A6323E\" r=\"4\"><\/circle>\n<text font-size=\"14\" x=\"29\" y=\"70\">22<\/text>\n<text font-size=\"14\" x=\"29\" y=\"120\">18<\/text>\n<text font-size=\"14\" x=\"29\" y=\"170\">14<\/text>\n<text font-size=\"13\" x=\"56\" y=\"238\">0<\/text>\n<text font-size=\"13\" x=\"164\" y=\"238\">π/2<\/text>\n<text font-size=\"13\" x=\"287\" y=\"238\">π<\/text>\n<text font-size=\"13\" x=\"392\" y=\"238\">3π/2<\/text>\n<text font-size=\"13\" x=\"513\" y=\"238\">2π<\/text>\n<text fill=\"#555\" font-size=\"13\" x=\"424\" y=\"108\">línea media<\/text>\n<\/svg>\n<div class=\"nota\">La gráfica presenta un periodo completo para \\(0\\leq\\theta\\leq2\\pi\\).<\/div>\n<\/div>\n<div class=\"datos\">\n<strong>Información que puede obtenerse de la gráfica<\/strong>\n<ul>\n<li>Valor máximo: \\(22\\,\\text{m}\\).<\/li>\n<li>Valor mínimo: \\(14\\,\\text{m}\\).<\/li>\n<li>Línea media: \\(18\\,\\text{m}\\).<\/li>\n<li>El máximo ocurre en \\(\\theta=\\pi\\).<\/li>\n<\/ul>\n<\/div>", "text": "Si se usa una función coseno de la forma \\(h(\\theta)=A\\cos(\\theta-H)+D\\), con \\(A&gt;0\\), ¿cuál modelo corresponde a la gráfica?", "opts": {"A": "\\(\\displaystyle h(\\theta)=8\\cos(\\theta-\\pi)+14\\)", "B": "\\(\\displaystyle h(\\theta)=4\\cos(\\theta-\\pi)+18\\)", "C": "\\(\\displaystyle h(\\theta)=18\\cos(\\theta+\\pi)+4\\)", "D": "\\(\\displaystyle h(\\theta)=4\\cos\\left(\\theta-\\frac{\\pi}{2}\\right)+18\\)"}}, {"id": 10, "tema": "Plan Lector", "subtema": "Falsa inducción y generalización a partir de ejemplos", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Interpretación y representación", "correct": "D", "explain": "Cuatro ejemplos que cumplen un patrón apoyan una conjetura, pero no la demuestran. Un solo contraejemplo la refuta: \\(110=11\\cdot10\\) es múltiplo de 11 y no tiene dos cifras iguales (tampoco 121, 132, etc.).", "titulo": "Una regularidad que parece convincente", "ctx": "<p>\nDurante el Plan Lector, un grupo observa varios múltiplos de \\(11\\):\n<\/p>\n<div class=\"datos\">\n<ul>\n<li>\\(22=11\\cdot2\\)<\/li>\n<li>\\(33=11\\cdot3\\)<\/li>\n<li>\\(44=11\\cdot4\\)<\/li>\n<li>\\(55=11\\cdot5\\)<\/li>\n<\/ul>\n<\/div>\n<p>\nA partir de esos ejemplos, un estudiante afirma:\n<strong>“Todos los múltiplos positivos de 11 están formados por dos cifras iguales”.<\/strong>\n<\/p>\n<div class=\"secuencia\">\n<strong>Estructura del razonamiento:<\/strong><br/><br/>\nEjemplos particulares \\(\\longrightarrow\\) patrón observado\n\\(\\longrightarrow\\) afirmación general.\n<\/div>\n<div class=\"flujo\">Ejemplos verdaderos → generalización → ¿conclusión válida?<\/div>", "text": "¿Cuál interpretación evalúa correctamente la conclusión del estudiante?", "opts": {"A": "La conclusión es válida, porque observar cuatro múltiplos consecutivos de 11 permite extender el patrón encontrado a todos los múltiplos positivos de ese número", "B": "La conclusión es válida solo para números de dos cifras, pero puede extenderse a números mayores si se conserva el mismo patrón de repetición observado", "C": "La conclusión solo podría rechazarse si aparecen al menos dos múltiplos de 11 que no tengan cifras iguales, pues un único caso sería insuficiente", "D": "La conclusión no es válida: los ejemplos apoyan el patrón, pero no lo demuestran; por ejemplo, 110 es múltiplo de 11 y no tiene dos cifras iguales"}}, {"id": 11, "tema": "Plan Lector", "subtema": "Construcción y uso de contraejemplos", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Formulación y ejecución", "correct": "C", "explain": "Para refutar una afirmación universal basta un contraejemplo. Con \\(n=6\\), que es múltiplo de 3: \\(6^2+3=39\\), que es impar y por tanto no es múltiplo de 6. Verificar varios casos que cumplen no demuestra la afirmación (A y D), y sumar los valores no tiene relación con ella (B).", "titulo": "Búsqueda de un contraejemplo", "ctx": "<p>\nEn una actividad de razonamiento se propone la afirmación:\n<\/p>\n<div class=\"secuencia\">\n<strong>“Si \\(n\\) es múltiplo de 3, entonces \\(n^2+3\\) es múltiplo de 6”.<\/strong>\n<\/div>\n<div class=\"datos\">\n<strong>Valores que pueden examinarse:<\/strong>\n\\(n=3,\\;6,\\;9,\\;12\\).\n<\/div>\n<div class=\"flujo\">Afirmación universal → comprobación → posible contraejemplo<\/div>", "text": "¿Qué estrategia permite decidir de manera pertinente si la afirmación debe rechazarse?", "opts": {"A": "Verificar varios múltiplos pequeños de \\(3\\) y, si todos cumplen, aceptar la afirmación como demostrada para cualquier múltiplo de \\(3\\)", "B": "Sumar los valores \\(3,6,9,12\\) y comprobar si esa suma es múltiplo de \\(6\\), usando ese resultado para decidir sobre la afirmación", "C": "Buscar un múltiplo de \\(3\\) que contradiga la afirmación; con \\(n=6\\), se obtiene \\(n^2+3=39\\), que no es múltiplo de \\(6\\)", "D": "Probar únicamente el mayor valor disponible, \\(n=12\\), y usar ese resultado para concluir que la afirmación también se cumple para todos los múltiplos menores"}}, {"id": 12, "tema": "Plan Lector", "subtema": "Validación de conclusiones y razonamiento matemático", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Argumentación", "correct": "A", "explain": "Los ejemplos de Mariana apoyan la proposición, pero no la demuestran. Samuel usa dos impares cualesquiera, \\(2m+1\\) y \\(2n+1\\), y obtiene \\((2m+1)(2n+1)=2(2mn+m+n)+1=2k+1\\), que es impar para todo \\(m,n\\) enteros: eso es una demostración general.", "titulo": "Ejemplos frente a un argumento general", "ctx": "<p>\nDos estudiantes analizan la siguiente proposición:\n<\/p>\n<div class=\"secuencia\">\n<strong>Proposición:<\/strong><br/><br/>\n“El producto de dos números impares siempre es impar”.\n<\/div>\n<p>\nMariana comprueba \\(3\\cdot5=15\\), \\(7\\cdot9=63\\) y \\(11\\cdot13=143\\).\nLuego afirma que esos tres ejemplos demuestran la proposición.\n<\/p>\n<p>\nSamuel representa dos números impares cualesquiera como\n\\(2m+1\\) y \\(2n+1\\).\n<\/p>\n<div class=\"datos\">\nEntonces:\n\\(\\displaystyle (2m+1)(2n+1)=2(2mn+m+n)+1\\).<br/>\nComo \\(2mn+m+n\\) es entero, el producto tiene la forma \\(2k+1\\).\n<\/div>\n<div class=\"flujo\">\nEjemplos particulares ↔ argumento general\n<\/div>", "text": "¿Cuál argumento compara correctamente los dos razonamientos?", "opts": {"A": "Los ejemplos de Mariana apoyan la proposición, pero Samuel la demuestra de forma general al expresar el producto en la forma \\(2k+1\\)", "B": "Mariana demuestra la proposición con tres casos distintos, mientras Samuel solo reescribe el producto usando letras sin comprobar valores numéricos concretos", "C": "Ambos razonamientos tienen el mismo alcance, porque verificar varios productos y desarrollar una expresión algebraica son procedimientos equivalentes para demostrar la proposición", "D": "Samuel no demuestra la proposición, porque emplear variables impide determinar si el resultado es par o impar sin asignar valores específicos a \\(m\\) y \\(n\\)"}}, {"id": 13, "tema": "Ley del Seno y del Coseno", "subtema": "Identificación de los casos ALA y LLL", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Argumentación", "correct": "B", "explain": "Situación I: se conocen dos ángulos y el lado comprendido entre ellos (\\(AB\\) está entre \\(A\\) y \\(B\\)): caso ALA. Se halla \\(\\angle C=65^\\circ\\) y se resuelve con Ley del Seno. Situación II: se conocen los tres lados: caso LLL, que requiere Ley del Coseno para hallar un ángulo.", "titulo": "Dos levantamientos de terreno", "ctx": "<p>Una brigada escolar analiza dos situaciones antes de decidir qué ley trigonométrica utilizar.<\/p>\n<div class=\"escenarios\">\n<div class=\"escenario\">\n<h3>Situación I<\/h3>\n<p>\nSe conocen \\(\\angle A=48^\\circ\\), \\(\\angle B=67^\\circ\\) y \\(AB=36\\,\\text{m}\\).\nSe desea hallar \\(AC\\).\n<\/p>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo con dos ángulos y un lado conocidos\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 300 210\">\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"45\" x2=\"250\" y1=\"175\" y2=\"175\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"45\" x2=\"145\" y1=\"175\" y2=\"35\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"145\" x2=\"250\" y1=\"35\" y2=\"175\"><\/line>\n<text font-size=\"16\" font-weight=\"bold\" x=\"30\" y=\"195\">A<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"255\" y=\"195\">B<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"140\" y=\"26\">C<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"124\" y=\"196\">36 m<\/text>\n<text fill=\"#A6323E\" font-size=\"14\" font-weight=\"bold\" x=\"60\" y=\"158\">48°<\/text>\n<text fill=\"#A6323E\" font-size=\"14\" font-weight=\"bold\" x=\"212\" y=\"158\">67°<\/text>\n<text font-size=\"15\" font-style=\"italic\" x=\"74\" y=\"94\">AC<\/text>\n<\/svg>\n<\/div>\n<\/div>\n<div class=\"escenario\">\n<h3>Situación II<\/h3>\n<p>\nUn lote triangular tiene lados de \\(19\\,\\text{m}\\), \\(24\\,\\text{m}\\) y \\(31\\,\\text{m}\\).\nSe desea determinar uno de sus ángulos.\n<\/p>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo con tres lados conocidos\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 300 210\">\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"40\" x2=\"255\" y1=\"175\" y2=\"175\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"40\" x2=\"125\" y1=\"175\" y2=\"40\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"125\" x2=\"255\" y1=\"40\" y2=\"175\"><\/line>\n<text font-size=\"16\" font-weight=\"bold\" x=\"25\" y=\"195\">P<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"260\" y=\"195\">Q<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"120\" y=\"30\">R<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"122\" y=\"197\">31 m<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"70\" y=\"102\">19 m<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"193\" y=\"104\">24 m<\/text>\n<\/svg>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"nota\">\nLas figuras representan la información de cada situación y no necesariamente están dibujadas a escala.\n<\/div>", "text": "¿Cuál clasificación y justificación es correcta?", "opts": {"A": "La Situación I corresponde a LLL y requiere Ley del Coseno; la Situación II corresponde a ALA y puede resolverse mediante Ley del Seno", "B": "La Situación I corresponde a ALA y puede resolverse mediante Ley del Seno; la Situación II corresponde a LLL y requiere Ley del Coseno", "C": "La Situación I corresponde a LAL y requiere Ley del Coseno; la Situación II corresponde a LLA y puede resolverse mediante Ley del Seno", "D": "La Situación I corresponde a LLA y puede resolverse mediante Ley del Seno; la Situación II corresponde a LAL y requiere Ley del Coseno"}}, {"id": 14, "tema": "Ley del Seno y del Coseno", "subtema": "Identificación de los casos LLA y LAL", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Argumentación", "correct": "D", "explain": "Situación I: un ángulo (\\(A\\)), el lado opuesto (\\(a=32\\)) y otro lado (\\(b=18\\)): caso LLA, que se resuelve con Ley del Seno. Situación II: dos lados y el ángulo comprendido entre ellos: caso LAL, que se resuelve con Ley del Coseno.", "titulo": "Selección de la ley adecuada", "ctx": "<p>\nDos equipos de topografía reciben datos distintos para dos triángulos y deben identificar el caso antes de resolverlos.\n<\/p>\n<div class=\"escenarios\">\n<div class=\"escenario\">\n<h3>Situación I<\/h3>\n<p>\nSe conocen \\(\\angle A=110^\\circ\\), el lado opuesto \\(a=32\\,\\text{m}\\)\ny otro lado \\(b=18\\,\\text{m}\\).\n<\/p>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo con un ángulo y dos lados conocidos\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 300 210\">\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"45\" x2=\"250\" y1=\"175\" y2=\"175\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"45\" x2=\"115\" y1=\"175\" y2=\"45\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"115\" x2=\"250\" y1=\"45\" y2=\"175\"><\/line>\n<text font-size=\"16\" font-weight=\"bold\" x=\"30\" y=\"195\">A<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"255\" y=\"195\">B<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"110\" y=\"35\">C<\/text>\n<text fill=\"#A6323E\" font-size=\"14\" font-weight=\"bold\" x=\"58\" y=\"156\">110°<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"177\" y=\"103\">32 m<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"67\" y=\"106\">18 m<\/text>\n<\/svg>\n<\/div>\n<\/div>\n<div class=\"escenario\">\n<h3>Situación II<\/h3>\n<p>\nSe conocen dos lados de \\(25\\,\\text{m}\\) y \\(34\\,\\text{m}\\), y el ángulo comprendido entre ellos mide \\(62^\\circ\\).\n<\/p>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo con dos lados y ángulo comprendido conocidos\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 300 210\">\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"45\" x2=\"250\" y1=\"175\" y2=\"175\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"45\" x2=\"128\" y1=\"175\" y2=\"42\"><\/line>\n<line stroke=\"#333\" stroke-width=\"3\" x1=\"128\" x2=\"250\" y1=\"42\" y2=\"175\"><\/line>\n<text font-size=\"16\" font-weight=\"bold\" x=\"30\" y=\"195\">P<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"255\" y=\"195\">Q<\/text>\n<text font-size=\"16\" font-weight=\"bold\" x=\"123\" y=\"32\">R<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"64\" y=\"104\">25 m<\/text>\n<text font-size=\"15\" font-weight=\"bold\" x=\"120\" y=\"197\">34 m<\/text>\n<text fill=\"#A6323E\" font-size=\"14\" font-weight=\"bold\" x=\"58\" y=\"158\">62°<\/text>\n<\/svg>\n<\/div>\n<\/div>\n<\/div>\n<div class=\"nota\">\nLas figuras muestran los datos conocidos en cada situación y no necesariamente están dibujadas a escala.\n<\/div>", "text": "¿Cuál estudiante identifica correctamente los casos y la ley pertinente?", "opts": {"A": "La Situación I corresponde a LAL y se resuelve con Ley del Coseno; la Situación II corresponde a LLA y se resuelve con Ley del Seno", "B": "La Situación I corresponde a ALA y se resuelve con Ley del Seno; la Situación II corresponde a LLL y se resuelve con Ley del Coseno", "C": "La Situación I corresponde a LAL y se resuelve con Ley del Seno; la Situación II corresponde a LLA y se resuelve con Ley del Coseno", "D": "La Situación I corresponde a LLA y se resuelve con Ley del Seno; la Situación II corresponde a LAL y se resuelve con Ley del Coseno"}}, {"id": 15, "tema": "Ley del Seno y del Coseno", "subtema": "Correspondencia entre lados y ángulos opuestos", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Interpretación y representación", "correct": "A", "explain": "El lado \\(x=AB\\) es opuesto al ángulo \\(C=75^\\circ\\), y el lado \\(AC=42\\) es opuesto al ángulo \\(B=47^\\circ\\). La Ley del Seno relaciona cada lado con su ángulo opuesto: \\(\\frac{x}{\\sin75^\\circ}=\\frac{42}{\\sin47^\\circ}\\).", "titulo": "Ubicación de una estación de apoyo", "ctx": "<p>\nTres puntos \\(A\\), \\(B\\) y \\(C\\) forman un triángulo. Se conocen\n\\(\\angle A=58^\\circ\\), \\(\\angle B=47^\\circ\\) y \\(AC=42\\,\\text{m}\\).\nSe desea determinar \\(AB=x\\).\n<\/p>\n<div class=\"datos\">\nEl tercer ángulo es \\(C=180^\\circ-58^\\circ-47^\\circ=75^\\circ\\).\n<\/div>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo ABC\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 500 245\">\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"120\" x2=\"360\" y1=\"200\" y2=\"200\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"120\" x2=\"270\" y1=\"200\" y2=\"45\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"270\" x2=\"360\" y1=\"45\" y2=\"200\"><\/line>\n<text font-size=\"20\" font-weight=\"bold\" x=\"106\" y=\"224\">A<\/text>\n<text font-size=\"20\" font-weight=\"bold\" x=\"365\" y=\"224\">B<\/text>\n<text font-size=\"20\" font-weight=\"bold\" x=\"264\" y=\"36\">C<\/text>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"154\" y=\"178\">58°<\/text>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"320\" y=\"178\">47°<\/text>\n<text font-size=\"18\" font-weight=\"600\" x=\"175\" y=\"112\">42 m<\/text>\n<text font-size=\"18\" font-weight=\"600\" x=\"232\" y=\"224\">x<\/text>\n<text font-size=\"18\" font-style=\"italic\" font-weight=\"600\" x=\"316\" y=\"120\"><\/text>\n<\/svg>\n<\/div>", "text": "¿Qué relación de la Ley del Seno representa correctamente los datos para hallar \\(x\\)?", "opts": {"A": "\\(\\displaystyle \\frac{x}{\\sin75^\\circ}=\\frac{42}{\\sin47^\\circ}\\)", "B": "\\(\\displaystyle \\frac{x}{\\sin58^\\circ}=\\frac{42}{\\sin47^\\circ}\\)", "C": "\\(\\displaystyle \\frac{x}{\\sin47^\\circ}=\\frac{42}{\\sin75^\\circ}\\)", "D": "\\(\\displaystyle \\frac{x}{\\sin75^\\circ}=\\frac{42}{\\sin58^\\circ}\\)"}}, {"id": 16, "tema": "Ley del Seno y del Coseno", "subtema": "Determinación de una longitud", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Formulación y ejecución", "correct": "C", "explain": "\\(AC\\) es opuesto a \\(B=82^\\circ\\) y \\(AB=64\\) es opuesto a \\(C=60^\\circ\\). Entonces \\(AC=\\frac{64\\sin82^\\circ}{\\sin60^\\circ}\\approx\\frac{64(0{,}9903)}{0{,}8660}\\approx73{,}2\\) m.", "titulo": "Medición entre dos puntos de observación", "ctx": "<p>\nEn un levantamiento se conoce \\(AB=64\\,\\text{m}\\),\n\\(\\angle A=38^\\circ\\) y \\(\\angle B=82^\\circ\\).\nSe desea determinar la distancia \\(AC\\).\n<\/p>\n<div class=\"datos\">\nEl tercer ángulo es \\(C=60^\\circ\\).\nEl lado \\(AC\\) es opuesto al ángulo \\(B=82^\\circ\\).\n<\/div>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo ABC\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 500 245\">\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"120\" x2=\"360\" y1=\"200\" y2=\"200\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"120\" x2=\"270\" y1=\"200\" y2=\"45\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"270\" x2=\"360\" y1=\"45\" y2=\"200\"><\/line>\n<text font-size=\"20\" font-weight=\"bold\" x=\"106\" y=\"224\">A<\/text>\n<text font-size=\"20\" font-weight=\"bold\" x=\"365\" y=\"224\">B<\/text>\n<text font-size=\"20\" font-weight=\"bold\" x=\"264\" y=\"36\">C<\/text>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"154\" y=\"178\">38°<\/text>\n<text fill=\"#A6323E\" font-size=\"16\" font-weight=\"bold\" x=\"320\" y=\"178\">82°<\/text>\n<text font-size=\"18\" font-weight=\"600\" x=\"175\" y=\"112\">AC<\/text>\n<text font-size=\"18\" font-weight=\"600\" x=\"232\" y=\"224\">64 m<\/text>\n<text font-size=\"18\" font-style=\"italic\" font-weight=\"600\" x=\"316\" y=\"120\"><\/text>\n<\/svg>\n<\/div>", "text": "¿Cuál es aproximadamente la longitud de \\(AC\\)?", "opts": {"A": "\\(56,2\\,\\text{m}\\), usando \\(\\displaystyle AC=\\frac{64\\sin60^\\circ}{\\sin82^\\circ}\\)", "B": "\\(67,0\\,\\text{m}\\), usando \\(\\displaystyle AC=\\frac{64\\sin38^\\circ}{\\sin60^\\circ}\\)", "C": "\\(73,2\\,\\text{m}\\), usando \\(\\displaystyle AC=\\frac{64\\sin82^\\circ}{\\sin60^\\circ}\\)", "D": "\\(84,6\\,\\text{m}\\), usando \\(\\displaystyle AC=\\frac{64\\sin82^\\circ}{\\sin38^\\circ}\\)"}}, {"id": 17, "tema": "Ley del Seno y del Coseno", "subtema": "Validación de un procedimiento con pares lado–ángulo opuesto", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Argumentación", "correct": "B", "explain": "En la Ley del Seno cada lado se divide por el seno de su ángulo opuesto. Como \\(a=35\\) es opuesto a \\(46^\\circ\\) y \\(b\\) es opuesto a \\(79^\\circ\\), el procedimiento válido es el 1: \\(\\frac{b}{\\sin79^\\circ}=\\frac{35}{\\sin46^\\circ}\\). El procedimiento 2 empareja cada lado con el ángulo equivocado.", "titulo": "Revisión de dos procedimientos", "ctx": "<p>\nEn un triángulo se conocen \\(\\angle A=46^\\circ\\), \\(\\angle B=79^\\circ\\)\ny el lado \\(a=35\\,\\text{m}\\), opuesto a \\(A\\). Se desea hallar el lado \\(b\\), opuesto a \\(B\\).\n<\/p>\n<div class=\"datos\">\n<strong>Correspondencias conocidas<\/strong>\n<ul>\n<li>\\(a=35\\,\\text{m}\\) es opuesto a \\(A=46^\\circ\\).<\/li>\n<li>\\(b\\) es opuesto a \\(B=79^\\circ\\).<\/li>\n<\/ul>\n<\/div>\n<div class=\"formula-destacada\">\nLey del Seno:\n\\(\\displaystyle \\frac{a}{\\sin A}=\\frac{b}{\\sin B}\\)\n<\/div>\n<div class=\"afirmacion\">\n<strong>Procedimiento 1:<\/strong>\n\\(\\displaystyle \\frac{b}{\\sin79^\\circ}=\\frac{35}{\\sin46^\\circ}\\).\n<br/><br/>\n<strong>Procedimiento 2:<\/strong>\n\\(\\displaystyle \\frac{b}{\\sin46^\\circ}=\\frac{35}{\\sin79^\\circ}\\).\n<\/div>", "text": "¿Cuál argumento permite decidir cuál procedimiento es válido?", "opts": {"A": "El procedimiento 2 es válido, porque cada lado debe relacionarse con el ángulo adyacente y no con el ángulo que se encuentra frente a él", "B": "El procedimiento 1 es válido, porque \\(b\\) se relaciona con su ángulo opuesto \\(79^\\circ\\) y \\(35\\) con su ángulo opuesto \\(46^\\circ\\)", "C": "Ambos procedimientos son válidos, porque intercambiar los ángulos en los denominadores no modifica la proporción establecida por la Ley del Seno", "D": "Ningún procedimiento es válido, porque la Ley del Seno solo puede utilizarse cuando se conocen previamente los tres lados del triángulo"}}, {"id": 18, "tema": "Ley del Seno y del Coseno", "subtema": "Relación entre lados y ángulo comprendido", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Interpretación y representación", "correct": "D", "explain": "La Ley del Coseno para el lado opuesto al ángulo comprendido es \\(d^2=18^2+25^2-2(18)(25)\\cos132^\\circ\\). Las demás opciones cambian el signo, usan seno o reemplazan el ángulo comprendido por otro valor.", "titulo": "Dos rutas desde un mismo punto", "ctx": "<p>\nDesde un punto \\(P\\) parten dos rutas de \\(18\\,\\text{km}\\) y \\(25\\,\\text{km}\\).\nEl ángulo comprendido entre ellas es de \\(132^\\circ\\).\nSe desea representar la distancia directa \\(d\\) entre los extremos.\n<\/p>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo con lados 18 y 25 kilómetros y ángulo de 132 grados\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 500 250\">\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"120\" x2=\"405\" y1=\"205\" y2=\"205\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"120\" x2=\"220\" y1=\"205\" y2=\"48\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"220\" x2=\"405\" y1=\"48\" y2=\"205\"><\/line>\n<text font-size=\"19\" font-weight=\"bold\" x=\"103\" y=\"228\">P<\/text>\n<text font-size=\"19\" font-weight=\"bold\" x=\"410\" y=\"228\">Q<\/text>\n<text font-size=\"19\" font-weight=\"bold\" x=\"215\" y=\"38\">R<\/text>\n<text font-size=\"17\" font-weight=\"bold\" x=\"150\" y=\"118\">18 km<\/text>\n<text font-size=\"17\" font-weight=\"bold\" x=\"239\" y=\"223\">25 km<\/text>\n<text font-size=\"18\" font-style=\"italic\" x=\"286\" y=\"118\">d<\/text>\n<path d=\"M145 205 A25 25 0 0 0 105 184\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2.5\"><\/path>\n<text fill=\"#A6323E\" font-size=\"15\" font-weight=\"bold\" x=\"132\" y=\"181\">132°<\/text>\n<\/svg>\n<div class=\"nota\">La figura representa los datos de la situación y no está dibujada necesariamente a escala.<\/div>\n<\/div>", "text": "¿Cuál expresión modela correctamente la distancia \\(d\\)?", "opts": {"A": "\\(d^2=18^2+25^2+2(18)(25)\\cos132^\\circ\\)", "B": "\\(d^2=18^2+25^2-2(18)(25)\\sin132^\\circ\\)", "C": "\\(d^2=(18+25)^2-2(18)(25)\\cos48^\\circ\\)", "D": "\\(d^2=18^2+25^2-2(18)(25)\\cos132^\\circ\\)"}}, {"id": 19, "tema": "Ley del Seno y del Coseno", "subtema": "Cálculo de un lado con dos lados y el ángulo comprendido", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Formulación y ejecución", "correct": "A", "explain": "\\(QR^2=84^2+63^2-2(84)(63)\\cos74^\\circ=7056+3969-10584(0{,}2756)\\approx8108\\), de donde \\(QR\\approx90{,}0\\) m. Las demás opciones corresponden a errores de signo, suma directa de lados u omisión del coseno.", "titulo": "Distancia directa entre dos estaciones", "ctx": "<p>\nDesde una estación \\(P\\) parten dos trayectos hacia \\(Q\\) y \\(R\\).\nLas longitudes son \\(PQ=84\\,\\text{m}\\) y \\(PR=63\\,\\text{m}\\), y forman un ángulo de \\(74^\\circ\\).\n<\/p>\n<div class=\"datos\">\n<strong>Datos disponibles<\/strong>\n<ul>\n<li>\\(PQ=84\\,\\text{m}\\)<\/li>\n<li>\\(PR=63\\,\\text{m}\\)<\/li>\n<li>\\(\\angle QPR=74^\\circ\\)<\/li>\n<li>Se desea determinar \\(QR\\).<\/li>\n<\/ul>\n<\/div>\n<div class=\"figura\">\n<svg aria-label=\"Triángulo con lados 84 y 63 metros y ángulo de 74 grados\" class=\"grafico-svg\" role=\"img\" viewBox=\"0 0 500 250\">\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"100\" x2=\"405\" y1=\"205\" y2=\"205\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"100\" x2=\"230\" y1=\"205\" y2=\"48\"><\/line>\n<line stroke=\"#333\" stroke-width=\"4\" x1=\"230\" x2=\"405\" y1=\"48\" y2=\"205\"><\/line>\n<text font-size=\"19\" font-weight=\"bold\" x=\"84\" y=\"228\">P<\/text>\n<text font-size=\"19\" font-weight=\"bold\" x=\"410\" y=\"228\">Q<\/text>\n<text font-size=\"19\" font-weight=\"bold\" x=\"225\" y=\"38\">R<\/text>\n<text font-size=\"17\" font-weight=\"bold\" x=\"143\" y=\"120\">63 m<\/text>\n<text font-size=\"17\" font-weight=\"bold\" x=\"240\" y=\"223\">84 m<\/text>\n<text font-size=\"18\" font-style=\"italic\" x=\"305\" y=\"118\">QR<\/text>\n<path d=\"M133 205 A33 33 0 0 0 120 179\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2.5\"><\/path>\n<text fill=\"#A6323E\" font-size=\"15\" font-weight=\"bold\" x=\"126\" y=\"178\">74°<\/text>\n<\/svg>\n<div class=\"nota\">La figura representa los datos de la situación y no está dibujada necesariamente a escala.<\/div>\n<\/div>", "text": "¿Cuál es aproximadamente la longitud del paso directo \\(QR\\)?", "opts": {"A": "\\(90,0\\,\\text{m}\\)", "B": "\\(65,4\\,\\text{m}\\)", "C": "\\(122,7\\,\\text{m}\\)", "D": "\\(147\\,\\text{m}\\)"}}, {"id": 20, "tema": "Ley del Seno y del Coseno", "subtema": "Efecto del ángulo comprendido sobre el lado opuesto", "pens": "Pensamiento métrico y sistemas de medidas", "comp": "Argumentación", "correct": "C", "explain": "Con \\(c^2=9^2+16^2-2(9)(16)\\cos C=337-288\\cos C\\): al aumentar \\(C\\) de \\(40^\\circ\\) a \\(130^\\circ\\), \\(\\cos C\\) disminuye (de positivo a negativo), el término que se resta se hace menor y \\(c^2\\) aumenta. Así \\(c\\) crece de forma continua, de unos 10,8 cm a unos 22,8 cm; no hay punto de cambio en \\(90^\\circ\\).", "titulo": "Cómo cambia el lado opuesto", "ctx": "<p>\nSe comparan varios triángulos en los que dos lados conservan longitudes\n\\(a=9\\,\\text{cm}\\) y \\(b=16\\,\\text{cm}\\), mientras el ángulo comprendido \\(C\\) aumenta de\n\\(40^\\circ\\) a \\(130^\\circ\\).\n<\/p>\n<div class=\"formula-destacada\">\n\\(\\displaystyle c^2=9^2+16^2-2(9)(16)\\cos C\\)\n<\/div>\n<table class=\"mini-tabla\">\n<tr><th>\\(C\\)<\/th><th>Comportamiento de \\(\\cos C\\)<\/th><\/tr>\n<tr><td>\\(40^\\circ\\)<\/td><td>positivo<\/td><\/tr>\n<tr><td>\\(90^\\circ\\)<\/td><td>0<\/td><\/tr>\n<tr><td>\\(130^\\circ\\)<\/td><td>negativo<\/td><\/tr>\n<\/table>", "text": "¿Cuál argumento describe correctamente qué ocurre con el lado \\(c\\) cuando \\(C\\) aumenta en ese intervalo?", "opts": {"A": "El lado \\(c\\) disminuye, porque al aumentar \\(C\\) también aumenta \\(\\cos C\\), haciendo mayor el término que se resta en la expresión", "B": "El lado \\(c\\) permanece constante, porque los lados \\(a\\) y \\(b\\) mantienen sus longitudes aunque cambie el ángulo comprendido entre ellos", "C": "El lado \\(c\\) aumenta, porque al disminuir \\(\\cos C\\), disminuye el término que se resta y, por tanto, aumenta el valor de \\(c^2\\)", "D": "El lado \\(c\\) aumenta hasta \\(90^\\circ\\) y luego disminuye, porque el coseno cambia de positivo a negativo al pasar al segundo cuadrante"}}];
+const TOTAL = Q.length;
+const LETTERS = ['A','B','C','D'];
+const $ = id => document.getElementById(id);
+const correctOf = q => q.correct;
+
+const INTRO_EST = 'Estas son las <b>20 preguntas</b> de preparación para la segunda prueba de periodo. Responde con calma: puedes cambiar tus respuestas antes de finalizar y moverte entre preguntas con la hoja de burbujas. Las preguntas y las opciones aparecen en orden aleatorio. Al final verás tu resultado por tema y por competencia.';
+const INTRO_DOC = '<b>Versión docente.</b> Las 20 preguntas del banco alternativo balanceado. Al elegir una opción se muestra de inmediato si es correcta, con la explicación del procedimiento; también puedes pulsar <b>Ver solución</b> sin responder. Usa <b>Orden del cuadernillo</b> o <b>Aleatorio</b> y consulta la <b>Clave de respuestas</b> con tema, subtema y competencia.';
+
+/* ===== Sesión y rol ===== */
+function leerSesion(){
+  try{
+    const raw = sessionStorage.getItem('slg_sesion');
+    if(!raw) return null;
+    try{ return JSON.parse(raw) || {}; }catch(e){ return {}; }
+  }catch(e){ return null; }
+}
+const sesion = leerSesion();
+let ES_DOCENTE = false;
+let PREVIEW = false;
+
+/* ===== Estado ===== */
+let current = 0;
+let mode = 'aleatorio';
+let answers = {}, revealed = {};
+let displayQuestions = [], optionOrder = {};
+let startTime = Date.now(), timerId = null, endTime = null;
+let numeroIntentoActual = 1;
+let started = false;
+
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildOrder(){
+  const rand = mode === 'aleatorio';
+  displayQuestions = rand ? shuffle(Q) : Q.slice();
+  optionOrder = {};
+  Q.forEach(q => { const l = Object.keys(q.opts); optionOrder[q.id] = rand ? shuffle(l) : l; });
+}
+function typeset(el){ if(window.MathJax && typeof MathJax.typesetPromise === 'function'){ MathJax.typesetPromise([el]).catch(function(){}); } }
+const label = (q,i) => ES_DOCENTE ? q.id : (i+1);
+const answeredCount = () => Object.keys(answers).length;
+const fmtTime = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+
+function markSVG(kind){
+  const p = kind==='ok' ? 'M6 18 L14 26 L28 8' : kind==='bad' ? 'M8 8 L26 26 M26 8 L8 26' : 'M17 6 L17 20 M17 27 L17 28';
+  return '<svg class="mark '+kind+'" viewBox="0 0 34 34" aria-hidden="true"><path d="'+p+'"/></svg>';
+}
+
+/* ===== Temporizador ===== */
+function startTimer(){
+  stopTimer(true);
+  startTime = Date.now(); endTime = null;
+  if(ES_DOCENTE) return;
+  $('timerWrap').hidden = false;
+  const tick = () => { $('timer').textContent = fmtTime(Math.floor((Date.now()-startTime)/1000)); };
+  tick(); timerId = setInterval(tick, 1000);
+}
+function stopTimer(silent){
+  if(timerId){ clearInterval(timerId); timerId = null; }
+  if(!silent && endTime === null) endTime = Date.now();
+}
+
+/* ===== Burbujas y progreso ===== */
+function renderBubbles(){
+  const el = $('bubbles'); el.innerHTML = '';
+  displayQuestions.forEach((q,i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    let cls = 'bub';
+    const a = answers[q.id];
+    if(a){
+      if(ES_DOCENTE) cls += (a.choice===correctOf(q)) ? ' correct' : ' incorrect';
+      else cls += ' answered';
+    }
+    if(i===current) cls += ' current';
+    b.className = cls;
+    b.textContent = label(q,i);
+    b.setAttribute('aria-label', 'Ir a la pregunta ' + label(q,i));
+    b.onclick = () => { showQuiz(); current = i; render(); };
+    el.appendChild(b);
+  });
+}
+function updateProgress(){
+  const n = answeredCount();
+  $('progress').innerHTML = 'Respondidas <b>' + n + ' / ' + TOTAL + '</b>';
+  if(ES_DOCENTE){
+    const ok = Object.keys(answers).filter(id => { const q = Q.find(x=>x.id==id); return answers[id].choice===correctOf(q); }).length;
+    $('scorePill').textContent = ok + ' / ' + TOTAL + ' correctas';
+  }
+}
+
+/* ===== Tarjeta de pregunta ===== */
+function render(){
+  const q = displayQuestions[current];
+  const ans = answers[q.id];
+  const order = optionOrder[q.id];
+  const cor = correctOf(q);
+  const showFb = ES_DOCENTE && (ans || revealed[q.id]);
+  const anyGraph = order.some(l => /<svg/i.test(q.opts[l]));
+  const shortOpts = order.every(l => q.opts[l].length < 70);
+
+  let optsHTML = '';
+  order.forEach((orig,i) => {
+    const cls = ['opt'];
+    if(/<svg/i.test(q.opts[orig])) cls.push('opt-graph');
+    if(showFb){
+      if(orig===cor) cls.push('reveal-correct');
+      else if(ans && ans.choice===orig) cls.push('reveal-wrong');
+    } else if(ans && ans.choice===orig){ cls.push('selected'); }
+    optsHTML += '<div class="'+cls.join(' ')+'" role="radio" tabindex="0" aria-checked="'+(ans && ans.choice===orig ? 'true':'false')+'" data-orig="'+orig+'">'
+      + '<span class="letter">'+LETTERS[i]+'</span><div class="txt">'+q.opts[orig]+'</div></div>';
+  });
+
+  let fb = '';
+  if(showFb){
+    const corDisp = LETTERS[order.indexOf(cor)];
+    if(ans){
+      const ok = ans.choice === cor;
+      fb = '<div class="feedback '+(ok?'ok':'bad')+'"><b>'+markSVG(ok?'ok':'bad')+(ok?'¡Correcto!':'No es la respuesta')+' — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    } else {
+      fb = '<div class="feedback info"><b>'+markSVG('info')+'Solución — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    }
+  }
+  const revealBtn = (ES_DOCENTE && !showFb) ? '<div class="card-actions"><button type="button" class="btn small" id="revealBtn">👁 Ver solución</button></div>' : '';
+  const metaDoc = ES_DOCENTE ? '<div class="meta-doc">Pregunta '+q.id+' del banco · Subtema: '+q.subtema+' · '+q.pens+'</div>' : '';
+
+  $('cardInner').innerHTML =
+    '<div class="q-head"><div class="q-num">'+label(q,current)+'</div>'
+    + '<div class="q-tags"><span class="tag">'+q.tema+'</span><span class="tag tag-comp">'+q.comp+'</span></div></div>'
+    + metaDoc
+    + '<div class="context"><h2 class="ctx-title">'+q.titulo+'</h2>'+q.ctx+'</div>'
+    + '<p class="stmt">'+q.text+'</p>'
+    + '<div class="options'+((anyGraph||shortOpts)?' cols2':'')+'" role="radiogroup" aria-label="Opciones de respuesta">'+optsHTML+'</div>'
+    + revealBtn + fb;
+
+  const inner = $('cardInner');
+  inner.querySelectorAll('.opt').forEach(el => {
+    const pick = () => {
+      const orig = el.getAttribute('data-orig');
+      if(!ES_DOCENTE && answers[q.id] && answers[q.id].choice===orig){ delete answers[q.id]; }
+      else { answers[q.id] = { choice: orig }; }
+      $('finishWarn').hidden = true;
+      render();
+    };
+    el.onclick = pick;
+    el.onkeydown = ev => { if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); pick(); } };
+  });
+  const rb = $('revealBtn');
+  if(rb) rb.onclick = () => { revealed[q.id] = true; render(); };
+
+  $('prevBtn').disabled = current === 0;
+  $('nextBtn').textContent = current === TOTAL-1 ? (ES_DOCENTE ? 'Ver resultados →' : 'Finalizar →') : 'Siguiente →';
+  renderBubbles(); updateProgress();
+  typeset($('cardInner'));
+}
+
+function go(delta){
+  const n = current + delta;
+  if(n < 0) return;
+  if(n >= TOTAL){ tryFinish(); return; }
+  current = n; render();
+  $('cardInner').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ===== Finalizar y resumen ===== */
+function unansweredList(){
+  const out = [];
+  displayQuestions.forEach((q,i) => { if(!answers[q.id]) out.push(label(q,i)); });
+  return out;
+}
+function tryFinish(){
+  const pend = unansweredList();
+  if(!ES_DOCENTE && pend.length){
+    const w = $('finishWarn');
+    w.innerHTML = '<b>Aún tienes ' + pend.length + ' pregunta' + (pend.length>1?'s':'') + ' sin responder</b> (números: ' + pend.join(', ') + ').'
+      + '<div class="row"><button type="button" class="btn" id="keepBtn">Seguir respondiendo</button><button type="button" class="btn primary" id="forceBtn">Finalizar de todos modos</button></div>';
+    w.hidden = false;
+    $('keepBtn').onclick = () => { w.hidden = true; };
+    $('forceBtn').onclick = () => { w.hidden = true; showSummary(); };
+    w.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  showSummary();
+}
+function barsHTML(data){
+  return '<div class="bars">' + Object.entries(data).map(([name,v]) => {
+    const pct = Math.round(v.ok / v.total * 100);
+    return '<div class="row"><div class="cname">'+name+'</div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div><div class="cnum">'+v.ok+'/'+v.total+'</div></div>';
+  }).join('') + '</div>';
+}
+function keyTableHTML(){
+  return '<table class="keytable"><thead><tr><th>#</th><th>Tema</th><th>Subtema</th><th>Competencia</th><th>Clave</th></tr></thead><tbody>'
+    + Q.map(q => '<tr><td class="n">'+q.id+'</td><td>'+q.tema+'</td><td>'+q.subtema+'</td><td>'+q.comp+'</td><td class="k">'+q.correct+'</td></tr>').join('')
+    + '</tbody></table>';
+}
+function showSummary(){
+  stopTimer();
+  const cats = {}, comps = {}, missed = [];
+  let ok = 0;
+  Q.forEach(q => {
+    cats[q.tema] = cats[q.tema] || {ok:0,total:0};
+    comps[q.comp] = comps[q.comp] || {ok:0,total:0};
+    cats[q.tema].total++; comps[q.comp].total++;
+    const a = answers[q.id];
+    if(a && a.choice === correctOf(q)){ ok++; cats[q.tema].ok++; comps[q.comp].ok++; }
+  });
+  displayQuestions.forEach((q,i) => {
+    const a = answers[q.id];
+    if(!(a && a.choice === correctOf(q))) missed.push({pos:i, q:q});
+  });
+  const pct = Math.round(ok/TOTAL*100);
+  let html = '<p class="caption">Resultado final</p><h2>' + (ES_DOCENTE ? 'Resultado de la práctica' : 'Así te fue en la preparación') + '</h2>'
+    + '<div class="big">'+ok+'/'+TOTAL+'</div><div class="pct">'+pct+'% de aciertos'
+    + (!ES_DOCENTE && endTime ? ' · Tiempo: ' + fmtTime(Math.floor((endTime-startTime)/1000)) : '') + '</div>'
+    + '<p class="label sec-gap">Por tema</p>' + barsHTML(cats)
+    + '<p class="label sec-gap">Por competencia evaluada</p>' + barsHTML(comps);
+  if(!ES_DOCENTE){
+    if(missed.length){
+      html += '<p class="label sec-gap">Para repasar — toca una pregunta para volver a ella</p><div class="chips">'
+        + missed.map(m => '<button type="button" class="chip" data-pos="'+m.pos+'">'+(m.pos+1)+'. '+m.q.tema+'</button>').join('') + '</div>';
+    } else {
+      html += '<p class="sec-gap" style="font-size:15px">Respondiste correctamente todas las preguntas.</p>';
+    }
+  } else {
+    html += '<p class="label sec-gap">Clave de respuestas</p><div class="table-scroll">' + keyTableHTML() + '</div>';
+  }
+  html += '<button type="button" class="btn primary" id="retryBtn">↺ Reintentar</button>';
+  const s = $('summary'); s.innerHTML = html; s.hidden = false;
+  $('quizBody').hidden = true;
+  s.querySelectorAll('.chip').forEach(c => c.onclick = () => { showQuiz(); current = +c.getAttribute('data-pos'); render(); $('cardInner').scrollIntoView({behavior:'smooth', block:'start'}); });
+  $('retryBtn').onclick = retry;
+  s.scrollIntoView({behavior:'smooth', block:'start'});
+  enviarIntento(ok);
+}
+function showQuiz(){ $('summary').hidden = true; $('quizBody').hidden = false; }
+function retry(){
+  answers = {}; revealed = {}; current = 0; buildOrder();
+  $('finishWarn').hidden = true; showQuiz(); startTimer(); render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===== Controles docente ===== */
+function setMode(m){
+  mode = m;
+  $('orderBookletBtn').classList.toggle('active', m==='orden');
+  $('orderRandomBtn').classList.toggle('active', m==='aleatorio');
+  $('reshuffleBtn').hidden = (m !== 'aleatorio');
+  retry();
+}
+
+/* ===== Registro en el portal (silencioso: nunca bloquea el cuadernillo) ===== */
+function registrarApertura(){
+  try{
+    if(!sesion || !sesion.documento) return;
+    const params = new URLSearchParams({
+      accion: 'registrarVista',
+      doc: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupoAsignado || sesion.grupo || '',
+      rol: sesion.rol || '',
+      origen: 'GitHub',
+      tipoVista: 'Apertura Artefacto — ' + AREA_ARTEFACTO
+    });
+    fetch(SCRIPT_URL_VISTAS + '?' + params.toString(), { mode: 'no-cors' }).catch(function(){});
+  }catch(e){}
+}
+function agruparPorCampo(campo){
+  const grupos = {};
+  displayQuestions.forEach(function(q){
+    const etiqueta = q[campo];
+    if(!etiqueta) return;
+    if(!grupos[etiqueta]) grupos[etiqueta] = { etiqueta: etiqueta, aciertos: 0, total: 0 };
+    grupos[etiqueta].total++;
+    if(answers[q.id] && answers[q.id].choice === correctOf(q)) grupos[etiqueta].aciertos++;
+  });
+  return Object.values(grupos);
+}
+function enviarIntento(totalCorrectas){
+  try{
+    if(!sesion || !sesion.documento) return; // sin sesión del portal (vista previa) no se registra nada
+    const endMs = endTime || Date.now();
+    const payload = {
+      documento: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupo || '',
+      area: AREA_ARTEFACTO,
+      numeroIntento: numeroIntentoActual,
+      duracionSegundos: Math.round((endMs - startTime) / 1000),
+      origen: 'portal',
+      rol: ES_DOCENTE ? 'docente' : 'estudiante',
+      versionArtefacto: VERSION_ARTEFACTO,
+      tipoArtefacto: 'periodo',
+      periodo: 'P2',
+      categorias: agruparPorCampo('tema'),
+      competencias: agruparPorCampo('comp'),
+      totalAciertos: totalCorrectas,
+      totalPreguntas: displayQuestions.length
+    };
+    numeroIntentoActual++;
+    fetch(SCRIPT_URL_INTENTOS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // evita el preflight de CORS con Apps Script
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+  }catch(e){}
+}
+async function cargarHistorial(){
+  if(ES_DOCENTE) return;
+  if(!sesion || !sesion.documento) return;
+  try{
+    const params = new URLSearchParams({ doc: sesion.documento, area: AREA_ARTEFACTO, accion: 'historialArtefacto', tipoArtefacto: 'periodo', periodo: 'P2' });
+    const resp = await fetch(SCRIPT_URL_INTENTOS + '?' + params.toString());
+    const datos = await resp.json();
+    if(datos && datos.encontrado){
+      numeroIntentoActual = datos.numeroIntentosPrevios + 1;
+      if(datos.numeroIntentosPrevios === 0) return;
+      const u = datos.ultimoIntento || {};
+      const banner = document.createElement('div');
+      banner.className = 'hist-banner';
+      banner.innerHTML = '<strong>Intento N.° ' + (datos.numeroIntentosPrevios + 1) + '</strong> — tu puntaje del intento anterior fue <strong>'
+        + u.aciertos + '/' + u.totalPreguntas + '</strong> (' + u.porcentaje + '%)';
+      $('app').insertBefore(banner, $('app').children[1] || null);
+    }
+  }catch(e){}
+}
+
+/* ===== Arranque según el rol ===== */
+function start(){
+  if(started) return; started = true;
+  $('roleGate').hidden = true;
+  $('app').hidden = false;
+  mode = ES_DOCENTE ? 'orden' : 'aleatorio';
+
+  $('stamp').textContent = ES_DOCENTE ? 'VERSIÓN DOCENTE · 20 PREGUNTAS' : '20 PREGUNTAS';
+  $('modo').textContent = ES_DOCENTE ? 'retroalimentación inmediata' : 'simulacro con resultado final';
+  $('introNote').innerHTML = ES_DOCENTE ? INTRO_DOC : INTRO_EST;
+  $('finishBtn').textContent = ES_DOCENTE ? 'Ver resultados' : 'Finalizar y ver resultados';
+  if(PREVIEW){
+    $('previewBar').hidden = false;
+    $('previewRole').textContent = ES_DOCENTE ? 'docente' : 'estudiante';
+    $('switchRole').onclick = () => location.reload();
+  }
+
+  $('prevBtn').onclick = () => go(-1);
+  $('nextBtn').onclick = () => go(1);
+  $('finishBtn').onclick = tryFinish;
+
+  if(ES_DOCENTE){
+    $('orderRow').hidden = false;
+    $('orderBookletBtn').onclick = () => setMode('orden');
+    $('orderRandomBtn').onclick = () => setMode('aleatorio');
+    $('reshuffleBtn').onclick = retry;
+    $('keyBtn').onclick = () => {
+      const p = $('keyPanel');
+      if(p.hidden){ $('keyTable').innerHTML = keyTableHTML(); }
+      p.hidden = !p.hidden;
+      $('keyBtn').classList.toggle('active', !p.hidden);
+    };
+  } else {
+    $('scorePill').style.visibility = 'hidden';
+  }
+
+  buildOrder();
+  startTimer();
+  render();
+  registrarApertura();
+  cargarHistorial();
+}
+
+if(sesion){
+  ES_DOCENTE = String(sesion.rol || '').trim().toLowerCase().indexOf('docente') === 0;
+  start();
+} else if(/(^|\.)github\.io$/i.test(location.hostname)){
+  // En el portal publicado siempre debe haber sesión: si no, vuelve al portal.
+  window.location.href = PORTAL;
+} else {
+  // Fuera del portal (vista previa en Claude o archivo local): se elige el rol a mano.
+  PREVIEW = true;
+  $('roleGate').hidden = false;
+  $('pickEst').onclick = () => { ES_DOCENTE = false; start(); };
+  $('pickDoc').onclick = () => { ES_DOCENTE = true; start(); };
+}
+})();
+</script>
+
+</body>
+</html>
