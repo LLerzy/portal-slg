@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prueba de Periodo Economía</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+/* Concepto: libreta de examen. Ticket de encabezado, hoja de burbujas y una tarjeta por pregunta,
+   sobre papel cálido. Misma identidad visual de los cuadernillos SLG; un solo tema (claro) a propósito. */
+:root{
+  --paper:#EAE3D3; --paper-dark:#DDD4BE; --card:#F6F1E6; --card-hi:#FBF8F1;
+  --ink:#232A3B; --ink-soft:#4B5266; --rule:#B9AD8F;
+  --gold:#B8862E; --gold-ink:#7E5A12;
+  --green:#2E6B4F; --green-bg:#DDEBE1; --red:#A6323E; --red-bg:#F3DEDD;
+  --shadow:0 10px 30px rgba(35,42,59,.14);
+  --f-display:'Fraunces',Georgia,serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none!important;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--f-body); color:var(--ink); background-color:var(--paper);
+  background-image:radial-gradient(circle at 1px 1px, rgba(35,42,59,.05) 1px, transparent 0);
+  background-size:14px 14px;
+  padding-block:28px 60px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  min-height:100vh; line-height:1.45;
+}
+.wrap{max-width:980px; margin:0 auto;}
+
+/* ---------- ticket ---------- */
+.ticket{background:var(--ink); color:var(--paper); border-radius:14px; padding:22px 26px 26px; position:relative; box-shadow:var(--shadow); overflow:hidden;}
+.ticket::after{content:""; position:absolute; left:0; right:0; bottom:-1px; height:14px;
+  background-image:radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px); background-size:20px 14px; background-repeat:repeat-x;}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.ticket-id{display:flex; gap:14px; align-items:center; min-width:0; flex:1 1 320px;}
+.logos{display:flex; gap:8px; flex:none;}
+.logo-chip{width:54px; height:54px; border-radius:10px; background:var(--card); display:flex; align-items:center; justify-content:center; padding:5px;}
+.logo-chip img{max-width:100%; max-height:100%; object-fit:contain;}
+.eyebrow{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#C9BFA0; margin:0 0 6px;}
+.ticket h1{font-family:var(--f-display); font-weight:600; font-size:clamp(24px,4vw,36px); margin:0; line-height:1.08; text-wrap:balance;}
+.ticket .sub{font-family:var(--f-display); font-style:italic; font-weight:500; color:#D8CFB2; font-size:16px; margin-top:4px;}
+.stamp{border:2px solid var(--gold); color:#E2B95B; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; padding:6px 10px; border-radius:6px; transform:rotate(4deg); white-space:nowrap;}
+.ticket-meta{display:flex; gap:8px 20px; margin-top:18px; flex-wrap:wrap; font-family:var(--f-mono); font-size:12px; color:#C9BFA0;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+.timer{font-variant-numeric:tabular-nums;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:14px; color:var(--ink-soft); line-height:1.55; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+
+/* ---------- navegador ---------- */
+.nav-strip{background:var(--card); border-radius:12px; margin-top:14px; padding:14px 16px; box-shadow:var(--shadow);}
+.label{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{font-family:var(--f-mono); font-size:12px; font-weight:600; border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft); padding:8px 14px; border-radius:20px; cursor:pointer; transition:background .15s, border-color .15s, color .15s;}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{width:32px; height:32px; border-radius:50%; border:2px solid var(--rule); background:transparent; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:600; font-size:12px; color:var(--ink-soft); cursor:pointer; padding:0; transition:transform .15s, background .2s, border-color .2s, color .2s;}
+.bub:hover{transform:translateY(-2px);}
+.bub.answered{background:var(--ink-soft); border-color:var(--ink-soft); color:#fff;}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+.bub.current{border-color:var(--ink); box-shadow:0 0 0 3px rgba(184,134,46,.45);}
+.bub.answered.current,.bub.correct.current,.bub.incorrect.current{border-color:var(--ink);}
+.progress-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:1px dashed var(--rule);}
+.progress{font-family:var(--f-mono); font-size:12.5px; color:var(--ink-soft);}
+.progress b{color:var(--ink);}
+
+/* ---------- botones ---------- */
+.btn{font-family:var(--f-mono); font-weight:600; font-size:13px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); padding:10px 18px; border-radius:8px; cursor:pointer; transition:background .15s, color .15s;}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn:disabled:hover{background:transparent; color:var(--ink);}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#3a4360;}
+.btn.small{padding:8px 14px; font-size:12px; border-radius:20px;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+
+/* ---------- tarjeta de pregunta ---------- */
+.card{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); overflow:hidden;}
+.card-inner{padding:24px 26px 28px;}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
+.q-num{width:42px; height:42px; min-width:42px; border-radius:50%; background:var(--ink); color:var(--paper); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:16px;}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap; min-width:0;}
+.tag{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:20px; border:1px solid var(--rule); color:var(--ink-soft);}
+.tag-comp{border-color:var(--gold); color:var(--gold-ink); background:rgba(184,134,46,.1);}
+.meta-doc{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft); margin:-4px 0 14px; padding:6px 10px; background:var(--paper); border-radius:6px; border:1px dashed var(--rule);}
+
+.context{margin:0 0 18px; padding:14px 16px 16px; background:var(--paper-dark); border-radius:8px; font-size:14.5px; line-height:1.5; color:var(--ink);}
+.ctx-title{font-family:var(--f-display); font-weight:600; font-size:19px; line-height:1.2; margin:0 0 8px; color:var(--red); text-wrap:balance;}
+.context p{margin:0 0 8px;}
+.context p:last-child{margin-bottom:0;}
+.context .datos,.context .recordatorio,.context .formula-destacada,.context .formula-general,
+.context .tarjeta-afirmacion,.context .afirmacion,.context .secuencia,.context .flujo,
+.context .escenario,.context .figura,.context .grafica-principal,.context .parametro{
+  background:var(--card-hi); border:1px solid var(--rule); border-radius:8px; padding:9px 12px; margin:10px 0 0;
+}
+.context .recordatorio,.context .formula-destacada,.context .formula-general,.context .flujo{text-align:center;}
+.context .formula-destacada,.context .formula-general{overflow-x:auto;}
+.context .formula-general .titulo-formula{display:block; margin-bottom:4px; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--red);}
+.context .flujo{font-weight:600; font-size:14px;}
+.context .datos ul{margin:5px 0 0 18px; padding:0;}
+.context .datos li{margin-bottom:3px;}
+.context .tarjeta-afirmacion strong{color:var(--red);}
+.context .parametros{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:6px; margin-top:10px;}
+.context .parametros .parametro{margin:0; font-size:14px; padding:6px 10px;}
+.context .escenarios{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px; margin-top:10px;}
+.context .escenario{margin:0; min-width:0;}
+.context .escenario h3{margin:0 0 4px; font-family:var(--f-display); font-size:16px; color:var(--red);}
+.context .escenario p{font-size:14px;}
+.context .escenario .figura{border:0; padding:2px; margin:6px 0 0; background:transparent;}
+.context .figura,.context .grafica-principal{text-align:center;}
+.context svg.grafico-svg{display:block; width:100%; max-width:520px; height:auto; margin:0 auto;}
+.context .escenario svg.grafico-svg{max-height:190px;}
+.nota{margin-top:4px; font-size:12px; line-height:1.3; color:var(--ink-soft); text-align:center;}
+.context table{border-collapse:collapse; width:100%; margin-top:10px; font-size:13.5px; background:var(--card-hi);}
+.context th,.context td{border:1px solid var(--rule); padding:5px 8px; text-align:center;}
+.context th{background:var(--ink); color:var(--paper); font-weight:600;}
+.table-scroll{overflow-x:auto;}
+
+.stmt{margin:0 0 18px; font-size:17px; line-height:1.55; font-weight:600;}
+.options{display:grid; grid-template-columns:1fr; gap:10px;}
+.options.cols2{grid-template-columns:1fr 1fr;}
+.opt{display:flex; align-items:flex-start; gap:12px; border:1.5px solid var(--rule); border-radius:9px; padding:10px 14px; cursor:pointer; background:var(--card); font-size:15px; line-height:1.45; transition:border-color .15s, background .15s; min-width:0;}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{width:28px; height:28px; min-width:28px; border-radius:50%; border:2px solid var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:12.5px; transition:background .2s, color .2s; margin-top:1px;}
+.opt .txt{min-width:0; flex:1; overflow-x:auto; padding-block:2px;}
+.opt.selected{border-color:var(--ink); background:#EFE8D6;}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #545f7a, var(--ink) 70%); color:var(--paper);}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+.opt.opt-graph{align-items:flex-start;}
+.opt.opt-graph .txt{overflow:visible;}
+.opt svg.grafico-svg{display:block; width:100%; height:auto; max-height:190px;}
+
+.card-actions{margin-top:14px; display:flex; justify-content:flex-end;}
+.feedback{margin-top:16px; padding:14px 16px; border-radius:9px; font-size:14.5px; line-height:1.6;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback.info{background:var(--card-hi); color:var(--ink); border:1px solid var(--gold);}
+.feedback b{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;}
+.feedback .mark{width:20px; height:20px; flex:none;}
+.feedback .mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.feedback .mark.ok path{stroke:var(--green);} .feedback .mark.bad path{stroke:var(--red);} .feedback .mark.info path{stroke:var(--gold-ink);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+@media (prefers-reduced-motion:reduce){.feedback .mark path{animation:none; stroke-dashoffset:0;} *{transition:none!important;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.score-pill{font-family:var(--f-mono); font-size:13px; font-weight:600; background:var(--card); border:1.5px solid var(--gold); color:var(--gold-ink); padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);}
+
+.finish-warn{margin-top:14px; background:var(--card); border:1.5px solid var(--gold); border-radius:10px; padding:14px 16px; box-shadow:var(--shadow); font-size:14.5px;}
+.finish-warn .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+
+/* ---------- panel de clave y resumen ---------- */
+.keypanel,.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:24px 26px;}
+.keypanel h2,.summary h2{font-family:var(--f-display); font-size:26px; margin:0 0 4px; font-weight:600;}
+.summary .big{font-family:var(--f-display); font-size:54px; font-weight:700; color:var(--gold-ink); margin:10px 0 0; line-height:1;}
+.summary .pct{font-family:var(--f-mono); font-size:13px; color:var(--ink-soft); margin-top:4px;}
+.caption{font-family:var(--f-mono); font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; margin:0 0 4px;}
+.bars{margin-top:6px;}
+.bars .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.bars .cname{width:210px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden; min-width:60px;}
+.fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cnum{font-family:var(--f-mono); font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.chips{display:flex; flex-wrap:wrap; gap:8px;}
+.chip{font-size:13px; border:1px solid var(--red); background:var(--red-bg); color:#5E1B23; border-radius:20px; padding:4px 12px; cursor:pointer; font-family:var(--f-body);}
+.summary .btn{margin-top:22px; margin-right:8px;}
+.keytable{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:10px; min-width:520px;}
+.keytable th,.keytable td{border:1px solid var(--rule); padding:6px 9px; text-align:left;}
+.keytable th{background:var(--ink); color:var(--paper); font-weight:600;}
+.keytable td.k{font-family:var(--f-mono); font-weight:700; text-align:center; color:var(--green);}
+.keytable td.n{font-family:var(--f-mono); text-align:center;}
+.sec-gap{margin-top:24px;}
+
+mjx-container[jax="SVG"]{margin:0 .05em!important; font-size:100%!important;}
+.stmt mjx-container,.opt mjx-container,.context p mjx-container,.context .datos mjx-container,.context li mjx-container,
+.context .formula-destacada mjx-container,.context .formula-general mjx-container,.context td mjx-container,
+.context th mjx-container,.context .afirmacion mjx-container,.context .parametro mjx-container,
+.context .recordatorio mjx-container,.context .nota mjx-container,.feedback mjx-container{display:inline-block!important; vertical-align:-.08em;}
+
+@media (max-width:640px){
+  .card-inner{padding:18px 14px 22px;}
+  .options.cols2{grid-template-columns:1fr;}
+  .ticket{padding:18px 16px 24px;}
+  .bars .row{flex-wrap:wrap;}
+  .bars .cname{width:100%;}
+  .keypanel,.summary{padding:20px 14px;}
+  .stmt{font-size:16px;}
+}
+
+/* ---------- portal, vista previa y banner de historial ---------- */
+.portal-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+.portal-link{display:inline-flex; align-items:center; gap:6px; background:var(--card-hi); border:1px solid var(--rule); border-radius:999px; padding:7px 14px; font-size:12.5px; font-weight:700; color:var(--red); text-decoration:none;}
+.portal-link:hover{background:var(--card);}
+.preview-bar{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft);}
+.preview-bar b{color:var(--ink);}
+.gate{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:28px 26px; margin:40px auto 0; max-width:580px;}
+.gate h1{font-family:var(--f-display); font-size:26px; line-height:1.15; margin:0; font-weight:600; text-wrap:balance;}
+.gate .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;}
+.hist-banner{background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:12px 16px; margin-bottom:14px; font-size:13.5px; box-shadow:var(--shadow);}
+
+.context td:first-child{text-align:left;}
+.context .table-scroll{overflow-x:auto;}
+.context .table-scroll table{margin-top:10px;}
+@media(max-width:520px){.context th,.context td{padding:4px 4px; font-size:12px;}}
+.context .tarjeta-afirmacion p{margin:0 0 6px;}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <section class="gate" id="roleGate" hidden>
+    <p class="eyebrow" style="color:var(--ink-soft)">Vista previa fuera del portal</p>
+    <h1>Preparación Segunda Prueba de Periodo</h1>
+    <p style="margin:8px 0 0; font-size:14.5px; color:var(--ink-soft); line-height:1.55">
+      En el portal, el rol se toma de la sesión iniciada. Aquí no hay sesión, así que elige cómo quieres ver el cuadernillo.
+    </p>
+    <div class="row">
+      <button type="button" class="btn primary" id="pickEst">Ver como estudiante</button>
+      <button type="button" class="btn" id="pickDoc">Ver como docente</button>
+    </div>
+  </section>
+
+  <div id="app" hidden>
+
+  <div class="portal-row">
+    <a class="portal-link" href="https://llerzy.github.io/portal-slg/">← Volver al portal</a>
+    <div class="preview-bar" id="previewBar" hidden>
+      <span>Vista previa: <b id="previewRole"></b></span>
+      <button type="button" class="btn small" id="switchRole">Cambiar vista</button>
+    </div>
+  </div>
+
+  <header class="ticket">
+    <div class="ticket-top">
+      <div class="ticket-id">
+        <div class="logos">
+          <div class="logo-chip"><img src="https://i.imgur.com/Ld5BbX3.png" alt="Logo Institución Educativa San Luis Gonzaga" onerror="this.parentNode.remove()"></div>
+          <div class="logo-chip"><img src="https://i.imgur.com/Os2RUbW.png" alt="Logo FACIMATE" onerror="this.parentNode.remove()"></div>
+        </div>
+        <div style="min-width:0">
+          <p class="eyebrow">Facimate · I.E. San Luis Gonzaga</p>
+          <h1>Preparación Segunda Prueba de Periodo</h1>
+          <div class="sub">Economía — Grado 10°</div>
+        </div>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Tema</b> Interés simple</span>
+      <span><b>Docente</b> Llerzy Esneider Torres Ome Ph.D.</span>
+      <span><b>Modo</b> <span id="modo"></span></span>
+      <span id="timerWrap" hidden><b>Tiempo</b> <span class="timer" id="timer">00:00</span></span>
+    </div>
+  </header>
+
+  <div class="intro-note" id="introNote"></div>
+
+  <section class="nav-strip">
+    <div class="order-row" id="orderRow" hidden>
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button type="button" class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button type="button" class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button type="button" class="btn small" id="reshuffleBtn" hidden>↻ Mezclar de nuevo</button>
+        <button type="button" class="order-btn" id="keyBtn">📋 Clave de respuestas</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+    <div class="progress-row">
+      <span class="progress" id="progress"></span>
+      <button type="button" class="btn small primary" id="finishBtn">Ver resultados</button>
+    </div>
+  </section>
+
+  <section class="keypanel" id="keyPanel" hidden>
+    <p class="caption">Solo docente</p>
+    <h2>Clave de respuestas</h2>
+    <p style="margin:0; font-size:13.5px; color:var(--ink-soft)">Las letras corresponden al orden original de las opciones del banco de preguntas.</p>
+    <div class="table-scroll" id="keyTable"></div>
+  </section>
+
+  <div id="quizBody">
+    <article class="card"><div class="card-inner" id="cardInner"></div></article>
+    <div class="finish-warn" id="finishWarn" hidden></div>
+    <div class="footer-nav">
+      <button type="button" class="btn" id="prevBtn">← Anterior</button>
+      <span class="score-pill" id="scorePill">0 / 20 correctas</span>
+      <button type="button" class="btn primary" id="nextBtn">Siguiente →</button>
+    </div>
+  </div>
+
+  <section class="summary" id="summary" hidden></section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+/* ===== Configuración del portal (mismos servicios que los demás cuadernillos) ===== */
+const PORTAL = "https://llerzy.github.io/portal-slg/";
+const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+const VERSION_ARTEFACTO = "pp2-v1"; // súbelo manualmente si cambias las preguntas de este cuadernillo
+const AREA_ARTEFACTO = "Economía · Prueba de periodo 2";
+
+const Q = [{"id": 1, "tema": "Interés y valor futuro", "subtema": "Determinación del interés mediante la diferencia entre valor futuro y capital", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Interpretación y representación", "correct": "C", "explain": "En interés simple \\(I=VF-C\\). Dulces típicos: \\(2.169.600-1.920.000=249.600\\). Panela: \\(3.025.000-2.750.000=275.000\\). Hospedaje rural: \\(2.440.800-2.160.000=280.800\\). El mayor interés es el del hospedaje rural. A y B ordenan mal los intereses; D confunde los valores futuros con los intereses.", "titulo": "Financiación de actividades productivas", "ctx": "<p>Tres familias de la zona de influencia de Santa Fe de Antioquia utilizaron recursos para fortalecer pequeños negocios. Al terminar el plazo, cada una debía cancelar un valor futuro.<\/p>\n<div class=\"table-scroll\"><table><thead><tr><th>Actividad<\/th><th>Capital<\/th><th>Valor futuro<\/th><\/tr><\/thead><tbody>\n<tr><td>Venta de dulces típicos<\/td><td>$1.920.000<\/td><td>$2.169.600<\/td><\/tr>\n<tr><td>Producción de panela<\/td><td>$2.750.000<\/td><td>$3.025.000<\/td><\/tr>\n<tr><td>Hospedaje rural<\/td><td>$2.160.000<\/td><td>$2.440.800<\/td><\/tr>\n<\/tbody><\/table><\/div><div class=\"formula-destacada\">En una operación de interés simple, \\(I=VF-C\\).<\/div>", "text": "Al interpretar los datos de la tabla, ¿cuál afirmación es correcta sobre los intereses generados?", "opts": {"A": "La venta de dulces típicos generó $249.600 y la producción de panela $275.000; por ello el hospedaje rural generó el menor interés", "B": "El hospedaje rural generó $280.800 y la producción de panela $275.000; por ello la venta de dulces típicos generó el mayor interés", "C": "Los intereses fueron $249.600, $275.000 y $280.800; por tanto, el hospedaje rural generó el mayor interés", "D": "Los intereses fueron $2.169.600, $3.025.000 y $2.440.800; por tanto, la producción de panela generó el mayor interés"}}, {"id": 2, "tema": "Interés y valor futuro", "subtema": "Determinación del interés a partir de un valor futuro obtenido mediante información porcentual", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Formulación y ejecución", "correct": "A", "explain": "Si $3.653.000 es el 65 % del valor futuro, \\(VF=\\frac{3.653.000}{0{,}65}=5.620.000\\). Entonces \\(I=VF-C=5.620.000-5.100.000=520.000\\). B toma el 35 % del valor futuro (\\(1.967.000\\)) como si fuera todo el interés; C solo usa el pago final; D suma el capital y el pago restante.", "titulo": "Crédito para una tienda de productos locales", "ctx": "<p>Una comerciante de Santa Fe de Antioquia recibió un capital de <strong>$5.100.000<\/strong> para adecuar una tienda de productos regionales.<\/p>\n<p>Al finalizar el plazo, pagó primero el <strong>35 % del valor futuro<\/strong>. El pago restante fue de <strong>$3.653.000<\/strong>, correspondiente al <strong>65 % del valor futuro<\/strong>.<\/p>\n<div class=\"datos\">Primero debe determinarse el valor futuro total y luego aplicar \\(I=VF-C\\).<\/div>", "text": "¿Cuál fue el interés pagado al finalizar la operación?", "opts": {"A": "$520.000, porque el valor futuro es $5.620.000 y al restarle el capital se obtiene el interés", "B": "$1.967.000, porque ese valor corresponde al 35 % del valor futuro y representa todo el interés", "C": "$3.653.000, porque el pago final coincide con la parte pendiente de la obligación", "D": "$8.753.000, porque se suman el capital inicial y el pago restante para hallar el interés"}}, {"id": 3, "tema": "Tasa de interés", "subtema": "Porcentaje del interés producido por un capital en diferentes periodos", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Interpretación y representación", "correct": "D", "explain": "Porcentaje total \\(p=\\frac{I}{C}\\times100\\%\\): frutas \\(\\frac{243.000}{2.700.000}=9\\%\\), guía \\(\\frac{448.000}{3.200.000}=14\\%\\), vivero \\(\\frac{300.000}{2.500.000}=12\\%\\). Se divide entre los meses: \\(\\frac96=1{,}5\\%\\), \\(\\frac{14}{8}=1{,}75\\%\\) y \\(\\frac{12}{10}=1{,}2\\%\\) mensual. Los tres no rinden lo mismo (A) y el mayor mensual es el de guía (no el vivero, B). C invierte la razón \\(C/I\\).", "titulo": "Rendimientos de tres actividades", "ctx": "<p>Tres pequeños negocios de la región invirtieron capitales distintos y obtuvieron los siguientes intereses simples:<\/p>\n<div class=\"table-scroll\"><table><thead><tr><th>Actividad<\/th><th>Capital<\/th><th>Interés<\/th><th>Tiempo<\/th><\/tr><\/thead><tbody>\n<tr><td>Frutas deshidratadas<\/td><td>$2.700.000<\/td><td>$243.000<\/td><td>6 meses<\/td><\/tr>\n<tr><td>Servicios de guía<\/td><td>$3.200.000<\/td><td>$448.000<\/td><td>8 meses<\/td><\/tr>\n<tr><td>Vivero<\/td><td>$2.500.000<\/td><td>$300.000<\/td><td>10 meses<\/td><\/tr>\n<\/tbody><\/table><\/div><div class=\"formula-destacada\">\\(p=\\dfrac{I}{C}\\times100\\%\\)<\/div>", "text": "¿Cuál interpretación relaciona correctamente el porcentaje total y el porcentaje mensual de cada inversión?", "opts": {"A": "Los porcentajes totales son 9 %, 14 % y 12 %; por tanto, los tres negocios obtienen 1,5 % mensual", "B": "Los porcentajes totales son 9 %, 14 % y 12 %; por tanto, el vivero presenta el mayor porcentaje mensual", "C": "Los porcentajes totales son 11,1 %, 7,14 % y 8,33 %; por tanto, servicios de guía presenta el menor porcentaje mensual", "D": "Los porcentajes totales son 9 %, 14 % y 12 %; equivalen respectivamente a 1,5 %, 1,75 % y 1,2 % mensual"}}, {"id": 4, "tema": "Tasa de interés", "subtema": "Determinación del porcentaje de interés en un periodo a partir del capital y el interés generado", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Formulación y ejecución", "correct": "B", "explain": "\\(p=\\frac{729.000}{5.400.000}\\times100\\%=13{,}5\\%\\) en 9 meses. En interés simple el porcentaje es proporcional al tiempo, así que en 3 meses (la tercera parte) corresponde \\(\\frac{13{,}5}{3}=4{,}5\\%\\). A mantiene el 13,5 %; C invierte la razón; D confunde $243.000 (interés de 3 meses) con un porcentaje.", "titulo": "Capital para una microempresa de conservas", "ctx": "<p>Una productora cercana a Santa Fe de Antioquia invirtió <strong>$5.400.000<\/strong> y, después de <strong>9 meses<\/strong>, obtuvo <strong>$729.000<\/strong> de interés simple.<\/p>\n<div class=\"datos\">Desea conocer el porcentaje generado en 9 meses y el porcentaje equivalente para 3 meses, manteniendo las mismas condiciones.<\/div>\n<div class=\"formula-destacada\">\\(p=\\dfrac{I}{C}\\times100\\%\\)<\/div>", "text": "¿Qué procedimiento permite obtener correctamente ambos porcentajes?", "opts": {"A": "Calcular \\(729\\,000/5\\,400\\,000\\times100=13,5\\%\\) y conservar 13,5 % para 3 meses, porque el capital no cambia", "B": "Calcular \\(729\\,000/5\\,400\\,000\\times100=13,5\\%\\) y tomar la tercera parte, obteniendo 4,5 % para 3 meses", "C": "Calcular \\(5\\,400\\,000/729\\,000\\times100\\approx740,7\\%\\) y dividir entre 3 para obtener 246,9 %", "D": "Dividir $729.000 entre 9 y multiplicar por 3; el resultado $243.000 se interpreta directamente como 24,3 %"}}, {"id": 5, "tema": "Tasa de interés", "subtema": "Validación de porcentajes de interés correspondientes a diferentes periodos de tiempo", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Argumentación", "correct": "C", "explain": "Con el mismo capital, M: \\(\\frac{288.000}{4.800.000}=6\\%\\) en 4 meses \\(\\Rightarrow 1{,}5\\%\\) mensual. N: \\(\\frac{504.000}{4.800.000}=10{,}5\\%\\) en 7 meses \\(\\Rightarrow 1{,}5\\%\\) mensual. Esteban tiene razón: hay que comparar porcentaje y tiempo, y ambos créditos tienen la misma tasa mensual. Que N pague más interés solo refleja que dura más meses (Juliana, A y D); y 10,5 % > 6 % no implica una tasa mensual mayor (B).", "titulo": "Comparación de dos créditos rurales", "ctx": "<p>Dos productores comparan créditos de interés simple con el mismo capital inicial de <strong>$4.800.000<\/strong>.<\/p>\n<div class=\"table-scroll\"><table><thead><tr><th>Crédito<\/th><th>Tiempo<\/th><th>Interés pagado<\/th><\/tr><\/thead><tbody>\n<tr><td>M<\/td><td>4 meses<\/td><td>$288.000<\/td><\/tr><tr><td>N<\/td><td>7 meses<\/td><td>$504.000<\/td><\/tr>\n<\/tbody><\/table><\/div>\n<div class=\"tarjeta-afirmacion\"><p><strong>Juliana afirma:<\/strong> “N tiene una tasa mayor porque paga más interés”.<\/p>\n<p><strong>Esteban afirma:<\/strong> “La comparación debe hacerse teniendo en cuenta el porcentaje y el tiempo”.<\/p><\/div>", "text": "¿Cuál argumento permite decidir correctamente entre las dos afirmaciones?", "opts": {"A": "Juliana tiene razón, porque $504.000 supera a $288.000 y, con el mismo capital, el interés mayor siempre implica una tasa mensual mayor", "B": "Esteban tiene razón, porque M genera 6 % y N 10,5 %; como 10,5 % es mayor, N posee una tasa mensual necesariamente superior", "C": "Esteban tiene razón, porque M genera 6 % en 4 meses y N 10,5 % en 7 meses; ambos equivalen a 1,5 % mensual", "D": "Juliana tiene razón, porque los créditos tienen el mismo capital y el tiempo no modifica el interés cuando se trabaja con interés simple"}}, {"id": 6, "tema": "Tasa de interés", "subtema": "Interpretación de la tasa de interés a partir del interés y el capital", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Interpretación y representación", "correct": "A", "explain": "\\(i=\\frac{I}{C}\\): panadería \\(\\frac{312.000}{2.400.000}=0{,}13\\) (13 %), transporte \\(\\frac{360.000}{3.000.000}=0{,}12\\) (12 %), café \\(\\frac{405.000}{2.700.000}=0{,}15\\) (15 %). La mayor tasa es la del café. B usa \\(C/I\\); C atribuye la mayor tasa al mayor capital (la tasa no depende de eso); D intercambia los valores de panadería y transporte.", "titulo": "Tasas en actividades comerciales", "ctx": "<p>Tres negocios de Santa Fe de Antioquia registraron los siguientes datos al finalizar sus operaciones:<\/p>\n<div class=\"table-scroll\"><table><thead><tr><th>Actividad<\/th><th>Capital \\(C\\)<\/th><th>Interés \\(I\\)<\/th><\/tr><\/thead><tbody>\n<tr><td>Panadería artesanal<\/td><td>$2.400.000<\/td><td>$312.000<\/td><\/tr>\n<tr><td>Transporte turístico<\/td><td>$3.000.000<\/td><td>$360.000<\/td><\/tr>\n<tr><td>Venta de café<\/td><td>$2.700.000<\/td><td>$405.000<\/td><\/tr>\n<\/tbody><\/table><\/div><div class=\"formula-destacada\">\\(i=\\dfrac{I}{C}\\)<\/div>", "text": "¿Cuál opción interpreta correctamente las tasas del periodo?", "opts": {"A": "Panadería: 13 %, transporte: 12 % y café: 15 %; por tanto, la venta de café presenta la mayor tasa", "B": "Panadería: 7,69 %, transporte: 8,33 % y café: 6,67 %; por tanto, transporte presenta la mayor tasa", "C": "Panadería: 13 %, transporte: 12 % y café: 15 %; por tanto, transporte presenta la mayor tasa por tener mayor capital", "D": "Panadería: 12 %, transporte: 13 % y café: 15 %; por tanto, panadería presenta la menor tasa del periodo"}}, {"id": 7, "tema": "Tasa de interés", "subtema": "Comparación de tasas mediante diferentes representaciones de interés y capital", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Interpretación y representación", "correct": "D", "explain": "R: \\(\\frac{450.000}{3.750.000}=0{,}12\\) (12 %). S: \\(\\frac{30.000}{200.000}=0{,}15\\) (15 %). La diferencia es \\(15\\%-12\\%=3\\) puntos porcentuales. A invierte las razones y C es falso: sí pueden compararse expresando ambas como porcentajes. B afirma “$30 más por cada $100”, pero 15 % − 12 % = 3 puntos, es decir, $3 por cada $100 (no $30).", "titulo": "Dos alternativas de inversión", "ctx": "<p>Dos emprendedores del Occidente antioqueño comparan las siguientes operaciones de interés simple:<\/p>\n<div class=\"datos\"><strong>Operación R:<\/strong> un capital de $3.750.000 genera $450.000 de interés.<\/div>\n<div class=\"datos\"><strong>Operación S:<\/strong> por cada $200.000 de capital se generan $30.000 de interés.<\/div>\n<div class=\"formula-destacada\">\\(i=\\dfrac{I}{C}\\)<\/div>", "text": "Al expresar ambas operaciones como porcentajes, ¿qué conclusión es correcta?", "opts": {"A": "R tiene una tasa de 8,33 % y S una tasa de 6,67 %; por ello R ofrece mayor rendimiento", "B": "R tiene una tasa de 12 % y S una tasa de 15 %; por ello S genera exactamente $30 más por cada $100 de capital", "C": "R y S no pueden compararse porque utilizan capitales distintos y no tienen el mismo valor de interés", "D": "R tiene una tasa de 12 % y S una tasa de 15 %; por ello S supera a R en 3 puntos porcentuales"}}, {"id": 8, "tema": "Tasa de interés", "subtema": "Cálculo de la tasa de interés a partir del interés y el capital", "pens": "Pensamiento numérico y sistemas numéricos", "comp": "Formulación y ejecución", "correct": "B", "explain": "\\(i=\\frac{I}{C}=\\frac{896.000}{6.400.000}=0{,}14\\) y se expresa en porcentaje multiplicando por 100: \\(14\\%\\). A invierte la razón; C deja 0,14 sin convertirlo (sería 0,14 %); D resta el interés al capital.", "titulo": "Adecuación de un local comercial", "ctx": "<p>Una emprendedora recibió un capital de <strong>$6.400.000<\/strong> para adecuar un local en Santa Fe de Antioquia. Al finalizar la operación pagó <strong>$896.000<\/strong> de interés.<\/p>\n<div class=\"datos\">La tasa del periodo debe expresarse primero en forma decimal y luego en porcentaje.<\/div>\n<div class=\"formula-destacada\">\\(i=\\dfrac{I}{C}\\)<\/div>", "text": "¿Qué procedimiento determina correctamente la tasa del periodo?", "opts": {"A": "Calcular \\(6\\,400\\,000/896\\,000\\approx7,14\\) y concluir que la tasa es 7,14 %", "B": "Calcular \\(896\\,000/6\\,400\\,000=0,14\\) y multiplicar por 100, obteniendo 14 %", "C": "Calcular \\(896\\,000/6\\,400\\,000=0,14\\) y concluir que la tasa es 0,14 %", "D": "Restar $896.000 a $6.400.000 y dividir entre el capital, obteniendo una tasa de 86 %"}}, {"id": 9, "tema": "Tasa de interés", "subtema": "Validación de procedimientos para determinar la tasa de interés", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Argumentación", "correct": "A", "explain": "La tasa es la proporción del interés respecto al capital: X \\(\\frac{585.000}{4.500.000}=13\\%\\); Y \\(\\frac{720.000}{6.000.000}=12\\%\\). Felipe tiene razón: X tiene la mayor tasa aunque pague menos pesos. B y D comparan valores absolutos; C afirma que ambos son 13 %, y Y es 12 %.", "titulo": "Dos opciones de financiación", "ctx": "<p>Dos comerciantes comparan créditos de interés simple.<\/p>\n<div class=\"table-scroll\"><table><thead><tr><th>Crédito<\/th><th>Capital<\/th><th>Interés<\/th><\/tr><\/thead><tbody>\n<tr><td>X<\/td><td>$4.500.000<\/td><td>$585.000<\/td><\/tr><tr><td>Y<\/td><td>$6.000.000<\/td><td>$720.000<\/td><\/tr>\n<\/tbody><\/table><\/div>\n<div class=\"tarjeta-afirmacion\"><p><strong>Mariana:<\/strong> “Y tiene mayor tasa porque paga $720.000”.<\/p>\n<p><strong>Felipe:<\/strong> “La tasa debe compararse como proporción del capital”.<\/p><\/div>", "text": "¿Cuál argumento permite establecer quién tiene razón?", "opts": {"A": "Felipe tiene razón: X tiene 13 % y Y 12 %; por ello X presenta una tasa mayor aunque el interés en pesos sea menor", "B": "Mariana tiene razón: Y tiene mayor tasa porque el interés absoluto es mayor y los capitales no afectan la comparación", "C": "Felipe tiene razón: X y Y tienen 13 % porque el aumento del capital compensa exactamente la diferencia de intereses", "D": "Mariana tiene razón: la diferencia de $135.000 entre intereses equivale a 1,35 puntos porcentuales de tasa"}}, {"id": 10, "tema": "Fórmula I = C·i·t y despejes", "subtema": "Identificación de fórmulas equivalentes derivadas de I = Cit", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Interpretación y representación", "correct": "C", "explain": "A partir de \\(I=C\\cdot i\\cdot t\\), dividir ambos miembros entre el producto de las otras dos variables da \\(C=\\frac{I}{it}\\), \\(i=\\frac{I}{Ct}\\) y \\(t=\\frac{I}{Ci}\\). A suma en el denominador, B invierte las fracciones y D multiplica, en lugar de dividir.", "titulo": "Relaciones entre variables financieras", "ctx": "<p>En una actividad de educación financiera se parte de la expresión de interés simple:<\/p>\n<div class=\"formula-destacada\">\\(I=C\\cdot i\\cdot t\\)<\/div>\n<p>Los estudiantes deben identificar despejes equivalentes que permitan hallar cualquiera de las variables restantes.<\/p>\n<div class=\"datos\">Las operaciones deben conservar la igualdad original.<\/div>", "text": "¿Cuál conjunto contiene únicamente despejes algebraicamente equivalentes?", "opts": {"A": "\\(C=\\dfrac{I}{i+t}\\), \\(i=\\dfrac{I}{C+t}\\), \\(t=\\dfrac{I}{C+i}\\)", "B": "\\(C=\\dfrac{it}{I}\\), \\(i=\\dfrac{Ct}{I}\\), \\(t=\\dfrac{Ci}{I}\\)", "C": "\\(C=\\dfrac{I}{it}\\), \\(i=\\dfrac{I}{Ct}\\), \\(t=\\dfrac{I}{Ci}\\)", "D": "\\(C=Iit\\), \\(i=ICt\\), \\(t=ICi\\)"}}, {"id": 11, "tema": "Fórmula I = C·i·t y despejes", "subtema": "Selección de la fórmula adecuada según la variable desconocida", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Interpretación y representación", "correct": "B", "explain": "Se despeja cada variable de \\(I=Cit\\): M (capital) \\(C=\\frac{I}{it}\\); N (tasa) \\(i=\\frac{I}{Ct}\\); P (tiempo) \\(t=\\frac{I}{Ci}\\); Q (interés) \\(I=Cit\\). Las demás opciones suman en lugar de multiplicar, invierten fracciones o mezclan fórmulas.", "titulo": "Variables desconocidas en cuatro casos", "ctx": "<p>Cuatro estudiantes analizan situaciones de interés simple y registran los datos conocidos:<\/p>\n<div class=\"table-scroll\"><table><thead><tr><th>Caso<\/th><th>Datos conocidos<\/th><th>Variable buscada<\/th><\/tr><\/thead><tbody>\n<tr><td>M<\/td><td>\\(I, i, t\\)<\/td><td>\\(C\\)<\/td><\/tr>\n<tr><td>N<\/td><td>\\(I, C, t\\)<\/td><td>\\(i\\)<\/td><\/tr>\n<tr><td>P<\/td><td>\\(I, C, i\\)<\/td><td>\\(t\\)<\/td><\/tr>\n<tr><td>Q<\/td><td>\\(C, i, t\\)<\/td><td>\\(I\\)<\/td><\/tr>\n<\/tbody><\/table><\/div>", "text": "¿Qué correspondencia permite hallar correctamente la variable desconocida en los cuatro casos?", "opts": {"A": "M: \\(C=Iit\\); N: \\(i=I/(C+t)\\); P: \\(t=I/(C+i)\\); Q: \\(I=C+it\\)", "B": "M: \\(C=I/(it)\\); N: \\(i=I/(Ct)\\); P: \\(t=I/(Ci)\\); Q: \\(I=Cit\\)", "C": "M: \\(C=it/I\\); N: \\(i=Ct/I\\); P: \\(t=Ci/I\\); Q: \\(I=Cit\\)", "D": "M: \\(C=I/(it)\\); N: \\(i=I/(Ct)\\); P: \\(t=ICi\\); Q: \\(I=C/(it)\\)"}}, {"id": 12, "tema": "Fórmula I = C·i·t y despejes", "subtema": "Determinación del capital mediante C = I/(it)", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Formulación y ejecución", "correct": "D", "explain": "\\(C=\\frac{I}{i\\cdot t}=\\frac{825.000}{0{,}015\\cdot10}=\\frac{825.000}{0{,}15}=5.500.000\\). B ignora el tiempo (divide solo entre la tasa mensual); A multiplica en vez de dividir; C resta un porcentaje sin sustento.", "titulo": "Capital para un proyecto de huerta", "ctx": "<p>Una asociación rural obtuvo un crédito para adecuar una huerta productiva. Después de <strong>10 meses<\/strong> se generaron <strong>$825.000<\/strong> de interés simple, con una tasa de <strong>1,5 % mensual<\/strong>.<\/p>\n<div class=\"formula-destacada\">\\(I=C\\cdot i\\cdot t\\)<\/div>\n<p>Para operar con la tasa, \\(1,5\\%=0,015\\).<\/p>", "text": "¿Cuál era el capital inicial del crédito?", "opts": {"A": "$123.750, porque \\(C=825\\,000(0,015)(10)\\)", "B": "$55.000.000, porque \\(C=825\\,000/0,015\\)", "C": "$7.012.500, porque se resta al interés el 15 % correspondiente a diez meses", "D": "$5.500.000, porque \\(C=825\\,000/[0,015(10)]=825\\,000/0,15\\)"}}, {"id": 13, "tema": "Fórmula I = C·i·t y despejes", "subtema": "Determinación del tiempo mediante t = I/(Ci)", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Formulación y ejecución", "correct": "A", "explain": "\\(t=\\frac{I}{Ci}=\\frac{800.000}{6.250.000\\cdot0{,}016}=\\frac{800.000}{100.000}=8\\) meses. Las demás opciones combinan mal las cantidades (por ejemplo C usa \\(\\frac{C}{I}\\), que da 7,8125).", "titulo": "Financiación de un taller artesanal", "ctx": "<p>Un artesano de la región recibió un capital de <strong>$6.250.000<\/strong> con interés simple a una tasa de <strong>1,6 % mensual<\/strong>. El interés acumulado fue de <strong>$800.000<\/strong>.<\/p>\n<div class=\"formula-destacada\">\\(t=\\dfrac{I}{Ci}\\)<\/div>\n<div class=\"datos\">La tasa mensual en forma decimal es \\(i=0,016\\).<\/div>", "text": "¿Durante cuántos meses estuvo vigente la operación?", "opts": {"A": "8 meses, porque \\(t=800\\,000/[6\\,250\\,000(0,016)]=800\\,000/100\\,000\\)", "B": "12,8 meses, porque se multiplica el porcentaje total de interés por la tasa mensual", "C": "7,8125 meses, porque se divide el capital entre el interés y luego se multiplica por 100", "D": "6,4 meses, porque \\(t=800\\,000(0,016)/6\\,250\\,000\\times100\\)"}}, {"id": 14, "tema": "Fórmula I = C·i·t y despejes", "subtema": "Validación algebraica de fórmulas asociadas al interés simple", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Argumentación", "correct": "D", "explain": "Para despejar \\(i\\) en \\(I=Cit\\) se dividen ambos miembros entre \\(Ct\\) (con \\(C\\neq0\\) y \\(t\\neq0\\)): \\(i=\\frac{I}{Ct}\\). Nicolás tiene razón. La expresión de Lucía, \\(\\frac{Ct}{I}\\), es el recíproco, y un número y su recíproco solo coinciden en casos particulares, por lo que no son equivalentes.", "titulo": "Despeje de la tasa de interés", "ctx": "<p>Dos estudiantes parten de la fórmula:<\/p>\n<div class=\"formula-destacada\">\\(I=C\\cdot i\\cdot t\\)<\/div>\n<div class=\"tarjeta-afirmacion\"><p><strong>Lucía afirma:<\/strong> “La tasa es \\(i=\\dfrac{Ct}{I}\\)”.<\/p>\n<p><strong>Nicolás afirma:<\/strong> “La tasa es \\(i=\\dfrac{I}{Ct}\\)”.<\/p><\/div>\n<p>Se desea determinar cuál transformación conserva la igualdad.<\/p>", "text": "¿Cuál argumento es matemáticamente válido?", "opts": {"A": "Lucía tiene razón, porque al despejar una variable que multiplica se invierte toda la igualdad y queda \\(Ct/I\\)", "B": "Ambos tienen razón, porque \\(Ct/I\\) e \\(I/Ct\\) son recíprocos y representan la misma tasa", "C": "Ninguno tiene razón, porque la tasa solo puede obtenerse a partir del valor futuro de la operación", "D": "Nicolás tiene razón, porque al dividir ambos miembros entre \\(Ct\\) se obtiene \\(I/(Ct)=i\\), siempre que \\(C\\neq0\\) y \\(t\\neq0\\)"}}, {"id": 15, "tema": "Valor futuro VF = C(1 + it)", "subtema": "Identificación de fórmulas equivalentes asociadas al valor futuro", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Interpretación y representación", "correct": "B", "explain": "Como \\(VF=C+I\\) e \\(I=Cit\\): \\(VF=C+Cit=C(1+it)\\). Al dividir entre \\((1+it)\\): \\(C=\\frac{VF}{1+it}\\). A suma \\(i\\) y \\(t\\); C omite el capital; D multiplica por \\((1+it)\\) en lugar de dividir.", "titulo": "Valor futuro de una obligación", "ctx": "<p>Un comerciante analiza el valor que deberá cancelar al finalizar una operación de interés simple.<\/p>\n<div class=\"formula-destacada\">\\(VF=C+I\\)<\/div>\n<p>Como \\(I=Cit\\), ambas relaciones pueden combinarse para expresar el valor futuro directamente en función de \\(C\\), \\(i\\) y \\(t\\).<\/p>\n<div class=\"datos\">El capital inicial debe poder despejarse de la expresión obtenida.<\/div>", "text": "¿Qué par de fórmulas es correcto?", "opts": {"A": "\\(VF=C(1+i+t)\\) y \\(C=VF/(1+i+t)\\)", "B": "\\(VF=C(1+it)\\) y \\(C=VF/(1+it)\\)", "C": "\\(VF=Cit\\) y \\(C=VF/(it)\\)", "D": "\\(VF=C(1+it)\\) y \\(C=VF(1+it)\\)"}}, {"id": 16, "tema": "Valor futuro VF = C(1 + it)", "subtema": "Selección de fórmulas según la variable desconocida en VF = C(1 + it)", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Interpretación y representación", "correct": "C", "explain": "De \\(VF=C(1+it)\\): \\(C=\\frac{VF}{1+it}\\); \\(\\frac{VF}{C}=1+it\\Rightarrow i=\\frac{VF/C-1}{t}\\); \\(t=\\frac{VF/C-1}{i}\\); y \\(VF=C(1+it)\\). A, B y D pierden el factor \\(C\\) o cambian divisiones por multiplicaciones.", "titulo": "Cuatro situaciones con valor futuro", "ctx": "<p>Una cooperativa local usa la expresión de interés simple:<\/p>\n<div class=\"formula-destacada\">\\(VF=C(1+it)\\)<\/div>\n<div class=\"table-scroll\"><table><thead><tr><th>Caso<\/th><th>Datos conocidos<\/th><th>Variable buscada<\/th><\/tr><\/thead><tbody>\n<tr><td>A<\/td><td>\\(VF,i,t\\)<\/td><td>\\(C\\)<\/td><\/tr>\n<tr><td>B<\/td><td>\\(VF,C,t\\)<\/td><td>\\(i\\)<\/td><\/tr>\n<tr><td>C<\/td><td>\\(VF,C,i\\)<\/td><td>\\(t\\)<\/td><\/tr>\n<tr><td>D<\/td><td>\\(C,i,t\\)<\/td><td>\\(VF\\)<\/td><\/tr>\n<\/tbody><\/table><\/div>", "text": "¿Cuál conjunto de fórmulas resuelve correctamente los cuatro casos?", "opts": {"A": "A: \\(C=VF(1+it)\\); B: \\(i=(VF-C)/t\\); C: \\(t=(VF-C)/i\\); D: \\(VF=C+it\\)", "B": "A: \\(C=VF/(it)\\); B: \\(i=VF/(Ct)\\); C: \\(t=VF/(Ci)\\); D: \\(VF=Cit\\)", "C": "A: \\(C=VF/(1+it)\\); B: \\(i=(VF/C-1)/t\\); C: \\(t=(VF/C-1)/i\\); D: \\(VF=C(1+it)\\)", "D": "A: \\(C=VF-Cit\\); B: \\(i=C/(VFt)\\); C: \\(t=C/(VFi)\\); D: \\(VF=C(1+i+t)\\)"}}, {"id": 17, "tema": "Valor futuro VF = C(1 + it)", "subtema": "Determinación del capital inicial a partir del valor futuro", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Formulación y ejecución", "correct": "A", "explain": "\\(C=\\frac{VF}{1+it}=\\frac{8.409.600}{1+0{,}014\\cdot12}=\\frac{8.409.600}{1{,}168}=7.200.000\\). B, C y D restan o multiplican porcentajes sobre el valor equivocado.", "titulo": "Inversión para un café cultural", "ctx": "<p>Una familia invirtió en la adecuación de un pequeño café cultural. Después de <strong>12 meses<\/strong>, el valor futuro fue de <strong>$8.409.600<\/strong>, con una tasa de interés simple de <strong>1,4 % mensual<\/strong>.<\/p>\n<div class=\"formula-destacada\">\\(VF=C(1+it)\\)<\/div>\n<div class=\"datos\">Para operar: \\(1,4\\%=0,014\\).<\/div>", "text": "¿Cuál fue el capital inicial?", "opts": {"A": "$7.200.000, porque \\(C=8\\,409\\,600/[1+0,014(12)]=8\\,409\\,600/1,168\\)", "B": "$6.996.787, porque se resta al valor futuro el 16,8 % calculado sobre el propio valor futuro", "C": "$8.291.866, porque se resta únicamente el 1,4 % correspondiente a un mes", "D": "$9.822.413, porque se multiplica el valor futuro por \\(1+0,014(12)\\)"}}, {"id": 18, "tema": "Valor futuro VF = C(1 + it)", "subtema": "Determinación de la tasa de interés a partir del valor futuro y el capital", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Formulación y ejecución", "correct": "D", "explain": "\\(\\frac{VF}{C}=\\frac{8.064.000}{7.200.000}=1{,}12\\), entonces \\(i=\\frac{1{,}12-1}{10}=0{,}012\\), es decir, \\(1{,}2\\%\\) mensual. A calcula 12 %, que es la tasa de los 10 meses (no mensual); B no resta el capital; C interpreta mal 0,012.", "titulo": "Crédito para un servicio de transporte", "ctx": "<p>Un pequeño servicio de transporte turístico recibió un capital de <strong>$7.200.000<\/strong>. Al cabo de <strong>10 meses<\/strong>, el valor futuro fue de <strong>$8.064.000<\/strong>.<\/p>\n<div class=\"formula-destacada\">\\(VF=C(1+it)\\)<\/div>\n<div class=\"datos\">La tasa debe expresarse como porcentaje mensual.<\/div>", "text": "¿Cuál es la tasa mensual de interés simple?", "opts": {"A": "12 % mensual, porque \\((8\\,064\\,000-7\\,200\\,000)/7\\,200\\,000=0,12\\)", "B": "11,2 % mensual, porque se divide el valor futuro entre el capital y se multiplica por 100", "C": "0,12 % mensual, porque \\(0,012\\) corresponde directamente a 0,12 %", "D": "1,2 % mensual, porque \\(i=(8\\,064\\,000/7\\,200\\,000-1)/10=0,012\\)"}}, {"id": 19, "tema": "Valor futuro VF = C(1 + it)", "subtema": "Validación de un despeje algebraico para determinar el tiempo", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Argumentación", "correct": "B", "explain": "De \\(VF=C(1+it)\\): \\(\\frac{VF}{C}=1+it\\), luego \\(\\frac{VF}{C}-1=it\\) y \\(t=\\frac{VF/C-1}{i}\\). Tomás tiene razón. La expresión de Paula no sigue los pasos algebraicos válidos, pues el 1 no puede eliminarse al dividir entre \\(Ci\\).", "titulo": "Dos procedimientos para hallar el tiempo", "ctx": "<p>Dos estudiantes parten de:<\/p>\n<div class=\"formula-destacada\">\\(VF=C(1+it)\\)<\/div>\n<div class=\"tarjeta-afirmacion\"><p><strong>Paula:<\/strong> “El tiempo se obtiene como \\(t=\\dfrac{VF}{Ci}\\)”.<\/p>\n<p><strong>Tomás:<\/strong> “Primero divido por \\(C\\), resto 1 y luego divido por \\(i\\): \\(t=\\dfrac{VF/C-1}{i}\\)”.<\/p><\/div>", "text": "¿Cuál argumento permite validar uno de los procedimientos?", "opts": {"A": "Paula tiene razón, porque al dividir toda la expresión entre \\(Ci\\) se eliminan simultáneamente el 1, el capital y la tasa", "B": "Tomás tiene razón, porque \\(VF/C=1+it\\); al restar 1 y dividir por \\(i\\) se obtiene \\(t=(VF/C-1)/i\\)", "C": "Ambos tienen razón, porque el término 1 puede omitirse cuando se trabaja con interés simple y las dos expresiones coinciden", "D": "Ninguno tiene razón, porque el tiempo solo puede calcularse con la fórmula \\(I=Cit\\) y nunca a partir del valor futuro"}}, {"id": 20, "tema": "Valor futuro VF = C(1 + it)", "subtema": "Validación de fórmulas equivalentes para calcular la tasa de interés", "pens": "Pensamiento variacional y sistemas algebraicos y analíticos", "comp": "Argumentación", "correct": "C", "explain": "\\(\\frac{VF/C-1}{t}=\\frac{(VF-C)/C}{t}=\\frac{VF-C}{Ct}\\). Como \\(VF-C=I\\), ambas expresiones son \\(i=\\frac{I}{Ct}\\), con lo que son equivalentes y las dos dan una tasa (no un valor monetario).", "titulo": "Dos expresiones para una misma tasa", "ctx": "<p>En una actividad de educación financiera, dos estudiantes proponen fórmulas para la tasa de una operación:<\/p>\n<div class=\"tarjeta-afirmacion\"><p><strong>Isabela:<\/strong> \\(i=\\dfrac{VF/C-1}{t}\\).<\/p>\n<p><strong>Daniel:<\/strong> \\(i=\\dfrac{VF-C}{Ct}\\).<\/p><\/div>\n<div class=\"formula-destacada\">Fórmula de partida: \\(VF=C(1+it)\\)<\/div>\n<p>Se desea establecer si las expresiones representan la misma relación.<\/p>", "text": "¿Cuál argumento es correcto?", "opts": {"A": "Solo Isabela tiene razón, porque la expresión de Daniel produce un valor monetario y no una tasa", "B": "Solo Daniel tiene razón, porque \\(VF/C-1\\) no puede simplificarse como una razón relacionada con el capital", "C": "Ambas expresiones son equivalentes, porque \\((VF/C-1)/t=[(VF-C)/C]/t=(VF-C)/(Ct)\\)", "D": "Ninguna es válida, porque la tasa solo puede obtenerse sustituyendo primero el interés en pesos en \\(I=Cit\\)"}}];
+const TOTAL = Q.length;
+const LETTERS = ['A','B','C','D'];
+const $ = id => document.getElementById(id);
+const correctOf = q => q.correct;
+
+const INTRO_EST = 'Estas son las <b>20 preguntas</b> de preparación para la segunda prueba de periodo. Responde con calma: puedes cambiar tus respuestas antes de finalizar y moverte entre preguntas con la hoja de burbujas. Las preguntas y las opciones aparecen en orden aleatorio. Al final verás tu resultado por tema y por competencia.';
+const INTRO_DOC = '<b>Versión docente.</b> Las 20 preguntas de la versión alternativa. Al elegir una opción se muestra de inmediato si es correcta, con la explicación del procedimiento; también puedes pulsar <b>Ver solución</b> sin responder. Usa <b>Orden del cuadernillo</b> o <b>Aleatorio</b> y consulta la <b>Clave de respuestas</b> con tema, subtema y competencia.';
+
+/* ===== Sesión y rol ===== */
+function leerSesion(){
+  try{
+    const raw = sessionStorage.getItem('slg_sesion');
+    if(!raw) return null;
+    try{ return JSON.parse(raw) || {}; }catch(e){ return {}; }
+  }catch(e){ return null; }
+}
+const sesion = leerSesion();
+let ES_DOCENTE = false;
+let PREVIEW = false;
+
+/* ===== Estado ===== */
+let current = 0;
+let mode = 'aleatorio';
+let answers = {}, revealed = {};
+let displayQuestions = [], optionOrder = {};
+let startTime = Date.now(), timerId = null, endTime = null;
+let numeroIntentoActual = 1;
+let started = false;
+
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildOrder(){
+  const rand = mode === 'aleatorio';
+  displayQuestions = rand ? shuffle(Q) : Q.slice();
+  optionOrder = {};
+  Q.forEach(q => { const l = Object.keys(q.opts); optionOrder[q.id] = rand ? shuffle(l) : l; });
+}
+function typeset(el){ if(window.MathJax && typeof MathJax.typesetPromise === 'function'){ MathJax.typesetPromise([el]).catch(function(){}); } }
+const label = (q,i) => ES_DOCENTE ? q.id : (i+1);
+const answeredCount = () => Object.keys(answers).length;
+const fmtTime = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+
+function markSVG(kind){
+  const p = kind==='ok' ? 'M6 18 L14 26 L28 8' : kind==='bad' ? 'M8 8 L26 26 M26 8 L8 26' : 'M17 6 L17 20 M17 27 L17 28';
+  return '<svg class="mark '+kind+'" viewBox="0 0 34 34" aria-hidden="true"><path d="'+p+'"/></svg>';
+}
+
+/* ===== Temporizador ===== */
+function startTimer(){
+  stopTimer(true);
+  startTime = Date.now(); endTime = null;
+  if(ES_DOCENTE) return;
+  $('timerWrap').hidden = false;
+  const tick = () => { $('timer').textContent = fmtTime(Math.floor((Date.now()-startTime)/1000)); };
+  tick(); timerId = setInterval(tick, 1000);
+}
+function stopTimer(silent){
+  if(timerId){ clearInterval(timerId); timerId = null; }
+  if(!silent && endTime === null) endTime = Date.now();
+}
+
+/* ===== Burbujas y progreso ===== */
+function renderBubbles(){
+  const el = $('bubbles'); el.innerHTML = '';
+  displayQuestions.forEach((q,i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    let cls = 'bub';
+    const a = answers[q.id];
+    if(a){
+      if(ES_DOCENTE) cls += (a.choice===correctOf(q)) ? ' correct' : ' incorrect';
+      else cls += ' answered';
+    }
+    if(i===current) cls += ' current';
+    b.className = cls;
+    b.textContent = label(q,i);
+    b.setAttribute('aria-label', 'Ir a la pregunta ' + label(q,i));
+    b.onclick = () => { showQuiz(); current = i; render(); };
+    el.appendChild(b);
+  });
+}
+function updateProgress(){
+  const n = answeredCount();
+  $('progress').innerHTML = 'Respondidas <b>' + n + ' / ' + TOTAL + '</b>';
+  if(ES_DOCENTE){
+    const ok = Object.keys(answers).filter(id => { const q = Q.find(x=>x.id==id); return answers[id].choice===correctOf(q); }).length;
+    $('scorePill').textContent = ok + ' / ' + TOTAL + ' correctas';
+  }
+}
+
+/* ===== Tarjeta de pregunta ===== */
+function render(){
+  const q = displayQuestions[current];
+  const ans = answers[q.id];
+  const order = optionOrder[q.id];
+  const cor = correctOf(q);
+  const showFb = ES_DOCENTE && (ans || revealed[q.id]);
+  const anyGraph = order.some(l => /<svg/i.test(q.opts[l]));
+  const shortOpts = order.every(l => q.opts[l].length < 70);
+
+  let optsHTML = '';
+  order.forEach((orig,i) => {
+    const cls = ['opt'];
+    if(/<svg/i.test(q.opts[orig])) cls.push('opt-graph');
+    if(showFb){
+      if(orig===cor) cls.push('reveal-correct');
+      else if(ans && ans.choice===orig) cls.push('reveal-wrong');
+    } else if(ans && ans.choice===orig){ cls.push('selected'); }
+    optsHTML += '<div class="'+cls.join(' ')+'" role="radio" tabindex="0" aria-checked="'+(ans && ans.choice===orig ? 'true':'false')+'" data-orig="'+orig+'">'
+      + '<span class="letter">'+LETTERS[i]+'</span><div class="txt">'+q.opts[orig]+'</div></div>';
+  });
+
+  let fb = '';
+  if(showFb){
+    const corDisp = LETTERS[order.indexOf(cor)];
+    if(ans){
+      const ok = ans.choice === cor;
+      fb = '<div class="feedback '+(ok?'ok':'bad')+'"><b>'+markSVG(ok?'ok':'bad')+(ok?'¡Correcto!':'No es la respuesta')+' — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    } else {
+      fb = '<div class="feedback info"><b>'+markSVG('info')+'Solución — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    }
+  }
+  const revealBtn = (ES_DOCENTE && !showFb) ? '<div class="card-actions"><button type="button" class="btn small" id="revealBtn">👁 Ver solución</button></div>' : '';
+  const metaDoc = ES_DOCENTE ? '<div class="meta-doc">Pregunta '+q.id+' del banco · Subtema: '+q.subtema+' · '+q.pens+'</div>' : '';
+
+  $('cardInner').innerHTML =
+    '<div class="q-head"><div class="q-num">'+label(q,current)+'</div>'
+    + '<div class="q-tags"><span class="tag">'+q.tema+'</span><span class="tag tag-comp">'+q.comp+'</span></div></div>'
+    + metaDoc
+    + '<div class="context"><h2 class="ctx-title">'+q.titulo+'</h2>'+q.ctx+'</div>'
+    + '<p class="stmt">'+q.text+'</p>'
+    + '<div class="options'+((anyGraph||shortOpts)?' cols2':'')+'" role="radiogroup" aria-label="Opciones de respuesta">'+optsHTML+'</div>'
+    + revealBtn + fb;
+
+  const inner = $('cardInner');
+  inner.querySelectorAll('.opt').forEach(el => {
+    const pick = () => {
+      const orig = el.getAttribute('data-orig');
+      if(!ES_DOCENTE && answers[q.id] && answers[q.id].choice===orig){ delete answers[q.id]; }
+      else { answers[q.id] = { choice: orig }; }
+      $('finishWarn').hidden = true;
+      render();
+    };
+    el.onclick = pick;
+    el.onkeydown = ev => { if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); pick(); } };
+  });
+  const rb = $('revealBtn');
+  if(rb) rb.onclick = () => { revealed[q.id] = true; render(); };
+
+  $('prevBtn').disabled = current === 0;
+  $('nextBtn').textContent = current === TOTAL-1 ? (ES_DOCENTE ? 'Ver resultados →' : 'Finalizar →') : 'Siguiente →';
+  renderBubbles(); updateProgress();
+  typeset($('cardInner'));
+}
+
+function go(delta){
+  const n = current + delta;
+  if(n < 0) return;
+  if(n >= TOTAL){ tryFinish(); return; }
+  current = n; render();
+  $('cardInner').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ===== Finalizar y resumen ===== */
+function unansweredList(){
+  const out = [];
+  displayQuestions.forEach((q,i) => { if(!answers[q.id]) out.push(label(q,i)); });
+  return out;
+}
+function tryFinish(){
+  const pend = unansweredList();
+  if(!ES_DOCENTE && pend.length){
+    const w = $('finishWarn');
+    w.innerHTML = '<b>Aún tienes ' + pend.length + ' pregunta' + (pend.length>1?'s':'') + ' sin responder</b> (números: ' + pend.join(', ') + ').'
+      + '<div class="row"><button type="button" class="btn" id="keepBtn">Seguir respondiendo</button><button type="button" class="btn primary" id="forceBtn">Finalizar de todos modos</button></div>';
+    w.hidden = false;
+    $('keepBtn').onclick = () => { w.hidden = true; };
+    $('forceBtn').onclick = () => { w.hidden = true; showSummary(); };
+    w.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  showSummary();
+}
+function barsHTML(data){
+  return '<div class="bars">' + Object.entries(data).map(([name,v]) => {
+    const pct = Math.round(v.ok / v.total * 100);
+    return '<div class="row"><div class="cname">'+name+'</div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div><div class="cnum">'+v.ok+'/'+v.total+'</div></div>';
+  }).join('') + '</div>';
+}
+function keyTableHTML(){
+  return '<table class="keytable"><thead><tr><th>#</th><th>Tema</th><th>Subtema</th><th>Competencia</th><th>Clave</th></tr></thead><tbody>'
+    + Q.map(q => '<tr><td class="n">'+q.id+'</td><td>'+q.tema+'</td><td>'+q.subtema+'</td><td>'+q.comp+'</td><td class="k">'+q.correct+'</td></tr>').join('')
+    + '</tbody></table>';
+}
+function showSummary(){
+  stopTimer();
+  const cats = {}, comps = {}, missed = [];
+  let ok = 0;
+  Q.forEach(q => {
+    cats[q.tema] = cats[q.tema] || {ok:0,total:0};
+    comps[q.comp] = comps[q.comp] || {ok:0,total:0};
+    cats[q.tema].total++; comps[q.comp].total++;
+    const a = answers[q.id];
+    if(a && a.choice === correctOf(q)){ ok++; cats[q.tema].ok++; comps[q.comp].ok++; }
+  });
+  displayQuestions.forEach((q,i) => {
+    const a = answers[q.id];
+    if(!(a && a.choice === correctOf(q))) missed.push({pos:i, q:q});
+  });
+  const pct = Math.round(ok/TOTAL*100);
+  let html = '<p class="caption">Resultado final</p><h2>' + (ES_DOCENTE ? 'Resultado de la práctica' : 'Así te fue en la preparación') + '</h2>'
+    + '<div class="big">'+ok+'/'+TOTAL+'</div><div class="pct">'+pct+'% de aciertos'
+    + (!ES_DOCENTE && endTime ? ' · Tiempo: ' + fmtTime(Math.floor((endTime-startTime)/1000)) : '') + '</div>'
+    + '<p class="label sec-gap">Por tema</p>' + barsHTML(cats)
+    + '<p class="label sec-gap">Por competencia evaluada</p>' + barsHTML(comps);
+  if(!ES_DOCENTE){
+    if(missed.length){
+      html += '<p class="label sec-gap">Para repasar — toca una pregunta para volver a ella</p><div class="chips">'
+        + missed.map(m => '<button type="button" class="chip" data-pos="'+m.pos+'">'+(m.pos+1)+'. '+m.q.tema+'</button>').join('') + '</div>';
+    } else {
+      html += '<p class="sec-gap" style="font-size:15px">Respondiste correctamente todas las preguntas.</p>';
+    }
+  } else {
+    html += '<p class="label sec-gap">Clave de respuestas</p><div class="table-scroll">' + keyTableHTML() + '</div>';
+  }
+  html += '<button type="button" class="btn primary" id="retryBtn">↺ Reintentar</button>';
+  const s = $('summary'); s.innerHTML = html; s.hidden = false;
+  $('quizBody').hidden = true;
+  s.querySelectorAll('.chip').forEach(c => c.onclick = () => { showQuiz(); current = +c.getAttribute('data-pos'); render(); $('cardInner').scrollIntoView({behavior:'smooth', block:'start'}); });
+  $('retryBtn').onclick = retry;
+  s.scrollIntoView({behavior:'smooth', block:'start'});
+  enviarIntento(ok);
+}
+function showQuiz(){ $('summary').hidden = true; $('quizBody').hidden = false; }
+function retry(){
+  answers = {}; revealed = {}; current = 0; buildOrder();
+  $('finishWarn').hidden = true; showQuiz(); startTimer(); render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===== Controles docente ===== */
+function setMode(m){
+  mode = m;
+  $('orderBookletBtn').classList.toggle('active', m==='orden');
+  $('orderRandomBtn').classList.toggle('active', m==='aleatorio');
+  $('reshuffleBtn').hidden = (m !== 'aleatorio');
+  retry();
+}
+
+/* ===== Registro en el portal (silencioso: nunca bloquea el cuadernillo) ===== */
+function registrarApertura(){
+  try{
+    if(!sesion || !sesion.documento) return;
+    const params = new URLSearchParams({
+      accion: 'registrarVista',
+      doc: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupoAsignado || sesion.grupo || '',
+      rol: sesion.rol || '',
+      director: sesion.director || '',
+      origen: 'GitHub',
+      tipoVista: 'Apertura Artefacto — ' + AREA_ARTEFACTO
+    });
+    fetch(SCRIPT_URL_VISTAS + '?' + params.toString(), { mode: 'no-cors' }).catch(function(){});
+  }catch(e){}
+}
+function agruparPorCampo(campo){
+  const grupos = {};
+  displayQuestions.forEach(function(q){
+    const etiqueta = q[campo];
+    if(!etiqueta) return;
+    if(!grupos[etiqueta]) grupos[etiqueta] = { etiqueta: etiqueta, aciertos: 0, total: 0 };
+    grupos[etiqueta].total++;
+    if(answers[q.id] && answers[q.id].choice === correctOf(q)) grupos[etiqueta].aciertos++;
+  });
+  return Object.values(grupos);
+}
+function enviarIntento(totalCorrectas){
+  try{
+    if(!sesion || !sesion.documento) return; // sin sesión del portal (vista previa) no se registra nada
+    const endMs = endTime || Date.now();
+    const payload = {
+      documento: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupo || '',
+      area: AREA_ARTEFACTO,
+      numeroIntento: numeroIntentoActual,
+      duracionSegundos: Math.round((endMs - startTime) / 1000),
+      origen: 'portal',
+      rol: ES_DOCENTE ? 'docente' : 'estudiante',
+      versionArtefacto: VERSION_ARTEFACTO,
+      tipoArtefacto: 'periodo',
+      periodo: 'P2',
+      categorias: agruparPorCampo('tema'),
+      competencias: agruparPorCampo('comp'),
+      totalAciertos: totalCorrectas,
+      totalPreguntas: displayQuestions.length
+    };
+    numeroIntentoActual++;
+    fetch(SCRIPT_URL_INTENTOS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // evita el preflight de CORS con Apps Script
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+  }catch(e){}
+}
+async function cargarHistorial(){
+  if(ES_DOCENTE) return;
+  if(!sesion || !sesion.documento) return;
+  try{
+    const params = new URLSearchParams({ doc: sesion.documento, area: AREA_ARTEFACTO, accion: 'historialArtefacto', tipoArtefacto: 'periodo', periodo: 'P2' });
+    const resp = await fetch(SCRIPT_URL_INTENTOS + '?' + params.toString());
+    const datos = await resp.json();
+    if(datos && datos.encontrado){
+      numeroIntentoActual = datos.numeroIntentosPrevios + 1;
+      if(datos.numeroIntentosPrevios === 0) return;
+      const u = datos.ultimoIntento || {};
+      const banner = document.createElement('div');
+      banner.className = 'hist-banner';
+      banner.innerHTML = '<strong>Intento N.° ' + (datos.numeroIntentosPrevios + 1) + '</strong> — tu puntaje del intento anterior fue <strong>'
+        + u.aciertos + '/' + u.totalPreguntas + '</strong> (' + u.porcentaje + '%)';
+      $('app').insertBefore(banner, $('app').children[1] || null);
+    }
+  }catch(e){}
+}
+
+/* ===== Arranque según el rol ===== */
+function start(){
+  if(started) return; started = true;
+  $('roleGate').hidden = true;
+  $('app').hidden = false;
+  mode = ES_DOCENTE ? 'orden' : 'aleatorio';
+
+  $('stamp').textContent = ES_DOCENTE ? 'VERSIÓN DOCENTE · 20 PREGUNTAS' : '20 PREGUNTAS';
+  $('modo').textContent = ES_DOCENTE ? 'retroalimentación inmediata' : 'simulacro con resultado final';
+  $('introNote').innerHTML = ES_DOCENTE ? INTRO_DOC : INTRO_EST;
+  $('finishBtn').textContent = ES_DOCENTE ? 'Ver resultados' : 'Finalizar y ver resultados';
+  if(PREVIEW){
+    $('previewBar').hidden = false;
+    $('previewRole').textContent = ES_DOCENTE ? 'docente' : 'estudiante';
+    $('switchRole').onclick = () => location.reload();
+  }
+
+  $('prevBtn').onclick = () => go(-1);
+  $('nextBtn').onclick = () => go(1);
+  $('finishBtn').onclick = tryFinish;
+
+  if(ES_DOCENTE){
+    $('orderRow').hidden = false;
+    $('orderBookletBtn').onclick = () => setMode('orden');
+    $('orderRandomBtn').onclick = () => setMode('aleatorio');
+    $('reshuffleBtn').onclick = retry;
+    $('keyBtn').onclick = () => {
+      const p = $('keyPanel');
+      if(p.hidden){ $('keyTable').innerHTML = keyTableHTML(); }
+      p.hidden = !p.hidden;
+      $('keyBtn').classList.toggle('active', !p.hidden);
+    };
+  } else {
+    $('scorePill').style.visibility = 'hidden';
+  }
+
+  buildOrder();
+  startTimer();
+  render();
+  registrarApertura();
+  cargarHistorial();
+}
+
+if(sesion){
+  ES_DOCENTE = String(sesion.rol || '').trim().toLowerCase().indexOf('docente') === 0;
+  start();
+} else if(/(^|\.)github\.io$/i.test(location.hostname)){
+  // En el portal publicado siempre debe haber sesión: si no, vuelve al portal.
+  window.location.href = PORTAL;
+} else {
+  // Fuera del portal (vista previa en Claude o archivo local): se elige el rol a mano.
+  PREVIEW = true;
+  $('roleGate').hidden = false;
+  $('pickEst').onclick = () => { ES_DOCENTE = false; start(); };
+  $('pickDoc').onclick = () => { ES_DOCENTE = true; start(); };
+}
+})();
+</script>
+
+</body>
+</html>
