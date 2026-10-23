@@ -313,7 +313,7 @@ mjx-container[jax="SVG"]{margin:0 .05em!important; font-size:100%!important;}
 /* ===== Configuración del portal (mismos servicios que los demás cuadernillos) ===== */
 const PORTAL = "https://llerzy.github.io/portal-slg/";
 const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
-const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec";
+const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
 const VERSION_ARTEFACTO = "pp2-v1"; // súbelo manualmente si cambias las preguntas de este cuadernillo
 const AREA_ARTEFACTO = "Matemáticas · Prueba de periodo 2";
 
@@ -576,6 +576,7 @@ function registrarApertura(){
       nombre: sesion.nombre || '',
       grupo: sesion.grupoAsignado || sesion.grupo || '',
       rol: sesion.rol || '',
+      director: sesion.director || '',
       origen: 'GitHub',
       tipoVista: 'Apertura Artefacto — ' + AREA_ARTEFACTO
     });
