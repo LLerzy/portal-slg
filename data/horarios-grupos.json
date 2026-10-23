@@ -1,0 +1,455 @@
+{
+  "generado": "2026-10-23T06:19:12-05:00",
+  "grupos": {
+    "1001": [
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "1.ª hora",
+        "horaRango": "6:30 - 7:25",
+        "lunes": "C. Naturales | Diana E. | Aula 15",
+        "martes": "Ed. Física | Sandra M. | Coliseo",
+        "miercoles": "L. Castellana | Armando G. | Aula 11",
+        "jueves": "Sociales | Orlando F. | Aula 10",
+        "viernes": "Inglés | Carolina B. | Aula 3"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "2.ª hora",
+        "horaRango": "7:25 - 8:20",
+        "lunes": "L. Castellana | Armando G. | Aula 11",
+        "martes": "Filosofía | Eduardo P. | Aula 2",
+        "miercoles": "L. Castellana | Armando G. | Aula 11",
+        "jueves": "Economía | Llerzy T. | Aula 12",
+        "viernes": "Inglés | Carolina B. | Aula 3"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "8:20 - 8:40",
+        "lunes": "DESCANSO",
+        "martes": "DESCANSO",
+        "miercoles": "DESCANSO",
+        "jueves": "DESCANSO",
+        "viernes": "DESCANSO"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "3.ª hora",
+        "horaRango": "8:40 - 9:35",
+        "lunes": "Física | Esperanza M. | Laboratorio",
+        "martes": "Matemáticas | Llerzy T. | Aula 12",
+        "miercoles": "Química | Daniel C. | Laboratorio",
+        "jueves": "Política | Bernardo L. | Aula 7",
+        "viernes": "Tecnología | Juan V. | Sala Sistemas 1"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "4.ª hora",
+        "horaRango": "9:35 - 10:30",
+        "lunes": "Filosofía | Eduardo P. | Aula 2",
+        "martes": "Matemáticas | Llerzy T. | Aula 12",
+        "miercoles": "C. Naturales | Diana E. | Aula 15",
+        "jueves": "Religión | Bernardo L. | Aula 7",
+        "viernes": "Tecnología | Juan V. | Sala Sistemas 1"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "10:30 - 10:40",
+        "lunes": "DESCANSO",
+        "martes": "DESCANSO",
+        "miercoles": "DESCANSO",
+        "jueves": "DESCANSO",
+        "viernes": "DESCANSO"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "5.ª hora",
+        "horaRango": "10:40 - 11:35",
+        "lunes": "Matemáticas | Llerzy T. | Aula 12",
+        "martes": "Artística | Ana Kate L. | Aula 4",
+        "miercoles": "Emprendimiento | Juan V. | Sala Sistemas 1",
+        "jueves": "Inglés | Carolina B. | Aula 3",
+        "viernes": "Ética | Eneida C. | Aula 1"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "6.ª hora",
+        "horaRango": "11:35 - 12:30",
+        "lunes": "Matemáticas | Llerzy T. | Aula 12",
+        "martes": "Química | Daniel C. | Laboratorio",
+        "miercoles": "Sociales | Orlando F. | Aula 10",
+        "jueves": "Física | Esperanza M. | Laboratorio",
+        "viernes": "L. Castellana | Armando G. | Aula 11"
+      }
+    ],
+    "1002": [
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "1.ª hora",
+        "horaRango": "6:30 - 7:25",
+        "lunes": "Política | Bernardo L. | Aula 7",
+        "martes": "L. Castellana | Armando G. | Aula 11",
+        "miercoles": "Física | Esperanza M. | Laboratorio",
+        "jueves": "Química | Daniel C. | Laboratorio",
+        "viernes": "Matemáticas | Llerzy T. | Aula 12"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "2.ª hora",
+        "horaRango": "7:25 - 8:20",
+        "lunes": "Sociales | Orlando F. | Aula 10",
+        "martes": "L. Castellana | Armando G. | Aula 11",
+        "miercoles": "Filosofía | Eduardo P. | Aula 2",
+        "jueves": "Inglés | Carolina B. | Aula 3",
+        "viernes": "Matemáticas | Llerzy T. | Aula 12"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "8:20 - 8:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "3.ª hora",
+        "horaRango": "8:40 - 9:35",
+        "lunes": "Ética | Eneida C. | Aula 1",
+        "martes": "Tecnología | Juan V. |",
+        "miercoles": "Ed. Física | Sandra M. | Coliseo",
+        "jueves": "Artística | Ana Kate L. | Aula 4",
+        "viernes": "C. Naturales | Diana E. | Aula 15"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "4.ª hora",
+        "horaRango": "9:35 - 10:30",
+        "lunes": "Religión | Bernardo L. | Aula 7",
+        "martes": "Tecnología | Juan V. |",
+        "miercoles": "Matemáticas | Llerzy T. | Aula 12",
+        "jueves": "Sociales | Orlando F. | Aula 10",
+        "viernes": "C. Naturales | Diana E. | Aula 15"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "10:30 - 10:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "5.ª hora",
+        "horaRango": "10:40 - 11:35",
+        "lunes": "Inglés | Carolina B. | Aula 3",
+        "martes": "Química | Daniel C. | Laboratorio",
+        "miercoles": "L. Castellana | Armando G. | Aula 11",
+        "jueves": "Economía | Yovany A. |",
+        "viernes": "L. Castellana | Armando G. | Aula 11"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "6.ª hora",
+        "horaRango": "11:35 - 12:30",
+        "lunes": "Inglés | Carolina B. | Aula 3",
+        "martes": "Filosofía | Eduardo P. | Aula 2",
+        "miercoles": "Emprendimiento | Juan V. |",
+        "jueves": "Matemáticas | Llerzy T. | Aula 12",
+        "viernes": "Física | Esperanza M. | Laboratorio"
+      }
+    ],
+    "1003": [
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "1.ª hora",
+        "horaRango": "6:30 - 7:25",
+        "lunes": "Sociales | Orlando F. | Aula 10",
+        "martes": "Economía | Yovany A. |",
+        "miercoles": "Matemáticas | Llerzy T. | Aula 12",
+        "jueves": "Inglés | Harlinton P. |",
+        "viernes": "Religión | Bernardo L. | Aula 7"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "2.ª hora",
+        "horaRango": "7:25 - 8:20",
+        "lunes": "Química | Daniel C. | Laboratorio",
+        "martes": "Física | Esperanza M. | Laboratorio",
+        "miercoles": "Matemáticas | Llerzy T. | Aula 12",
+        "jueves": "Inglés | Harlinton P. |",
+        "viernes": "Ed. Física | Sandra M. | Coliseo"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "8:20 - 8:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "3.ª hora",
+        "horaRango": "8:40 - 9:35",
+        "lunes": "L. Castellana | Armando G. | Aula 11",
+        "martes": "Filosofía | Eduardo P. | Aula 2",
+        "miercoles": "L. Castellana | Armando G. | Aula 11",
+        "jueves": "Matemáticas | Llerzy T. | Aula 12",
+        "viernes": "Política | Bernardo L. | Aula 7"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "4.ª hora",
+        "horaRango": "9:35 - 10:30",
+        "lunes": "Física | Esperanza M. | Laboratorio",
+        "martes": "L. Castellana | Armando G. | Aula 11",
+        "miercoles": "L. Castellana | Armando G. | Aula 11",
+        "jueves": "Matemáticas | Llerzy T. | Aula 12",
+        "viernes": "Filosofía | Eduardo P. | Aula 2"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "10:30 - 10:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "5.ª hora",
+        "horaRango": "10:40 - 11:35",
+        "lunes": "Emprendimiento | Juan V. |",
+        "martes": "Sociales | Orlando F. | Aula 10",
+        "miercoles": "Tecnología | John Grajales |",
+        "jueves": "C. Naturales | Diana E. | Aula 15",
+        "viernes": "Química | Daniel C. | Laboratorio"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "6.ª hora",
+        "horaRango": "11:35 - 12:30",
+        "lunes": "Artística | Ana Kate L. | Aula 4",
+        "martes": "Inglés | Harlinton P. |",
+        "miercoles": "Tecnología | John Grajales |",
+        "jueves": "C. Naturales | Diana E. | Aula 15",
+        "viernes": "Ética | Eneida C. | Aula 1"
+      }
+    ],
+    "1004": [
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "1.ª hora",
+        "horaRango": "6:30 - 7:25",
+        "lunes": "Matemáticas | Llerzy T. | Aula 12",
+        "martes": "Física | Esperanza M. | Laboratorio",
+        "miercoles": "Inglés | Harlinton P. |",
+        "jueves": "Física | Esperanza M. | Laboratorio",
+        "viernes": "L. Castellana | Armando G. | Aula 11"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "2.ª hora",
+        "horaRango": "7:25 - 8:20",
+        "lunes": "Matemáticas | Llerzy T. | Aula 12",
+        "martes": "Química | Daniel C. | Laboratorio",
+        "miercoles": "Inglés | Harlinton P. |",
+        "jueves": "Política | Bernardo L. | Aula 7",
+        "viernes": "Artística | Ana Kate L. | Aula 4"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "8:20 - 8:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "3.ª hora",
+        "horaRango": "8:40 - 9:35",
+        "lunes": "Filosofía | Eduardo P. | Aula 2",
+        "martes": "C. Naturales | Diana E. | Aula 15",
+        "miercoles": "Tecnología | John Grajales |",
+        "jueves": "Ed. Física | Sandra M. | Coliseo",
+        "viernes": "Ética | Eneida C. | Aula 1"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "4.ª hora",
+        "horaRango": "9:35 - 10:30",
+        "lunes": "Sociales | Orlando F. | Aula 10",
+        "martes": "C. Naturales | Diana E. | Aula 15",
+        "miercoles": "Tecnología | John Grajales |",
+        "jueves": "Inglés | Harlinton P. |",
+        "viernes": "Emprendimiento | Osman D. |"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "10:30 - 10:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "5.ª hora",
+        "horaRango": "10:40 - 11:35",
+        "lunes": "L. Castellana | Armando G. | Aula 11",
+        "martes": "Matemáticas | Llerzy T. | Aula 12",
+        "miercoles": "Química | Daniel C. | Laboratorio",
+        "jueves": "Economía | Carolina G. |",
+        "viernes": "Religión | Bernardo L. | Aula 7"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "6.ª hora",
+        "horaRango": "11:35 - 12:30",
+        "lunes": "L. Castellana | Armando G. | Aula 11",
+        "martes": "Filosofía | Eduardo P. | Aula 2",
+        "miercoles": "Química | Daniel C. | Laboratorio",
+        "jueves": "L. Castellana | Armando G. | Aula 11",
+        "viernes": "Sociales | Orlando F. | Aula 10"
+      }
+    ],
+    "1005": [
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "1.ª hora",
+        "horaRango": "6:30 - 7:25",
+        "lunes": "Química | Daniel C. | Laboratorio",
+        "martes": "Inglés | Carolina B. | Aula 3",
+        "miercoles": "C. Naturales | Diana E. | Aula 15",
+        "jueves": "Inglés | Carolina B. | Aula 3",
+        "viernes": "Física | Esperanza M. | Laboratorio"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "2.ª hora",
+        "horaRango": "7:25 - 8:20",
+        "lunes": "Ética | Eneida C. | Aula 1",
+        "martes": "Inglés | Carolina B. | Aula 3",
+        "miercoles": "C. Naturales | Diana E. | Aula 15",
+        "jueves": "Sociales | Orlando F. | Aula 10",
+        "viernes": "Química | Daniel C. | Laboratorio"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "8:20 - 8:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "3.ª hora",
+        "horaRango": "8:40 - 9:35",
+        "lunes": "Política | Bernardo L. | Aula 7",
+        "martes": "Ed. Física | Sandra M. | Coliseo",
+        "miercoles": "Sociales | Orlando F. | Aula 10",
+        "jueves": "Filosofía | Eduardo P. | Aula 2",
+        "viernes": "L. Castellana | Armando G. | Aula 11"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "4.ª hora",
+        "horaRango": "9:35 - 10:30",
+        "lunes": "Matemáticas | Llerzy T. | Aula 12",
+        "martes": "Religión | Bernardo L. | Aula 7",
+        "miercoles": "Física | Esperanza M. | Laboratorio",
+        "jueves": "Tecnología | John Grajales |",
+        "viernes": "Emprendimiento | John Grajales |"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "descanso",
+        "horaEtiqueta": "Descanso",
+        "horaRango": "10:30 - 10:40",
+        "lunes": "Descanso",
+        "martes": "Descanso",
+        "miercoles": "Descanso",
+        "jueves": "Descanso",
+        "viernes": "Descanso"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "5.ª hora",
+        "horaRango": "10:40 - 11:35",
+        "lunes": "Artística | Ana Kate L. | Aula 4",
+        "martes": "L. Castellana | Armando G. | Aula 11",
+        "miercoles": "Matemáticas | Llerzy T. | Aula 12",
+        "jueves": "L. Castellana | Armando G. | Aula 11",
+        "viernes": "Matemáticas | Llerzy T. | Aula 12"
+      },
+      {
+        "version": "jueves, 30 de julio de 2026",
+        "tipo": "clase",
+        "horaEtiqueta": "6.ª hora",
+        "horaRango": "11:35 - 12:30",
+        "lunes": "Filosofía | Eduardo P. | Aula 2",
+        "martes": "L. Castellana | Armando G. | Aula 11",
+        "miercoles": "Matemáticas | Llerzy T. | Aula 12",
+        "jueves": "Economía | Carolina G. |",
+        "viernes": "Tecnología | John Grajales |"
+      }
+    ]
+  }
+}
