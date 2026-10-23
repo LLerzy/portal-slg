@@ -535,7 +535,7 @@
             <div class="icono">🧩</div>
             <h3>Artefactos de práctica</h3>
             <p class="desc">Abre el artefacto de un área para proyectarlo en clase.</p>
-            <select class="selector-hoja" id="selector-artefacto-docente" aria-label="Seleccione el área">
+                        <select class="selector-hoja" id="selector-artefacto-docente" aria-label="Seleccione el área">
               <option value="matematicas">Matemáticas</option>
               <option value="lectura_critica">Lectura Crítica</option>
               <option value="ciencias_naturales">Ciencias Naturales</option>
@@ -544,6 +544,19 @@
             </select>
             <button type="button" class="btn" id="btn-artefacto-docente">Abrir artefacto ↗</button>
             <p class="estado-doc" id="estado-artefacto-docente"></p>
+          </div>
+        </article>
+        <article class="reporte tarjeta">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📝</div>
+            <h3>Preparación Prueba de Periodo</h3>
+            <p class="desc">Abre el artefacto de preparación de periodo para proyectarlo en clase.</p>
+            <select class="selector-hoja" id="selector-artefacto-periodo-docente" aria-label="Seleccione el periodo">
+              <option value="matematicas_periodo2">Matemáticas — Segundo Periodo 2026</option>
+            </select>
+            <button type="button" class="btn" id="btn-artefacto-periodo-docente">Abrir artefacto ↗</button>
+            <p class="estado-doc" id="estado-artefacto-periodo-docente"></p>
           </div>
         </article>
         <article class="reporte tarjeta">
@@ -664,6 +677,19 @@
             <p class="estado-doc" id="estado-artefacto"></p>
           </div>
         </article>
+        <article class="reporte tarjeta" id="ficha-artefactos-periodo">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📝</div>
+            <h3>Preparación Prueba de Periodo</h3>
+            <p class="desc">Practica con preguntas elaboradas por el docente, similares a las de la prueba de periodo real.</p>
+            <select class="selector-hoja" id="selector-artefacto-periodo" aria-label="Seleccione el periodo">
+              <option value="matematicas_periodo2">Matemáticas — Segundo Periodo 2026</option>
+            </select>
+            <button type="button" class="btn" id="btn-artefacto-periodo">Abrir artefacto ↗</button>
+            <p class="estado-doc" id="estado-artefacto-periodo"></p>
+          </div>
+        </article>
         </div>
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno"></div></div>
       </div>
@@ -780,7 +806,8 @@ const CONFIG_ARTEFACTOS = {
   lectura_critica: "artefactos/lectura-critica.html",
   ciencias_naturales: "artefactos/ciencias-naturales.html",
   ingles: "artefactos/ingles.html",
-  sociales_ciudadanas: "artefactos/sociales-ciudadanas.html"
+  sociales_ciudadanas: "artefactos/sociales-ciudadanas.html",
+  matematicas_periodo2: "artefactos-periodo/matematicas-periodo2.html"
 };
 
 const ORIGEN_CONSULTA = "GitHub";
@@ -1466,6 +1493,8 @@ function conectarSelectorArtefactos(idSelector, idBoton, idEstado) {
 
 conectarSelectorArtefactos("selector-artefacto", "btn-artefacto", "estado-artefacto");
 conectarSelectorArtefactos("selector-artefacto-docente", "btn-artefacto-docente", "estado-artefacto-docente");
+conectarSelectorArtefactos("selector-artefacto-periodo", "btn-artefacto-periodo", "estado-artefacto-periodo");
+conectarSelectorArtefactos("selector-artefacto-periodo-docente", "btn-artefacto-periodo-docente", "estado-artefacto-periodo-docente");
 
 function configurarBotonDashboard(boton, url, textoHabilitado, nombreConstante) {
   if (url && url.indexOf("PEGA_AQUI") === -1) {
@@ -1912,7 +1941,8 @@ function renderizarMenuLista(idContenedor, categorias) {
 // le corresponde ver la ficha de Cuentas 10-01 o no.
 function construirYRenderizarMenuEstudiante() {
   const categoriasEstudiante = construirCategoriasReportes("rejilla-reportes")
-    .concat([construirCategoriaArtefactos("selector-artefacto", "estado-artefacto")].filter(Boolean));
+    .concat([construirCategoriaArtefactos("selector-artefacto", "estado-artefacto")].filter(Boolean))
+    .concat([construirCategoriaArtefactos("selector-artefacto-periodo", "estado-artefacto-periodo", "Preparación Prueba de Periodo")].filter(Boolean));
   renderizarMenuLista("menu-lista-estudiante", categoriasEstudiante);
 }
 
@@ -1922,6 +1952,7 @@ const categoriasDocente = [
   { icono: "📈", nombre: "Dashboard de resultados de simulacros", accionDirecta: function () { if (enlaceDashboard.dataset.url) window.open(enlaceDashboard.dataset.url, "_blank"); } }
 ]
   .concat([construirCategoriaArtefactos("selector-artefacto-docente", "estado-artefacto-docente", "Artefactos de práctica")].filter(Boolean))
+  .concat([construirCategoriaArtefactos("selector-artefacto-periodo-docente", "estado-artefacto-periodo-docente", "Preparación Prueba de Periodo")].filter(Boolean))
   .concat([
     { icono: "📊", nombre: "Dashboard de artefactos", accionDirecta: function () { if (enlaceDashboardArtefactos.dataset.url) window.open(enlaceDashboardArtefactos.dataset.url, "_blank"); } }
   ]);
