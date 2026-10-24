@@ -1,42 +1,53 @@
 Grupo,Grado,Área,TipoArtefacto,Periodo,TipoAgrupación,Etiqueta,NumeroIntentos,PromedioPorcentaje
-1001,10°,Matemáticas,practica,,categoria,Estadística,2,30.4
-1001,10°,Matemáticas,practica,,categoria,Álgebra y cálculo,2,53.8
-1001,10°,Matemáticas,practica,,competencia,Interpretación y representación,2,39.1
-1001,10°,Matemáticas,practica,,total,Total,2,41.7
-1001,10°,Matemáticas,periodo,P1,categoria,Preguntas tipo cuadernillo,1,60
-1001,10°,Matemáticas,periodo,P1,total,Total,1,60
-1001,10°,Matemáticas,practica,,categoria,Geometría,2,0
-1001,10°,Matemáticas,practica,,competencia,Formulación y ejecución,2,11.1
-1001,10°,Matemáticas,practica,,competencia,Argumentación,2,50
-1001,10°,Lectura Crítica,practica,,categoria,Texto narrativo,1,20
-1001,10°,Lectura Crítica,practica,,categoria,Texto argumentativo,1,0
-1001,10°,Lectura Crítica,practica,,categoria,Texto informativo,1,0
-1001,10°,Lectura Crítica,practica,,competencia,Identificación de información,1,0
-1001,10°,Lectura Crítica,practica,,competencia,Reflexión y evaluación,1,16.7
-1001,10°,Lectura Crítica,practica,,competencia,Comprensión global,1,10
-1001,10°,Lectura Crítica,practica,,total,Total,1,8.3
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,4,0
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,4,12.5
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,4,6.3
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,4,0
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,4,16.7
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,4,9.4
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,4,0
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,4,8.3
-1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,4,6.3
-1003,10°,Matemáticas,practica,,categoria,Estadística,1,0
-1003,10°,Matemáticas,practica,,categoria,Álgebra y cálculo,1,0
-1003,10°,Matemáticas,practica,,categoria,Geometría,1,0
-1003,10°,Matemáticas,practica,,competencia,Formulación y ejecución,1,0
-1003,10°,Matemáticas,practica,,competencia,Interpretación y representación,1,0
-1003,10°,Matemáticas,practica,,competencia,Argumentación,1,0
-1003,10°,Matemáticas,practica,,total,Total,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,1,0
-1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,1,0
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,16,60.2
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,16,40.6
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,16,53.1
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,16,60.4
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,16,50
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,16,56.3
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,16,49.2
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,16,62.5
+1002,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,16,55.3
+1001,10°,Matemáticas,practica,,categoria,Estadística,4,55.6
+1001,10°,Matemáticas,practica,,categoria,Álgebra y cálculo,4,0
+1001,10°,Matemáticas,practica,,categoria,Geometría,4,0
+1001,10°,Matemáticas,practica,,competencia,Interpretación y representación,4,72.7
+1001,10°,Matemáticas,practica,,competencia,Argumentación,4,50
+1001,10°,Matemáticas,practica,,competencia,Formulación y ejecución,4,0
+1001,10°,Matemáticas,practica,,total,Total,4,41.7
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,2,87.5
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,2,100
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,2,33.3
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,2,100
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,2,100
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,2,66.7
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,2,100
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,2,87.5
+1001,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,2,85
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,4,18.8
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,4,16.7
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,4,50
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,4,37.5
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,4,0
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,4,21.9
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,4,25
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,4,29.2
+1003,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,4,25
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,2,66.7
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,2,62.5
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,2,50
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,2,100
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,2,100
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,2,83.3
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,2,50
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,2,75
+1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,2,70
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,2,37.5
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,2,100
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,2,0
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,2,16.7
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,2,0
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,2,50
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,2,16.7
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,2,31.3
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,2,32.5
