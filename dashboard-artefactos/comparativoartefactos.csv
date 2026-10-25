@@ -42,12 +42,19 @@ Grupo,Grado,Área,TipoArtefacto,Periodo,TipoAgrupación,Etiqueta,NumeroIntentos,
 1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,2,50
 1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,2,75
 1004,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,2,70
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,2,37.5
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,2,100
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,2,0
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,2,16.7
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,2,0
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,2,50
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,2,16.7
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,2,31.3
-1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,2,32.5
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Ley del Seno y del Coseno,3,37.5
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Plan Lector,3,88.9
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Funciones seno y coseno,3,8.3
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Identidades trigonométricas,3,11.1
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,categoria,Circunferencia trigonométrica,3,16.7
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Argumentación,3,50
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,3,22.2
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,3,29.2
+1005,10°,Matemáticas · Prueba de periodo 2,periodo,P2,total,Total,3,33.3
+1005,10°,Matemáticas,practica,,categoria,Estadística,2,83.3
+1005,10°,Matemáticas,practica,,categoria,Geometría,2,66.7
+1005,10°,Matemáticas,practica,,categoria,Álgebra y cálculo,2,66.7
+1005,10°,Matemáticas,practica,,competencia,Argumentación,2,75
+1005,10°,Matemáticas,practica,,competencia,Interpretación y representación,2,81.8
+1005,10°,Matemáticas,practica,,competencia,Formulación y ejecución,2,77.8
+1005,10°,Matemáticas,practica,,total,Total,2,79.2
