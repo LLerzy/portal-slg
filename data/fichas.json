@@ -1,5 +1,5 @@
 {
-  "generado": "2026-10-30T10:34:12-05:00",
+  "generado": "2026-10-30T10:53:43-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
@@ -16,6 +16,50 @@
     },
     {
       "ficha": "cuentasFiestas",
+      "opcion": "",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "notasParciales",
+      "opcion": "",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "boletinesPeriodo",
+      "opcion": "",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "boletinSena",
+      "opcion": "",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactos",
       "opcion": "",
       "activo": false,
       "grados": [
