@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prueba de Periodo 1 Matemáticas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+/* Concepto: libreta de examen. Ticket de encabezado, hoja de burbujas y una tarjeta por pregunta,
+   sobre papel cálido. Misma identidad visual de los cuadernillos SLG; un solo tema (claro) a propósito. */
+:root{
+  --paper:#EAE3D3; --paper-dark:#DDD4BE; --card:#F6F1E6; --card-hi:#FBF8F1;
+  --ink:#232A3B; --ink-soft:#4B5266; --rule:#B9AD8F;
+  --gold:#B8862E; --gold-ink:#7E5A12;
+  --green:#2E6B4F; --green-bg:#DDEBE1; --red:#A6323E; --red-bg:#F3DEDD;
+  --shadow:0 10px 30px rgba(35,42,59,.14);
+  --f-display:'Fraunces',Georgia,serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none!important;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--f-body); color:var(--ink); background-color:var(--paper);
+  background-image:radial-gradient(circle at 1px 1px, rgba(35,42,59,.05) 1px, transparent 0);
+  background-size:14px 14px;
+  padding-block:28px 60px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  min-height:100vh; line-height:1.45;
+}
+.wrap{max-width:980px; margin:0 auto;}
+
+/* ---------- ticket ---------- */
+.ticket{background:var(--ink); color:var(--paper); border-radius:14px; padding:22px 26px 26px; position:relative; box-shadow:var(--shadow); overflow:hidden;}
+.ticket::after{content:""; position:absolute; left:0; right:0; bottom:-1px; height:14px;
+  background-image:radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px); background-size:20px 14px; background-repeat:repeat-x;}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.ticket-id{display:flex; gap:14px; align-items:center; min-width:0; flex:1 1 320px;}
+.logos{display:flex; gap:8px; flex:none;}
+.logo-chip{width:54px; height:54px; border-radius:10px; background:var(--card); display:flex; align-items:center; justify-content:center; padding:5px;}
+.logo-chip img{max-width:100%; max-height:100%; object-fit:contain;}
+.eyebrow{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#C9BFA0; margin:0 0 6px;}
+.ticket h1{font-family:var(--f-display); font-weight:600; font-size:clamp(24px,4vw,36px); margin:0; line-height:1.08; text-wrap:balance;}
+.ticket .sub{font-family:var(--f-display); font-style:italic; font-weight:500; color:#D8CFB2; font-size:16px; margin-top:4px;}
+.stamp{border:2px solid var(--gold); color:#E2B95B; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; padding:6px 10px; border-radius:6px; transform:rotate(4deg); white-space:nowrap;}
+.ticket-meta{display:flex; gap:8px 20px; margin-top:18px; flex-wrap:wrap; font-family:var(--f-mono); font-size:12px; color:#C9BFA0;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+.timer{font-variant-numeric:tabular-nums;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:14px; color:var(--ink-soft); line-height:1.55; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+
+/* ---------- navegador ---------- */
+.nav-strip{background:var(--card); border-radius:12px; margin-top:14px; padding:14px 16px; box-shadow:var(--shadow);}
+.label{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{font-family:var(--f-mono); font-size:12px; font-weight:600; border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft); padding:8px 14px; border-radius:20px; cursor:pointer; transition:background .15s, border-color .15s, color .15s;}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{width:32px; height:32px; border-radius:50%; border:2px solid var(--rule); background:transparent; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:600; font-size:12px; color:var(--ink-soft); cursor:pointer; padding:0; transition:transform .15s, background .2s, border-color .2s, color .2s;}
+.bub:hover{transform:translateY(-2px);}
+.bub.answered{background:var(--ink-soft); border-color:var(--ink-soft); color:#fff;}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+.bub.current{border-color:var(--ink); box-shadow:0 0 0 3px rgba(184,134,46,.45);}
+.bub.answered.current,.bub.correct.current,.bub.incorrect.current{border-color:var(--ink);}
+.progress-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:1px dashed var(--rule);}
+.progress{font-family:var(--f-mono); font-size:12.5px; color:var(--ink-soft);}
+.progress b{color:var(--ink);}
+
+/* ---------- botones ---------- */
+.btn{font-family:var(--f-mono); font-weight:600; font-size:13px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); padding:10px 18px; border-radius:8px; cursor:pointer; transition:background .15s, color .15s;}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn:disabled:hover{background:transparent; color:var(--ink);}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#3a4360;}
+.btn.small{padding:8px 14px; font-size:12px; border-radius:20px;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+
+/* ---------- tarjeta de pregunta ---------- */
+.card{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); overflow:hidden;}
+.card-inner{padding:24px 26px 28px;}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
+.q-num{width:42px; height:42px; min-width:42px; border-radius:50%; background:var(--ink); color:var(--paper); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:16px;}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap; min-width:0;}
+.tag{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:20px; border:1px solid var(--rule); color:var(--ink-soft);}
+.tag-comp{border-color:var(--gold); color:var(--gold-ink); background:rgba(184,134,46,.1);}
+.meta-doc{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft); margin:-4px 0 14px; padding:6px 10px; background:var(--paper); border-radius:6px; border:1px dashed var(--rule);}
+
+.context{margin:0 0 18px; padding:14px 16px 16px; background:var(--paper-dark); border-radius:8px; font-size:14.5px; line-height:1.5; color:var(--ink);}
+.ctx-title{font-family:var(--f-display); font-weight:600; font-size:19px; line-height:1.2; margin:0 0 8px; color:var(--red); text-wrap:balance;}
+.context p{margin:0 0 8px;}
+.context p:last-child{margin-bottom:0;}
+.context .datos,.context .recordatorio,.context .formula-destacada,.context .formula-general,
+.context .tarjeta-afirmacion,.context .afirmacion,.context .secuencia,.context .flujo,
+.context .escenario,.context .figura,.context .grafica-principal,.context .parametro{
+  background:var(--card-hi); border:1px solid var(--rule); border-radius:8px; padding:9px 12px; margin:10px 0 0;
+}
+.context .recordatorio,.context .formula-destacada,.context .formula-general,.context .flujo{text-align:center;}
+.context .formula-destacada,.context .formula-general{overflow-x:auto;}
+.context .formula-general .titulo-formula{display:block; margin-bottom:4px; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--red);}
+.context .flujo{font-weight:600; font-size:14px;}
+.context .datos ul{margin:5px 0 0 18px; padding:0;}
+.context .datos li{margin-bottom:3px;}
+.context .tarjeta-afirmacion strong{color:var(--red);}
+.context .parametros{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:6px; margin-top:10px;}
+.context .parametros .parametro{margin:0; font-size:14px; padding:6px 10px;}
+.context .escenarios{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px; margin-top:10px;}
+.context .escenario{margin:0; min-width:0;}
+.context .escenario h3{margin:0 0 4px; font-family:var(--f-display); font-size:16px; color:var(--red);}
+.context .escenario p{font-size:14px;}
+.context .escenario .figura{border:0; padding:2px; margin:6px 0 0; background:transparent;}
+.context .figura,.context .grafica-principal{text-align:center;}
+.context svg.grafico-svg{display:block; width:100%; max-width:520px; height:auto; margin:0 auto;}
+.context .escenario svg.grafico-svg{max-height:190px;}
+.nota{margin-top:4px; font-size:12px; line-height:1.3; color:var(--ink-soft); text-align:center;}
+.context table{border-collapse:collapse; width:100%; margin-top:10px; font-size:13.5px; background:var(--card-hi);}
+.context th,.context td{border:1px solid var(--rule); padding:5px 8px; text-align:center;}
+.context th{background:var(--ink); color:var(--paper); font-weight:600;}
+.table-scroll{overflow-x:auto;}
+
+.stmt{margin:0 0 18px; font-size:17px; line-height:1.55; font-weight:600;}
+.options{display:grid; grid-template-columns:1fr; gap:10px;}
+.options.cols2{grid-template-columns:1fr 1fr;}
+.opt{display:flex; align-items:flex-start; gap:12px; border:1.5px solid var(--rule); border-radius:9px; padding:10px 14px; cursor:pointer; background:var(--card); font-size:15px; line-height:1.45; transition:border-color .15s, background .15s; min-width:0;}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{width:28px; height:28px; min-width:28px; border-radius:50%; border:2px solid var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:12.5px; transition:background .2s, color .2s; margin-top:1px;}
+.opt .txt{min-width:0; flex:1; overflow-x:auto; padding-block:2px;}
+.opt.selected{border-color:var(--ink); background:#EFE8D6;}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #545f7a, var(--ink) 70%); color:var(--paper);}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+.opt.opt-graph{align-items:flex-start;}
+.opt.opt-graph .txt{overflow:visible;}
+.opt svg.grafico-svg{display:block; width:100%; height:auto; max-height:190px;}
+
+.card-actions{margin-top:14px; display:flex; justify-content:flex-end;}
+.feedback{margin-top:16px; padding:14px 16px; border-radius:9px; font-size:14.5px; line-height:1.6;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback.info{background:var(--card-hi); color:var(--ink); border:1px solid var(--gold);}
+.feedback b{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;}
+.feedback .mark{width:20px; height:20px; flex:none;}
+.feedback .mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.feedback .mark.ok path{stroke:var(--green);} .feedback .mark.bad path{stroke:var(--red);} .feedback .mark.info path{stroke:var(--gold-ink);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+@media (prefers-reduced-motion:reduce){.feedback .mark path{animation:none; stroke-dashoffset:0;} *{transition:none!important;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.score-pill{font-family:var(--f-mono); font-size:13px; font-weight:600; background:var(--card); border:1.5px solid var(--gold); color:var(--gold-ink); padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);}
+
+.finish-warn{margin-top:14px; background:var(--card); border:1.5px solid var(--gold); border-radius:10px; padding:14px 16px; box-shadow:var(--shadow); font-size:14.5px;}
+.finish-warn .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+
+/* ---------- panel de clave y resumen ---------- */
+.keypanel,.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:24px 26px;}
+.keypanel h2,.summary h2{font-family:var(--f-display); font-size:26px; margin:0 0 4px; font-weight:600;}
+.summary .big{font-family:var(--f-display); font-size:54px; font-weight:700; color:var(--gold-ink); margin:10px 0 0; line-height:1;}
+.summary .pct{font-family:var(--f-mono); font-size:13px; color:var(--ink-soft); margin-top:4px;}
+.caption{font-family:var(--f-mono); font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; margin:0 0 4px;}
+.bars{margin-top:6px;}
+.bars .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.bars .cname{width:210px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden; min-width:60px;}
+.fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cnum{font-family:var(--f-mono); font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.chips{display:flex; flex-wrap:wrap; gap:8px;}
+.chip{font-size:13px; border:1px solid var(--red); background:var(--red-bg); color:#5E1B23; border-radius:20px; padding:4px 12px; cursor:pointer; font-family:var(--f-body);}
+.summary .btn{margin-top:22px; margin-right:8px;}
+.keytable{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:10px; min-width:520px;}
+.keytable th,.keytable td{border:1px solid var(--rule); padding:6px 9px; text-align:left;}
+.keytable th{background:var(--ink); color:var(--paper); font-weight:600;}
+.keytable td.k{font-family:var(--f-mono); font-weight:700; text-align:center; color:var(--green);}
+.keytable td.n{font-family:var(--f-mono); text-align:center;}
+.sec-gap{margin-top:24px;}
+
+mjx-container[jax="SVG"]{margin:0 .05em!important; font-size:100%!important;}
+.stmt mjx-container,.opt mjx-container,.context p mjx-container,.context .datos mjx-container,.context li mjx-container,
+.context .formula-destacada mjx-container,.context .formula-general mjx-container,.context td mjx-container,
+.context th mjx-container,.context .afirmacion mjx-container,.context .parametro mjx-container,
+.context .recordatorio mjx-container,.context .nota mjx-container,.feedback mjx-container{display:inline-block!important; vertical-align:-.08em;}
+
+@media (max-width:640px){
+  .card-inner{padding:18px 14px 22px;}
+  .options.cols2{grid-template-columns:1fr;}
+  .ticket{padding:18px 16px 24px;}
+  .bars .row{flex-wrap:wrap;}
+  .bars .cname{width:100%;}
+  .keypanel,.summary{padding:20px 14px;}
+  .stmt{font-size:16px;}
+}
+
+/* ---------- portal, vista previa y banner de historial ---------- */
+.portal-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+.portal-link{display:inline-flex; align-items:center; gap:6px; background:var(--card-hi); border:1px solid var(--rule); border-radius:999px; padding:7px 14px; font-size:12.5px; font-weight:700; color:var(--red); text-decoration:none;}
+.portal-link:hover{background:var(--card);}
+.preview-bar{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft);}
+.preview-bar b{color:var(--ink);}
+.gate{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:28px 26px; margin:40px auto 0; max-width:580px;}
+.gate h1{font-family:var(--f-display); font-size:26px; line-height:1.15; margin:0; font-weight:600; text-wrap:balance;}
+.gate .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;}
+.hist-banner{background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:12px 16px; margin-bottom:14px; font-size:13.5px; box-shadow:var(--shadow);}
+
+.context .table-scroll{overflow-x:auto;}
+.context th{text-align:left;}
+.context .dato-doble{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:8px; margin-top:10px;}
+.context .dato-doble>div{background:var(--card-hi); border:1px solid var(--rule); border-radius:8px; padding:9px 12px; text-align:left;}
+.context .figura .nota{margin:2px 0 0;}
+@media(max-width:520px){.context th,.context td{padding:4px 5px; font-size:12.5px;}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <section class="gate" id="roleGate" hidden>
+    <p class="eyebrow" style="color:var(--ink-soft)">Vista previa fuera del portal</p>
+    <h1>Preparación Primera Prueba de Periodo</h1>
+    <p style="margin:8px 0 0; font-size:14.5px; color:var(--ink-soft); line-height:1.55">
+      En el portal, el rol se toma de la sesión iniciada. Aquí no hay sesión, así que elige cómo quieres ver el cuadernillo.
+    </p>
+    <div class="row">
+      <button type="button" class="btn primary" id="pickEst">Ver como estudiante</button>
+      <button type="button" class="btn" id="pickDoc">Ver como docente</button>
+    </div>
+  </section>
+
+  <div id="app" hidden>
+
+  <div class="portal-row">
+    <a class="portal-link" href="https://llerzy.github.io/portal-slg/">← Volver al portal</a>
+    <div class="preview-bar" id="previewBar" hidden>
+      <span>Vista previa: <b id="previewRole"></b></span>
+      <button type="button" class="btn small" id="switchRole">Cambiar vista</button>
+    </div>
+  </div>
+
+  <header class="ticket">
+    <div class="ticket-top">
+      <div class="ticket-id">
+        <div class="logos">
+          <div class="logo-chip"><img src="https://i.imgur.com/Ld5BbX3.png" alt="Logo Institución Educativa San Luis Gonzaga" onerror="this.parentNode.remove()"></div>
+          <div class="logo-chip"><img src="https://i.imgur.com/Os2RUbW.png" alt="Logo FACIMATE" onerror="this.parentNode.remove()"></div>
+        </div>
+        <div style="min-width:0">
+          <p class="eyebrow">Facimate · I.E. San Luis Gonzaga</p>
+          <h1>Preparación Primera Prueba de Periodo</h1>
+          <div class="sub">Matemáticas — Grado 10°</div>
+        </div>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Temas</b> Funciones · Geometría · Trigonometría · Plan Lector</span>
+      <span><b>Docente</b> Llerzy Esneider Torres Ome Ph.D.</span>
+      <span><b>Modo</b> <span id="modo"></span></span>
+      <span id="timerWrap" hidden><b>Tiempo</b> <span class="timer" id="timer">00:00</span></span>
+    </div>
+  </header>
+
+  <div class="intro-note" id="introNote"></div>
+
+  <section class="nav-strip">
+    <div class="order-row" id="orderRow" hidden>
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button type="button" class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button type="button" class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button type="button" class="btn small" id="reshuffleBtn" hidden>↻ Mezclar de nuevo</button>
+        <button type="button" class="order-btn" id="keyBtn">📋 Clave de respuestas</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+    <div class="progress-row">
+      <span class="progress" id="progress"></span>
+      <button type="button" class="btn small primary" id="finishBtn">Ver resultados</button>
+    </div>
+  </section>
+
+  <section class="keypanel" id="keyPanel" hidden>
+    <p class="caption">Solo docente</p>
+    <h2>Clave de respuestas</h2>
+    <p style="margin:0; font-size:13.5px; color:var(--ink-soft)">Las letras corresponden al orden original de las opciones del banco de preguntas.</p>
+    <div class="table-scroll" id="keyTable"></div>
+  </section>
+
+  <div id="quizBody">
+    <article class="card"><div class="card-inner" id="cardInner"></div></article>
+    <div class="finish-warn" id="finishWarn" hidden></div>
+    <div class="footer-nav">
+      <button type="button" class="btn" id="prevBtn">← Anterior</button>
+      <span class="score-pill" id="scorePill">0 / 20 correctas</span>
+      <button type="button" class="btn primary" id="nextBtn">Siguiente →</button>
+    </div>
+  </div>
+
+  <section class="summary" id="summary" hidden></section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+/* ===== Configuración del portal (mismos servicios que los demás cuadernillos) ===== */
+const PORTAL = "https://llerzy.github.io/portal-slg/";
+const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbwEzpQsbsQ9JrLpY_ItBRljCfNTy1h_fEUxRVIm0vzr0iy98rjKAi4nz9S0owaBZiHg/exec";
+const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec";
+const VERSION_ARTEFACTO = "pp1-v1"; // súbelo manualmente si cambias las preguntas de este cuadernillo
+const AREA_ARTEFACTO = "Matemáticas · Prueba de periodo 1";
+
+const Q = [{"id": 1, "tema": "Funciones", "subtema": "Clasificación de funciones", "pens": "", "comp": "Formulación y ejecución", "correct": "B", "explain": "Una función lineal \\(f(x)=mx\\) exige que \\(\\frac{f(x)}{x}\\) sea constante. Grupo 1: \\(\\frac{45}{3}=\\frac{90}{6}=\\frac{135}{9}=\\frac{180}{12}=15\\), entonces \\(f(x)=15x\\) y \\(f(20)=300\\) tapas. Grupo 2: \\(\\frac{52}{3}\\approx17{,}3\\), \\(\\frac{97}{6}\\approx16{,}2\\), \\(\\frac{142}{9}\\approx15{,}8\\): el cociente no es constante (la regla es \\(15x+7\\)), así que no es lineal según la definición dada. A: que los valores aumenten no basta; C: aumentar 45 cada 3 estudiantes equivale a 15 por estudiante, no a 45; D: no hace falta \\(x=0\\) para comprobar el cociente.", "titulo": "Clasificación de funciones", "ctx": "<p>En Santa Fe de Antioquia, dos grupos de estudiantes apoyan una jornada de recolección de tapas plásticas cerca del parque principal. La cantidad total recolectada se representa por <strong>f(x)<\/strong>, donde <strong>x<\/strong> es el número de estudiantes participantes.<\/p>\n<div class=\"table-scroll\"><table><tr><th>x estudiantes<\/th><td>3<\/td><td>6<\/td><td>9<\/td><td>12<\/td><\/tr><tr><th>f(x) Grupo 1<\/th><td>45<\/td><td>90<\/td><td>135<\/td><td>180<\/td><\/tr><tr><th>f(x) Grupo 2<\/th><td>52<\/td><td>97<\/td><td>142<\/td><td>187<\/td><\/tr><\/table><\/div>\n<p>Para esta actividad se considera función lineal aquella que tiene la forma <strong>f(x)=mx<\/strong>; es decir, el cociente <strong>\\(\\dfrac{f(x)}{x}\\)<\/strong> permanece constante y la gráfica pasa por el origen.<\/p>", "text": "¿Cuál comparación permite identificar correctamente la función lineal y estimar cuántas tapas recolectaría ese grupo con 20 estudiantes?", "opts": {"A": "Ambos grupos son funciones lineales, porque en las dos tablas las cantidades aumentan cuando aumenta el número de estudiantes", "B": "El Grupo 1 corresponde a una función lineal, porque \\(\\dfrac{45}{3}=\\dfrac{90}{6}=\\dfrac{135}{9}=\\dfrac{180}{12}=15\\); por tanto, f(x)=15x y f(20)=300 tapas", "C": "El Grupo 2 corresponde a una función lineal, porque aumenta 45 tapas cada vez que participan 3 estudiantes; por tanto, f(x)=45x y f(20)=900 tapas", "D": "Ningún grupo puede clasificarse, porque en la tabla no aparece el valor x=0 y por eso no se puede usar una regla de cálculo"}}, {"id": 2, "tema": "Funciones", "subtema": "Ceros de una función cuadrática", "pens": "", "comp": "Argumentación", "correct": "D", "explain": "Con \\(a=-1\\), \\(b=10\\), \\(c=-21\\): \\(\\Delta=b^2-4ac=100-84=16>0\\). Los ceros son \\(t=\\frac{-10\\pm4}{-2}\\), es decir \\(t=3\\) y \\(t=7\\). El valor \\(t=5\\) es el vértice (altura máxima \\(h(5)=4\\)), no un cero. B afirma que \\(\\Delta\\) es negativo, pero \\(\\Delta=16\\); A y C usan razonamientos que no son válidos.", "titulo": "Ceros de una función cuadrática", "ctx": "<p>Durante un juego deportivo en la cancha del colegio, la altura de una pelota, en metros, mientras permanece en el aire, se modela con la función:<\/p>\n<div class=\"formula-destacada\">h(t)=−t<sup>2<\/sup>+10t−21<\/div>\n<p>Donde <strong>t<\/strong> representa el tiempo, en segundos. Un estudiante afirma que la pelota toca el suelo en <strong>t=5<\/strong>, porque 5 está en la mitad de los valores que aparecen en la expresión.<\/p>\n<p>Para hallar los ceros se resuelve <strong>−t<sup>2<\/sup>+10t−21=0<\/strong>, identificando los coeficientes <strong>a<\/strong>, <strong>b<\/strong> y <strong>c<\/strong>, y calculando el discriminante <strong>Δ=b<sup>2<\/sup>−4ac<\/strong>.<\/p>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación del estudiante?", "opts": {"A": "Se valida, porque al dividir 10 entre 2 se obtiene 5, y ese valor siempre corresponde a un cero de una función cuadrática", "B": "Se refuta, porque el discriminante es negativo: Δ = 10² − 4(−1)(−21)=16; por tanto, no hay ceros reales", "C": "Se valida, porque al reemplazar t=5 se obtiene una altura positiva, y toda altura positiva indica que la pelota ya tocó el suelo", "D": "Se refuta, porque a=−1, b=10 y c=−21; entonces Δ=100−84=16 y los ceros son t=3 y t=7, no t=5"}}, {"id": 3, "tema": "Funciones", "subtema": "Función exponencial", "pens": "", "comp": "Formulación y ejecución", "correct": "A", "explain": "Con \\(f(x)=a\\cdot b^x\\): \\(f(0)=12\\Rightarrow a=12\\). Como cada 3 días la cantidad se multiplica por 4, \\(b^3=4\\Rightarrow b=\\sqrt[3]{4}\\). Verificación: \\(f(3)=12\\cdot4=48\\), \\(f(6)=192\\), \\(f(9)=768\\). B multiplicaría por 4 cada día (\\(f(3)=12\\cdot64=768\\)); C es lineal; D coloca el 12 como base.", "titulo": "Función exponencial", "ctx": "<p>En Santa Fe de Antioquia, la información sobre una feria estudiantil se comparte por redes sociales. La tabla muestra la cantidad acumulada de personas que han recibido la invitación.<\/p>\n<div class=\"table-scroll\"><table><tr><th>x días<\/th><td>0<\/td><td>3<\/td><td>6<\/td><td>9<\/td><\/tr><tr><th>f(x) personas<\/th><td>12<\/td><td>48<\/td><td>192<\/td><td>768<\/td><\/tr><\/table><\/div>\n<p>El comportamiento es multiplicativo: cada <strong>3 días<\/strong> la cantidad se multiplica por <strong>4<\/strong>. Una función exponencial puede escribirse como <strong>f(x)=a·b<sup>x<\/sup><\/strong>.<\/p>", "text": "¿Cuál función representa correctamente la situación?", "opts": {"A": "<strong>\\(f(x)=12\\cdot(\\sqrt[3]{4})^{x}\\)<\/strong>, porque f(0)=12 y, al pasar 3 días, el factor cumple b<sup>3<\/sup>=4", "B": "<strong>f(x)=12·4<sup>x<\/sup><\/strong>, porque la cantidad se multiplica por 4 entre dos registros consecutivos", "C": "<strong>f(x)=12+36x<\/strong>, porque de 12 a 48 hay una diferencia de 36 personas", "D": "<strong>f(x)=4·12<sup>x<\/sup><\/strong>, porque el crecimiento es exponencial y el primer dato debe quedar como base"}}, {"id": 4, "tema": "Funciones", "subtema": "Función logarítmica", "pens": "", "comp": "Interpretación y representación", "correct": "C", "explain": "Con \\(f(x)=a+b\\log_3x\\): \\(f(1)=25\\Rightarrow a=25\\) (porque \\(\\log_31=0\\)). Además \\(f(3)=25+b=32\\Rightarrow b=7\\). Verificación: \\(f(9)=25+14=39\\), \\(f(27)=46\\), \\(f(81)=53\\). A es lineal y B exponencial; D da \\(f(1)=0\\), no 25.", "titulo": "Función logarítmica", "ctx": "<p>En una práctica de sonido realizada cerca del Puente de Occidente, los estudiantes registran el nivel que marca un sensor cuando se triplica la intensidad relativa de una fuente sonora.<\/p>\n<div class=\"table-scroll\"><table><tr><th>x intensidad relativa<\/th><td>1<\/td><td>3<\/td><td>9<\/td><td>27<\/td><td>81<\/td><\/tr><tr><th>f(x) nivel registrado<\/th><td>25<\/td><td>32<\/td><td>39<\/td><td>46<\/td><td>53<\/td><\/tr><\/table><\/div>\n<p>En una función logarítmica, si los valores de <strong>x<\/strong> se multiplican por el mismo factor, los valores de <strong>f(x)<\/strong> aumentan o disminuyen en una cantidad constante.<\/p>", "text": "¿Cuál función representa correctamente el comportamiento registrado?", "opts": {"A": "<strong>f(x)=25+7x<\/strong>, porque entre los dos primeros niveles hay un aumento de 7 unidades", "B": "<strong>f(x)=7·3<sup>x<\/sup>+25<\/strong>, porque los valores de x se multiplican por 3", "C": "<strong>f(x)=25+7log<sub>3<\/sub>(x)<\/strong>, porque f(1)=25 y cada vez que x se triplica, f(x) aumenta 7 unidades", "D": "<strong>f(x)=32log<sub>3<\/sub>(x)<\/strong>, porque al tomar x=3 se obtiene f(3)=32"}}, {"id": 5, "tema": "Geometría y triángulos", "subtema": "Circunferencia en el plano cartesiano", "pens": "", "comp": "Argumentación", "correct": "B", "explain": "El centro es \\(C(-1{,}2)\\), así que \\(h=-1\\) y \\(k=2\\); además \\(r=3\\). La ecuación es \\((x+1)^2+(y-2)^2=9\\). El estudiante usó \\(h=1\\) y \\(k=-2\\) (signos contrarios a los del centro). A: el radio solo no determina la ecuación; C: solo cambia el signo de la coordenada negativa, no de ambas; D: el lado derecho es \\(r^2=9\\), no 3.", "titulo": "Circunferencia en el plano cartesiano", "ctx": "<p>En una guía de geometría analítica se presenta una circunferencia semejante a la zona circular de una plazoleta. En la figura, el centro es <strong>C(−1, 2)<\/strong> y el radio es <strong>3<\/strong>.<\/p>\n<div class=\"figura\"><svg aria-label=\"Circunferencia con centro C menos uno coma dos y radio tres\" role=\"img\" class=\"grafico-svg\" style=\"max-width:300px\" viewBox=\"0 0 280 275\" font-family=\"IBM Plex Sans, Arial, sans-serif\" fill=\"#1F2937\"><line x1=\"10\" y1=\"20\" x2=\"10\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"40\" y1=\"20\" x2=\"40\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"70\" y1=\"20\" x2=\"70\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"100\" y1=\"20\" x2=\"100\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"130\" y1=\"20\" x2=\"130\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"160\" y1=\"20\" x2=\"160\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"190\" y1=\"20\" x2=\"190\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"220\" y1=\"20\" x2=\"220\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"250\" y1=\"20\" x2=\"250\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"260\" x2=\"250\" y2=\"260\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"230\" x2=\"250\" y2=\"230\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"200\" x2=\"250\" y2=\"200\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"170\" x2=\"250\" y2=\"170\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"140\" x2=\"250\" y2=\"140\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"110\" x2=\"250\" y2=\"110\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"80\" x2=\"250\" y2=\"80\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"50\" x2=\"250\" y2=\"50\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><line x1=\"10\" y1=\"20\" x2=\"250\" y2=\"20\" stroke=\"#E5E7EB\" stroke-width=\"1\"/><defs><marker id=\"arr\" markerWidth=\"8\" markerHeight=\"8\" refX=\"5\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L0,6 L6,3 z\" fill=\"#334155\"/><\/marker><\/defs><line x1=\"10\" y1=\"200\" x2=\"266\" y2=\"200\" stroke=\"#334155\" stroke-width=\"1.6\" marker-end=\"url(#arr)\"/><line x1=\"160\" y1=\"264\" x2=\"160\" y2=\"10\" stroke=\"#334155\" stroke-width=\"1.6\" marker-end=\"url(#arr)\"/><circle cx=\"130\" cy=\"140\" r=\"90\" fill=\"rgba(46,74,107,.10)\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><line x1=\"130\" y1=\"140\" x2=\"220\" y2=\"140\" stroke=\"#A6323E\" stroke-width=\"3\"/><circle cx=\"130\" cy=\"140\" r=\"4.5\" fill=\"#A6323E\"/><text x=\"40\" y=\"214\" font-size=\"11\" text-anchor=\"middle\">−4<\/text><text x=\"70\" y=\"214\" font-size=\"11\" text-anchor=\"middle\">−3<\/text><text x=\"100\" y=\"214\" font-size=\"11\" text-anchor=\"middle\">−2<\/text><text x=\"130\" y=\"214\" font-size=\"11\" text-anchor=\"middle\">−1<\/text><text x=\"190\" y=\"214\" font-size=\"11\" text-anchor=\"middle\">1<\/text><text x=\"220\" y=\"214\" font-size=\"11\" text-anchor=\"middle\">2<\/text><text x=\"250\" y=\"214\" font-size=\"11\" text-anchor=\"middle\">3<\/text><text x=\"152\" y=\"234\" font-size=\"11\" text-anchor=\"end\">−1<\/text><text x=\"152\" y=\"174\" font-size=\"11\" text-anchor=\"end\">1<\/text><text x=\"152\" y=\"144\" font-size=\"11\" text-anchor=\"end\">2<\/text><text x=\"152\" y=\"114\" font-size=\"11\" text-anchor=\"end\">3<\/text><text x=\"152\" y=\"84\" font-size=\"11\" text-anchor=\"end\">4<\/text><text x=\"152\" y=\"54\" font-size=\"11\" text-anchor=\"end\">5<\/text><text x=\"152\" y=\"24\" font-size=\"11\" text-anchor=\"end\">6<\/text><text x=\"124\" y=\"160\" font-size=\"13\" font-weight=\"700\" text-anchor=\"end\" stroke=\"#fff\" stroke-width=\"3\" paint-order=\"stroke\">C(−1, 2)<\/text><text x=\"175\" y=\"133\" font-size=\"13\" font-weight=\"700\" fill=\"#A6323E\" text-anchor=\"middle\" stroke=\"#fff\" stroke-width=\"3\" paint-order=\"stroke\">r = 3<\/text><text x=\"270\" y=\"192\" font-size=\"12\" text-anchor=\"end\">x<\/text><text x=\"167\" y=\"16\" font-size=\"12\">y<\/text><\/svg><\/div>\n<p>Un estudiante afirma que la ecuación es <strong>(x−1)<sup>2<\/sup>+(y+2)<sup>2<\/sup>=9<\/strong>, porque usa los números 1 y 2 dentro de los paréntesis.<\/p>\n<div class=\"formula-destacada\">(x−h)<sup>2<\/sup>+(y−k)<sup>2<\/sup>=r<sup>2<\/sup><\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación del estudiante?", "opts": {"A": "Se valida, porque el radio es 3 y entonces r<sup>2<\/sup>=9; ese dato basta para escribir la ecuación", "B": "Se refuta, porque si el centro es C(−1,2) y r=3, entonces h=−1, k=2 y la ecuación correcta es <strong>(x+1)<sup>2<\/sup>+(y−2)<sup>2<\/sup>=9<\/strong>", "C": "Se valida, porque cuando el centro tiene coordenadas negativas se cambian ambos signos dentro de los paréntesis", "D": "Se refuta, porque la ecuación correcta debe ser <strong>(x+1)<sup>2<\/sup>+(y−2)<sup>2<\/sup>=3<\/strong>, ya que el radio no se eleva al cuadrado"}}, {"id": 6, "tema": "Ángulos y razones trigonométricas", "subtema": "Conversión de grados a radianes", "pens": "", "comp": "Formulación y ejecución", "correct": "A", "explain": "Primero se suma el giro total: \\(120^\\circ+30^\\circ=150^\\circ\\). Luego \\(150^\\circ\\cdot\\frac{\\pi}{180^\\circ}=\\frac{5\\pi}{6}\\). B ignora el segundo giro; C multiplica los ángulos; D divide entre \\(\\pi\\) en lugar de multiplicar por \\(\\frac{\\pi}{180^\\circ}\\).", "titulo": "Conversión de grados a radianes", "ctx": "<p>Durante una visita académica al Puente de Occidente, una cámara debe girar primero <strong>120°<\/strong> y luego <strong>30°<\/strong> adicionales para enfocar una parte de la estructura.<\/p>\n<p>Para ingresar el giro total al sistema, el ángulo debe expresarse en radianes usando:<\/p>\n<div class=\"formula-destacada\">\\(\\theta_{\\text{rad}}=\\theta_{\\text{grados}}\\cdot\\dfrac{\\pi}{180^\\circ}\\)<\/div>\n<p>Como el giro ocurre en dos momentos, primero se debe sumar el ángulo total y luego hacer la conversión.<\/p>", "text": "¿Cuál procedimiento permite calcular correctamente el giro total de la cámara en radianes?", "opts": {"A": "Sumar los ángulos: 120°+30°=150° y convertir: <strong>\\(150^\\circ\\cdot\\dfrac{\\pi}{180^\\circ}=\\dfrac{5\\pi}{6}\\)<\/strong>", "B": "Convertir solo el primer giro: <strong>\\(120^\\circ\\cdot\\dfrac{\\pi}{180^\\circ}=\\dfrac{2\\pi}{3}\\)<\/strong>, porque el segundo giro solo ajusta el enfoque", "C": "Multiplicar los dos giros: <strong>120°·30°=3600°<\/strong> y luego convertir a radianes", "D": "Dividir el giro total entre π: <strong>\\(\\dfrac{150^\\circ}{\\pi}\\)<\/strong>, porque π es la unidad de medida en radianes"}}, {"id": 7, "tema": "Ángulos y razones trigonométricas", "subtema": "Conversión de radianes a grados", "pens": "", "comp": "Interpretación y representación", "correct": "D", "explain": "\\(\\frac{7\\pi}{6}\\cdot\\frac{180^\\circ}{\\pi}=7\\cdot30^\\circ=210^\\circ\\). A divide en lugar de multiplicar; B es falsa porque \\(\\pi\\) rad equivale a \\(180^\\circ\\), pero \\(\\frac{7\\pi}{6}\\) no; C aproxima sin justificación.", "titulo": "Conversión de radianes a grados", "ctx": "<p>En una actividad cultural en el parque La Chinca, el plano de ubicación de una cámara giratoria indica el siguiente ángulo:<\/p>\n<div class=\"formula-destacada\">\\(\\theta=\\dfrac{7\\pi}{6}\\ \\text{rad}\\)<\/div>\n<p>Para interpretar este giro en grados se usa la equivalencia:<\/p>\n<div class=\"formula-destacada\">\\(\\theta_{\\text{grados}}=\\theta_{\\text{radianes}}\\cdot\\left(\\dfrac{180^\\circ}{\\pi}\\right)\\)<\/div>", "text": "¿Cuál representación en grados corresponde correctamente al ángulo de giro?", "opts": {"A": "<strong>\\(\\dfrac{7\\pi}{1080^\\circ}\\)<\/strong>, porque se divide \\(\\dfrac{7\\pi}{6}\\) entre 180°", "B": "<strong>180°<\/strong>, porque toda expresión que contiene π representa media vuelta", "C": "<strong>240°<\/strong>, porque se aproxima \\(\\dfrac{7\\pi}{6}\\) a \\(\\dfrac{8\\pi}{6}\\)", "D": "<strong>210°<\/strong>, porque \\(\\left(\\dfrac{7\\pi}{6}\\right)\\cdot\\left(\\dfrac{180^\\circ}{\\pi}\\right)\\)\\(=7\\cdot30^\\circ=210^\\circ\\)"}}, {"id": 8, "tema": "Geometría y triángulos", "subtema": "Clasificación de triángulos", "pens": "", "comp": "Argumentación", "correct": "C", "explain": "\\(x=180^\\circ-65^\\circ-65^\\circ=50^\\circ\\). Como dos ángulos son iguales, los lados opuestos a ellos también lo son, por lo que el triángulo es isósceles. La afirmación del estudiante es correcta. A suma los ángulos conocidos; B desconoce que la clasificación se puede deducir de los ángulos; D es falsa (un isósceles no necesita un ángulo recto).", "titulo": "Clasificación de triángulos", "ctx": "<p>Durante la Semana Santa en Santa Fe de Antioquia, los estudiantes analizan una estructura triangular usada como soporte decorativo. La figura representa el triángulo asociado.<\/p>\n<div class=\"figura\"><svg aria-label=\"Triángulo ABC con ángulos de 65 grados en A y B y ángulo x en C\" role=\"img\" class=\"grafico-svg\" style=\"max-width:270px\" viewBox=\"0 0 260 215\" font-family=\"IBM Plex Sans, Arial, sans-serif\" fill=\"#1F2937\"><polygon points=\"65,185 195,185 130,46\" fill=\"#EFE8D6\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><path d=\"M91,185 A26,26 0 0 0 76,161.4\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M169,185 A26,26 0 0 1 184,161.4\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M120.7,65.9 A22,22 0 0 0 139.3,65.9\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><text x=\"96\" y=\"174\" font-size=\"14\" font-weight=\"700\" fill=\"#A6323E\">65°<\/text><text x=\"164\" y=\"174\" font-size=\"14\" font-weight=\"700\" fill=\"#A6323E\" text-anchor=\"end\">65°<\/text><text x=\"126\" y=\"92\" font-size=\"14\" font-weight=\"700\" fill=\"#A6323E\">x<\/text><text x=\"48\" y=\"201\" font-size=\"14\" font-weight=\"700\">A<\/text><text x=\"200\" y=\"201\" font-size=\"14\" font-weight=\"700\">B<\/text><text x=\"126\" y=\"38\" font-size=\"14\" font-weight=\"700\">C<\/text><\/svg><\/div>\n<p>En el triángulo <strong>ABC<\/strong>, los ángulos interiores en <strong>A<\/strong> y <strong>B<\/strong> miden <strong>65°<\/strong>. Un estudiante afirma que el ángulo faltante mide <strong>50°<\/strong> y que el triángulo es <strong>isósceles<\/strong>.<\/p>\n<p>La suma de los ángulos interiores de un triángulo es <strong>180°<\/strong>.<\/p>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación del estudiante?", "opts": {"A": "Se refuta, porque x=65°+65°=130°; por tanto, el triángulo es obtusángulo y escaleno", "B": "Se valida solo la medida del ángulo, pero se refuta la clasificación, porque no se muestran las longitudes de los lados", "C": "Se valida, porque x=180°−65°−65°=50° y, como dos ángulos son iguales, los lados opuestos también son iguales; por tanto, el triángulo es isósceles", "D": "Se refuta, porque un triángulo isósceles siempre debe tener un ángulo de 90°"}}, {"id": 9, "tema": "Geometría y triángulos", "subtema": "Clasificación de triángulos según sus ángulos", "pens": "", "comp": "Formulación y ejecución", "correct": "B", "explain": "\\(x=180^\\circ-40^\\circ-50^\\circ=90^\\circ\\), así que el triángulo tiene un ángulo recto: es rectángulo. A suma los dos ángulos en lugar de restarlos de \\(180^\\circ\\); C y D restan solo un ángulo; además, un triángulo sí se clasifica por sus ángulos.", "titulo": "Clasificación de triángulos según sus ángulos", "ctx": "<p>Durante las fiestas tradicionales de Santa Fe de Antioquia, se diseña una estructura triangular para una decoración luminosa. La figura muestra dos ángulos conocidos.<\/p>\n<div class=\"figura\"><svg class=\"grafico-svg\" style=\"max-width:270px\" aria-label=\"Triángulo con ángulos 40 grados, 50 grados y x\" role=\"img\" viewBox=\"0 0 260 190\">\n<polygon fill=\"#EFE8D6\" points=\"35,155 230,155 170,45\" stroke=\"#2E4A6B\" stroke-width=\"3\"/>\n<text font-size=\"14\" font-weight=\"700\" x=\"24\" y=\"172\">A<\/text>\n<text font-size=\"14\" font-weight=\"700\" x=\"233\" y=\"172\">B<\/text>\n<text font-size=\"14\" font-weight=\"700\" x=\"166\" y=\"37\">C<\/text>\n<text fill=\"#A6323E\" font-size=\"14\" font-weight=\"700\" x=\"64\" y=\"150\">40°<\/text>\n<text fill=\"#A6323E\" font-size=\"14\" font-weight=\"700\" x=\"190\" y=\"140\">50°<\/text>\n<text fill=\"#A6323E\" font-size=\"14\" font-weight=\"700\" x=\"161\" y=\"90\">x<\/text>\n<path d=\"M153,58.9 A22,22 0 0 0 180.5,64.3\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/>\n<\/svg><p class=\"nota\">Figura no a escala.<\/p><\/div>\n<p>En el triángulo <strong>ABC<\/strong>, los ángulos interiores en <strong>A<\/strong> y <strong>B<\/strong> miden <strong>40°<\/strong> y <strong>50°<\/strong>, respectivamente. El ángulo en <strong>C<\/strong> se representa con <strong>x<\/strong>.<\/p>\n<p>Un triángulo es acutángulo si todos sus ángulos son menores que 90°, rectángulo si uno mide 90° y obtusángulo si uno es mayor que 90°.<\/p>", "text": "¿Cuál procedimiento permite determinar correctamente el ángulo faltante y clasificar el triángulo?", "opts": {"A": "Calcular x=40°+50°=90°; por tanto, el triángulo es acutángulo porque los ángulos dados son menores que 90°", "B": "Calcular x=180°−40°−50°=90°; por tanto, el triángulo es rectángulo porque uno de sus ángulos mide 90°", "C": "Calcular x=180°−50°=130°; por tanto, el triángulo es obtusángulo", "D": "Calcular x=180°−40°=140°; por tanto, no se puede clasificar porque faltan las medidas de los lados"}}, {"id": 10, "tema": "Geometría y triángulos", "subtema": "Teorema de Pitágoras", "pens": "", "comp": "Interpretación y representación", "correct": "A", "explain": "Triángulo 1: \\(x^2=7^2+24^2=625\\), entonces \\(x=25\\) m. Triángulo 2: \\(y^2=29^2-20^2=441\\), entonces \\(y=21\\) m. Por tanto \\(x>y\\). B y C suman las medidas sin elevarlas al cuadrado o suman cuadrados que no corresponden; D resta en el triángulo equivocado.", "titulo": "Teorema de Pitágoras", "ctx": "<p>En las fiestas institucionales del San Luis Gonzaga, dos grupos diseñan estructuras con forma de triángulo rectángulo para sostener pendones. La figura resume las medidas.<\/p>\n<div class=\"figura\"><svg aria-label=\"Dos triángulos rectángulos para aplicar Pitágoras\" role=\"img\" class=\"grafico-svg\" style=\"max-width:340px\" viewBox=\"0 0 330 190\" font-family=\"IBM Plex Sans, Arial, sans-serif\" fill=\"#1F2937\"><g transform=\"translate(12,15)\"><polygon points=\"10,140 130,140 130,105\" fill=\"#EFE8D6\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><path d=\"M118,140 v-12 h12\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><text x=\"58\" y=\"158\" font-size=\"12\" font-weight=\"700\">24 m<\/text><text x=\"138\" y=\"126\" font-size=\"12\" font-weight=\"700\">7 m<\/text><text x=\"66\" y=\"112\" font-size=\"13\" font-weight=\"700\" fill=\"#A6323E\">x<\/text><text x=\"40\" y=\"18\" font-size=\"13\" font-weight=\"700\">Triángulo 1<\/text><\/g><g transform=\"translate(160,15)\"><polygon points=\"10,140 115,140 115,40\" fill=\"#EFE8D6\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><path d=\"M101,140 v-14 h14\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><text x=\"58\" y=\"158\" font-size=\"12\" font-weight=\"700\">y<\/text><text x=\"122\" y=\"94\" font-size=\"12\" font-weight=\"700\">20 m<\/text><text x=\"52\" y=\"86\" font-size=\"12\" font-weight=\"700\" fill=\"#A6323E\" text-anchor=\"end\">29 m<\/text><text x=\"40\" y=\"18\" font-size=\"13\" font-weight=\"700\">Triángulo 2<\/text><\/g><\/svg><\/div>\n<p>En el Triángulo 1, los catetos miden <strong>7 m<\/strong> y <strong>24 m<\/strong>, y la hipotenusa es <strong>x<\/strong>. En el Triángulo 2, un cateto mide <strong>20 m<\/strong>, la hipotenusa mide <strong>29 m<\/strong>, y el otro cateto es <strong>y<\/strong>.<\/p>\n<div class=\"formula-destacada\">a<sup>2<\/sup>+b<sup>2<\/sup>=c<sup>2<\/sup><\/div>", "text": "¿Cuál comparación entre los valores de x y y es correcta?", "opts": {"A": "<strong>x=25 m<\/strong> y <strong>y=21 m<\/strong>, porque x²=7²+24²=625 y y²=29²−20²=441; por tanto, <strong>x&gt;y<\/strong>", "B": "<strong>x=31 m<\/strong> y <strong>y=49 m<\/strong>, porque se suman directamente las medidas dadas", "C": "<strong>x=25 m<\/strong> y <strong>y=49 m<\/strong>, porque en ambos casos se suman los cuadrados de las medidas dadas", "D": "<strong>x=17 m<\/strong> y <strong>y=21 m<\/strong>, porque en el Triángulo 1 se resta 24²−7²"}}, {"id": 11, "tema": "Geometría y triángulos", "subtema": "Teorema de Herón", "pens": "", "comp": "Argumentación", "correct": "C", "explain": "Pieza 1: \\(s=\\frac{10+10+12}{2}=16\\), \\(A=\\sqrt{16\\cdot6\\cdot6\\cdot4}=\\sqrt{2304}=48\\) m². Pieza 2: \\(s=\\frac{13+14+15}{2}=21\\), \\(A=\\sqrt{21\\cdot8\\cdot7\\cdot6}=\\sqrt{7056}=84\\) m². Área total: \\(48+84=132\\) m², no 96. B omite el semiperímetro \\(s\\) en la pieza 2; A y D suponen que las dos piezas tienen igual área.", "titulo": "Teorema de Herón", "ctx": "<p>En una jornada de decoración de la Iglesia Santa Bárbara, se quieren calcular las áreas de dos piezas triangulares.<\/p>\n<div class=\"figura\"><svg class=\"grafico-svg\" style=\"max-width:340px\" aria-label=\"Dos piezas triangulares con lados dados\" role=\"img\" viewBox=\"0 0 330 195\">\n<g transform=\"translate(12,18)\">\n<polygon fill=\"#ecfeff\" points=\"20,135 135,135 77,45\" stroke=\"#2E4A6B\" stroke-width=\"3\"/>\n<text font-size=\"13\" font-weight=\"700\" x=\"58\" y=\"28\">Pieza 1<\/text>\n<text font-size=\"12\" x=\"55\" y=\"152\">12 m<\/text>\n<text font-size=\"12\" x=\"20\" y=\"86\">10 m<\/text>\n<text font-size=\"12\" x=\"113\" y=\"86\">10 m<\/text>\n<\/g>\n<g transform=\"translate(172,18)\">\n<polygon fill=\"#fff7ed\" points=\"15,135 140,135 96,42\" stroke=\"#2E4A6B\" stroke-width=\"3\"/>\n<text font-size=\"13\" font-weight=\"700\" x=\"58\" y=\"28\">Pieza 2<\/text>\n<text font-size=\"12\" x=\"63\" y=\"152\">14 m<\/text>\n<text font-size=\"12\" x=\"24\" y=\"86\">13 m<\/text>\n<text font-size=\"12\" x=\"120\" y=\"86\">15 m<\/text>\n<\/g>\n<\/svg><\/div>\n<p>La <strong>pieza 1<\/strong> tiene lados de <strong>10 m<\/strong>, <strong>10 m<\/strong> y <strong>12 m<\/strong>. La <strong>pieza 2<\/strong> tiene lados de <strong>13 m<\/strong>, <strong>14 m<\/strong> y <strong>15 m<\/strong>.<\/p>\n<p>Un estudiante afirma que el área total es <strong>96 m²<\/strong>, porque considera que ambas piezas tienen área de <strong>48 m²<\/strong>.<\/p>\n<div class=\"formula-destacada\">\\(A=\\sqrt{s(s-a)(s-b)(s-c)}\\)<\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación del estudiante?", "opts": {"A": "Se valida, porque la pieza 1 tiene área 48 m² y cualquier pieza triangular semejante debe tener la misma área", "B": "Se refuta, porque en la pieza 1 se obtiene s=16 y \\(A=\\sqrt{16(6)(6)(4)}=48\\), pero en la pieza 2 se debe calcular \\(A=\\sqrt{13\\cdot14\\cdot15}\\)", "C": "Se refuta, porque en la pieza 1 se obtiene s=16 y A=48; mientras que en la pieza 2 se obtiene s=21 y \\(A=\\sqrt{21(8)(7)(6)}=84\\). Por tanto, el área total es 132 m²", "D": "Se valida, porque al sumar los lados de la pieza 1 se obtiene 32 y al dividir entre 2 se obtiene 16, por lo que el área total es 2·48"}}, {"id": 12, "tema": "Ángulos y razones trigonométricas", "subtema": "Razones trigonométricas", "pens": "", "comp": "Formulación y ejecución", "correct": "D", "explain": "Respecto al ángulo de \\(45^\\circ\\), el cateto opuesto mide 2 y el adyacente mide 2, luego \\(\\tan45^\\circ=\\frac22=1\\). A calcula \\(\\sin45^\\circ\\); B usa la diagonal como cateto opuesto; C suma los catetos.", "titulo": "Razones trigonométricas", "ctx": "<p>En una actividad de medición en el parque principal de Santa Fe de Antioquia, los estudiantes analizan un cuadrado de lado <strong>2<\/strong> y su diagonal.<\/p>\n<div class=\"figura\"><svg class=\"grafico-svg\" style=\"max-width:230px\" aria-label=\"Cuadrado de lado 2 con diagonal\" role=\"img\" viewBox=\"0 0 220 200\">\n<rect fill=\"#EFE8D6\" height=\"120\" stroke=\"#2E4A6B\" stroke-width=\"3\" width=\"120\" x=\"45\" y=\"35\"/>\n<line stroke=\"#A6323E\" stroke-width=\"3\" x1=\"45\" x2=\"165\" y1=\"155\" y2=\"35\"/>\n<path d=\"M73,155 A28,28 0 0 1 65,135\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n<text fill=\"#A6323E\" font-size=\"13\" font-weight=\"700\" x=\"76\" y=\"139\">45°<\/text>\n<text font-size=\"13\" font-weight=\"700\" x=\"96\" y=\"174\">2<\/text>\n<text font-size=\"13\" font-weight=\"700\" x=\"25\" y=\"98\">2<\/text>\n<text transform=\"translate(105,95) rotate(-45)\" font-size=\"13\" font-weight=\"700\" fill=\"#A6323E\" text-anchor=\"middle\" y=\"-8\">2√<tspan text-decoration=\"overline\">2<\/tspan><\/text>\n<\/svg><\/div>\n<p>La diagonal forma un ángulo de <strong>45°<\/strong> con la base. Para determinar la tangente del ángulo indicado, se comparan el cateto opuesto y el cateto adyacente.<\/p>\n<div class=\"formula-destacada\">\\(\\tan(\\theta)=\\dfrac{\\text{cateto opuesto}}{\\text{cateto adyacente}}\\)<\/div>", "text": "A partir de la figura, ¿cuál procedimiento permite calcular correctamente tan(45°)?", "opts": {"A": "<strong>\\(\\tan(45^\\circ)=\\dfrac{2}{2\\sqrt2}=\\dfrac{1}{\\sqrt2}\\)<\/strong>, porque se divide el cateto entre la diagonal", "B": "<strong>\\(\\tan(45^\\circ)=\\dfrac{2\\sqrt2}{2}=\\sqrt2\\)<\/strong>, porque la diagonal es el lado opuesto al ángulo", "C": "<strong>\\(\\tan(45^\\circ)=\\dfrac{2+2}{2\\sqrt2}=\\sqrt2\\)<\/strong>, porque se suman los catetos y luego se comparan con la diagonal", "D": "<strong>\\(\\tan(45^\\circ)=\\dfrac{2}{2}=1\\)<\/strong>, porque el cateto opuesto y el cateto adyacente al ángulo tienen la misma medida"}}, {"id": 13, "tema": "Ángulos y razones trigonométricas", "subtema": "Razones trigonométricas", "pens": "", "comp": "Interpretación y representación", "correct": "B", "explain": "Para el ángulo de \\(30^\\circ\\) en \\(B\\), el cateto adyacente es \\(BD=2\\sqrt3\\) y la hipotenusa es \\(AB=4\\): \\(\\sec30^\\circ=\\frac{4}{2\\sqrt3}=\\frac{2}{\\sqrt3}=\\frac{2\\sqrt3}{3}\\). A calcula \\(\\cos30^\\circ\\); C toma \\(AD\\) (que es el cateto opuesto) como adyacente; D compara los catetos (\\(\\tan30^\\circ\\)).", "titulo": "Razones trigonométricas", "ctx": "<p>En una finca turística de Santa Fe de Antioquia se analiza la inclinación de una cuerda sostenida por una estructura con forma de triángulo rectángulo.<\/p>\n<div class=\"figura\"><svg aria-label=\"Triángulo rectángulo ABD con ángulo de 60 grados en A y de 30 grados en B\" role=\"img\" class=\"grafico-svg\" style=\"max-width:300px\" viewBox=\"0 0 320 215\" font-family=\"IBM Plex Sans, Arial, sans-serif\" fill=\"#1F2937\"><polygon points=\"60,185 140,185 140,46.4\" fill=\"#EFE8D6\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><path d=\"M126,185 v-14 h14\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M86,185 A26,26 0 0 0 73,162.5\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M140,72.4 A26,26 0 0 1 127,68.9\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><text x=\"92\" y=\"176\" font-size=\"13\" font-weight=\"700\" fill=\"#A6323E\">60°<\/text><text x=\"115\" y=\"100\" font-size=\"12\" font-weight=\"700\" fill=\"#A6323E\">30°<\/text><text x=\"86\" y=\"111\" font-size=\"13\" font-weight=\"700\" text-anchor=\"end\">AB = 4<\/text><text x=\"100\" y=\"205\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\">AD = 2<\/text><text x=\"150\" y=\"120\" font-size=\"13\" font-weight=\"700\">BD = 2√<tspan text-decoration=\"overline\">3<\/tspan><\/text><text x=\"44\" y=\"201\" font-size=\"14\" font-weight=\"700\">A<\/text><text x=\"146\" y=\"201\" font-size=\"14\" font-weight=\"700\">D<\/text><text x=\"146\" y=\"44\" font-size=\"14\" font-weight=\"700\">B<\/text><\/svg><\/div>\n<p>En el triángulo rectángulo <strong>ABD<\/strong>, el ángulo en <strong>B<\/strong> mide <strong>30°<\/strong>. La hipotenusa <strong>AB<\/strong> mide <strong>4<\/strong>, el cateto <strong>BD<\/strong> mide <strong>\\(2\\sqrt3\\)<\/strong> y el cateto <strong>AD<\/strong> mide <strong>2<\/strong>.<\/p>\n<div class=\"formula-destacada\">\\(\\sec(\\theta)=\\dfrac{\\text{hipotenusa}}{\\text{cateto adyacente}}\\)<\/div>", "text": "A partir de la figura, ¿cuál representación corresponde correctamente a sec(30°)?", "opts": {"A": "<strong>\\(\\sec(30^\\circ)=\\dfrac{2\\sqrt3}{4}=\\dfrac{\\sqrt3}{2}\\)<\/strong>, porque se divide el cateto adyacente entre la hipotenusa", "B": "<strong>\\(\\sec(30^\\circ)=\\dfrac{4}{2\\sqrt3}=\\dfrac{2}{\\sqrt3}=\\dfrac{2\\sqrt3}{3}\\)<\/strong>, porque la hipotenusa es AB=4 y el cateto adyacente al ángulo de 30° es \\(BD=2\\sqrt3\\)", "C": "<strong>\\(\\sec(30^\\circ)=\\dfrac{4}{2}=2\\)<\/strong>, porque se toma el cateto AD como adyacente al ángulo de 30°", "D": "<strong>\\(\\sec(30^\\circ)=\\dfrac{2}{2\\sqrt3}=\\dfrac{1}{\\sqrt3}\\)<\/strong>, porque se comparan los dos catetos"}}, {"id": 14, "tema": "Ángulos y razones trigonométricas", "subtema": "Funciones trigonométricas", "pens": "", "comp": "Argumentación", "correct": "A", "explain": "Para el ángulo de \\(60^\\circ\\) en \\(A\\), el cateto opuesto es \\(BD=2\\sqrt3\\) y la hipotenusa es 4: \\(\\csc60^\\circ=\\frac{4}{2\\sqrt3}=\\frac{2\\sqrt3}{3}\\). El estudiante tomó \\(AD=2\\), que es el cateto adyacente a \\(60^\\circ\\); el valor 2 corresponde en realidad a \\(\\sec60^\\circ\\). D define la cosecante al revés (eso es el seno).", "titulo": "Funciones trigonométricas", "ctx": "<p>En un local comercial de Santa Fe de Antioquia, se diseña un soporte triangular para un aviso. La figura representa el esquema usado.<\/p>\n<div class=\"figura\"><svg aria-label=\"Triángulo rectángulo ABD con ángulo de 60 grados en A y de 30 grados en B\" role=\"img\" class=\"grafico-svg\" style=\"max-width:300px\" viewBox=\"0 0 320 215\" font-family=\"IBM Plex Sans, Arial, sans-serif\" fill=\"#1F2937\"><polygon points=\"60,185 140,185 140,46.4\" fill=\"#EFE8D6\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><path d=\"M126,185 v-14 h14\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M86,185 A26,26 0 0 0 73,162.5\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M140,72.4 A26,26 0 0 1 127,68.9\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><text x=\"92\" y=\"176\" font-size=\"13\" font-weight=\"700\" fill=\"#A6323E\">60°<\/text><text x=\"115\" y=\"100\" font-size=\"12\" font-weight=\"700\" fill=\"#A6323E\">30°<\/text><text x=\"86\" y=\"111\" font-size=\"13\" font-weight=\"700\" text-anchor=\"end\">AB = 4<\/text><text x=\"100\" y=\"205\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\">AD = 2<\/text><text x=\"150\" y=\"120\" font-size=\"13\" font-weight=\"700\">BD = 2√<tspan text-decoration=\"overline\">3<\/tspan><\/text><text x=\"44\" y=\"201\" font-size=\"14\" font-weight=\"700\">A<\/text><text x=\"146\" y=\"201\" font-size=\"14\" font-weight=\"700\">D<\/text><text x=\"146\" y=\"44\" font-size=\"14\" font-weight=\"700\">B<\/text><\/svg><\/div>\n<p>En el triángulo rectángulo <strong>ABD<\/strong>, el ángulo en <strong>A<\/strong> mide <strong>60°<\/strong>. Un estudiante afirma que <strong>csc(60°)=2<\/strong>, porque identifica el cateto <strong>AD=2<\/strong> como lado opuesto.<\/p>\n<div class=\"formula-destacada\">\\(\\csc(\\theta)=\\dfrac{\\text{hipotenusa}}{\\text{cateto opuesto}}\\)<\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación del estudiante?", "opts": {"A": "Se refuta, porque \\(\\csc(60^\\circ)=\\dfrac{4}{2\\sqrt3}=\\dfrac{2}{\\sqrt3}=\\dfrac{2\\sqrt3}{3}\\); el estudiante tomó como opuesto un cateto que en realidad es adyacente", "B": "Se valida, porque el cateto AD está cerca del ángulo de 60° y por eso es el cateto opuesto", "C": "Se valida, porque \\(\\csc(60^\\circ)=\\dfrac{\\text{hipotenusa}}{\\text{cateto adyacente}}\\)\\(=\\dfrac{4}{2}=2\\)", "D": "Se refuta, porque la cosecante se calcula como cateto opuesto sobre hipotenusa; por tanto, \\(\\csc(60^\\circ)=\\dfrac{2\\sqrt3}{4}\\)"}}, {"id": 15, "tema": "Ángulos y razones trigonométricas", "subtema": "Funciones trigonométricas", "pens": "", "comp": "Formulación y ejecución", "correct": "D", "explain": "Para \\(60^\\circ\\), el cateto adyacente es \\(AD=2\\) y la hipotenusa es \\(AB=4\\): \\(\\cos60^\\circ=\\frac24=\\frac12\\) y \\(\\sec60^\\circ=\\frac42=2\\). La secante es el recíproco del coseno, así que \\(\\sec60^\\circ>\\cos60^\\circ\\).", "titulo": "Funciones trigonométricas", "ctx": "<p>En una tienda del barrio Buga, se analiza un soporte triangular para exhibir productos. Se usa el mismo triángulo rectángulo de referencia.<\/p>\n<div class=\"figura\"><svg aria-label=\"Triángulo rectángulo ABD con ángulo de 60 grados en A y de 30 grados en B\" role=\"img\" class=\"grafico-svg\" style=\"max-width:300px\" viewBox=\"0 0 320 215\" font-family=\"IBM Plex Sans, Arial, sans-serif\" fill=\"#1F2937\"><polygon points=\"60,185 140,185 140,46.4\" fill=\"#EFE8D6\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><path d=\"M126,185 v-14 h14\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M86,185 A26,26 0 0 0 73,162.5\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M140,72.4 A26,26 0 0 1 127,68.9\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><text x=\"92\" y=\"176\" font-size=\"13\" font-weight=\"700\" fill=\"#A6323E\">60°<\/text><text x=\"115\" y=\"100\" font-size=\"12\" font-weight=\"700\" fill=\"#A6323E\">30°<\/text><text x=\"86\" y=\"111\" font-size=\"13\" font-weight=\"700\" text-anchor=\"end\">AB = 4<\/text><text x=\"100\" y=\"205\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\">AD = 2<\/text><text x=\"150\" y=\"120\" font-size=\"13\" font-weight=\"700\">BD = 2√<tspan text-decoration=\"overline\">3<\/tspan><\/text><text x=\"44\" y=\"201\" font-size=\"14\" font-weight=\"700\">A<\/text><text x=\"146\" y=\"201\" font-size=\"14\" font-weight=\"700\">D<\/text><text x=\"146\" y=\"44\" font-size=\"14\" font-weight=\"700\">B<\/text><\/svg><\/div>\n<p>Para el ángulo de <strong>60°<\/strong>, el cateto adyacente es <strong>AD=2<\/strong> y la hipotenusa es <strong>AB=4<\/strong>.<\/p>\n<div class=\"formula-destacada\">\\(\\cos(\\theta)=\\dfrac{\\text{cateto adyacente}}{\\text{hipotenusa}}\\)\\xa0\\xa0 | \\xa0\\xa0\\(\\sec(\\theta)=\\dfrac{\\text{hipotenusa}}{\\text{cateto adyacente}}\\)<\/div>", "text": "A partir de la figura, ¿cuál comparación entre cos(60°) y sec(60°) es correcta?", "opts": {"A": "<strong>\\(\\cos(60^\\circ)=\\dfrac{2}{2\\sqrt3}\\)<\/strong> y <strong>\\(\\sec(60^\\circ)=\\dfrac{2\\sqrt3}{2}\\)<\/strong>, porque se comparan únicamente los catetos", "B": "<strong>\\(\\cos(60^\\circ)=\\dfrac{4}{2}=2\\)<\/strong> y <strong>\\(\\sec(60^\\circ)=\\dfrac{2}{4}=\\dfrac{1}{2}\\)<\/strong>, porque se invierten las razones", "C": "<strong>\\(\\cos(60^\\circ)=\\dfrac{2\\sqrt3}{4}\\)<\/strong> y <strong>\\(\\sec(60^\\circ)=\\dfrac{4}{2\\sqrt3}\\)<\/strong>, porque se usa BD como adyacente", "D": "<strong>\\(\\cos(60^\\circ)=\\dfrac{2}{4}=\\dfrac{1}{2}\\)<\/strong> y <strong>\\(\\sec(60^\\circ)=\\dfrac{4}{2}=2\\)<\/strong>; por tanto, <strong>\\(\\sec(60^\\circ)>\\cos(60^\\circ)\\)<\/strong>"}}, {"id": 16, "tema": "Ángulos y razones trigonométricas", "subtema": "Razones trigonométricas", "pens": "", "comp": "Interpretación y representación", "correct": "C", "explain": "\\(AC=3\\) es el cateto adyacente al ángulo de \\(45^\\circ\\). Entonces \\(\\cos45^\\circ=\\frac{AC}{AB}\\Rightarrow AB=\\frac{3}{\\sqrt2/2}=3\\sqrt2\\) m, y \\(\\tan45^\\circ=\\frac{BC}{AC}\\Rightarrow BC=3\\cdot1=3\\) m. A multiplica por el coseno en lugar de dividir; B divide entre el seno y no coincide; D supone que la hipotenusa mide lo mismo que la base.", "titulo": "Razones trigonométricas", "ctx": "<p>En el barrio Llano de Bolívar se diseña una cartelera informativa sostenida por una estructura con forma de triángulo rectángulo.<\/p>\n<div class=\"figura\"><svg aria-label=\"Triángulo rectángulo ABC con ángulo de 45 grados en A y base AC de 3 metros\" role=\"img\" class=\"grafico-svg\" style=\"max-width:290px\" viewBox=\"0 0 270 215\" font-family=\"IBM Plex Sans, Arial, sans-serif\" fill=\"#1F2937\"><polygon points=\"40,185 190,185 190,35\" fill=\"#EFE8D6\" stroke=\"#2E4A6B\" stroke-width=\"3\"/><path d=\"M175,185 v-15 h15\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><path d=\"M74,185 A34,34 0 0 0 64,161\" fill=\"none\" stroke=\"#A6323E\" stroke-width=\"2\"/><text x=\"82\" y=\"177\" font-size=\"13\" font-weight=\"700\" fill=\"#A6323E\">45°<\/text><text x=\"104\" y=\"102\" font-size=\"13\" font-weight=\"700\" text-anchor=\"end\">AB = x<\/text><text x=\"115\" y=\"204\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\">AC = 3 m<\/text><text x=\"198\" y=\"114\" font-size=\"13\" font-weight=\"700\">BC = y<\/text><text x=\"28\" y=\"201\" font-size=\"14\" font-weight=\"700\">A<\/text><text x=\"194\" y=\"201\" font-size=\"14\" font-weight=\"700\">C<\/text><text x=\"194\" y=\"31\" font-size=\"14\" font-weight=\"700\">B<\/text><\/svg><\/div>\n<p>En el triángulo rectángulo <strong>ABC<\/strong>, el ángulo en <strong>A<\/strong> mide <strong>45°<\/strong>. La base horizontal <strong>AC<\/strong> mide <strong>3&nbsp;m<\/strong>, el soporte inclinado <strong>AB<\/strong> es <strong>x<\/strong> y el poste vertical <strong>BC<\/strong> es <strong>y<\/strong>.<\/p>\n<p>Para el ángulo de 45°, <strong>AC<\/strong> es cateto adyacente y <strong>BC<\/strong> es cateto opuesto.<\/p>", "text": "¿Cuáles son las longitudes de AB y BC, respectivamente?", "opts": {"A": "<strong>\\(AB=\\dfrac{3\\sqrt2}{2}\\ \\text{m}\\)<\/strong> y <strong>\\(BC=3\\ \\text{m}\\)<\/strong>, porque se multiplica la base por cos(45°)", "B": "<strong>\\(AB=6\\ \\text{m}\\)<\/strong> y <strong>\\(BC=3\\sqrt2\\ \\text{m}\\)<\/strong>, porque se divide la base entre sin(45°)", "C": "<strong>\\(AB=\\dfrac{3}{\\cos(45^\\circ)}=3\\sqrt2\\ \\text{m}\\)<\/strong> y <strong>\\(BC=3\\cdot\\tan(45^\\circ)=3\\ \\text{m}\\)<\/strong>", "D": "<strong>\\(AB=3\\ \\text{m}\\)<\/strong> y <strong>\\(BC=3\\sqrt2\\ \\text{m}\\)<\/strong>, porque la hipotenusa coincide con la base"}}, {"id": 17, "tema": "Plan Lector", "subtema": "Plan Lector y desbordamiento numérico", "pens": "", "comp": "Argumentación", "correct": "B", "explain": "Con 8 bits sin negativos los valores van de 0 a 255. Al restar \\(2-3=-1\\) se baja de 0, se produce desbordamiento y el valor regresa al máximo: \\(256-1=255\\). A es falsa (el sistema no conserva negativos); C inventa que 255 sale de sumar 2 y 3; D afirma que se trunca en 0, lo cual contradice la lectura.", "titulo": "Plan Lector y desbordamiento numérico", "ctx": "<p>En una actividad del <strong>Plan Lector de Matemáticas<\/strong>, los estudiantes retoman el caso de Gandhi en <em>Civilization<\/em>, trabajado en el capítulo <em>Seis no cuadra<\/em>.<\/p>\n<p>La lectura explica que ciertos valores se almacenaban como números de <strong>8 bits<\/strong>, por lo que los valores posibles iban de <strong>0<\/strong> a <strong>255<\/strong>.<\/p>\n<div class=\"dato-doble\"><div><strong>Valores posibles:<\/strong><br/>0, 1, 2, ..., 255<\/div><div>Si una resta baja de 0 en un sistema sin negativos, puede producirse un desbordamiento y regresar al valor máximo.<\/div><\/div>\n<p>Un estudiante afirma que, si la agresividad pasa de <strong>2<\/strong> y disminuye <strong>3<\/strong> puntos, el nuevo valor debe ser <strong>−1<\/strong>, porque <strong>2−3=−1<\/strong>.<\/p>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación del estudiante?", "opts": {"A": "Se valida, porque todo computador conserva exactamente los resultados negativos de cualquier resta", "B": "Se refuta, porque en un sistema de 8 bits sin valores negativos, al calcular 2−3 se produce un desbordamiento y el valor almacenado pasa a 255", "C": "Se valida, porque 255 resulta de sumar 2 y 3 hasta completar los 8 bits disponibles", "D": "Se refuta, porque el resultado correcto de 2−3 es 0, ya que los computadores eliminan automáticamente los valores negativos"}}, {"id": 18, "tema": "Plan Lector", "subtema": "Plan Lector y desbordamiento numérico", "pens": "", "comp": "Formulación y ejecución", "correct": "C", "explain": "\\(2^8=256\\) valores, que contados desde 0 van de 0 a 255. El valor 256 no cabe en 8 bits: al intentar representarlo ocurre desbordamiento y el contador vuelve a 0. A cuenta de 1 a 256; B calcula \\(8^2\\) en lugar de \\(2^8\\); D resta sin sentido (\\(256-8\\)).", "titulo": "Plan Lector y desbordamiento numérico", "ctx": "<p>En otra actividad del <strong>Plan Lector<\/strong>, los estudiantes analizan el error de desbordamiento asociado a <em>Pac-Man<\/em>. Según la lectura, el juego almacenaba el número del nivel usando <strong>8 bits<\/strong>.<\/p>\n<div class=\"dato-doble\"><div><strong>Capacidad:<\/strong><br/>2<sup>8<\/sup>=256 valores<\/div><div>Si se cuenta desde 0, los valores representables son <strong>0,1,2,...,255<\/strong>.<\/div><\/div>\n<p>Al intentar pasar del nivel <strong>255<\/strong> al siguiente, el contador se reiniciaba en <strong>0<\/strong>, generando un comportamiento inesperado.<\/p>\n<p>Un estudiante afirma que el error ocurre porque el juego no puede representar el número <strong>256<\/strong> con 8 bits.<\/p>", "text": "¿Cuál procedimiento permite validar correctamente la afirmación del estudiante?", "opts": {"A": "Calcular 2<sup>8<\/sup>=256 y concluir que los valores van de 1 a 256; por tanto, el juego sí representa el nivel 256", "B": "Calcular 8<sup>2<\/sup>=64 y concluir que el error debía aparecer al pasar del nivel 63", "C": "Calcular 2<sup>8<\/sup>=256 y reconocer que, si se cuenta desde 0, los valores son 0 a 255; por tanto, al intentar representar 256 ocurre desbordamiento", "D": "Calcular 256−8=248 y concluir que el error aparece porque faltan 8 niveles para completar la capacidad"}}, {"id": 19, "tema": "Plan Lector", "subtema": "Plan Lector y desbordamiento numérico", "pens": "", "comp": "Interpretación y representación", "correct": "D", "explain": "Con 8 bits hay \\(2^8=256\\) valores (0 a 255). Si el contador está en 255 y aumenta 1, intenta formar 256, que no cabe y se registra como 0; como el programa leía 0 como ausencia de condición de riesgo, la conclusión de la estudiante es válida. A, B y C afirman cosas falsas sobre el rango o sobre los negativos.", "titulo": "Plan Lector y desbordamiento numérico", "ctx": "<p>En el <strong>Plan Lector de Matemáticas<\/strong>, los estudiantes analizan el caso del <strong>Therac-25<\/strong>. El texto indica que una variable del programa funcionaba como contador de <strong>8 bits<\/strong>.<\/p>\n<div class=\"dato-doble\"><div><strong>8 bits:<\/strong><br/>2<sup>8<\/sup>=256 valores<\/div><div>Los valores posibles eran <strong>0<\/strong> hasta <strong>255<\/strong>. Si el contador estaba en 255 y aumentaba 1, volvía a 0.<\/div><\/div>\n<p>El programa interpretaba el valor <strong>0<\/strong> como ausencia de una condición pendiente de seguridad. Una estudiante concluye que el desbordamiento pudo hacer que el sistema interpretara una situación riesgosa como si fuera segura.<\/p>", "text": "¿Cuál representación matemática permite validar correctamente la conclusión de la estudiante?", "opts": {"A": "Se refuta, porque si 2<sup>8<\/sup>=256, entonces el contador puede aumentar sin límite y no vuelve a 0", "B": "Se refuta, porque con 8 bits solo se representan los valores de 0 a 8, de modo que el desbordamiento ocurre al sumar 8+1", "C": "Se valida, porque después de 255 el contador almacena valores negativos y todo número negativo representa ausencia de riesgo", "D": "Se valida, porque con 8 bits se representan 256 valores, de 0 a 255; así, 255+1 intenta formar 256, se registra como 0 y el sistema puede interpretar ese valor como ausencia de riesgo"}}, {"id": 20, "tema": "Funciones", "subtema": "Interpretación de gráficas", "pens": "", "comp": "Argumentación", "correct": "A", "explain": "Lectura del gráfico (minutos 60, 90, 120, 150, 180). Tamarindo: 80, 95, 105, 125, 145 (crece entre 90 y 180). Crispetas: 70, 130, 155, 140, 110 (máximo de 155 en el minuto 120 y luego baja). La afirmación es correcta. B: el tamarindo no disminuye; C: las crispetas suben hasta el minuto 120; D: a los 180 minutos valen 145 y 110, no son iguales.", "titulo": "Interpretación de gráficas", "ctx": "<p>Durante un evento de cine comunitario en el parque principal de Santa Fe de Antioquia, se registran las ventas de bolsas de <strong>tamarindo<\/strong> y cajas de <strong>crispetas<\/strong> en diferentes momentos.<\/p>\n<div class=\"figura\"><svg class=\"grafico-svg\" style=\"max-width:430px\" aria-label=\"Gráfica de ventas de tamarindo y crispetas\" role=\"img\" viewBox=\"0 0 420 280\">\n<rect fill=\"#fff\" height=\"280\" width=\"420\" x=\"0\" y=\"0\"/>\n<line stroke=\"#334155\" stroke-width=\"2\" x1=\"55\" x2=\"385\" y1=\"230\" y2=\"230\"/>\n<line stroke=\"#334155\" stroke-width=\"2\" x1=\"55\" x2=\"55\" y1=\"230\" y2=\"30\"/>\n<g stroke=\"#e5e7eb\" stroke-width=\"1\">\n<line x1=\"55\" x2=\"385\" y1=\"190\" y2=\"190\"/><line x1=\"55\" x2=\"385\" y1=\"150\" y2=\"150\"/><line x1=\"55\" x2=\"385\" y1=\"110\" y2=\"110\"/><line x1=\"55\" x2=\"385\" y1=\"70\" y2=\"70\"/>\n<\/g>\n<text font-size=\"11\" x=\"18\" y=\"235\">0<\/text><text font-size=\"11\" x=\"18\" y=\"194\">50<\/text><text font-size=\"11\" x=\"12\" y=\"154\">100<\/text><text font-size=\"11\" x=\"12\" y=\"114\">150<\/text><text font-size=\"11\" x=\"12\" y=\"74\">200<\/text>\n<text font-size=\"11\" x=\"60\" y=\"250\" text-anchor=\"middle\">60<\/text><text font-size=\"11\" x=\"132\" y=\"250\" text-anchor=\"middle\">90<\/text><text font-size=\"11\" x=\"205\" y=\"250\" text-anchor=\"middle\">120<\/text><text font-size=\"11\" x=\"278\" y=\"250\" text-anchor=\"middle\">150<\/text><text font-size=\"11\" x=\"350\" y=\"250\" text-anchor=\"middle\">180<\/text>\n<polyline fill=\"none\" points=\"60,166 132,154 205,146 278,130 350,114\" stroke=\"#2E4A6B\" stroke-width=\"4\"/>\n<polyline fill=\"none\" points=\"60,174 132,126 205,106 278,118 350,142\" stroke=\"#A6323E\" stroke-width=\"4\"/>\n<g fill=\"#2E4A6B\"><circle cx=\"60\" cy=\"166\" r=\"5\"/><circle cx=\"132\" cy=\"154\" r=\"5\"/><circle cx=\"205\" cy=\"146\" r=\"5\"/><circle cx=\"278\" cy=\"130\" r=\"5\"/><circle cx=\"350\" cy=\"114\" r=\"5\"/><\/g>\n<g fill=\"#A6323E\"><circle cx=\"60\" cy=\"174\" r=\"5\"/><circle cx=\"132\" cy=\"126\" r=\"5\"/><circle cx=\"205\" cy=\"106\" r=\"5\"/><circle cx=\"278\" cy=\"118\" r=\"5\"/><circle cx=\"350\" cy=\"142\" r=\"5\"/><\/g>\n<rect fill=\"#f8fafc\" height=\"44\" rx=\"8\" stroke=\"#cbd5e1\" width=\"125\" x=\"245\" y=\"35\"/>\n<line stroke=\"#2E4A6B\" stroke-width=\"4\" x1=\"255\" x2=\"282\" y1=\"50\" y2=\"50\"/><text font-size=\"12\" x=\"288\" y=\"54\">Tamarindo<\/text>\n<line stroke=\"#A6323E\" stroke-width=\"4\" x1=\"255\" x2=\"282\" y1=\"68\" y2=\"68\"/><text font-size=\"12\" x=\"288\" y=\"72\">Crispetas<\/text>\n<text fill=\"#334155\" font-size=\"12\" x=\"132\" y=\"272\">Tiempo de venta (minutos)<\/text>\n<text font-size=\"11\" x=\"12\" y=\"20\">Unidades vendidas<\/text><\/svg><\/div>\n<p>Una estudiante afirma que, entre los <strong>90<\/strong> y los <strong>180<\/strong> minutos, la venta de tamarindo aumentó de manera sostenida y la venta de crispetas disminuyó después de alcanzar su valor máximo.<\/p>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación de la estudiante?", "opts": {"A": "Se valida, porque el tamarindo pasa de 95 a 105, luego a 125 y finalmente a 145 unidades; mientras que las crispetas alcanzan su máximo en 120 minutos con 155 unidades y después bajan a 140 y 110 unidades", "B": "Se refuta, porque el tamarindo disminuye entre 90 y 180 minutos, al pasar de 145 a 95 unidades", "C": "Se valida, porque las crispetas disminuyen durante todo el evento desde el minuto 60 hasta el 180", "D": "Se refuta, porque en 180 minutos ambos productos tienen el mismo valor y por eso muestran el mismo comportamiento"}}];
+const TOTAL = Q.length;
+const LETTERS = ['A','B','C','D'];
+const $ = id => document.getElementById(id);
+const correctOf = q => q.correct;
+
+const INTRO_EST = 'Estas son las <b>20 preguntas</b> de preparación para la primera prueba de periodo. Responde con calma: puedes cambiar tus respuestas antes de finalizar y moverte entre preguntas con la hoja de burbujas. Las preguntas y las opciones aparecen en orden aleatorio. Al final verás tu resultado por tema y por competencia.';
+const INTRO_DOC = '<b>Versión docente.</b> Las 20 preguntas del banco de la prueba. Al elegir una opción se muestra de inmediato si es correcta, con la explicación del procedimiento; también puedes pulsar <b>Ver solución</b> sin responder. Usa <b>Orden del cuadernillo</b> o <b>Aleatorio</b> y consulta la <b>Clave de respuestas</b> con tema, subtema y competencia.';
+
+/* ===== Sesión y rol ===== */
+function leerSesion(){
+  try{
+    const raw = sessionStorage.getItem('slg_sesion');
+    if(!raw) return null;
+    try{ return JSON.parse(raw) || {}; }catch(e){ return {}; }
+  }catch(e){ return null; }
+}
+const sesion = leerSesion();
+let ES_DOCENTE = false;
+let PREVIEW = false;
+
+/* ===== Estado ===== */
+let current = 0;
+let mode = 'aleatorio';
+let answers = {}, revealed = {};
+let displayQuestions = [], optionOrder = {};
+let startTime = Date.now(), timerId = null, endTime = null;
+let numeroIntentoActual = 1;
+let started = false;
+
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildOrder(){
+  const rand = mode === 'aleatorio';
+  displayQuestions = rand ? shuffle(Q) : Q.slice();
+  optionOrder = {};
+  Q.forEach(q => { const l = Object.keys(q.opts); optionOrder[q.id] = rand ? shuffle(l) : l; });
+}
+function typeset(el){ if(window.MathJax && typeof MathJax.typesetPromise === 'function'){ MathJax.typesetPromise([el]).catch(function(){}); } }
+const label = (q,i) => ES_DOCENTE ? q.id : (i+1);
+const answeredCount = () => Object.keys(answers).length;
+const fmtTime = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+
+function markSVG(kind){
+  const p = kind==='ok' ? 'M6 18 L14 26 L28 8' : kind==='bad' ? 'M8 8 L26 26 M26 8 L8 26' : 'M17 6 L17 20 M17 27 L17 28';
+  return '<svg class="mark '+kind+'" viewBox="0 0 34 34" aria-hidden="true"><path d="'+p+'"/></svg>';
+}
+
+/* ===== Temporizador ===== */
+function startTimer(){
+  stopTimer(true);
+  startTime = Date.now(); endTime = null;
+  if(ES_DOCENTE) return;
+  $('timerWrap').hidden = false;
+  const tick = () => { $('timer').textContent = fmtTime(Math.floor((Date.now()-startTime)/1000)); };
+  tick(); timerId = setInterval(tick, 1000);
+}
+function stopTimer(silent){
+  if(timerId){ clearInterval(timerId); timerId = null; }
+  if(!silent && endTime === null) endTime = Date.now();
+}
+
+/* ===== Burbujas y progreso ===== */
+function renderBubbles(){
+  const el = $('bubbles'); el.innerHTML = '';
+  displayQuestions.forEach((q,i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    let cls = 'bub';
+    const a = answers[q.id];
+    if(a){
+      if(ES_DOCENTE) cls += (a.choice===correctOf(q)) ? ' correct' : ' incorrect';
+      else cls += ' answered';
+    }
+    if(i===current) cls += ' current';
+    b.className = cls;
+    b.textContent = label(q,i);
+    b.setAttribute('aria-label', 'Ir a la pregunta ' + label(q,i));
+    b.onclick = () => { showQuiz(); current = i; render(); };
+    el.appendChild(b);
+  });
+}
+function updateProgress(){
+  const n = answeredCount();
+  $('progress').innerHTML = 'Respondidas <b>' + n + ' / ' + TOTAL + '</b>';
+  if(ES_DOCENTE){
+    const ok = Object.keys(answers).filter(id => { const q = Q.find(x=>x.id==id); return answers[id].choice===correctOf(q); }).length;
+    $('scorePill').textContent = ok + ' / ' + TOTAL + ' correctas';
+  }
+}
+
+/* ===== Tarjeta de pregunta ===== */
+function render(){
+  const q = displayQuestions[current];
+  const ans = answers[q.id];
+  const order = optionOrder[q.id];
+  const cor = correctOf(q);
+  const showFb = ES_DOCENTE && (ans || revealed[q.id]);
+  const anyGraph = order.some(l => /<svg/i.test(q.opts[l]));
+  const shortOpts = order.every(l => q.opts[l].length < 70);
+
+  let optsHTML = '';
+  order.forEach((orig,i) => {
+    const cls = ['opt'];
+    if(/<svg/i.test(q.opts[orig])) cls.push('opt-graph');
+    if(showFb){
+      if(orig===cor) cls.push('reveal-correct');
+      else if(ans && ans.choice===orig) cls.push('reveal-wrong');
+    } else if(ans && ans.choice===orig){ cls.push('selected'); }
+    optsHTML += '<div class="'+cls.join(' ')+'" role="radio" tabindex="0" aria-checked="'+(ans && ans.choice===orig ? 'true':'false')+'" data-orig="'+orig+'">'
+      + '<span class="letter">'+LETTERS[i]+'</span><div class="txt">'+q.opts[orig]+'</div></div>';
+  });
+
+  let fb = '';
+  if(showFb){
+    const corDisp = LETTERS[order.indexOf(cor)];
+    if(ans){
+      const ok = ans.choice === cor;
+      fb = '<div class="feedback '+(ok?'ok':'bad')+'"><b>'+markSVG(ok?'ok':'bad')+(ok?'¡Correcto!':'No es la respuesta')+' — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    } else {
+      fb = '<div class="feedback info"><b>'+markSVG('info')+'Solución — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    }
+  }
+  const revealBtn = (ES_DOCENTE && !showFb) ? '<div class="card-actions"><button type="button" class="btn small" id="revealBtn">👁 Ver solución</button></div>' : '';
+  const metaDoc = ES_DOCENTE ? '<div class="meta-doc">Pregunta '+q.id+' del banco · Subtema: '+q.subtema+(q.pens?' · '+q.pens:'')+'</div>' : '';
+
+  $('cardInner').innerHTML =
+    '<div class="q-head"><div class="q-num">'+label(q,current)+'</div>'
+    + '<div class="q-tags"><span class="tag">'+q.tema+'</span><span class="tag tag-comp">'+q.comp+'</span></div></div>'
+    + metaDoc
+    + '<div class="context"><h2 class="ctx-title">'+q.titulo+'</h2>'+q.ctx+'</div>'
+    + '<p class="stmt">'+q.text+'</p>'
+    + '<div class="options'+((anyGraph||shortOpts)?' cols2':'')+'" role="radiogroup" aria-label="Opciones de respuesta">'+optsHTML+'</div>'
+    + revealBtn + fb;
+
+  const inner = $('cardInner');
+  inner.querySelectorAll('.opt').forEach(el => {
+    const pick = () => {
+      const orig = el.getAttribute('data-orig');
+      if(!ES_DOCENTE && answers[q.id] && answers[q.id].choice===orig){ delete answers[q.id]; }
+      else { answers[q.id] = { choice: orig }; }
+      $('finishWarn').hidden = true;
+      render();
+    };
+    el.onclick = pick;
+    el.onkeydown = ev => { if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); pick(); } };
+  });
+  const rb = $('revealBtn');
+  if(rb) rb.onclick = () => { revealed[q.id] = true; render(); };
+
+  $('prevBtn').disabled = current === 0;
+  $('nextBtn').textContent = current === TOTAL-1 ? (ES_DOCENTE ? 'Ver resultados →' : 'Finalizar →') : 'Siguiente →';
+  renderBubbles(); updateProgress();
+  typeset($('cardInner'));
+}
+
+function go(delta){
+  const n = current + delta;
+  if(n < 0) return;
+  if(n >= TOTAL){ tryFinish(); return; }
+  current = n; render();
+  $('cardInner').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ===== Finalizar y resumen ===== */
+function unansweredList(){
+  const out = [];
+  displayQuestions.forEach((q,i) => { if(!answers[q.id]) out.push(label(q,i)); });
+  return out;
+}
+function tryFinish(){
+  const pend = unansweredList();
+  if(!ES_DOCENTE && pend.length){
+    const w = $('finishWarn');
+    w.innerHTML = '<b>Aún tienes ' + pend.length + ' pregunta' + (pend.length>1?'s':'') + ' sin responder</b> (números: ' + pend.join(', ') + ').'
+      + '<div class="row"><button type="button" class="btn" id="keepBtn">Seguir respondiendo</button><button type="button" class="btn primary" id="forceBtn">Finalizar de todos modos</button></div>';
+    w.hidden = false;
+    $('keepBtn').onclick = () => { w.hidden = true; };
+    $('forceBtn').onclick = () => { w.hidden = true; showSummary(); };
+    w.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  showSummary();
+}
+function barsHTML(data){
+  return '<div class="bars">' + Object.entries(data).map(([name,v]) => {
+    const pct = Math.round(v.ok / v.total * 100);
+    return '<div class="row"><div class="cname">'+name+'</div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div><div class="cnum">'+v.ok+'/'+v.total+'</div></div>';
+  }).join('') + '</div>';
+}
+function keyTableHTML(){
+  return '<table class="keytable"><thead><tr><th>#</th><th>Tema</th><th>Subtema</th><th>Competencia</th><th>Clave</th></tr></thead><tbody>'
+    + Q.map(q => '<tr><td class="n">'+q.id+'</td><td>'+q.tema+'</td><td>'+q.subtema+'</td><td>'+q.comp+'</td><td class="k">'+q.correct+'</td></tr>').join('')
+    + '</tbody></table>';
+}
+function showSummary(){
+  stopTimer();
+  const cats = {}, comps = {}, missed = [];
+  let ok = 0;
+  Q.forEach(q => {
+    cats[q.tema] = cats[q.tema] || {ok:0,total:0};
+    comps[q.comp] = comps[q.comp] || {ok:0,total:0};
+    cats[q.tema].total++; comps[q.comp].total++;
+    const a = answers[q.id];
+    if(a && a.choice === correctOf(q)){ ok++; cats[q.tema].ok++; comps[q.comp].ok++; }
+  });
+  displayQuestions.forEach((q,i) => {
+    const a = answers[q.id];
+    if(!(a && a.choice === correctOf(q))) missed.push({pos:i, q:q});
+  });
+  const pct = Math.round(ok/TOTAL*100);
+  let html = '<p class="caption">Resultado final</p><h2>' + (ES_DOCENTE ? 'Resultado de la práctica' : 'Así te fue en la preparación') + '</h2>'
+    + '<div class="big">'+ok+'/'+TOTAL+'</div><div class="pct">'+pct+'% de aciertos'
+    + (!ES_DOCENTE && endTime ? ' · Tiempo: ' + fmtTime(Math.floor((endTime-startTime)/1000)) : '') + '</div>'
+    + '<p class="label sec-gap">Por tema</p>' + barsHTML(cats)
+    + '<p class="label sec-gap">Por competencia evaluada</p>' + barsHTML(comps);
+  if(!ES_DOCENTE){
+    if(missed.length){
+      html += '<p class="label sec-gap">Para repasar — toca una pregunta para volver a ella</p><div class="chips">'
+        + missed.map(m => '<button type="button" class="chip" data-pos="'+m.pos+'">'+(m.pos+1)+'. '+m.q.tema+'</button>').join('') + '</div>';
+    } else {
+      html += '<p class="sec-gap" style="font-size:15px">Respondiste correctamente todas las preguntas.</p>';
+    }
+  } else {
+    html += '<p class="label sec-gap">Clave de respuestas</p><div class="table-scroll">' + keyTableHTML() + '</div>';
+  }
+  html += '<button type="button" class="btn primary" id="retryBtn">↺ Reintentar</button>';
+  const s = $('summary'); s.innerHTML = html; s.hidden = false;
+  $('quizBody').hidden = true;
+  s.querySelectorAll('.chip').forEach(c => c.onclick = () => { showQuiz(); current = +c.getAttribute('data-pos'); render(); $('cardInner').scrollIntoView({behavior:'smooth', block:'start'}); });
+  $('retryBtn').onclick = retry;
+  s.scrollIntoView({behavior:'smooth', block:'start'});
+  enviarIntento(ok);
+}
+function showQuiz(){ $('summary').hidden = true; $('quizBody').hidden = false; }
+function retry(){
+  answers = {}; revealed = {}; current = 0; buildOrder();
+  $('finishWarn').hidden = true; showQuiz(); startTimer(); render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===== Controles docente ===== */
+function setMode(m){
+  mode = m;
+  $('orderBookletBtn').classList.toggle('active', m==='orden');
+  $('orderRandomBtn').classList.toggle('active', m==='aleatorio');
+  $('reshuffleBtn').hidden = (m !== 'aleatorio');
+  retry();
+}
+
+/* ===== Registro en el portal (silencioso: nunca bloquea el cuadernillo) ===== */
+function registrarApertura(){
+  try{
+    if(!sesion || !sesion.documento) return;
+    const params = new URLSearchParams({
+      accion: 'registrarVista',
+      doc: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupoAsignado || sesion.grupo || '',
+      rol: sesion.rol || '',
+      origen: 'GitHub',
+      tipoVista: 'Apertura Artefacto — ' + AREA_ARTEFACTO
+    });
+    fetch(SCRIPT_URL_VISTAS + '?' + params.toString(), { mode: 'no-cors' }).catch(function(){});
+  }catch(e){}
+}
+function agruparPorCampo(campo){
+  const grupos = {};
+  displayQuestions.forEach(function(q){
+    const etiqueta = q[campo];
+    if(!etiqueta) return;
+    if(!grupos[etiqueta]) grupos[etiqueta] = { etiqueta: etiqueta, aciertos: 0, total: 0 };
+    grupos[etiqueta].total++;
+    if(answers[q.id] && answers[q.id].choice === correctOf(q)) grupos[etiqueta].aciertos++;
+  });
+  return Object.values(grupos);
+}
+function enviarIntento(totalCorrectas){
+  try{
+    if(!sesion || !sesion.documento) return; // sin sesión del portal (vista previa) no se registra nada
+    const endMs = endTime || Date.now();
+    const payload = {
+      documento: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupo || '',
+      area: AREA_ARTEFACTO,
+      numeroIntento: numeroIntentoActual,
+      duracionSegundos: Math.round((endMs - startTime) / 1000),
+      origen: 'portal',
+      rol: ES_DOCENTE ? 'docente' : 'estudiante',
+      versionArtefacto: VERSION_ARTEFACTO,
+      categorias: agruparPorCampo('tema'),
+      competencias: agruparPorCampo('comp'),
+      totalAciertos: totalCorrectas,
+      totalPreguntas: displayQuestions.length
+    };
+    numeroIntentoActual++;
+    fetch(SCRIPT_URL_INTENTOS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // evita el preflight de CORS con Apps Script
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+  }catch(e){}
+}
+async function cargarHistorial(){
+  if(ES_DOCENTE) return;
+  if(!sesion || !sesion.documento) return;
+  try{
+    const params = new URLSearchParams({ doc: sesion.documento, area: AREA_ARTEFACTO, accion: 'historialArtefacto' });
+    const resp = await fetch(SCRIPT_URL_INTENTOS + '?' + params.toString());
+    const datos = await resp.json();
+    if(datos && datos.encontrado){
+      numeroIntentoActual = datos.numeroIntentosPrevios + 1;
+      if(datos.numeroIntentosPrevios === 0) return;
+      const u = datos.ultimoIntento || {};
+      const banner = document.createElement('div');
+      banner.className = 'hist-banner';
+      banner.innerHTML = '<strong>Intento N.° ' + (datos.numeroIntentosPrevios + 1) + '</strong> — tu puntaje del intento anterior fue <strong>'
+        + u.aciertos + '/' + u.totalPreguntas + '</strong> (' + u.porcentaje + '%)';
+      $('app').insertBefore(banner, $('app').children[1] || null);
+    }
+  }catch(e){}
+}
+
+/* ===== Arranque según el rol ===== */
+function start(){
+  if(started) return; started = true;
+  $('roleGate').hidden = true;
+  $('app').hidden = false;
+  mode = ES_DOCENTE ? 'orden' : 'aleatorio';
+
+  $('stamp').textContent = ES_DOCENTE ? 'VERSIÓN DOCENTE · 20 PREGUNTAS' : '20 PREGUNTAS';
+  $('modo').textContent = ES_DOCENTE ? 'retroalimentación inmediata' : 'simulacro con resultado final';
+  $('introNote').innerHTML = ES_DOCENTE ? INTRO_DOC : INTRO_EST;
+  $('finishBtn').textContent = ES_DOCENTE ? 'Ver resultados' : 'Finalizar y ver resultados';
+  if(PREVIEW){
+    $('previewBar').hidden = false;
+    $('previewRole').textContent = ES_DOCENTE ? 'docente' : 'estudiante';
+    $('switchRole').onclick = () => location.reload();
+  }
+
+  $('prevBtn').onclick = () => go(-1);
+  $('nextBtn').onclick = () => go(1);
+  $('finishBtn').onclick = tryFinish;
+
+  if(ES_DOCENTE){
+    $('orderRow').hidden = false;
+    $('orderBookletBtn').onclick = () => setMode('orden');
+    $('orderRandomBtn').onclick = () => setMode('aleatorio');
+    $('reshuffleBtn').onclick = retry;
+    $('keyBtn').onclick = () => {
+      const p = $('keyPanel');
+      if(p.hidden){ $('keyTable').innerHTML = keyTableHTML(); }
+      p.hidden = !p.hidden;
+      $('keyBtn').classList.toggle('active', !p.hidden);
+    };
+  } else {
+    $('scorePill').style.visibility = 'hidden';
+  }
+
+  buildOrder();
+  startTimer();
+  render();
+  registrarApertura();
+  cargarHistorial();
+}
+
+if(sesion){
+  ES_DOCENTE = String(sesion.rol || '').trim().toLowerCase().indexOf('docente') === 0;
+  start();
+} else if(/(^|\.)github\.io$/i.test(location.hostname)){
+  // En el portal publicado siempre debe haber sesión: si no, vuelve al portal.
+  window.location.href = PORTAL;
+} else {
+  // Fuera del portal (vista previa en Claude o archivo local): se elige el rol a mano.
+  PREVIEW = true;
+  $('roleGate').hidden = false;
+  $('pickEst').onclick = () => { ES_DOCENTE = false; start(); };
+  $('pickDoc').onclick = () => { ES_DOCENTE = true; start(); };
+}
+})();
+</script>
+
+</body>
+</html>
