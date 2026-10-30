@@ -319,8 +319,8 @@ mjx-container[jax="SVG"]{margin:0 .05em!important; font-size:100%!important;}
 (function(){
 /* ===== Configuración del portal (mismos servicios que los demás cuadernillos) ===== */
 const PORTAL = "https://llerzy.github.io/portal-slg/";
-const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbwEzpQsbsQ9JrLpY_ItBRljCfNTy1h_fEUxRVIm0vzr0iy98rjKAi4nz9S0owaBZiHg/exec";
-const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbwpY-uBntm7dNVLR8fIDCFfrp7ALf2raxRO6vx-gl2FQ85g5rPnTTjWrk20i1qsw3nD/exec";
+const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
 const VERSION_ARTEFACTO = "pp1-v1"; // súbelo manualmente si cambias las preguntas de este cuadernillo
 const AREA_ARTEFACTO = "Matemáticas · Prueba de periodo 1";
 
@@ -583,6 +583,7 @@ function registrarApertura(){
       nombre: sesion.nombre || '',
       grupo: sesion.grupoAsignado || sesion.grupo || '',
       rol: sesion.rol || '',
+      director: sesion.director || '',
       origen: 'GitHub',
       tipoVista: 'Apertura Artefacto — ' + AREA_ARTEFACTO
     });
@@ -614,6 +615,8 @@ function enviarIntento(totalCorrectas){
       origen: 'portal',
       rol: ES_DOCENTE ? 'docente' : 'estudiante',
       versionArtefacto: VERSION_ARTEFACTO,
+      tipoArtefacto: 'periodo',
+      periodo: 'P1',
       categorias: agruparPorCampo('tema'),
       competencias: agruparPorCampo('comp'),
       totalAciertos: totalCorrectas,
@@ -631,7 +634,7 @@ async function cargarHistorial(){
   if(ES_DOCENTE) return;
   if(!sesion || !sesion.documento) return;
   try{
-    const params = new URLSearchParams({ doc: sesion.documento, area: AREA_ARTEFACTO, accion: 'historialArtefacto' });
+    const params = new URLSearchParams({ doc: sesion.documento, area: AREA_ARTEFACTO, accion: 'historialArtefacto', tipoArtefacto: 'periodo', periodo: 'P1' });
     const resp = await fetch(SCRIPT_URL_INTENTOS + '?' + params.toString());
     const datos = await resp.json();
     if(datos && datos.encontrado){
