@@ -1,12 +1,13 @@
 {
-  "generado": "2026-10-30T09:16:04-05:00",
+  "generado": "2026-10-30T10:16:56-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
       "opcion": "",
       "activo": false,
       "grados": [
-        "10"
+        "10",
+        "11"
       ],
       "grupos": [
         "1001"
@@ -50,6 +51,28 @@
     {
       "ficha": "artefactosPeriodo",
       "opcion": "economia_periodo1_11",
+      "activo": true,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
+      "opcion": "economia_periodo1_10",
+      "activo": true,
+      "grados": [
+        "10"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
+      "opcion": "economia_periodo2_11",
       "activo": true,
       "grados": [
         "11"
