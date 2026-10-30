@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prueba de Periodo 1 Economía 11</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+/* Concepto: libreta de examen. Ticket de encabezado, hoja de burbujas y una tarjeta por pregunta,
+   sobre papel cálido. Misma identidad visual de los cuadernillos SLG; un solo tema (claro) a propósito. */
+:root{
+  --paper:#EAE3D3; --paper-dark:#DDD4BE; --card:#F6F1E6; --card-hi:#FBF8F1;
+  --ink:#232A3B; --ink-soft:#4B5266; --rule:#B9AD8F;
+  --gold:#B8862E; --gold-ink:#7E5A12;
+  --green:#2E6B4F; --green-bg:#DDEBE1; --red:#A6323E; --red-bg:#F3DEDD;
+  --shadow:0 10px 30px rgba(35,42,59,.14);
+  --f-display:'Fraunces',Georgia,serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none!important;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--f-body); color:var(--ink); background-color:var(--paper);
+  background-image:radial-gradient(circle at 1px 1px, rgba(35,42,59,.05) 1px, transparent 0);
+  background-size:14px 14px;
+  padding-block:28px 60px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  min-height:100vh; line-height:1.45;
+}
+.wrap{max-width:980px; margin:0 auto;}
+
+/* ---------- ticket ---------- */
+.ticket{background:var(--ink); color:var(--paper); border-radius:14px; padding:22px 26px 26px; position:relative; box-shadow:var(--shadow); overflow:hidden;}
+.ticket::after{content:""; position:absolute; left:0; right:0; bottom:-1px; height:14px;
+  background-image:radial-gradient(circle at 10px 0, var(--paper) 7px, transparent 7.5px); background-size:20px 14px; background-repeat:repeat-x;}
+.ticket-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+.ticket-id{display:flex; gap:14px; align-items:center; min-width:0; flex:1 1 320px;}
+.logos{display:flex; gap:8px; flex:none;}
+.logo-chip{width:54px; height:54px; border-radius:10px; background:var(--card); display:flex; align-items:center; justify-content:center; padding:5px;}
+.logo-chip img{max-width:100%; max-height:100%; object-fit:contain;}
+.eyebrow{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#C9BFA0; margin:0 0 6px;}
+.ticket h1{font-family:var(--f-display); font-weight:600; font-size:clamp(24px,4vw,36px); margin:0; line-height:1.08; text-wrap:balance;}
+.ticket .sub{font-family:var(--f-display); font-style:italic; font-weight:500; color:#D8CFB2; font-size:16px; margin-top:4px;}
+.stamp{border:2px solid var(--gold); color:#E2B95B; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; padding:6px 10px; border-radius:6px; transform:rotate(4deg); white-space:nowrap;}
+.ticket-meta{display:flex; gap:8px 20px; margin-top:18px; flex-wrap:wrap; font-family:var(--f-mono); font-size:12px; color:#C9BFA0;}
+.ticket-meta b{color:var(--paper); font-weight:600;}
+.timer{font-variant-numeric:tabular-nums;}
+
+.intro-note{margin-top:14px; background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:14px 18px; font-size:14px; color:var(--ink-soft); line-height:1.55; box-shadow:var(--shadow);}
+.intro-note b{color:var(--ink);}
+
+/* ---------- navegador ---------- */
+.nav-strip{background:var(--card); border-radius:12px; margin-top:14px; padding:14px 16px; box-shadow:var(--shadow);}
+.label{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;}
+.order-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--rule);}
+.order-toggle{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.order-btn{font-family:var(--f-mono); font-size:12px; font-weight:600; border:1.5px solid var(--rule); background:var(--paper); color:var(--ink-soft); padding:8px 14px; border-radius:20px; cursor:pointer; transition:background .15s, border-color .15s, color .15s;}
+.order-btn:hover{border-color:var(--ink-soft);}
+.order-btn.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+.bubbles{display:flex; flex-wrap:wrap; gap:7px;}
+.bub{width:32px; height:32px; border-radius:50%; border:2px solid var(--rule); background:transparent; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:600; font-size:12px; color:var(--ink-soft); cursor:pointer; padding:0; transition:transform .15s, background .2s, border-color .2s, color .2s;}
+.bub:hover{transform:translateY(-2px);}
+.bub.answered{background:var(--ink-soft); border-color:var(--ink-soft); color:#fff;}
+.bub.correct{background:var(--green); border-color:var(--green); color:#fff;}
+.bub.incorrect{background:var(--red); border-color:var(--red); color:#fff;}
+.bub.current{border-color:var(--ink); box-shadow:0 0 0 3px rgba(184,134,46,.45);}
+.bub.answered.current,.bub.correct.current,.bub.incorrect.current{border-color:var(--ink);}
+.progress-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:1px dashed var(--rule);}
+.progress{font-family:var(--f-mono); font-size:12.5px; color:var(--ink-soft);}
+.progress b{color:var(--ink);}
+
+/* ---------- botones ---------- */
+.btn{font-family:var(--f-mono); font-weight:600; font-size:13px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); padding:10px 18px; border-radius:8px; cursor:pointer; transition:background .15s, color .15s;}
+.btn:hover{background:var(--ink); color:var(--paper);}
+.btn:disabled{opacity:.35; cursor:not-allowed;}
+.btn:disabled:hover{background:transparent; color:var(--ink);}
+.btn.primary{background:var(--ink); color:var(--paper);}
+.btn.primary:hover{background:#3a4360;}
+.btn.small{padding:8px 14px; font-size:12px; border-radius:20px;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+
+/* ---------- tarjeta de pregunta ---------- */
+.card{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); overflow:hidden;}
+.card-inner{padding:24px 26px 28px;}
+.q-head{display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
+.q-num{width:42px; height:42px; min-width:42px; border-radius:50%; background:var(--ink); color:var(--paper); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:16px;}
+.q-tags{display:flex; gap:8px; flex-wrap:wrap; min-width:0;}
+.tag{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:20px; border:1px solid var(--rule); color:var(--ink-soft);}
+.tag-comp{border-color:var(--gold); color:var(--gold-ink); background:rgba(184,134,46,.1);}
+.meta-doc{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft); margin:-4px 0 14px; padding:6px 10px; background:var(--paper); border-radius:6px; border:1px dashed var(--rule);}
+
+.context{margin:0 0 18px; padding:14px 16px 16px; background:var(--paper-dark); border-radius:8px; font-size:14.5px; line-height:1.5; color:var(--ink);}
+.ctx-title{font-family:var(--f-display); font-weight:600; font-size:19px; line-height:1.2; margin:0 0 8px; color:var(--red); text-wrap:balance;}
+.context p{margin:0 0 8px;}
+.context p:last-child{margin-bottom:0;}
+.context .datos,.context .recordatorio,.context .formula-destacada,.context .formula-general,
+.context .tarjeta-afirmacion,.context .afirmacion,.context .secuencia,.context .flujo,
+.context .escenario,.context .figura,.context .grafica-principal,.context .parametro{
+  background:var(--card-hi); border:1px solid var(--rule); border-radius:8px; padding:9px 12px; margin:10px 0 0;
+}
+.context .recordatorio,.context .formula-destacada,.context .formula-general,.context .flujo{text-align:center;}
+.context .formula-destacada,.context .formula-general{overflow-x:auto;}
+.context .formula-general .titulo-formula{display:block; margin-bottom:4px; font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--red);}
+.context .flujo{font-weight:600; font-size:14px;}
+.context .datos ul{margin:5px 0 0 18px; padding:0;}
+.context .datos li{margin-bottom:3px;}
+.context .tarjeta-afirmacion strong{color:var(--red);}
+.context .parametros{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:6px; margin-top:10px;}
+.context .parametros .parametro{margin:0; font-size:14px; padding:6px 10px;}
+.context .escenarios{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:10px; margin-top:10px;}
+.context .escenario{margin:0; min-width:0;}
+.context .escenario h3{margin:0 0 4px; font-family:var(--f-display); font-size:16px; color:var(--red);}
+.context .escenario p{font-size:14px;}
+.context .escenario .figura{border:0; padding:2px; margin:6px 0 0; background:transparent;}
+.context .figura,.context .grafica-principal{text-align:center;}
+.context svg.grafico-svg{display:block; width:100%; max-width:520px; height:auto; margin:0 auto;}
+.context .escenario svg.grafico-svg{max-height:190px;}
+.nota{margin-top:4px; font-size:12px; line-height:1.3; color:var(--ink-soft); text-align:center;}
+.context table{border-collapse:collapse; width:100%; margin-top:10px; font-size:13.5px; background:var(--card-hi);}
+.context th,.context td{border:1px solid var(--rule); padding:5px 8px; text-align:center;}
+.context th{background:var(--ink); color:var(--paper); font-weight:600;}
+.table-scroll{overflow-x:auto;}
+
+.stmt{margin:0 0 18px; font-size:17px; line-height:1.55; font-weight:600;}
+.options{display:grid; grid-template-columns:1fr; gap:10px;}
+.options.cols2{grid-template-columns:1fr 1fr;}
+.opt{display:flex; align-items:flex-start; gap:12px; border:1.5px solid var(--rule); border-radius:9px; padding:10px 14px; cursor:pointer; background:var(--card); font-size:15px; line-height:1.45; transition:border-color .15s, background .15s; min-width:0;}
+.opt:hover{border-color:var(--ink-soft);}
+.opt .letter{width:28px; height:28px; min-width:28px; border-radius:50%; border:2px solid var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-weight:700; font-size:12.5px; transition:background .2s, color .2s; margin-top:1px;}
+.opt .txt{min-width:0; flex:1; overflow-x:auto; padding-block:2px;}
+.opt.selected{border-color:var(--ink); background:#EFE8D6;}
+.opt.selected .letter{background:radial-gradient(circle at 35% 30%, #545f7a, var(--ink) 70%); color:var(--paper);}
+.opt.reveal-correct{border-color:var(--green); background:var(--green-bg);}
+.opt.reveal-correct .letter{background:var(--green); border-color:var(--green); color:#fff;}
+.opt.reveal-wrong{border-color:var(--red); background:var(--red-bg);}
+.opt.reveal-wrong .letter{background:var(--red); border-color:var(--red); color:#fff;}
+.opt.opt-graph{align-items:flex-start;}
+.opt.opt-graph .txt{overflow:visible;}
+.opt svg.grafico-svg{display:block; width:100%; height:auto; max-height:190px;}
+
+.card-actions{margin-top:14px; display:flex; justify-content:flex-end;}
+.feedback{margin-top:16px; padding:14px 16px; border-radius:9px; font-size:14.5px; line-height:1.6;}
+.feedback.ok{background:var(--green-bg); color:#1E4433; border:1px solid var(--green);}
+.feedback.bad{background:var(--red-bg); color:#5E1B23; border:1px solid var(--red);}
+.feedback.info{background:var(--card-hi); color:var(--ink); border:1px solid var(--gold);}
+.feedback b{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;}
+.feedback .mark{width:20px; height:20px; flex:none;}
+.feedback .mark path{fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:60; stroke-dashoffset:60; animation:draw .4s ease forwards .05s;}
+.feedback .mark.ok path{stroke:var(--green);} .feedback .mark.bad path{stroke:var(--red);} .feedback .mark.info path{stroke:var(--gold-ink);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+@media (prefers-reduced-motion:reduce){.feedback .mark path{animation:none; stroke-dashoffset:0;} *{transition:none!important;}}
+
+.footer-nav{display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding:0 4px; gap:10px; flex-wrap:wrap;}
+.score-pill{font-family:var(--f-mono); font-size:13px; font-weight:600; background:var(--card); border:1.5px solid var(--gold); color:var(--gold-ink); padding:8px 14px; border-radius:20px; box-shadow:var(--shadow);}
+
+.finish-warn{margin-top:14px; background:var(--card); border:1.5px solid var(--gold); border-radius:10px; padding:14px 16px; box-shadow:var(--shadow); font-size:14.5px;}
+.finish-warn .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+
+/* ---------- panel de clave y resumen ---------- */
+.keypanel,.summary{background:var(--card); border-radius:12px; margin-top:14px; box-shadow:var(--shadow); padding:24px 26px;}
+.keypanel h2,.summary h2{font-family:var(--f-display); font-size:26px; margin:0 0 4px; font-weight:600;}
+.summary .big{font-family:var(--f-display); font-size:54px; font-weight:700; color:var(--gold-ink); margin:10px 0 0; line-height:1;}
+.summary .pct{font-family:var(--f-mono); font-size:13px; color:var(--ink-soft); margin-top:4px;}
+.caption{font-family:var(--f-mono); font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; margin:0 0 4px;}
+.bars{margin-top:6px;}
+.bars .row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.bars .cname{width:210px; font-size:13.5px; font-weight:600; flex-shrink:0;}
+.track{flex:1; height:12px; border-radius:8px; background:var(--paper-dark); overflow:hidden; min-width:60px;}
+.fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--green)); border-radius:8px; transition:width .5s ease;}
+.cnum{font-family:var(--f-mono); font-size:12.5px; width:46px; text-align:right; flex-shrink:0;}
+.chips{display:flex; flex-wrap:wrap; gap:8px;}
+.chip{font-size:13px; border:1px solid var(--red); background:var(--red-bg); color:#5E1B23; border-radius:20px; padding:4px 12px; cursor:pointer; font-family:var(--f-body);}
+.summary .btn{margin-top:22px; margin-right:8px;}
+.keytable{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:10px; min-width:520px;}
+.keytable th,.keytable td{border:1px solid var(--rule); padding:6px 9px; text-align:left;}
+.keytable th{background:var(--ink); color:var(--paper); font-weight:600;}
+.keytable td.k{font-family:var(--f-mono); font-weight:700; text-align:center; color:var(--green);}
+.keytable td.n{font-family:var(--f-mono); text-align:center;}
+.sec-gap{margin-top:24px;}
+
+mjx-container[jax="SVG"]{margin:0 .05em!important; font-size:100%!important;}
+.stmt mjx-container,.opt mjx-container,.context p mjx-container,.context .datos mjx-container,.context li mjx-container,
+.context .formula-destacada mjx-container,.context .formula-general mjx-container,.context td mjx-container,
+.context th mjx-container,.context .afirmacion mjx-container,.context .parametro mjx-container,
+.context .recordatorio mjx-container,.context .nota mjx-container,.feedback mjx-container{display:inline-block!important; vertical-align:-.08em;}
+
+@media (max-width:640px){
+  .card-inner{padding:18px 14px 22px;}
+  .options.cols2{grid-template-columns:1fr;}
+  .ticket{padding:18px 16px 24px;}
+  .bars .row{flex-wrap:wrap;}
+  .bars .cname{width:100%;}
+  .keypanel,.summary{padding:20px 14px;}
+  .stmt{font-size:16px;}
+}
+
+/* ---------- portal, vista previa y banner de historial ---------- */
+.portal-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+.portal-link{display:inline-flex; align-items:center; gap:6px; background:var(--card-hi); border:1px solid var(--rule); border-radius:999px; padding:7px 14px; font-size:12.5px; font-weight:700; color:var(--red); text-decoration:none;}
+.portal-link:hover{background:var(--card);}
+.preview-bar{display:flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft);}
+.preview-bar b{color:var(--ink);}
+.gate{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:28px 26px; margin:40px auto 0; max-width:580px;}
+.gate h1{font-family:var(--f-display); font-size:26px; line-height:1.15; margin:0; font-weight:600; text-wrap:balance;}
+.gate .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;}
+.hist-banner{background:var(--card); border-left:4px solid var(--gold); border-radius:0 10px 10px 0; padding:12px 16px; margin-bottom:14px; font-size:13.5px; box-shadow:var(--shadow);}
+
+.context .frac,.opt .frac,.stmt .frac,.feedback .frac{display:inline-block; vertical-align:middle; text-align:center; margin:0 3px;}
+.frac .num{display:block; border-bottom:1.5px solid currentColor; padding:0 4px 1px;}
+.frac .den{display:block; padding:1px 4px 0;}
+.context .formula-destacada{font-size:15.5px;}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <section class="gate" id="roleGate" hidden>
+    <p class="eyebrow" style="color:var(--ink-soft)">Vista previa fuera del portal</p>
+    <h1>Preparación Primera Prueba de Periodo</h1>
+    <p style="margin:8px 0 0; font-size:14.5px; color:var(--ink-soft); line-height:1.55">
+      En el portal, el rol se toma de la sesión iniciada. Aquí no hay sesión, así que elige cómo quieres ver el cuadernillo.
+    </p>
+    <div class="row">
+      <button type="button" class="btn primary" id="pickEst">Ver como estudiante</button>
+      <button type="button" class="btn" id="pickDoc">Ver como docente</button>
+    </div>
+  </section>
+
+  <div id="app" hidden>
+
+  <div class="portal-row">
+    <a class="portal-link" href="https://llerzy.github.io/portal-slg/">← Volver al portal</a>
+    <div class="preview-bar" id="previewBar" hidden>
+      <span>Vista previa: <b id="previewRole"></b></span>
+      <button type="button" class="btn small" id="switchRole">Cambiar vista</button>
+    </div>
+  </div>
+
+  <header class="ticket">
+    <div class="ticket-top">
+      <div class="ticket-id">
+        <div class="logos">
+          <div class="logo-chip"><img src="https://i.imgur.com/Ld5BbX3.png" alt="Logo Institución Educativa San Luis Gonzaga" onerror="this.parentNode.remove()"></div>
+          <div class="logo-chip"><img src="https://i.imgur.com/Os2RUbW.png" alt="Logo FACIMATE" onerror="this.parentNode.remove()"></div>
+        </div>
+        <div style="min-width:0">
+          <p class="eyebrow">Facimate · I.E. San Luis Gonzaga</p>
+          <h1>Preparación Primera Prueba de Periodo</h1>
+          <div class="sub">Economía — Grado 11°</div>
+        </div>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+    <div class="ticket-meta">
+      <span><b>Temas</b> Interés simple · Interés compuesto</span>
+      <span><b>Docente</b> Llerzy Esneider Torres Ome Ph.D.</span>
+      <span><b>Modo</b> <span id="modo"></span></span>
+      <span id="timerWrap" hidden><b>Tiempo</b> <span class="timer" id="timer">00:00</span></span>
+    </div>
+  </header>
+
+  <div class="intro-note" id="introNote"></div>
+
+  <section class="nav-strip">
+    <div class="order-row" id="orderRow" hidden>
+      <p class="label" style="margin:0;">Orden de las preguntas</p>
+      <div class="order-toggle">
+        <button type="button" class="order-btn active" id="orderBookletBtn">📖 Orden del cuadernillo</button>
+        <button type="button" class="order-btn" id="orderRandomBtn">🔀 Aleatorio</button>
+        <button type="button" class="btn small" id="reshuffleBtn" hidden>↻ Mezclar de nuevo</button>
+        <button type="button" class="order-btn" id="keyBtn">📋 Clave de respuestas</button>
+      </div>
+    </div>
+    <p class="label">Hoja de respuestas — toca un número para ir a esa pregunta</p>
+    <div class="bubbles" id="bubbles"></div>
+    <div class="progress-row">
+      <span class="progress" id="progress"></span>
+      <button type="button" class="btn small primary" id="finishBtn">Ver resultados</button>
+    </div>
+  </section>
+
+  <section class="keypanel" id="keyPanel" hidden>
+    <p class="caption">Solo docente</p>
+    <h2>Clave de respuestas</h2>
+    <p style="margin:0; font-size:13.5px; color:var(--ink-soft)">Las letras corresponden al orden original de las opciones del banco de preguntas.</p>
+    <div class="table-scroll" id="keyTable"></div>
+  </section>
+
+  <div id="quizBody">
+    <article class="card"><div class="card-inner" id="cardInner"></div></article>
+    <div class="finish-warn" id="finishWarn" hidden></div>
+    <div class="footer-nav">
+      <button type="button" class="btn" id="prevBtn">← Anterior</button>
+      <span class="score-pill" id="scorePill">0 / 20 correctas</span>
+      <button type="button" class="btn primary" id="nextBtn">Siguiente →</button>
+    </div>
+  </div>
+
+  <section class="summary" id="summary" hidden></section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+/* ===== Configuración del portal (mismos servicios que los demás cuadernillos) ===== */
+const PORTAL = "https://llerzy.github.io/portal-slg/";
+const SCRIPT_URL_INTENTOS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+const SCRIPT_URL_VISTAS = "https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+const VERSION_ARTEFACTO = "pp1-v1"; // súbelo manualmente si cambias las preguntas de este cuadernillo
+const AREA_ARTEFACTO = "Economía · Prueba de periodo 1";
+
+const Q = [{"id": 1, "tema": "Interés simple", "subtema": "Interés simple", "pens": "", "comp": "Formulación y ejecución", "correct": "A", "explain": "\\(I=C\\cdot i\\cdot t=2.400.000\\cdot0{,}015\\cdot8=288.000\\) y \\(M=C+I=2.400.000+288.000=2.688.000\\) pesos. B usa 1,5 (el porcentaje) como si fuera la tasa decimal; C suma la tasa y el tiempo; D omite el tiempo.", "titulo": "Interés simple", "ctx": "<p>En Santa Fe de Antioquia, una familia invierte <strong>2.400.000<\/strong> pesos para comprar insumos destinados a la venta de productos de tamarindo durante una temporada turística. La inversión genera interés simple a una tasa mensual de <strong>1,5 %<\/strong> (<strong>0,015<\/strong>) durante <strong>8<\/strong> meses.<\/p>\n<p>Para calcular los intereses se usa<\/p>\n<div class=\"formula-destacada\">I=C·i·t<\/div>\n<p>y el valor futuro se calcula mediante<\/p>\n<div class=\"formula-destacada\">M=C+I<\/div>", "text": "¿Cuál procedimiento permite calcular correctamente los intereses generados y el valor futuro de la inversión?", "opts": {"A": "I=2.400.000(0,015)(8)=288.000 y M=2.400.000+288.000=2.688.000 pesos", "B": "I=2.400.000(1,5)(8)=28.800.000 y M=31.200.000 pesos, porque se usa 1,5 como tasa decimal", "C": "I=2.400.000(0,015+8)=19.236.000 y M=21.636.000 pesos, porque se suman la tasa y el tiempo", "D": "I=2.400.000(0,015)=36.000 y M=2.436.000 pesos, porque no se considera el periodo completo de inversión"}}, {"id": 2, "tema": "Interés simple", "subtema": "Interés simple", "pens": "", "comp": "Interpretación y representación", "correct": "B", "explain": "La tasa es anual, así que el tiempo se expresa en años: \\(t=\\frac{5}{12}\\). \\(I=1.800.000\\cdot0{,}18\\cdot\\frac{5}{12}=135.000\\) y \\(M=1.935.000\\) pesos. A toma 5 meses como 5 años; C ignora la tasa; D suma la tasa y el tiempo.", "titulo": "Interés simple", "ctx": "<p>Un comerciante de café de Santa Fe de Antioquia solicita un préstamo de <strong>1.800.000<\/strong> pesos para comprar empaques. El préstamo se pacta con interés simple anual de <strong>18 %<\/strong> (<strong>0,18<\/strong>), durante 5 meses.<\/p>\n<p>Para interpretar correctamente el tiempo, se debe expresar en años:<\/p>\n<div class=\"formula-destacada\">t=<span class=\"frac\"><span class=\"num\">5<\/span><span class=\"den\">12<\/span><\/span><\/div>\n<p>Además,<\/p>\n<div class=\"formula-destacada\">I=C·i·t\n   y   \nM=C+I<\/div>", "text": "¿Cuál interpretación financiera es correcta?", "opts": {"A": "I=1.800.000(0,18)(5)=1.620.000, porque 5 meses deben tomarse como 5 años", "B": "I=1.800.000(0,18)(<span class=\"frac\"><span class=\"num\">5<\/span><span class=\"den\">12<\/span><\/span>)=135.000 y M=1.935.000 pesos", "C": "I=1.800.000(<span class=\"frac\"><span class=\"num\">5<\/span><span class=\"den\">12<\/span><\/span>)=750.000, porque la tasa anual no debe usarse si el tiempo está en meses", "D": "I=1.800.000(0,18+5)=9.324.000, porque la tasa y el tiempo se suman antes de multiplicar"}}, {"id": 3, "tema": "Interés simple", "subtema": "Interés simple", "pens": "", "comp": "Argumentación", "correct": "C", "explain": "\\(I=3.000.000\\cdot0{,}02\\cdot12=720.000\\) y \\(M=3.000.000+720.000=3.720.000\\): la afirmación se valida. A suma en lugar de multiplicar; B usa solo 1 mes; D resta el interés del capital.", "titulo": "Interés simple", "ctx": "<p>Una asociación de guías turísticos de Santa Fe de Antioquia invierte <strong>3.000.000<\/strong> pesos en material promocional. La inversión genera interés simple a una tasa mensual de <strong>2 %<\/strong> (<strong>0,02<\/strong>) durante 12 meses.<\/p>\n<p>Un estudiante afirma que los intereses generados son 720.000 pesos y que el valor futuro es 3.720.000 pesos.<\/p>\n<p>Para analizar la afirmación, se usan las expresiones<\/p>\n<div class=\"formula-destacada\">I=C·i·t\n   y   \nM=C+I<\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación del estudiante?", "opts": {"A": "Se refuta, porque I=3.000.000+0,02+12=3.000.012,02, por lo que el interés no puede ser 720.000", "B": "Se refuta, porque I=3.000.000(0,02)(1)=60.000, ya que 12 meses equivalen siempre a un solo mes financiero", "C": "Se valida, porque I=3.000.000(0,02)(12)=720.000 y M=3.000.000+720.000=3.720.000 pesos", "D": "Se valida, porque M=3.000.000-720.000=2.280.000, lo que confirma que el interés se descuenta del capital"}}, {"id": 4, "tema": "Capital y tiempo", "subtema": "Capital con interés simple", "pens": "", "comp": "Formulación y ejecución", "correct": "D", "explain": "\\(C=\\frac{I}{i\\cdot t}=\\frac{360.000}{0{,}012\\cdot10}=\\frac{360.000}{0{,}12}=3.000.000\\) pesos. A multiplica en lugar de dividir; B ignora la tasa; C ignora el tiempo.", "titulo": "Capital con interés simple", "ctx": "<p>Un productor de fríjol de Santa Fe de Antioquia recibe <strong>360.000<\/strong> pesos de intereses por una inversión realizada durante <strong>10<\/strong> meses, con una tasa mensual de interés simple de <strong>1,2 %<\/strong> (<strong>0,012<\/strong>).<\/p>\n<p>Para hallar el capital inicial se despeja <strong>C<\/strong> de la fórmula<\/p>\n<div class=\"formula-destacada\">I=C·i·t,<\/div>\n<p>por lo que<\/p>\n<div class=\"formula-destacada\">C=<span class=\"frac\"><span class=\"num\">I<\/span><span class=\"den\">i·t<\/span><\/span><\/div>", "text": "¿Cuál es el capital inicial invertido?", "opts": {"A": "C=360.000(0,012)(10)=43.200 pesos, porque el interés debe multiplicarse por la tasa y el tiempo", "B": "C=<span class=\"frac\"><span class=\"num\">360.000<\/span><span class=\"den\">10<\/span><\/span>=36.000 pesos, porque solo se debe dividir el interés entre el número de meses", "C": "C=<span class=\"frac\"><span class=\"num\">360.000<\/span><span class=\"den\">0,012<\/span><\/span>=30.000.000 pesos, porque el tiempo no afecta el cálculo del capital", "D": "C=<span class=\"frac\"><span class=\"num\">360.000<\/span><span class=\"den\">0,012·10<\/span><\/span>=3.000.000 pesos"}}, {"id": 5, "tema": "Capital y tiempo", "subtema": "Capital con interés simple", "pens": "", "comp": "Interpretación y representación", "correct": "A", "explain": "\\(C=\\frac{M}{1+it}=\\frac{4.950.000}{1+0{,}025\\cdot8}=\\frac{4.950.000}{1{,}2}=4.125.000\\) pesos. B multiplica por el factor en lugar de dividir; C divide solo entre el interés acumulado (0,2); D resta la tasa y el tiempo.", "titulo": "Capital con interés simple", "ctx": "<p>Una tienda de artesanías de Santa Fe de Antioquia desea identificar cuánto capital inicial se invirtió si, después de <strong>8<\/strong> meses, el valor futuro fue de <strong>4.950.000<\/strong> pesos con una tasa mensual de interés simple de <strong>2,5 %<\/strong> (<strong>0,025<\/strong>).<\/p>\n<p>Para interés simple se cumple<\/p>\n<div class=\"formula-destacada\">M=C(1+i·t)<\/div>", "text": "¿Cuál representación permite hallar correctamente el capital inicial?", "opts": {"A": "C=<span class=\"frac\"><span class=\"num\">4.950.000<\/span><span class=\"den\">1+0,025(8)<\/span><\/span>=<span class=\"frac\"><span class=\"num\">4.950.000<\/span><span class=\"den\">1,2<\/span><\/span>=4.125.000 pesos", "B": "C=4.950.000(1+0,025(8))=5.940.000 pesos, porque el valor futuro debe multiplicarse por el factor de interés", "C": "C=<span class=\"frac\"><span class=\"num\">4.950.000<\/span><span class=\"den\">0,025(8)<\/span><\/span>=24.750.000 pesos, porque se divide únicamente entre los intereses acumulados", "D": "C=4.950.000-0,025(8)=4.949.999,8 pesos, porque la tasa y el tiempo se restan del valor futuro"}}, {"id": 6, "tema": "Capital y tiempo", "subtema": "Capital con interés simple", "pens": "", "comp": "Argumentación", "correct": "B", "explain": "\\(C=\\frac{M}{1+it}=\\frac{3.600.000}{1+0{,}01\\cdot12}=\\frac{3.600.000}{1{,}12}\\approx3.214.286\\) pesos, no 3.000.000: el interés real es de unos 385.714, no de 600.000. A da por hecho un interés de 600.000 sin comprobarlo; C usa \\(M\\cdot i\\cdot t\\); D multiplica por el factor en lugar de dividir.", "titulo": "Capital con interés simple", "ctx": "<p>Un emprendimiento de hospedaje en Santa Fe de Antioquia obtuvo un valor futuro de <strong>3.600.000<\/strong> pesos después de <strong>12<\/strong> meses, con una tasa mensual de interés simple de <strong>1 %<\/strong> (<strong>0,01<\/strong>). Un estudiante afirma que el capital inicial fue 3.000.000 pesos, porque la diferencia entre el valor futuro y el capital sería 600.000 pesos.<\/p>\n<p>Para analizar la afirmación, se debe usar<\/p>\n<div class=\"formula-destacada\">M=C(1+i·t),<\/div>\n<p>de donde<\/p>\n<div class=\"formula-destacada\">C=<span class=\"frac\"><span class=\"num\">M<\/span><span class=\"den\">1+i·t<\/span><\/span><\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación?", "opts": {"A": "Se valida, porque 3.600.000-600.000=3.000.000, y la diferencia siempre corresponde al capital inicial", "B": "Se refuta, porque C=<span class=\"frac\"><span class=\"num\">3.600.000<\/span><span class=\"den\">1+0,01(12)<\/span><\/span>=<span class=\"frac\"><span class=\"num\">3.600.000<\/span><span class=\"den\">1,12<\/span><\/span>≈ 3.214.286 pesos", "C": "Se valida, porque C=3.600.000(0,01)(12)=432.000, y este resultado confirma que el capital era menor que 3.000.000", "D": "Se refuta, porque C=3.600.000(1+0,01(12))=4.032.000, por lo que el capital inicial fue mayor que el valor futuro"}}, {"id": 7, "tema": "Capital y tiempo", "subtema": "Tiempo con interés simple", "pens": "", "comp": "Formulación y ejecución", "correct": "C", "explain": "\\(t=\\frac{I}{C\\cdot i}=\\frac{270.000}{1.500.000\\cdot0{,}015}=\\frac{270.000}{22.500}=12\\) meses. A suma en el denominador; B y D usan tasas distintas (0,018 y 0,012).", "titulo": "Tiempo con interés simple", "ctx": "<p>Una cooperativa agrícola de Santa Fe de Antioquia invierte <strong>1.500.000<\/strong> pesos y obtiene intereses por <strong>270.000<\/strong> pesos. La tasa de interés simple mensual es de <strong>1,5 %<\/strong> (<strong>0,015<\/strong>).<\/p>\n<p>Para hallar el tiempo se despeja <strong>t<\/strong> de<\/p>\n<div class=\"formula-destacada\">I=C·i·t,<\/div>\n<p>por lo que<\/p>\n<div class=\"formula-destacada\">t=<span class=\"frac\"><span class=\"num\">I<\/span><span class=\"den\">C·i<\/span><\/span><\/div>", "text": "¿Cuánto tiempo permaneció invertido el capital?", "opts": {"A": "8 meses, porque t=<span class=\"frac\"><span class=\"num\">270.000<\/span><span class=\"den\">1.500.000+0,015<\/span><\/span>", "B": "10 meses, porque t=<span class=\"frac\"><span class=\"num\">270.000<\/span><span class=\"den\">1.500.000(0,018)<\/span><\/span>", "C": "12 meses, porque t=<span class=\"frac\"><span class=\"num\">270.000<\/span><span class=\"den\">1.500.000(0,015)<\/span><\/span>=12", "D": "15 meses, porque t=<span class=\"frac\"><span class=\"num\">270.000<\/span><span class=\"den\">1.500.000(0,012)<\/span><\/span>=15"}}, {"id": 8, "tema": "Capital y tiempo", "subtema": "Tiempo con interés simple", "pens": "", "comp": "Interpretación y representación", "correct": "D", "explain": "\\(I=M-C=2.340.000-1.800.000=540.000\\) y \\(t=\\frac{I}{C\\cdot i}=\\frac{540.000}{1.800.000\\cdot0{,}02}=\\frac{540.000}{36.000}=15\\) meses. A divide entre 90.000, valor que no corresponde; B y C aproximan sin sustento.", "titulo": "Tiempo con interés simple", "ctx": "<p>Un comerciante de productos típicos de Santa Fe de Antioquia tomó un préstamo de <strong>1.800.000<\/strong> pesos. Al final pagó <strong>2.340.000<\/strong> pesos con interés simple mensual de <strong>2 %<\/strong> (<strong>0,02<\/strong>).<\/p>\n<p>Para interpretar el tiempo de la deuda, se calcula primero<\/p>\n<div class=\"formula-destacada\">I=M-C,<\/div>\n<p>y luego<\/p>\n<div class=\"formula-destacada\">t=<span class=\"frac\"><span class=\"num\">I<\/span><span class=\"den\">C·i<\/span><\/span><\/div>", "text": "¿Cuál interpretación del tiempo es correcta?", "opts": {"A": "t=6 meses, porque 2.340.000-1.800.000=540.000 y se divide entre 90.000", "B": "t=10 meses, porque 1.800.000(0,02)(10)=360.000, aproximando el interés", "C": "t=12 meses, porque se divide el valor futuro entre el capital y se aproxima a un año", "D": "t=15 meses, porque I=540.000 y t=<span class=\"frac\"><span class=\"num\">540.000<\/span><span class=\"den\">1.800.000(0,02)<\/span><\/span>=15"}}, {"id": 9, "tema": "Capital y tiempo", "subtema": "Tiempo con interés simple", "pens": "", "comp": "Argumentación", "correct": "A", "explain": "\\(I=2.240.000-2.000.000=240.000\\) y \\(t=\\frac{240.000}{2.000.000\\cdot0{,}008}=\\frac{240.000}{16.000}=15\\) meses: la afirmación se valida. B divide \\(M\\) entre \\(C\\); C confunde el tiempo con el interés; D inventa que los meses se vuelven años.", "titulo": "Tiempo con interés simple", "ctx": "<p>Una microempresa de turismo en Santa Fe de Antioquia recibe un crédito de <strong>2.000.000<\/strong> pesos a una tasa mensual de interés simple de <strong>0,8 %<\/strong> (<strong>0,008<\/strong>). Al finalizar la deuda paga <strong>2.240.000<\/strong> pesos.<\/p>\n<p>Un estudiante afirma que el tiempo de la deuda fue de <strong>15<\/strong> meses.<\/p>\n<p>Para analizar la afirmación, se usan<\/p>\n<div class=\"formula-destacada\">I=M-C\n   y   \nt=<span class=\"frac\"><span class=\"num\">I<\/span><span class=\"den\">C·i<\/span><\/span><\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación?", "opts": {"A": "Se valida, porque I=2.240.000-2.000.000=240.000 y t=<span class=\"frac\"><span class=\"num\">240.000<\/span><span class=\"den\">2.000.000(0,008)<\/span><\/span>=15 meses", "B": "Se refuta, porque t=<span class=\"frac\"><span class=\"num\">2.240.000<\/span><span class=\"den\">2.000.000<\/span><\/span>=1,12 meses", "C": "Se valida, porque t=2.240.000-2.000.000=240.000, y el tiempo corresponde al interés", "D": "Se refuta, porque 15 meses equivalen a 15 años cuando la tasa está escrita en porcentaje"}}, {"id": 10, "tema": "Tasa de interés simple", "subtema": "Tasa de interés simple", "pens": "", "comp": "Formulación y ejecución", "correct": "B", "explain": "\\(i=\\frac{I}{C\\cdot t}=\\frac{375.000}{2.500.000\\cdot10}=\\frac{375.000}{25.000.000}=0{,}015\\), es decir, 1,5 % mensual. A usa 100 en lugar de 10; C toma el tiempo como tasa; D ignora el tiempo.", "titulo": "Tasa de interés simple", "ctx": "<p>Un vendedor de frutas de Santa Fe de Antioquia invierte <strong>2.500.000<\/strong> pesos y obtiene intereses de <strong>375.000<\/strong> pesos durante <strong>10<\/strong> meses.<\/p>\n<p>Para hallar la tasa de interés simple mensual se despeja <strong>i<\/strong> de<\/p>\n<div class=\"formula-destacada\">I=C·i·t,<\/div>\n<p>por lo que<\/p>\n<div class=\"formula-destacada\">i=<span class=\"frac\"><span class=\"num\">I<\/span><span class=\"den\">C·t<\/span><\/span><\/div>", "text": "¿Cuál es la tasa mensual de interés simple?", "opts": {"A": "0,15 %=0,0015, porque i=<span class=\"frac\"><span class=\"num\">375.000<\/span><span class=\"den\">2.500.000(100)<\/span><\/span>", "B": "1,5 %=0,015, porque i=<span class=\"frac\"><span class=\"num\">375.000<\/span><span class=\"den\">2.500.000(10)<\/span><\/span>=0,015", "C": "10 %=0,10, porque el tiempo fue de 10 meses", "D": "15 %=0,15, porque <span class=\"frac\"><span class=\"num\">375.000<\/span><span class=\"den\">2.500.000<\/span><\/span>=0,15, sin considerar el tiempo"}}, {"id": 11, "tema": "Tasa de interés simple", "subtema": "Tasa de interés simple", "pens": "", "comp": "Interpretación y representación", "correct": "C", "explain": "\\(I=3.960.000-3.300.000=660.000\\) y \\(i=\\frac{660.000}{3.300.000\\cdot8}=\\frac{660.000}{26.400.000}=0{,}025\\), es decir, 2,5 % mensual. A aproxima el interés; B usa 9 meses; D no divide entre el tiempo.", "titulo": "Tasa de interés simple", "ctx": "<p>Una asociación de artesanos de Santa Fe de Antioquia invierte <strong>3.300.000<\/strong> pesos y, después de <strong>8<\/strong> meses, obtiene un valor futuro de <strong>3.960.000<\/strong> pesos.<\/p>\n<p>Para interpretar la tasa mensual de interés simple se usa<\/p>\n<div class=\"formula-destacada\">I=M-C\n   e   \ni=<span class=\"frac\"><span class=\"num\">I<\/span><span class=\"den\">C·t<\/span><\/span><\/div>", "text": "¿Cuál tasa representa correctamente la situación?", "opts": {"A": "2 %, porque se aproxima la diferencia 660.000 a 600.000", "B": "2,2 %, porque se divide 660.000 entre 3.300.000(9)", "C": "2,5 %, porque I=660.000 e i=<span class=\"frac\"><span class=\"num\">660.000<\/span><span class=\"den\">3.300.000(8)<\/span><\/span>=0,025", "D": "20 %, porque <span class=\"frac\"><span class=\"num\">660.000<\/span><span class=\"den\">3.300.000<\/span><\/span>=0,20, sin distribuir la tasa entre los meses"}}, {"id": 12, "tema": "Tasa de interés simple", "subtema": "Tasa de interés simple", "pens": "", "comp": "Argumentación", "correct": "D", "explain": "\\(I=1.440.000-1.200.000=240.000\\) y \\(i=\\frac{240.000}{1.200.000\\cdot5}=\\frac{240.000}{6.000.000}=0{,}04\\), es decir, 4 % mensual: se valida. A divide \\(M\\) entre \\(C\\), lo que no da una tasa; B divide el interés entre el tiempo y obtiene pesos; C toma el interés en pesos como si fuera la tasa.", "titulo": "Tasa de interés simple", "ctx": "<p>Un comerciante de maíz de Santa Fe de Antioquia recibe un préstamo de <strong>1.200.000<\/strong> pesos. Después de <strong>5<\/strong> meses paga <strong>1.440.000<\/strong> pesos. Un estudiante afirma que la tasa mensual de interés simple fue del <strong>4 %<\/strong>.<\/p>\n<p>Para analizar la afirmación, se calcula<\/p>\n<div class=\"formula-destacada\">I=M-C\n   y   \ni=<span class=\"frac\"><span class=\"num\">I<\/span><span class=\"den\">C·t<\/span><\/span><\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación?", "opts": {"A": "Se refuta, porque i=<span class=\"frac\"><span class=\"num\">1.440.000<\/span><span class=\"den\">1.200.000<\/span><\/span>=1,2, es decir, 120 % mensual", "B": "Se refuta, porque i=<span class=\"frac\"><span class=\"num\">240.000<\/span><span class=\"den\">5<\/span><\/span>=48.000, y una tasa no puede expresarse como decimal", "C": "Se valida, porque i=1.440.000-1.200.000=240.000, lo que equivale a 4 %", "D": "Se valida, porque I=240.000 e i=<span class=\"frac\"><span class=\"num\">240.000<\/span><span class=\"den\">1.200.000(5)<\/span><\/span>=0,04=4 % mensual"}}, {"id": 13, "tema": "Interés compuesto", "subtema": "Interés compuesto sin capitalización", "pens": "", "comp": "Formulación y ejecución", "correct": "A", "explain": "\\(M=C(1+i)^t=2.000.000(1{,}10)^3=2.662.000\\) e \\(I=M-C=662.000\\) pesos. B aplica interés simple; C y D no usan el factor \\((1+i)^t\\).", "titulo": "Interés compuesto sin capitalización", "ctx": "<p>Una familia de Santa Fe de Antioquia invierte <strong>2.000.000<\/strong> pesos para mejorar una habitación destinada al turismo. La inversión se pacta a interés compuesto anual de <strong>10 %<\/strong> (<strong>0,10<\/strong>), durante <strong>3<\/strong> años, aplicando una vez la tasa por cada año.<\/p>\n<p>Para calcular el valor futuro se usa<\/p>\n<div class=\"formula-destacada\">M=C(1+i)<sup>t<\/sup><\/div>\n<p>y los intereses generados son<\/p>\n<div class=\"formula-destacada\">I=M-C<\/div>", "text": "¿Cuál procedimiento calcula correctamente el valor futuro y los intereses?", "opts": {"A": "M=2.000.000(1,10)<sup>3<\/sup>=2.662.000 e I=2.662.000-2.000.000=662.000 pesos", "B": "M=2.000.000(1+0,10·3)=2.600.000 e I=600.000, porque el interés compuesto se calcula igual que el simple", "C": "M=2.000.000(0,10)<sup>3<\/sup>=2.000 e I=0, porque solo se eleva la tasa", "D": "M=2.000.000+0,10<sup>3<\/sup>=2.000.000,001, porque el capital no cambia de forma significativa"}}, {"id": 14, "tema": "Interés compuesto", "subtema": "Interés compuesto sin capitalización", "pens": "", "comp": "Interpretación y representación", "correct": "B", "explain": "\\(M=1.500.000(1{,}12)^2=1.500.000\\cdot1{,}2544=1.881.600\\) pesos. A es interés simple; C eleva solo la tasa; D suma el factor al capital.", "titulo": "Interés compuesto sin capitalización", "ctx": "<p>Un emprendimiento de recorridos históricos en Santa Fe de Antioquia invierte <strong>1.500.000<\/strong> pesos a una tasa compuesta anual de <strong>12 %<\/strong> (<strong>0,12<\/strong>), durante <strong>2<\/strong> años, aplicando una vez la tasa por cada año.<\/p>\n<p>Para interpretar el valor futuro se usa<\/p>\n<div class=\"formula-destacada\">M=C(1+i)<sup>t<\/sup><\/div>", "text": "¿Cuál representación corresponde correctamente al valor futuro?", "opts": {"A": "M=1.500.000(1+0,12·2)=1.860.000, porque se debe sumar el interés de ambos años sin capitalizar", "B": "M=1.500.000(1,12)<sup>2<\/sup>=1.881.600 pesos", "C": "M=1.500.000(0,12)<sup>2<\/sup>=21.600, porque se eleva únicamente la tasa al número de años", "D": "M=1.500.000+1,12<sup>2<\/sup>=1.500.001,2544, porque el factor compuesto se suma al capital"}}, {"id": 15, "tema": "Interés compuesto", "subtema": "Interés compuesto con capitalización", "pens": "", "comp": "Argumentación", "correct": "C", "explain": "Con capitalización mensual \\(n=12\\): \\(M=4.000.000\\left(1+\\frac{0{,}24}{12}\\right)^{12}=4.000.000(1{,}02)^{12}\\approx5.072.967\\) pesos. El valor 4.960.000 corresponde a interés simple, no a capitalización. A y B ignoran el efecto de capitalizar; D omite el 1 de la base.", "titulo": "Interés compuesto con capitalización", "ctx": "<p>Un hotel familiar de Santa Fe de Antioquia invierte <strong>4.000.000<\/strong> pesos en adecuaciones. La inversión se pacta a una tasa nominal anual de <strong>24 %<\/strong> (<strong>0,24<\/strong>), capitalizable mensualmente, durante <strong>1<\/strong> año. Como la capitalización es mensual, hay <strong>12<\/strong> capitalizaciones por año.<\/p>\n<p>Un estudiante afirma que el valor futuro es <strong>4.960.000<\/strong> pesos, porque calculó<\/p>\n<div class=\"formula-destacada\">M=4.000.000(1+0,24·1)<\/div>\n<p>Para interés compuesto con capitalización se debe usar<\/p>\n<div class=\"formula-destacada\">M=C(1+<span class=\"frac\"><span class=\"num\">i<\/span><span class=\"den\">n<\/span><\/span>)<sup>nt<\/sup><\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación?", "opts": {"A": "Se valida, porque al ser una tasa anual basta con multiplicar 0,24 por 1", "B": "Se valida, porque la capitalización mensual solo cambia la forma de escribir la tasa, pero no el valor futuro", "C": "Se refuta, porque M=4.000.000(1+<span class=\"frac\"><span class=\"num\">0,24<\/span><span class=\"den\">12<\/span><\/span>)<sup>12<\/sup>=4.000.000(1,02)<sup>12<\/sup>≈5.072.967 pesos", "D": "Se refuta, porque M=4.000.000(<span class=\"frac\"><span class=\"num\">0,24<\/span><span class=\"den\">12<\/span><\/span>)<sup>12<\/sup>≈0, de modo que no habría valor futuro"}}, {"id": 16, "tema": "Interés compuesto", "subtema": "Interés compuesto con capitalización", "pens": "", "comp": "Formulación y ejecución", "correct": "D", "explain": "Con \\(n=4\\) y \\(t=2\\): \\(M=3.000.000\\left(1+\\frac{0{,}18}{4}\\right)^{8}=3.000.000(1{,}045)^{8}\\approx4.266.302\\) pesos. A es interés simple; B toma \\(n=2\\); C capitaliza solo una vez al año.", "titulo": "Interés compuesto con capitalización", "ctx": "<p>Una cooperativa de productos agrícolas de Santa Fe de Antioquia invierte <strong>3.000.000<\/strong> pesos a una tasa nominal anual de <strong>18 %<\/strong> (<strong>0,18<\/strong>), capitalizable trimestralmente, durante <strong>2<\/strong> años. Como la capitalización es trimestral, hay <strong>4<\/strong> capitalizaciones por año.<\/p>\n<p>Para hallar el valor futuro se usa<\/p>\n<div class=\"formula-destacada\">M=C(1+<span class=\"frac\"><span class=\"num\">i<\/span><span class=\"den\">n<\/span><\/span>)<sup>nt<\/sup><\/div>", "text": "¿Cuál es el valor futuro aproximado de la inversión?", "opts": {"A": "M=3.000.000(1+0,18·2)=4.080.000 pesos, porque se aplica interés simple", "B": "M=3.000.000(1+<span class=\"frac\"><span class=\"num\">0,18<\/span><span class=\"den\">2<\/span><\/span>)<sup>4<\/sup>≈4.234.745 pesos, porque se toma n=2", "C": "M=3.000.000(1,18)<sup>2<\/sup>=4.177.200 pesos, porque se capitaliza solo una vez por año", "D": "M=3.000.000(1+<span class=\"frac\"><span class=\"num\">0,18<\/span><span class=\"den\">4<\/span><\/span>)<sup>8<\/sup>≈4.266.302 pesos"}}, {"id": 17, "tema": "Capitalización constante", "subtema": "Interés compuesto con capitalización constante", "pens": "", "comp": "Interpretación y representación", "correct": "A", "explain": "\\(M=Ce^{it}=2.500.000\\,e^{0{,}12\\cdot3}=2.500.000\\,e^{0{,}36}\\approx3.583.324\\) pesos e \\(I=M-C\\approx1.083.324\\). B equivale a interés simple; C eleva la tasa al tiempo; D suma la tasa y el tiempo en el exponente.", "titulo": "Interés compuesto con capitalización constante", "ctx": "<p>Un inversionista de Santa Fe de Antioquia destina <strong>2.500.000<\/strong> pesos a un proyecto turístico con capitalización constante. La tasa anual es de <strong>12 %<\/strong> (<strong>0,12<\/strong>) y el tiempo de inversión es de <strong>3<\/strong> años.<\/p>\n<p>Cuando la capitalización es constante, se usa<\/p>\n<div class=\"formula-destacada\">M=C e<sup>it<\/sup>,<\/div>\n<p>donde <strong>e<\/strong> es la base de los logaritmos naturales.<\/p>", "text": "¿Cuál interpretación del valor futuro y de los intereses generados es correcta?", "opts": {"A": "M=2.500.000e<sup>0,12(3)<\/sup>≈3.583.324 e I≈1.083.324 pesos", "B": "M=2.500.000(1+0,12·3)=3.400.000 e I=900.000 pesos, porque la capitalización constante equivale a interés simple", "C": "M=2.500.000(0,12)<sup>3<\/sup>=4.320 pesos, porque la tasa debe elevarse al tiempo", "D": "M=2.500.000e<sup>0,12+3<\/sup>≈56.615.949 pesos, porque la tasa y el tiempo se suman en el exponente"}}, {"id": 18, "tema": "Capitalización constante", "subtema": "Interés compuesto con capitalización constante", "pens": "", "comp": "Argumentación", "correct": "B", "explain": "Con capitalización constante \\(M=1.800.000\\,e^{0{,}16\\cdot2}=1.800.000\\,e^{0{,}32}\\approx2.478.830\\), que no coincide con 2.473.594 (capitalización mensual). A es falsa: la capitalización constante no usa \\(n=12\\); C afirma que son iguales y no lo son; D usa interés simple.", "titulo": "Interés compuesto con capitalización constante", "ctx": "<p>Una empresa de hospedaje de Santa Fe de Antioquia invierte <strong>1.800.000<\/strong> pesos a una tasa anual de <strong>16 %<\/strong> (<strong>0,16<\/strong>), durante <strong>2<\/strong> años, con capitalización constante. Un estudiante afirma que debe usarse capitalización mensual y calcula<\/p>\n<div class=\"formula-destacada\">M=1.800.000(1+<span class=\"frac\"><span class=\"num\">0,16<\/span><span class=\"den\">12<\/span><\/span>)<sup>24<\/sup>≈2.473.594<\/div>\n<p>Para capitalización constante se debe usar<\/p>\n<div class=\"formula-destacada\">M=C e<sup>it<\/sup><\/div>", "text": "¿Cuál argumento permite validar o refutar correctamente la afirmación?", "opts": {"A": "Se valida, porque la capitalización constante siempre se calcula con n=12", "B": "Se refuta, porque con capitalización constante M=1.800.000e<sup>0,16(2)<\/sup>≈2.478.830 pesos, no el valor obtenido con capitalización mensual", "C": "Se valida, porque 2.473.594 y 2.478.831 son exactamente el mismo valor financiero", "D": "Se refuta, porque la capitalización constante se calcula como M=1.800.000(1+0,16·2)=2.376.000"}}, {"id": 19, "tema": "Capitalización constante", "subtema": "Interés compuesto con capitalización constante especificando el límite adecuado", "pens": "", "comp": "Formulación y ejecución", "correct": "C", "explain": "\\(M=\\lim_{n\\to\\infty}C\\left(1+\\frac{i}{n}\\right)^{nt}=Ce^{it}=1.000.000\\,e^{0{,}20}\\approx1.221.403\\) pesos. A usa \\(n\\to0\\); B escribe 20 en lugar de 0,20; D es interés simple.", "titulo": "Capitalización constante y límite", "ctx": "<p>Un comerciante de Santa Fe de Antioquia invierte <strong>1.000.000<\/strong> pesos a una tasa anual de <strong>20 %<\/strong> (<strong>0,20<\/strong>), durante <strong>1<\/strong> año. Se quiere modelar la capitalización constante a partir de capitalizaciones cada vez más frecuentes.<\/p>\n<p>El modelo con <strong>n<\/strong> capitalizaciones por año es<\/p>\n<div class=\"formula-destacada\">M<sub>n<\/sub>=C(1+<span class=\"frac\"><span class=\"num\">i<\/span><span class=\"den\">n<\/span><\/span>)<sup>nt<\/sup><\/div>\n<p>La capitalización constante se obtiene con el límite<\/p>\n<div class=\"formula-destacada\">M=lim<sub>n→∞<\/sub> C(1+<span class=\"frac\"><span class=\"num\">i<\/span><span class=\"den\">n<\/span><\/span>)<sup>nt<\/sup>=Ce<sup>it<\/sup><\/div>", "text": "¿Cuál procedimiento especifica correctamente el límite y calcula el valor futuro aproximado?", "opts": {"A": "M=lim<sub>n→ 0<\/sub>1.000.000(1+<span class=\"frac\"><span class=\"num\">0,20<\/span><span class=\"den\">n<\/span><\/span>)<sup>n<\/sup>, porque la capitalización constante ocurre cuando n se acerca a cero", "B": "M=1.000.000e<sup>20<\/sup>, porque 20 % debe escribirse como 20 en el exponente", "C": "M=lim<sub>n→∞<\/sub>1.000.000(1+<span class=\"frac\"><span class=\"num\">0,20<\/span><span class=\"den\">n<\/span><\/span>)<sup>n<\/sup>=1.000.000e<sup>0,20<\/sup>≈1.221.403 pesos", "D": "M=1.000.000(1+0,20)=1.200.000 pesos, porque el límite elimina el efecto de la capitalización"}}, {"id": 20, "tema": "Capitalización constante", "subtema": "Interés compuesto con capitalización constante especificando el límite adecuado", "pens": "", "comp": "Interpretación y representación", "correct": "D", "explain": "Como \\(M=\\lim_{n\\to\\infty}C\\left(1+\\frac{i}{n}\\right)^{nt}=Ce^{it}\\), con \\(i=0{,}09\\) y \\(t=4\\): \\(M=2.000.000\\,e^{0{,}36}\\approx2.866.659\\) pesos. A omite el tiempo en el exponente; B hace \\(n\\to4\\); C reduce a interés simple.", "titulo": "Capitalización constante y límite", "ctx": "<p>Una asociación turística de Santa Fe de Antioquia invierte <strong>2.000.000<\/strong> pesos a una tasa anual de <strong>9 %<\/strong> (<strong>0,09<\/strong>), durante <strong>4<\/strong> años. Se desea interpretar el valor futuro cuando el número de capitalizaciones por año crece indefinidamente.<\/p>\n<p>Para <strong>n<\/strong> capitalizaciones anuales,<\/p>\n<div class=\"formula-destacada\">M<sub>n<\/sub>=C(1+<span class=\"frac\"><span class=\"num\">i<\/span><span class=\"den\">n<\/span><\/span>)<sup>nt<\/sup><\/div>\n<p>En capitalización constante,<\/p>\n<div class=\"formula-destacada\">M=lim<sub>n→∞<\/sub>M<sub>n<\/sub>=Ce<sup>it<\/sup><\/div>", "text": "¿Cuál representación interpreta correctamente el límite y el valor futuro aproximado?", "opts": {"A": "M=lim<sub>n→∞<\/sub>2.000.000(1+<span class=\"frac\"><span class=\"num\">0,09<\/span><span class=\"den\">n<\/span><\/span>)<sup>n<\/sup>=2.000.000e<sup>0,09<\/sup>, porque el tiempo no afecta el exponente", "B": "M=lim<sub>n→ 4<\/sub>2.000.000(1+<span class=\"frac\"><span class=\"num\">0,09<\/span><span class=\"den\">n<\/span><\/span>)<sup>4n<\/sup>, porque el límite debe coincidir con el número de años", "C": "M=2.000.000(1+0,09·4)=2.720.000, porque la capitalización constante se reduce a interés simple", "D": "M=lim<sub>n→∞<\/sub>2.000.000(1+<span class=\"frac\"><span class=\"num\">0,09<\/span><span class=\"den\">n<\/span><\/span>)<sup>4n<\/sup>=2.000.000e<sup>0,36<\/sup>≈2.866.659 pesos"}}];
+const TOTAL = Q.length;
+const LETTERS = ['A','B','C','D'];
+const $ = id => document.getElementById(id);
+const correctOf = q => q.correct;
+
+const INTRO_EST = 'Estas son las <b>20 preguntas</b> de preparación para la primera prueba de periodo. Responde con calma: puedes cambiar tus respuestas antes de finalizar y moverte entre preguntas con la hoja de burbujas. Las preguntas y las opciones aparecen en orden aleatorio. Al final verás tu resultado por tema y por competencia.';
+const INTRO_DOC = '<b>Versión docente.</b> Las 20 preguntas del banco de la prueba. Al elegir una opción se muestra de inmediato si es correcta, con la explicación del procedimiento; también puedes pulsar <b>Ver solución</b> sin responder. Usa <b>Orden del cuadernillo</b> o <b>Aleatorio</b> y consulta la <b>Clave de respuestas</b> con tema, subtema y competencia.';
+
+/* ===== Sesión y rol ===== */
+function leerSesion(){
+  try{
+    const raw = sessionStorage.getItem('slg_sesion');
+    if(!raw) return null;
+    try{ return JSON.parse(raw) || {}; }catch(e){ return {}; }
+  }catch(e){ return null; }
+}
+const sesion = leerSesion();
+let ES_DOCENTE = false;
+let PREVIEW = false;
+
+/* ===== Estado ===== */
+let current = 0;
+let mode = 'aleatorio';
+let answers = {}, revealed = {};
+let displayQuestions = [], optionOrder = {};
+let startTime = Date.now(), timerId = null, endTime = null;
+let numeroIntentoActual = 1;
+let started = false;
+
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildOrder(){
+  const rand = mode === 'aleatorio';
+  displayQuestions = rand ? shuffle(Q) : Q.slice();
+  optionOrder = {};
+  Q.forEach(q => { const l = Object.keys(q.opts); optionOrder[q.id] = rand ? shuffle(l) : l; });
+}
+function typeset(el){ if(window.MathJax && typeof MathJax.typesetPromise === 'function'){ MathJax.typesetPromise([el]).catch(function(){}); } }
+const label = (q,i) => ES_DOCENTE ? q.id : (i+1);
+const answeredCount = () => Object.keys(answers).length;
+const fmtTime = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+
+function markSVG(kind){
+  const p = kind==='ok' ? 'M6 18 L14 26 L28 8' : kind==='bad' ? 'M8 8 L26 26 M26 8 L8 26' : 'M17 6 L17 20 M17 27 L17 28';
+  return '<svg class="mark '+kind+'" viewBox="0 0 34 34" aria-hidden="true"><path d="'+p+'"/></svg>';
+}
+
+/* ===== Temporizador ===== */
+function startTimer(){
+  stopTimer(true);
+  startTime = Date.now(); endTime = null;
+  if(ES_DOCENTE) return;
+  $('timerWrap').hidden = false;
+  const tick = () => { $('timer').textContent = fmtTime(Math.floor((Date.now()-startTime)/1000)); };
+  tick(); timerId = setInterval(tick, 1000);
+}
+function stopTimer(silent){
+  if(timerId){ clearInterval(timerId); timerId = null; }
+  if(!silent && endTime === null) endTime = Date.now();
+}
+
+/* ===== Burbujas y progreso ===== */
+function renderBubbles(){
+  const el = $('bubbles'); el.innerHTML = '';
+  displayQuestions.forEach((q,i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    let cls = 'bub';
+    const a = answers[q.id];
+    if(a){
+      if(ES_DOCENTE) cls += (a.choice===correctOf(q)) ? ' correct' : ' incorrect';
+      else cls += ' answered';
+    }
+    if(i===current) cls += ' current';
+    b.className = cls;
+    b.textContent = label(q,i);
+    b.setAttribute('aria-label', 'Ir a la pregunta ' + label(q,i));
+    b.onclick = () => { showQuiz(); current = i; render(); };
+    el.appendChild(b);
+  });
+}
+function updateProgress(){
+  const n = answeredCount();
+  $('progress').innerHTML = 'Respondidas <b>' + n + ' / ' + TOTAL + '</b>';
+  if(ES_DOCENTE){
+    const ok = Object.keys(answers).filter(id => { const q = Q.find(x=>x.id==id); return answers[id].choice===correctOf(q); }).length;
+    $('scorePill').textContent = ok + ' / ' + TOTAL + ' correctas';
+  }
+}
+
+/* ===== Tarjeta de pregunta ===== */
+function render(){
+  const q = displayQuestions[current];
+  const ans = answers[q.id];
+  const order = optionOrder[q.id];
+  const cor = correctOf(q);
+  const showFb = ES_DOCENTE && (ans || revealed[q.id]);
+  const anyGraph = order.some(l => /<svg/i.test(q.opts[l]));
+  const shortOpts = order.every(l => q.opts[l].length < 70);
+
+  let optsHTML = '';
+  order.forEach((orig,i) => {
+    const cls = ['opt'];
+    if(/<svg/i.test(q.opts[orig])) cls.push('opt-graph');
+    if(showFb){
+      if(orig===cor) cls.push('reveal-correct');
+      else if(ans && ans.choice===orig) cls.push('reveal-wrong');
+    } else if(ans && ans.choice===orig){ cls.push('selected'); }
+    optsHTML += '<div class="'+cls.join(' ')+'" role="radio" tabindex="0" aria-checked="'+(ans && ans.choice===orig ? 'true':'false')+'" data-orig="'+orig+'">'
+      + '<span class="letter">'+LETTERS[i]+'</span><div class="txt">'+q.opts[orig]+'</div></div>';
+  });
+
+  let fb = '';
+  if(showFb){
+    const corDisp = LETTERS[order.indexOf(cor)];
+    if(ans){
+      const ok = ans.choice === cor;
+      fb = '<div class="feedback '+(ok?'ok':'bad')+'"><b>'+markSVG(ok?'ok':'bad')+(ok?'¡Correcto!':'No es la respuesta')+' — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    } else {
+      fb = '<div class="feedback info"><b>'+markSVG('info')+'Solución — Opción correcta: '+corDisp+'</b>'+q.explain+'</div>';
+    }
+  }
+  const revealBtn = (ES_DOCENTE && !showFb) ? '<div class="card-actions"><button type="button" class="btn small" id="revealBtn">👁 Ver solución</button></div>' : '';
+  const metaDoc = ES_DOCENTE ? '<div class="meta-doc">Pregunta '+q.id+' del banco · Subtema: '+q.subtema+(q.pens?' · '+q.pens:'')+'</div>' : '';
+
+  $('cardInner').innerHTML =
+    '<div class="q-head"><div class="q-num">'+label(q,current)+'</div>'
+    + '<div class="q-tags"><span class="tag">'+q.tema+'</span><span class="tag tag-comp">'+q.comp+'</span></div></div>'
+    + metaDoc
+    + '<div class="context"><h2 class="ctx-title">'+q.titulo+'</h2>'+q.ctx+'</div>'
+    + '<p class="stmt">'+q.text+'</p>'
+    + '<div class="options'+((anyGraph||shortOpts)?' cols2':'')+'" role="radiogroup" aria-label="Opciones de respuesta">'+optsHTML+'</div>'
+    + revealBtn + fb;
+
+  const inner = $('cardInner');
+  inner.querySelectorAll('.opt').forEach(el => {
+    const pick = () => {
+      const orig = el.getAttribute('data-orig');
+      if(!ES_DOCENTE && answers[q.id] && answers[q.id].choice===orig){ delete answers[q.id]; }
+      else { answers[q.id] = { choice: orig }; }
+      $('finishWarn').hidden = true;
+      render();
+    };
+    el.onclick = pick;
+    el.onkeydown = ev => { if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); pick(); } };
+  });
+  const rb = $('revealBtn');
+  if(rb) rb.onclick = () => { revealed[q.id] = true; render(); };
+
+  $('prevBtn').disabled = current === 0;
+  $('nextBtn').textContent = current === TOTAL-1 ? (ES_DOCENTE ? 'Ver resultados →' : 'Finalizar →') : 'Siguiente →';
+  renderBubbles(); updateProgress();
+  typeset($('cardInner'));
+}
+
+function go(delta){
+  const n = current + delta;
+  if(n < 0) return;
+  if(n >= TOTAL){ tryFinish(); return; }
+  current = n; render();
+  $('cardInner').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ===== Finalizar y resumen ===== */
+function unansweredList(){
+  const out = [];
+  displayQuestions.forEach((q,i) => { if(!answers[q.id]) out.push(label(q,i)); });
+  return out;
+}
+function tryFinish(){
+  const pend = unansweredList();
+  if(!ES_DOCENTE && pend.length){
+    const w = $('finishWarn');
+    w.innerHTML = '<b>Aún tienes ' + pend.length + ' pregunta' + (pend.length>1?'s':'') + ' sin responder</b> (números: ' + pend.join(', ') + ').'
+      + '<div class="row"><button type="button" class="btn" id="keepBtn">Seguir respondiendo</button><button type="button" class="btn primary" id="forceBtn">Finalizar de todos modos</button></div>';
+    w.hidden = false;
+    $('keepBtn').onclick = () => { w.hidden = true; };
+    $('forceBtn').onclick = () => { w.hidden = true; showSummary(); };
+    w.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  showSummary();
+}
+function barsHTML(data){
+  return '<div class="bars">' + Object.entries(data).map(([name,v]) => {
+    const pct = Math.round(v.ok / v.total * 100);
+    return '<div class="row"><div class="cname">'+name+'</div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div><div class="cnum">'+v.ok+'/'+v.total+'</div></div>';
+  }).join('') + '</div>';
+}
+function keyTableHTML(){
+  return '<table class="keytable"><thead><tr><th>#</th><th>Tema</th><th>Subtema</th><th>Competencia</th><th>Clave</th></tr></thead><tbody>'
+    + Q.map(q => '<tr><td class="n">'+q.id+'</td><td>'+q.tema+'</td><td>'+q.subtema+'</td><td>'+q.comp+'</td><td class="k">'+q.correct+'</td></tr>').join('')
+    + '</tbody></table>';
+}
+function showSummary(){
+  stopTimer();
+  const cats = {}, comps = {}, missed = [];
+  let ok = 0;
+  Q.forEach(q => {
+    cats[q.tema] = cats[q.tema] || {ok:0,total:0};
+    comps[q.comp] = comps[q.comp] || {ok:0,total:0};
+    cats[q.tema].total++; comps[q.comp].total++;
+    const a = answers[q.id];
+    if(a && a.choice === correctOf(q)){ ok++; cats[q.tema].ok++; comps[q.comp].ok++; }
+  });
+  displayQuestions.forEach((q,i) => {
+    const a = answers[q.id];
+    if(!(a && a.choice === correctOf(q))) missed.push({pos:i, q:q});
+  });
+  const pct = Math.round(ok/TOTAL*100);
+  let html = '<p class="caption">Resultado final</p><h2>' + (ES_DOCENTE ? 'Resultado de la práctica' : 'Así te fue en la preparación') + '</h2>'
+    + '<div class="big">'+ok+'/'+TOTAL+'</div><div class="pct">'+pct+'% de aciertos'
+    + (!ES_DOCENTE && endTime ? ' · Tiempo: ' + fmtTime(Math.floor((endTime-startTime)/1000)) : '') + '</div>'
+    + '<p class="label sec-gap">Por tema</p>' + barsHTML(cats)
+    + '<p class="label sec-gap">Por competencia evaluada</p>' + barsHTML(comps);
+  if(!ES_DOCENTE){
+    if(missed.length){
+      html += '<p class="label sec-gap">Para repasar — toca una pregunta para volver a ella</p><div class="chips">'
+        + missed.map(m => '<button type="button" class="chip" data-pos="'+m.pos+'">'+(m.pos+1)+'. '+m.q.tema+'</button>').join('') + '</div>';
+    } else {
+      html += '<p class="sec-gap" style="font-size:15px">Respondiste correctamente todas las preguntas.</p>';
+    }
+  } else {
+    html += '<p class="label sec-gap">Clave de respuestas</p><div class="table-scroll">' + keyTableHTML() + '</div>';
+  }
+  html += '<button type="button" class="btn primary" id="retryBtn">↺ Reintentar</button>';
+  const s = $('summary'); s.innerHTML = html; s.hidden = false;
+  $('quizBody').hidden = true;
+  s.querySelectorAll('.chip').forEach(c => c.onclick = () => { showQuiz(); current = +c.getAttribute('data-pos'); render(); $('cardInner').scrollIntoView({behavior:'smooth', block:'start'}); });
+  $('retryBtn').onclick = retry;
+  s.scrollIntoView({behavior:'smooth', block:'start'});
+  enviarIntento(ok);
+}
+function showQuiz(){ $('summary').hidden = true; $('quizBody').hidden = false; }
+function retry(){
+  answers = {}; revealed = {}; current = 0; buildOrder();
+  $('finishWarn').hidden = true; showQuiz(); startTimer(); render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===== Controles docente ===== */
+function setMode(m){
+  mode = m;
+  $('orderBookletBtn').classList.toggle('active', m==='orden');
+  $('orderRandomBtn').classList.toggle('active', m==='aleatorio');
+  $('reshuffleBtn').hidden = (m !== 'aleatorio');
+  retry();
+}
+
+/* ===== Registro en el portal (silencioso: nunca bloquea el cuadernillo) ===== */
+function registrarApertura(){
+  try{
+    if(!sesion || !sesion.documento) return;
+    const params = new URLSearchParams({
+      accion: 'registrarVista',
+      doc: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupoAsignado || sesion.grupo || '',
+      rol: sesion.rol || '',
+      director: sesion.director || '',
+      origen: 'GitHub',
+      tipoVista: 'Apertura Artefacto — ' + AREA_ARTEFACTO
+    });
+    fetch(SCRIPT_URL_VISTAS + '?' + params.toString(), { mode: 'no-cors' }).catch(function(){});
+  }catch(e){}
+}
+function agruparPorCampo(campo){
+  const grupos = {};
+  displayQuestions.forEach(function(q){
+    const etiqueta = q[campo];
+    if(!etiqueta) return;
+    if(!grupos[etiqueta]) grupos[etiqueta] = { etiqueta: etiqueta, aciertos: 0, total: 0 };
+    grupos[etiqueta].total++;
+    if(answers[q.id] && answers[q.id].choice === correctOf(q)) grupos[etiqueta].aciertos++;
+  });
+  return Object.values(grupos);
+}
+function enviarIntento(totalCorrectas){
+  try{
+    if(!sesion || !sesion.documento) return; // sin sesión del portal (vista previa) no se registra nada
+    const endMs = endTime || Date.now();
+    const payload = {
+      documento: sesion.documento || '',
+      nombre: sesion.nombre || '',
+      grupo: sesion.grupo || '',
+      area: AREA_ARTEFACTO,
+      numeroIntento: numeroIntentoActual,
+      duracionSegundos: Math.round((endMs - startTime) / 1000),
+      origen: 'portal',
+      rol: ES_DOCENTE ? 'docente' : 'estudiante',
+      versionArtefacto: VERSION_ARTEFACTO,
+      tipoArtefacto: 'periodo',
+      periodo: 'P1',
+      categorias: agruparPorCampo('tema'),
+      competencias: agruparPorCampo('comp'),
+      totalAciertos: totalCorrectas,
+      totalPreguntas: displayQuestions.length
+    };
+    numeroIntentoActual++;
+    fetch(SCRIPT_URL_INTENTOS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // evita el preflight de CORS con Apps Script
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+  }catch(e){}
+}
+async function cargarHistorial(){
+  if(ES_DOCENTE) return;
+  if(!sesion || !sesion.documento) return;
+  try{
+    const params = new URLSearchParams({ doc: sesion.documento, area: AREA_ARTEFACTO, accion: 'historialArtefacto', tipoArtefacto: 'periodo', periodo: 'P1' });
+    const resp = await fetch(SCRIPT_URL_INTENTOS + '?' + params.toString());
+    const datos = await resp.json();
+    if(datos && datos.encontrado){
+      numeroIntentoActual = datos.numeroIntentosPrevios + 1;
+      if(datos.numeroIntentosPrevios === 0) return;
+      const u = datos.ultimoIntento || {};
+      const banner = document.createElement('div');
+      banner.className = 'hist-banner';
+      banner.innerHTML = '<strong>Intento N.° ' + (datos.numeroIntentosPrevios + 1) + '</strong> — tu puntaje del intento anterior fue <strong>'
+        + u.aciertos + '/' + u.totalPreguntas + '</strong> (' + u.porcentaje + '%)';
+      $('app').insertBefore(banner, $('app').children[1] || null);
+    }
+  }catch(e){}
+}
+
+/* ===== Arranque según el rol ===== */
+function start(){
+  if(started) return; started = true;
+  $('roleGate').hidden = true;
+  $('app').hidden = false;
+  mode = ES_DOCENTE ? 'orden' : 'aleatorio';
+
+  $('stamp').textContent = ES_DOCENTE ? 'VERSIÓN DOCENTE · 20 PREGUNTAS' : '20 PREGUNTAS';
+  $('modo').textContent = ES_DOCENTE ? 'retroalimentación inmediata' : 'simulacro con resultado final';
+  $('introNote').innerHTML = ES_DOCENTE ? INTRO_DOC : INTRO_EST;
+  $('finishBtn').textContent = ES_DOCENTE ? 'Ver resultados' : 'Finalizar y ver resultados';
+  if(PREVIEW){
+    $('previewBar').hidden = false;
+    $('previewRole').textContent = ES_DOCENTE ? 'docente' : 'estudiante';
+    $('switchRole').onclick = () => location.reload();
+  }
+
+  $('prevBtn').onclick = () => go(-1);
+  $('nextBtn').onclick = () => go(1);
+  $('finishBtn').onclick = tryFinish;
+
+  if(ES_DOCENTE){
+    $('orderRow').hidden = false;
+    $('orderBookletBtn').onclick = () => setMode('orden');
+    $('orderRandomBtn').onclick = () => setMode('aleatorio');
+    $('reshuffleBtn').onclick = retry;
+    $('keyBtn').onclick = () => {
+      const p = $('keyPanel');
+      if(p.hidden){ $('keyTable').innerHTML = keyTableHTML(); }
+      p.hidden = !p.hidden;
+      $('keyBtn').classList.toggle('active', !p.hidden);
+    };
+  } else {
+    $('scorePill').style.visibility = 'hidden';
+  }
+
+  buildOrder();
+  startTimer();
+  render();
+  registrarApertura();
+  cargarHistorial();
+}
+
+if(sesion){
+  ES_DOCENTE = String(sesion.rol || '').trim().toLowerCase().indexOf('docente') === 0;
+  start();
+} else if(/(^|\.)github\.io$/i.test(location.hostname)){
+  // En el portal publicado siempre debe haber sesión: si no, vuelve al portal.
+  window.location.href = PORTAL;
+} else {
+  // Fuera del portal (vista previa en Claude o archivo local): se elige el rol a mano.
+  PREVIEW = true;
+  $('roleGate').hidden = false;
+  $('pickEst').onclick = () => { ES_DOCENTE = false; start(); };
+  $('pickDoc').onclick = () => { ES_DOCENTE = true; start(); };
+}
+})();
+</script>
+
+</body>
+</html>
