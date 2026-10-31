@@ -65,3 +65,37 @@ Grupo,Grado,Área,TipoArtefacto,Periodo,TipoAgrupación,Etiqueta,NumeroIntentos,
 1004,10°,Matemáticas,practica,,competencia,Formulación y ejecución,1,88.9
 1004,10°,Matemáticas,practica,,competencia,Argumentación,1,100
 1004,10°,Matemáticas,practica,,total,Total,1,91.7
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,categoria,Interés y valor futuro,1,50
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,categoria,Tasa de interés,1,28.6
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,categoria,Valor futuro VF = C(1 + it),1,16.7
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,categoria,Fórmula I = C·i·t y despejes,1,20
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,competencia,Formulación y ejecución,1,57.1
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,competencia,Argumentación,1,0
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,competencia,Interpretación y representación,1,12.5
+1001,10°,Economía · Prueba de periodo 2,periodo,P2,total,Total,1,25
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,categoria,Geometría y triángulos,1,40
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,categoria,Funciones,1,40
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,categoria,Ángulos y razones trigonométricas,1,14.3
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,categoria,Plan Lector,1,66.7
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,competencia,Argumentación,1,71.4
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,competencia,Formulación y ejecución,1,14.3
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,competencia,Interpretación y representación,1,16.7
+1001,10°,Matemáticas · Prueba de periodo 1,periodo,P1,total,Total,1,35
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,categoria,Interés compuesto,1,25
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,categoria,Capital y tiempo,1,0
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,categoria,Tasa de interés simple,1,0
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,categoria,Capitalización constante,1,50
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,categoria,Interés simple,1,0
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,competencia,Formulación y ejecución,1,14.3
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,competencia,Argumentación,1,16.7
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,competencia,Interpretación y representación,1,14.3
+1001,10°,Economía · Prueba de periodo 1,periodo,P1,total,Total,1,15
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,categoria,Capitalización constante,1,25
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,categoria,Interés simple,1,0
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,categoria,Capital y tiempo,1,33.3
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,categoria,Interés compuesto,1,25
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,categoria,Tasa de interés simple,1,33.3
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,competencia,Formulación y ejecución,1,14.3
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,competencia,Argumentación,1,50
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,competencia,Interpretación y representación,1,14.3
+1103,11°,Economía · Prueba de periodo 1,periodo,P1,total,Total,1,25
