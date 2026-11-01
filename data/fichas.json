@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-01T15:09:26-05:00",
+  "generado": "2026-11-01T15:31:37-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
@@ -61,6 +61,28 @@
     {
       "ficha": "artefactos",
       "opcion": "",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "simulacros",
+      "opcion": "PrimerSimulacro",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "simulacros",
+      "opcion": "SegundoSimulacro",
       "activo": false,
       "grados": [
         "11"
