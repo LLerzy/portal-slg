@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-01T15:08:18-05:00",
+  "generado": "2026-11-01T15:09:26-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
@@ -140,67 +140,28 @@
       "hasta": null
     },
     {
-      "ficha": "refuerzo",
+      "ficha": "planMejoramiento",
       "opcion": "plan_matematicas_10_p2",
       "activo": false,
-      "grados": [
-        "10"
-      ],
+      "grados": [],
       "grupos": [],
       "desde": null,
       "hasta": null
     },
     {
-      "ficha": "refuerzo",
+      "ficha": "planMejoramiento",
       "opcion": "plan_economia_10_p2",
       "activo": false,
-      "grados": [
-        "10"
-      ],
+      "grados": [],
       "grupos": [],
       "desde": null,
       "hasta": null
     },
     {
-      "ficha": "refuerzo",
+      "ficha": "planMejoramiento",
       "opcion": "plan_economia_11_p2",
       "activo": false,
-      "grados": [
-        "10"
-      ],
-      "grupos": [],
-      "desde": null,
-      "hasta": null
-    },
-    {
-      "ficha": "refuerzo",
-      "opcion": "plan_matematicas_10_p2",
-      "activo": false,
-      "grados": [
-        "11"
-      ],
-      "grupos": [],
-      "desde": null,
-      "hasta": null
-    },
-    {
-      "ficha": "refuerzo",
-      "opcion": "plan_economia_10_p2",
-      "activo": false,
-      "grados": [
-        "11"
-      ],
-      "grupos": [],
-      "desde": null,
-      "hasta": null
-    },
-    {
-      "ficha": "refuerzo",
-      "opcion": "plan_economia_11_p2",
-      "activo": false,
-      "grados": [
-        "11"
-      ],
+      "grados": [],
       "grupos": [],
       "desde": null,
       "hasta": null
