@@ -572,12 +572,42 @@
             <h3>Actividades de Refuerzo</h3>
             <p class="desc">Abre las actividades de refuerzo para proyectarlas en clase o revisar la clave de respuestas.</p>
             <select class="selector-hoja" id="selector-refuerzo-docente" aria-label="Seleccione la actividad de refuerzo">
-              <option value="economia_10_p2_t1">Economía 10° · P2 — Taller de refuerzo 1</option>
+              <option value="matematicas_10_p2_t1">Matemáticas 10° · P2 — T1</option>
+              <option value="matematicas_10_p2_t2">Matemáticas 10° · P2 — T2</option>
+              <option value="matematicas_10_p2_t3">Matemáticas 10° · P2 — T3</option>
+              <option value="matematicas_10_p2_t4">Matemáticas 10° · P2 — T4</option>
+              <option value="matematicas_10_p2_t5">Matemáticas 10° · P2 — T5</option>
+              <option value="matematicas_10_p2_t6">Matemáticas 10° · P2 — T6</option>
+              <option value="economia_10_p2_t1">Economía 10° · P2 — T1</option>
+              <option value="economia_10_p2_t2">Economía 10° · P2 — T2</option>
+              <option value="economia_10_p2_t3">Economía 10° · P2 — T3</option>
+              <option value="economia_10_p2_t4">Economía 10° · P2 — T4</option>
+              <option value="economia_11_p2_t1">Economía 11° · P2 — T1</option>
+              <option value="economia_11_p2_t2">Economía 11° · P2 — T2</option>
+              <option value="economia_11_p2_t3">Economía 11° · P2 — T3</option>
+              <option value="economia_11_p2_t4">Economía 11° · P2 — T4</option>
+              <option value="economia_11_p2_t5">Economía 11° · P2 — T5</option>
             </select>
             <button type="button" class="btn" id="btn-refuerzo-docente">Abrir actividad ↗</button>
             <p class="estado-doc" id="estado-refuerzo-docente"></p>
           </div>
         </article>  
+
+        <article class="reporte tarjeta">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📈</div>
+            <h3>Planes de Mejoramiento</h3>
+            <p class="desc">Abre los planes de mejoramiento para proyectarlos en clase o revisar la clave.</p>
+            <select class="selector-hoja" id="selector-plan-docente" aria-label="Seleccione el plan de mejoramiento">
+              <option value="plan_matematicas_10_p2">Matemáticas 10° · Plan de mejoramiento (P1 y P2)</option>
+              <option value="plan_economia_10_p2">Economía 10° · Plan de mejoramiento (P1 y P2)</option>
+              <option value="plan_economia_11_p2">Economía 11° · Plan de mejoramiento (P1 y P2)</option>
+            </select>
+            <button type="button" class="btn" id="btn-plan-docente">Abrir plan ↗</button>
+            <p class="estado-doc" id="estado-plan-docente"></p>
+          </div>
+        </article>
         
         <article class="reporte tarjeta">
           <div class="listón"></div>
@@ -723,12 +753,41 @@
             <h3>Actividades de Refuerzo</h3>
             <p class="desc">Talleres de refuerzo del periodo para reforzar los temas que necesitas mejorar.</p>
             <select class="selector-hoja" id="selector-refuerzo" aria-label="Seleccione la actividad de refuerzo">
-              <option value="economia_10_p2_t1">Economía 10° · P2 — Taller de refuerzo 1</option>
+              <option value="matematicas_10_p2_t1">Matemáticas 10° · P2 — T1</option>
+              <option value="matematicas_10_p2_t2">Matemáticas 10° · P2 — T2</option>
+              <option value="matematicas_10_p2_t3">Matemáticas 10° · P2 — T3</option>
+              <option value="matematicas_10_p2_t4">Matemáticas 10° · P2 — T4</option>
+              <option value="matematicas_10_p2_t5">Matemáticas 10° · P2 — T5</option>
+              <option value="matematicas_10_p2_t6">Matemáticas 10° · P2 — T6</option>
+              <option value="economia_10_p2_t1">Economía 10° · P2 — T1</option>
+              <option value="economia_10_p2_t2">Economía 10° · P2 — T2</option>
+              <option value="economia_10_p2_t3">Economía 10° · P2 — T3</option>
+              <option value="economia_10_p2_t4">Economía 10° · P2 — T4</option>
+              <option value="economia_11_p2_t1">Economía 11° · P2 — T1</option>
+              <option value="economia_11_p2_t2">Economía 11° · P2 — T2</option>
+              <option value="economia_11_p2_t3">Economía 11° · P2 — T3</option>
+              <option value="economia_11_p2_t4">Economía 11° · P2 — T4</option>
+              <option value="economia_11_p2_t5">Economía 11° · P2 — T5</option>
             </select>
             <button type="button" class="btn" id="btn-refuerzo">Abrir actividad ↗</button>
             <p class="estado-doc" id="estado-refuerzo"></p>
           </div>
-        </article>        
+        </article>
+        <article class="reporte tarjeta" id="ficha-plan" data-ficha="planMejoramiento">
+          <div class="listón"></div>
+          <div class="contenido">
+            <div class="icono">📈</div>
+            <h3>Planes de Mejoramiento</h3>
+            <p class="desc">Plan de mejoramiento del periodo para cada asignatura.</p>
+            <select class="selector-hoja" id="selector-plan" aria-label="Seleccione el plan de mejoramiento">
+              <option value="plan_matematicas_10_p2">Matemáticas 10° · Plan de mejoramiento (P1 y P2)</option>
+              <option value="plan_economia_10_p2">Economía 10° · Plan de mejoramiento (P1 y P2)</option>
+              <option value="plan_economia_11_p2">Economía 11° · Plan de mejoramiento (P1 y P2)</option>
+            </select>
+            <button type="button" class="btn" id="btn-plan">Abrir plan ↗</button>
+            <p class="estado-doc" id="estado-plan"></p>
+          </div>
+        </article>          
         </div>
         <div class="pista-scroll"><div class="pista-scroll-relleno" id="pista-relleno"></div></div>
       </div>
@@ -853,7 +912,25 @@ const CONFIG_ARTEFACTOS = {
   economia_periodo1_11: "artefactos-periodo/economia-periodo1-11.html",
   economia_periodo2_11: "artefactos-periodo/economia-periodo2-11.html",
   // Actividades de refuerzo (apertura registrada por cada HTML)
-  economia_10_p2_t1: "actividades-refuerzo/economia-10-p2-t1.html"
+  matematicas_10_p2_t1: "actividades-refuerzo/matematicas-10-p2-t1.html",
+  matematicas_10_p2_t2: "actividades-refuerzo/matematicas-10-p2-t2.html",
+  matematicas_10_p2_t3: "actividades-refuerzo/matematicas-10-p2-t3.html",
+  matematicas_10_p2_t4: "actividades-refuerzo/matematicas-10-p2-t4.html",
+  matematicas_10_p2_t5: "actividades-refuerzo/matematicas-10-p2-t5.html",
+  matematicas_10_p2_t6: "actividades-refuerzo/matematicas-10-p2-t6.html",
+  economia_10_p2_t1: "actividades-refuerzo/economia-10-p2-t1.html",
+  economia_10_p2_t2: "actividades-refuerzo/economia-10-p2-t2.html",
+  economia_10_p2_t3: "actividades-refuerzo/economia-10-p2-t3.html",
+  economia_10_p2_t4: "actividades-refuerzo/economia-10-p2-t4.html",
+  economia_11_p2_t1: "actividades-refuerzo/economia-11-p2-t1.html",
+  economia_11_p2_t2: "actividades-refuerzo/economia-11-p2-t2.html",
+  economia_11_p2_t3: "actividades-refuerzo/economia-11-p2-t3.html",
+  economia_11_p2_t4: "actividades-refuerzo/economia-11-p2-t4.html",
+  economia_11_p2_t5: "actividades-refuerzo/economia-11-p2-t5.html",
+  // Planes de mejoramiento
+  plan_matematicas_10_p2: "planes-mejoramiento/matematicas-10-p2.html",
+  plan_economia_10_p2: "planes-mejoramiento/economia-10-p2.html",
+  plan_economia_11_p2: "planes-mejoramiento/economia-11-p2.html"
 };
 
 const ORIGEN_CONSULTA = "GitHub";
