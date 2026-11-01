@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Taller T3 · Identidades trigonométricas · Matemáticas 10°</title>
+<script>
+window.MathJax = {tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--rojo:#B31217;--rosa:#fbeaec;--borde:#d9d9d9;--fondo:#f3f4f6;--txt:#222;--ambar:#fff7e8}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;padding:14px;background:var(--fondo);font-family:Arial,Helvetica,sans-serif;color:var(--txt);font-size:15px;line-height:1.42}
+.hoja{max-width:900px;margin:0 auto;background:#fff;padding:20px 26px 28px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.encabezado{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--rojo);color:#fff;border-radius:12px;padding:9px 16px}
+.logo-box{width:80px;min-width:80px;text-align:center}
+.logo-box img{max-height:60px;max-width:74px;object-fit:contain}
+.titulo-box{flex:1;text-align:center}
+.titulo-box h1{margin:0 0 3px;font-size:21px;line-height:1.15}
+.titulo-box p{margin:0;font-size:13.5px;font-weight:600}
+.ie-txt{font-size:12px;font-weight:700;line-height:1.15}
+.datos-est{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0 4px;font-size:14px}
+.datos-est span{flex:1 1 220px;border-bottom:1.5px solid #333;padding-bottom:2px;min-height:22px}
+.datos-est span.corto{flex:0 1 150px}
+.instr{margin:10px 0;padding:9px 12px;background:var(--rosa);border-left:5px solid var(--rojo);border-radius:8px;font-size:14px}
+.instr ul{margin:4px 0 0 18px;padding:0}
+h2.seccion{margin:22px 0 8px;padding-bottom:4px;border-bottom:3px solid var(--rojo);color:var(--rojo);font-size:18px}
+h3.sub{margin:14px 0 4px;color:var(--rojo);font-size:15.5px}
+.repaso p,.repaso li{font-size:14.5px}
+.caja{margin:8px 0;padding:9px 12px;border:1px solid #e2b3b6;border-radius:8px;background:#fffafa}
+.ejemplo{margin:10px 0;padding:10px 14px;border:1px solid var(--borde);border-left:5px solid #2e7d32;border-radius:8px;background:#fbfffb}
+.ejemplo h4{margin:0 0 4px;color:#2e7d32;font-size:14.5px}
+.pregunta{margin:14px 0;padding:11px 14px 12px;border:1px solid var(--borde);border-radius:10px;break-inside:avoid;page-break-inside:avoid;background:#fff}
+.pregunta .cab{font-weight:700;color:var(--rojo);margin-bottom:5px;font-size:15px}
+.ctx{margin:0 0 6px}
+.enun{margin:6px 0;padding:8px 11px;background:var(--ambar);border:1px solid #efd6a3;border-left:5px solid #d69a21;border-radius:8px;font-weight:700}
+.opcion{display:flex;gap:8px;align-items:flex-start;margin:5px 0;padding:6px 10px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.letra{min-width:20px;font-weight:700;color:var(--rojo)}
+.figura{margin:8px auto;padding:6px;border:1px solid var(--borde);border-radius:8px;text-align:center;background:#fff;max-width:560px}
+.figura .grafico-svg{display:block;width:100%;height:auto;margin:0 auto}
+.nota{font-size:12px;color:#555;margin-top:3px;text-align:center}
+.opciones-graficas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.opcion-grafica{position:relative;padding:6px 8px 6px 30px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.opcion-grafica .letra{position:absolute;left:9px;top:7px}
+.opcion-grafica .grafico-svg{display:block;width:100%;height:auto}
+table.t{border-collapse:collapse;margin:8px auto;font-size:14px}
+table.t th,table.t td{border:1px solid #bbb;padding:6px 10px;text-align:center}
+table.t th{background:#f7eeee}
+.blank{display:inline-block;min-width:62px;height:1.25em;border-bottom:1.6px solid #333;vertical-align:-3px;margin:0 3px}
+.blank.l{min-width:110px}
+.resp{margin-top:8px}
+.lineas{height:var(--h,110px);margin-top:6px;border:1px dashed #bbb;border-radius:6px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#d0d0d0 27px,#d0d0d0 28px)}
+.vf-box{display:flex;gap:22px;margin:6px 0 2px;font-weight:700}
+.vf-box span::before{content:"";display:inline-block;width:14px;height:14px;border:1.8px solid #333;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin:8px 0}
+.match .col{border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa}
+.match .it{display:flex;align-items:center;gap:6px;margin:5px 0}
+.match .it b{color:var(--rojo)}
+.clasif td.cat{text-align:left;font-weight:700;width:46%}
+.foot{margin-top:18px;font-size:11.5px;color:#666;text-align:center}
+.docente-box{margin-top:8px;padding:6px 10px;background:#f8f8f8;border:1px solid var(--borde);border-radius:8px;font-size:13px;font-weight:600}
+/* docente */
+.tec{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
+.tec th,.tec td{border:1px solid #bbb;padding:4px 6px;vertical-align:top;text-align:left}
+.tec th{background:#f7eeee}
+.sol{margin:10px 0;padding:9px 13px;border:1px solid var(--borde);border-left:5px solid var(--rojo);border-radius:8px;break-inside:avoid;page-break-inside:avoid;font-size:13.5px}
+.sol h4{margin:0 0 4px;color:var(--rojo);font-size:14.5px}
+.sol .etq{display:inline-block;font-size:11.5px;background:var(--rosa);color:#7a0d11;border-radius:10px;padding:1px 8px;margin-right:4px}
+.sol p{margin:3px 0}
+.resumen{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.resumen div{flex:1 1 170px;border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa;font-size:13px}
+.aviso{margin:8px 0;padding:8px 12px;background:#fff3cd;border:1px solid #e6c96b;border-radius:8px;font-size:13px}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}
+.fr>span{display:block;padding:0 5px}
+.fr>span:first-child{border-bottom:1.6px solid #333}
+mjx-container[jax="SVG"]{margin:0 .05em!important}
+#qs.prueba{display:flex;flex-direction:column}
+#qs.prueba .opts:not(.opciones-graficas){display:flex;flex-direction:column}
+.oculta{display:none!important}
+.barra{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:-20px -26px 14px;padding:10px 26px;background:#2b2b2b;color:#fff;border-radius:14px 14px 0 0;font-size:13.5px}
+.barra b{margin-right:4px}
+.barra button,.barra select,.barra input{font:inherit;padding:5px 10px;border-radius:7px;border:1px solid #888;background:#fff;color:#222;cursor:pointer}
+.barra input{cursor:text;width:150px}
+.barra button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+.barra .cod{margin-left:auto;font-weight:700;background:#fff3cd;color:#5a4300;padding:3px 10px;border-radius:7px}
+.verif{margin:10px 0;padding:10px 14px;border:2px solid #2b2b2b;border-radius:10px;background:#fafafa}
+.verif input{font:inherit;padding:5px 9px;width:200px;border:1px solid #888;border-radius:7px}
+.verif button{font:inherit;padding:5px 12px;border-radius:7px;border:1px solid var(--rojo);background:var(--rojo);color:#fff;cursor:pointer}
+@media (max-width:700px){.opciones-graficas,.match{grid-template-columns:1fr}.hoja{padding:14px}}
+@media print{
+ @page{size:A4 portrait;margin:11mm 12mm}
+ body{background:#fff;padding:0;font-size:13.2px}
+ .hoja{box-shadow:none;max-width:none;padding:0;border-radius:0}
+ h2.seccion{break-after:avoid;page-break-after:avoid}
+ .pregunta,.ejemplo,.sol,.caja,.opcion,.figura,.opcion-grafica{break-inside:avoid;page-break-inside:avoid}
+ .saltar{break-before:page;page-break-before:always}
+ .noprint{display:none!important}
+}
+
+#vp{background:#fff3cd;color:#5a4300;border-bottom:1px solid #e6c96b;padding:7px 12px;font-size:13px;text-align:center}
+#vp button{font:inherit;padding:3px 10px;border-radius:7px;border:1px solid #888;background:#fff;cursor:pointer;margin-left:6px}
+#vp button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+#panel-docente{margin-top:22px;padding-top:6px;border-top:4px double var(--rojo)}
+.barra button.sec{background:#444;color:#fff;border-color:#888}
+@media screen and (max-width:700px){table.t{display:block;overflow-x:auto;max-width:100%}}
+@media print{
+ #vp{display:none!important}
+ #docente-slot{display:none!important}
+ body.print-clave .hoja>*:not(#docente-slot):not(.encabezado){display:none!important}
+ body.print-clave #docente-slot{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="hoja">
+<div class="barra noprint oculta" id="barra"><b>Modalidad:</b><button id="b-completa" class="act">1 · Taller completo (20 preguntas)</button><button id="b-prueba">2 · Prueba aleatoria (sustentación)</button><span id="ctl-prueba" class="oculta"><label>Preguntas: <select id="sel-k"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label> <button id="b-nueva">Generar nueva</button> <input id="in-cod" placeholder="Código (T3-K4-123456)"/><button id="b-cargar">Cargar</button> <button id="b-imp">Imprimir</button></span><button id="b-sol" class="sec">📋 Mostrar solucionario</button><button id="b-imp-sol" class="sec">🖨 Imprimir clave y solucionario</button><span id="codigo" class="cod oculta"></span></div>
+<header class="encabezado">
+<div class="logo-box"><img alt="Logo IE San Luis Gonzaga" src="https://i.imgur.com/Ld5BbX3.png" onerror="this.style.display='none'"/><div class="ie-txt">I.E. San Luis Gonzaga</div></div>
+<div class="titulo-box"><h1>Taller de recuperación 3</h1><p><span id="sub-completa">Matemáticas · Grado Décimo · Identidades trigonométricas</span><span id="sub-prueba" class="oculta">Prueba de sustentación · Matemáticas · Grado Décimo · Identidades trigonométricas</span></p></div>
+<div class="logo-box"><img alt="Logo FACIMATE" src="https://i.imgur.com/Os2RUbW.png" onerror="this.style.display='none'"/><div class="ie-txt">FACIMATE</div></div>
+</header>
+<div class="docente-box">Docente: Llerzy Esneider Torres Ome Ph.D. · Segundo periodo<span id="codigo-imp" style="float:right"></span></div>
+<div class="datos-est"><span>Nombre:</span><span class="corto">Grupo:</span><span class="corto">Fecha:</span></div>
+<div id="instr-completa"><div class="instr"><b>Instrucciones</b>
+<ul>
+<li>Lee con atención cada situación antes de responder. Trabaja con orden y muestra tus procedimientos.</li>
+<li>En las preguntas de <b>selección múltiple</b> marca <b>una sola</b> opción (A, B, C o D).</li>
+<li>En las preguntas <b>abiertas</b>, <b>completar</b>, <b>emparejar</b>, <b>clasificar</b> y <b>verdadero/falso</b> escribe tu respuesta en el espacio dispuesto y justifica cuando se pida.</li>
+<li>Usa calculadora científica. Cuando trabajes con ángulos en grados, verifica que esté en modo <b>DEG</b>.</li>
+<li>Este taller es una oportunidad de refuerzo: estudia primero el <b>repaso</b> y los <b>ejemplos resueltos</b>.</li>
+<li><b>Valoración (máximo 3,0):</b> 2,0 por el taller completo y 1,0 por la sustentación (escrita u oral, según indique tu docente).</li>
+</ul></div></div>
+<div class="instr oculta" id="instr-prueba"><b>Instrucciones de la prueba de sustentación</b>
+<ul>
+<li>Esta prueba corta toma ejercicios del taller para verificar que comprendes tus procedimientos. Resuélvela por escrito y prepárate para explicarla oralmente.</li>
+<li>En <b>selección múltiple</b> marca una sola opción. En las demás preguntas escribe tu respuesta y justifica cuando se pida.</li>
+<li>Usa calculadora científica en modo <b>DEG</b>. Tu docente puede pedirte que expliques cualquier paso.</li>
+<li>La sustentación vale <b>1,0</b> de la nota de refuerzo (el taller completo vale 2,0).</li>
+</ul></div>
+<div id="material"><h2 class="seccion">Parte 1. Repaso conceptual</h2><div class="repaso">
+<h3 class="sub">1. Razones trigonométricas y sus recíprocas</h3>
+<div class="caja">
+\(\csc\theta=\dfrac{1}{\sin\theta}\) &nbsp;·&nbsp; \(\sec\theta=\dfrac{1}{\cos\theta}\) &nbsp;·&nbsp; \(\cot\theta=\dfrac{1}{\tan\theta}=\dfrac{\cos\theta}{\sin\theta}\) &nbsp;·&nbsp; \(\tan\theta=\dfrac{\sin\theta}{\cos\theta}\)
+</div>
+<p>En un triángulo rectángulo: \(\sin\theta=\frac{\text{opuesto}}{\text{hipotenusa}}\), \(\cos\theta=\frac{\text{adyacente}}{\text{hipotenusa}}\), \(\tan\theta=\frac{\text{opuesto}}{\text{adyacente}}\). En la circunferencia unitaria, \(P=(\cos\theta,\sin\theta)\) y los signos dependen del cuadrante.</p>
+<h3 class="sub">2. Identidades fundamentales</h3>
+<div class="caja">
+\(\sin^2\theta+\cos^2\theta=1\) &nbsp;·&nbsp; \(1+\tan^2\theta=\sec^2\theta\) &nbsp;·&nbsp; \(1+\cot^2\theta=\csc^2\theta\)<br>
+\(\sin(90^\circ-\theta)=\cos\theta\) &nbsp;·&nbsp; \(\cos(90^\circ-\theta)=\sin\theta\)
+</div>
+<h3 class="sub">3. Suma de ángulos y ángulo doble</h3>
+<div class="caja">
+\(\sin(a\pm b)=\sin a\cos b\pm\cos a\sin b\) &nbsp;·&nbsp; \(\cos(a\pm b)=\cos a\cos b\mp\sin a\sin b\)<br>
+\(\sin2\theta=2\sin\theta\cos\theta\) &nbsp;·&nbsp; \(\cos2\theta=\cos^2\theta-\sin^2\theta\)
+</div>
+<p><b>Estrategia para verificar una identidad:</b> trabaja un solo lado, reescribe todo en senos y cosenos, usa las identidades fundamentales y simplifica hasta obtener el otro lado. Un ejemplo numérico puede refutar una identidad, pero <b>no</b> la demuestra.</p>
+</div>
+<h2 class="seccion">Parte 2. Ejemplos resueltos</h2>
+<div class="ejemplo"><h4>Ejemplo 1 · Hallar razones a partir de una razón conocida</h4><p><b>Problema:</b> si \(\sin\theta=\frac35\) y \(\theta\) está en el cuadrante II, halle \(\cos\theta\), \(\tan\theta\) y \(\sec\theta\).</p>
+<p>1) \(\cos^2\theta=1-\sin^2\theta=1-\frac{9}{25}=\frac{16}{25}\Rightarrow\cos\theta=\pm\frac45\). En el cuadrante II el coseno es negativo: \(\cos\theta=-\frac45\).<br>
+2) \(\tan\theta=\frac{\sin\theta}{\cos\theta}=\frac{3/5}{-4/5}=-\frac34\).<br>
+3) \(\sec\theta=\frac{1}{\cos\theta}=-\frac54\).</p></div>
+<div class="ejemplo"><h4>Ejemplo 2 · Simplificar una expresión</h4><p><b>Problema:</b> simplifique \(\dfrac{1-\cos^2x}{\sin x\cos x}\).</p>
+<p>1) Por la identidad pitagórica, \(1-\cos^2x=\sin^2x\).<br>
+2) \(\dfrac{\sin^2x}{\sin x\cos x}=\dfrac{\sin x}{\cos x}=\tan x\).</p></div>
+</div>
+<h2 class="seccion saltar" id="tit-taller">Parte 3. Taller (20 preguntas)</h2><h2 class="seccion oculta" id="tit-prueba">Prueba de sustentación</h2>
+<div id="qs"><section class="pregunta" id="p1" data-n="1" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">1</span></div><div class="ctx">En la circunferencia trigonométrica, el punto asociado a \(225^\circ\) está en el cuadrante III y cumple \(\sin225^\circ=\cos225^\circ=-\frac{\sqrt2}{2}\).</div><div class="enun">¿Cuál conjunto representa correctamente \(\sec225^\circ\), \(\csc225^\circ\) y \(\cot225^\circ\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(\sec=-\frac{\sqrt2}{2},\ \csc=-\frac{\sqrt2}{2},\ \cot=1\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\sec=\sqrt2,\ \csc=\sqrt2,\ \cot=1\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\sec=-\sqrt2,\ \csc=-\sqrt2,\ \cot=1\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(\sec=-\sqrt2,\ \csc=-\sqrt2,\ \cot=-1\)</div></div></div></section><section class="pregunta" id="p2" data-n="2" data-fmt="short"><div class="cab">Pregunta <span class="qnum">2</span></div><div class="ctx">Si \(\sin\theta=\frac{5}{13}\) y \(\theta\) es un ángulo del primer cuadrante:</div><div class="enun">¿Cuál es el valor de \(\cos\theta\)?</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p3" data-n="3" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">3</span></div><div class="enun">Si \(\sin\theta=-\frac45\) y \(\theta\) está en el tercer cuadrante, ¿cuánto vale \(\tan\theta\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(-\frac43\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\frac43\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\frac34\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(-\frac34\)</div></div></div></section><section class="pregunta" id="p4" data-n="4" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">4</span></div><table class="t"><tr><th>\(\theta\)</th><th>\(\sin\theta\)</th><th>\(\cos\theta\)</th><th>\(\tan\theta\)</th><th>\(\sec\theta\)</th><th>\(\csc\theta\)</th><th>\(\cot\theta\)</th></tr>
+<tr><td>\(30^\circ\)</td><td>\(\frac12\)</td><td>\(\frac{\sqrt3}{2}\)</td><td><span class="blank" style="min-width:48px"></span></td><td><span class="blank" style="min-width:48px"></span></td><td>\(2\)</td><td>\(\sqrt3\)</td></tr>
+<tr><td>\(45^\circ\)</td><td>\(\frac{\sqrt2}{2}\)</td><td>\(\frac{\sqrt2}{2}\)</td><td>\(1\)</td><td><span class="blank" style="min-width:48px"></span></td><td>\(\sqrt2\)</td><td><span class="blank" style="min-width:48px"></span></td></tr>
+<tr><td>\(60^\circ\)</td><td>\(\frac{\sqrt3}{2}\)</td><td><span class="blank" style="min-width:48px"></span></td><td>\(\sqrt3\)</td><td>\(2\)</td><td><span class="blank" style="min-width:48px"></span></td><td>\(\frac{\sqrt3}{3}\)</td></tr></table><div class="enun">Completa los espacios en blanco con los valores exactos (sin decimales).</div></section><section class="pregunta" id="p5" data-n="5" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">5</span></div><div class="ctx">Un cable de 20 m está tensado entre el suelo y la parte alta de un poste vertical. Forma con el suelo un ángulo agudo \(\theta\) tal que \(\cos\theta=\frac35\).</div><div class="enun">¿A qué altura del poste llega el cable?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>16 m</div></div><div class="opcion"><div class="letra">B.</div><div>12 m</div></div><div class="opcion"><div class="letra">C.</div><div>25 m</div></div><div class="opcion"><div class="letra">D.</div><div>15 m</div></div></div></section><section class="pregunta" id="p6" data-n="6" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">6</span></div><div class="ctx">Dos estudiantes proponen expresiones para \(\cos2\theta\). <b>Estudiante 1:</b> “\(\cos2\theta=2\cos\theta\)”. <b>Estudiante 2:</b> “\(\cos2\theta=\cos^2\theta-\sin^2\theta\)”. Para revisar se usa \(\theta=30^\circ\).</div><div class="enun">¿Cuál argumento permite evaluar correctamente las dos propuestas?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>El Estudiante 1 tiene razón, porque al duplicar el ángulo se duplica el valor del coseno.</div></div><div class="opcion"><div class="letra">B.</div><div>El Estudiante 2 tiene razón: con \(\theta=30^\circ\), \(2\cos30^\circ=\sqrt3>1\), imposible para un coseno, mientras que \(\cos^230^\circ-\sin^230^\circ=\frac12=\cos60^\circ\).</div></div><div class="opcion"><div class="letra">C.</div><div>Ambos tienen razón, porque con \(\theta=0^\circ\) las dos expresiones dan el mismo valor.</div></div><div class="opcion"><div class="letra">D.</div><div>Ninguno tiene razón, porque \(\cos2\theta=2\sin\theta\cos\theta\).</div></div></div></section><section class="pregunta" id="p7" data-n="7" data-fmt="match"><div class="cab">Pregunta <span class="qnum">7</span></div><div class="enun">Relaciona cada expresión con su equivalente. Dos opciones de la columna derecha no se usan.</div><div class="match"><div class="col"><div class="it"><b>1.</b> <span>\(1-\sin^2x\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>2.</b> <span>\(\dfrac{\sin x}{\cos x}\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>3.</b> <span>\(1+\tan^2x\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>4.</b> <span>\(2\sin x\cos x\)</span> <span class="blank" style="min-width:40px"></span></div></div><div class="col"><div class="it"><b>A.</b> <span>\(\tan x\)</span></div><div class="it"><b>B.</b> <span>\(\sin2x\)</span></div><div class="it"><b>C.</b> <span>\(\cos^2x\)</span></div><div class="it"><b>D.</b> <span>\(\sec^2x\)</span></div><div class="it"><b>E.</b> <span>\(\cot x\)</span></div><div class="it"><b>F.</b> <span>\(\csc^2x\)</span></div></div></div><div class="nota" style="text-align:left">Escribe en cada línea la letra de la columna derecha que corresponda. Sobra una opción.</div></section><section class="pregunta" id="p8" data-n="8" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">8</span></div><div class="ctx">Un estudiante afirma: “La identidad \(\sin^2x+\cos^2x=1\) solo es válida para ángulos del primer cuadrante”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p9" data-n="9" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">9</span></div><div class="ctx">El punto \(P\left(-\frac{5}{13},-\frac{12}{13}\right)\) pertenece a la circunferencia trigonométrica y es el punto asociado al ángulo \(\theta\).</div><div class="enun">¿Cuáles son \(\csc\theta\), \(\sec\theta\) y \(\cot\theta\) del ángulo \(\theta\) asociado a \(P\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(\csc\theta=\frac{13}{12},\ \sec\theta=\frac{13}{5},\ \cot\theta=\frac{5}{12}\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\csc\theta=-\frac{13}{12},\ \sec\theta=-\frac{13}{5},\ \cot\theta=\frac{12}{5}\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\csc\theta=-\frac{12}{13},\ \sec\theta=-\frac{5}{13},\ \cot\theta=\frac{5}{12}\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(\csc\theta=-\frac{13}{12},\ \sec\theta=-\frac{13}{5},\ \cot\theta=\frac{5}{12}\)</div></div></div></section><section class="pregunta" id="p10" data-n="10" data-fmt="open"><div class="cab">Pregunta <span class="qnum">10</span></div><div class="enun">Demuestra que \(\sec x-\cos x=\sin x\cdot\tan x\), trabajando un solo lado de la igualdad. Justifica cada paso.</div><div class="lineas" style="--h:200px"></div></section><section class="pregunta" id="p11" data-n="11" data-fmt="short"><div class="cab">Pregunta <span class="qnum">11</span></div><div class="enun">Usando \(75^\circ=45^\circ+30^\circ\), escribe el valor exacto de \(\sin75^\circ\).</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p12" data-n="12" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">12</span></div><div class="enun">Si \(\sin\theta=\frac35\) y \(\theta\) es agudo, ¿cuánto vale \(\sin2\theta\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(\frac65\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\frac{18}{25}\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\frac{24}{25}\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(\frac{7}{25}\)</div></div></div></section><section class="pregunta" id="p13" data-n="13" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">13</span></div><div class="ctx">Dos estudiantes simplifican \(\dfrac{\sin x}{1-\cos^2x}\). <b>Ana:</b> “\(1-\cos^2x=\sin^2x\), entonces la expresión es \(\frac{\sin x}{\sin^2x}=\csc x\)”. <b>Bruno:</b> “\(1-\cos^2x=\sin x\), entonces la expresión vale 1”.</div><div class="enun">¿Cuál de las simplificaciones es correcta?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>La de Ana, porque \(1-\cos^2x=\sin^2x\) y por eso la expresión equivale a \(\frac{\sin x}{\sin^2x}=\csc x\).</div></div><div class="opcion"><div class="letra">B.</div><div>La de Bruno, porque \(1-\cos^2x=\sin x\) y el cociente se cancela.</div></div><div class="opcion"><div class="letra">C.</div><div>Ambas, porque \(\csc x\) y \(1\) son iguales cuando \(\sin x=1\).</div></div><div class="opcion"><div class="letra">D.</div><div>Ninguna, porque \(1-\cos^2x=\cos^2x-1\) y la expresión no se puede simplificar.</div></div></div></section><section class="pregunta" id="p14" data-n="14" data-fmt="classify"><div class="cab">Pregunta <span class="qnum">14</span></div><div class="enun">Clasifica cada igualdad: escribe su letra en la categoría que corresponde. Una identidad se cumple para todos los valores donde está definida.</div><div class="match"><div class="col"><div class="it"><b>a)</b> <span>\(\sin^2x+\cos^2x=1\)</span></div><div class="it"><b>b)</b> <span>\(\sin2x=2\sin x\)</span></div><div class="it"><b>c)</b> <span>\(1+\tan^2x=\sec^2x\)</span></div><div class="it"><b>d)</b> <span>\(\sin(x+y)=\sin x+\sin y\)</span></div><div class="it"><b>e)</b> <span>\(\cos(90^\circ-x)=\sin x\)</span></div><div class="it"><b>f)</b> <span>\(\tan x=\dfrac{\cos x}{\sin x}\)</span></div></div><div class="col"><table class="t clasif" style="width:100%"><tr><th>Categoría</th><th>Letras</th></tr><tr><td class="cat">Es una identidad</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">No es una identidad</td><td><span class="blank" style="min-width:150px"></span></td></tr></table></div></div></section><section class="pregunta" id="p15" data-n="15" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">15</span></div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Triángulo rectángulo con catetos 5 y 12 e hipotenusa 13" viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="380" height="200" fill="#fff"/><polygon points="60.4,154.0 319.6,154.0 319.6,46.0" fill="#fff4f4" stroke="#444" stroke-width="2.2" stroke-linejoin="round"/><polyline points="319.6,141.0 306.6,141.0 306.6,154.0" fill="none" stroke="#444" stroke-width="1.5"/><text x="44.7" y="162.3" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">A</text><text x="89.8" y="151.9" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">θ</text><text x="334.4" y="165.2" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">B</text><text x="331.9" y="40.8" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">C</text><text x="334.3" y="100.9" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">5</text><text x="176.2" y="98.2" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">13</text><text x="178.5" y="167.6" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">12</text></svg><div class="nota">Triángulo rectángulo en \(B\). Las medidas están en cm.</div></div><div class="enun">¿Cuál es el valor de \(\csc\theta\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(\frac{13}{12}\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\frac{12}{5}\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\frac{5}{13}\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(\frac{13}{5}\)</div></div></div></section><section class="pregunta" id="p16" data-n="16" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">16</span></div><div class="ctx">Un estudiante afirma que existe un ángulo \(\theta\) con \(\sin\theta=\frac35\) y \(\cos\theta=\frac35\), “porque \(\frac35\) está entre \(-1\) y \(1\)”.</div><div class="enun">¿Cuál argumento evalúa correctamente la afirmación del estudiante?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Es posible, porque \(\frac35\) pertenece al rango de ambas funciones.</div></div><div class="opcion"><div class="letra">B.</div><div>No es posible: \(\left(\frac35\right)^2+\left(\frac35\right)^2=\frac{18}{25}\neq1\), y debe cumplirse \(\sin^2\theta+\cos^2\theta=1\).</div></div><div class="opcion"><div class="letra">C.</div><div>No es posible, porque seno y coseno de un mismo ángulo nunca son positivos a la vez.</div></div><div class="opcion"><div class="letra">D.</div><div>Es posible, porque \(\frac35+\frac35=\frac65>1\) indica un ángulo mayor que \(90^\circ\).</div></div></div></section><section class="pregunta" id="p17" data-n="17" data-fmt="short"><div class="cab">Pregunta <span class="qnum">17</span></div><div class="enun">Escribe todos los valores de \(x\) en \(0^\circ\leq x<180^\circ\) que cumplen \(\cos2x=\frac12\).</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p18" data-n="18" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">18</span></div><div class="caja" style="line-height:3">
+\(\tan x+\cot x=\)<span class="fr"><span>\(\sin x\)</span><span>\(\cos x\)</span></span>\(+\) <span class="blank" style="min-width:48px"></span> \(=\) <span class="fr"><span>\(\sin^2x+\) <span class="blank" style="min-width:48px"></span></span><span>\(\sin x\cos x\)</span></span> \(=\) <span class="fr"><span><span class="blank" style="min-width:48px"></span></span><span>\(\sin x\cos x\)</span></span> \(=\sec x\cdot\csc x\)
+</div><div class="enun">Completa los pasos de la demostración de \(\tan x+\cot x=\sec x\cdot\csc x\).</div></section><section class="pregunta" id="p19" data-n="19" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">19</span></div><div class="ctx">Una rampa de acceso sube 6 m de altura. Su ángulo de inclinación \(\theta\) cumple \(\tan\theta=\frac34\).</div><div class="enun">¿Cuál es la longitud de la rampa?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>10 m</div></div><div class="opcion"><div class="letra">B.</div><div>8 m</div></div><div class="opcion"><div class="letra">C.</div><div>7,5 m</div></div><div class="opcion"><div class="letra">D.</div><div>4,5 m</div></div></div></section><section class="pregunta" id="p20" data-n="20" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">20</span></div><div class="ctx">Un estudiante afirma: “Si \(\cos\theta=\frac12\), entonces \(\sec\theta=2\), y esto se cumple tanto para \(\theta=60^\circ\) como para \(\theta=300^\circ\)”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section></div>
+<div id="docente-slot" class="oculta"></div>
+<div class="foot">Institución Educativa San Luis Gonzaga · FACIMATE — Formando Actitudes y Capacidades para Interpretar las Matemáticas</div><template id="tpl-docente"><div id="panel-docente"><div class="aviso"><b>Uso exclusivo del docente.</b> No entregar a los estudiantes. Contiene competencia, pensamiento, nivel, respuestas y soluciones.</div>
+<div id="resumen-completo"><div class="resumen"><div><b>Competencias</b><br>Interpretación y representación: 6<br>Formulación y ejecución: 8<br>Argumentación: 6</div><div><b>Niveles</b><br>Básico: 2<br>Medio: 10<br>Alto: 8</div><div><b>Formatos</b><br>A. Selección múltiple con única respuesta: 10<br>B. Respuesta abierta corta: 3<br>C. Pregunta abierta de procedimiento: 1<br>D. Emparejamiento: 1<br>E. Completar información: 2<br>F. Clasificación: 1<br>G. Verdadero o falso con justificación: 2</div><div><b>Puntaje</b><br>Total: 29 puntos<br>Taller (2,0) = 2,0 × (puntos / 29); sustentación (1,0) = 1,0 × (puntos de las preguntas sorteadas / su total). Refuerzo máximo: 3,0</div></div>
+</div><div id="clave-prueba" class="oculta"></div><div id="clave-completa"><h2 class="seccion">Matriz técnica y clave de valoración</h2>
+<table class="tec"><tr><th>N.º</th><th>Tema</th><th>Pensamiento</th><th>Competencia</th><th>Tipo de pregunta</th><th>Nivel</th><th>Pts</th><th>Respuesta esperada</th></tr><tr><td>1</td><td>Razones recíprocas en el cuadrante III</td><td>Variacional</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Básico</td><td>1</td><td><b>C</b>. \(\sec=-\sqrt2,\ \csc=-\sqrt2,\ \cot=1\)</td></tr><tr><td>2</td><td>Identidad pitagórica en el cuadrante I</td><td>Variacional</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Básico</td><td>1</td><td>\(\frac{12}{13}\)</td></tr><tr><td>3</td><td>Tangente a partir del seno en el cuadrante III</td><td>Variacional</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>B</b>. \(\frac43\)</td></tr><tr><td>4</td><td>Tabla de razones trigonométricas notables</td><td>Variacional</td><td>Interpretación y representación</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>tan 30° = \(\frac{\sqrt3}{3}\); sec 30° = \(\frac{2\sqrt3}{3}\); sec 45° = \(\sqrt2\); cot 45° = 1; cos 60° = \(\frac12\); csc 60° = \(\frac{2\sqrt3}{3}\)</td></tr><tr><td>5</td><td>Altura de un cable usando identidades</td><td>Variacional</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>A</b>. 16 m</td></tr><tr><td>6</td><td>Coseno del ángulo doble</td><td>Variacional</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>B</b>. Estudiante 2 (contraejemplo θ = 30° refuta al Estudiante 1)</td></tr><tr><td>7</td><td>Emparejar expresiones equivalentes</td><td>Variacional</td><td>Interpretación y representación</td><td>D. Emparejamiento</td><td>Medio</td><td>2</td><td>1-C, 2-A, 3-D, 4-B (sobran E y F)</td></tr><tr><td>8</td><td>Alcance de la identidad pitagórica</td><td>Variacional</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Medio</td><td>2</td><td>Falso: es válida para todo ángulo</td></tr><tr><td>9</td><td>Razones recíprocas desde un punto de la circunferencia</td><td>Variacional</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>D</b>. \(\csc=-\frac{13}{12},\ \sec=-\frac{13}{5},\ \cot=\frac{5}{12}\)</td></tr><tr><td>10</td><td>Demostración de una identidad</td><td>Variacional</td><td>Formulación y ejecución</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>\(\frac{1-\cos^2x}{\cos x}=\frac{\sin^2x}{\cos x}=\sin x\tan x\)</td></tr><tr><td>11</td><td>Valor exacto con suma de ángulos</td><td>Variacional</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>\(\frac{\sqrt6+\sqrt2}{4}\ (\approx0{,}966)\)</td></tr><tr><td>12</td><td>Seno del ángulo doble</td><td>Variacional</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>C</b>. \(\frac{24}{25}\)</td></tr><tr><td>13</td><td>Simplificación de una expresión</td><td>Variacional</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>A</b>. Ana: \(\csc x\)</td></tr><tr><td>14</td><td>Identidades y no identidades</td><td>Variacional</td><td>Interpretación y representación</td><td>F. Clasificación</td><td>Medio</td><td>2</td><td>Identidad: a, c, e · No identidad: b, d, f</td></tr><tr><td>15</td><td>Razón recíproca en un triángulo rectángulo</td><td>Espacial</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>D</b>. \(\frac{13}{5}\)</td></tr><tr><td>16</td><td>Compatibilidad de valores con la identidad pitagórica</td><td>Variacional</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>B</b>. No es posible: 18/25 ≠ 1</td></tr><tr><td>17</td><td>Ecuación con ángulo doble</td><td>Variacional</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Alto</td><td>1</td><td>\(x=30^\circ\) y \(x=150^\circ\)</td></tr><tr><td>18</td><td>Completar una demostración</td><td>Variacional</td><td>Argumentación</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>\(\frac{\cos x}{\sin x}\); \(\cos^2x\); \(1\)</td></tr><tr><td>19</td><td>Longitud de una rampa a partir de la pendiente</td><td>Variacional</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>A</b>. 10 m</td></tr><tr><td>20</td><td>Valores iguales en cuadrantes distintos</td><td>Variacional</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Alto</td><td>2</td><td>Verdadero: sec θ = 1/cos θ = 2 en ambos ángulos</td></tr></table>
+</div><h2 class="seccion saltar">Solucionario</h2>
+<div class="sol" id="sol1"><h4>Pregunta 1 <span class="etq">Interpretación y representación</span><span class="etq">Básico</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. \(\sec=-\sqrt2,\ \csc=-\sqrt2,\ \cot=1\)</p><p><b>Procedimiento:</b> \(\sec225^\circ=\frac{1}{-\sqrt2/2}=-\sqrt2\); \(\csc225^\circ=-\sqrt2\); \(\cot225^\circ=\frac{\cos}{\sin}=\frac{-\sqrt2/2}{-\sqrt2/2}=1\).</p><p><b>Por qué corresponde a la competencia:</b> Debe transformar la información del punto (valores de seno y coseno en el cuadrante III) en las razones recíprocas, lo que exige interpretar la representación.</p><p><b>Distractores:</b> (A) no invierte los valores: confunde recíproca con la razón original. (B) ignora el signo negativo del cuadrante III. (D) asigna signo negativo a la cotangente (cociente de dos negativos).</p></div>
+<div class="sol" id="sol2"><h4>Pregunta 2 <span class="etq">Formulación y ejecución</span><span class="etq">Básico</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> \(\frac{12}{13}\)</p><p><b>Procedimiento:</b> \(\cos^2\theta=1-\frac{25}{169}=\frac{144}{169}\Rightarrow\cos\theta=\frac{12}{13}\) (positivo en el cuadrante I).</p><p><b>Por qué corresponde a la competencia:</b> Debe seleccionar y ejecutar la identidad \(\sin^2\theta+\cos^2\theta=1\) para hallar un valor desconocido.</p><p><b>Criterio de valoración (1 pts):</b> Respuesta exacta \(\frac{12}{13}\) (o 0,923…): 1 pt.</p></div>
+<div class="sol" id="sol3"><h4>Pregunta 3 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. \(\frac43\)</p><p><b>Procedimiento:</b> \(\cos^2\theta=1-\frac{16}{25}=\frac{9}{25}\Rightarrow\cos\theta=-\frac35\) (cuadrante III). \(\tan\theta=\frac{-4/5}{-3/5}=\frac43\).</p><p><b>Por qué corresponde a la competencia:</b> Plantea y ejecuta una estrategia de dos pasos (identidad pitagórica y cociente) controlando el signo.</p><p><b>Distractores:</b> (A) asigna signo negativo a la tangente; en el cuadrante III es positiva. (C) invierte el cociente (calcula \(\cot\theta\)). (D) invierte el cociente y además se equivoca en el signo.</p></div>
+<div class="sol" id="sol4"><h4>Pregunta 4 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> tan 30° = \(\frac{\sqrt3}{3}\); sec 30° = \(\frac{2\sqrt3}{3}\); sec 45° = \(\sqrt2\); cot 45° = 1; cos 60° = \(\frac12\); csc 60° = \(\frac{2\sqrt3}{3}\)</p><p><b>Procedimiento:</b> \(\tan30^\circ=\frac{\sqrt3}{3}\); \(\sec30^\circ=\frac{2\sqrt3}{3}\); \(\sec45^\circ=\sqrt2\); \(\cot45^\circ=1\); \(\cos60^\circ=\frac12\); \(\csc60^\circ=\frac{2\sqrt3}{3}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe relacionar las seis razones entre sí (recíprocas y cociente) para completar una representación tabular.</p><p><b>Criterio de valoración (2 pts):</b> 6 espacios; 1/3 pt por espacio (máx. 2). Se acepta \(\frac{1}{\sqrt3}\) y \(\frac{2}{\sqrt3}\).</p></div>
+<div class="sol" id="sol5"><h4>Pregunta 5 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. 16 m</p><p><b>Procedimiento:</b> \(\sin\theta=\sqrt{1-\frac{9}{25}}=\frac45\). Altura \(h=20\sin\theta=20\cdot\frac45=16\) m.</p><p><b>Por qué corresponde a la competencia:</b> Debe formular una estrategia: obtener \(\sin\theta\) con la identidad pitagórica y usarlo para calcular la altura.</p><p><b>Distractores:</b> (B) usa \(\cos\theta\) como si fuera \(\sin\theta\) (calcula la distancia horizontal). (C) divide 20 entre \(\sin\theta\) en lugar de multiplicar. (D) multiplica por \(\frac34\) (confunde coseno con tangente).</p></div>
+<div class="sol" id="sol6"><h4>Pregunta 6 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. Estudiante 2 (contraejemplo θ = 30° refuta al Estudiante 1)</p><p><b>Procedimiento:</b> Con \(\theta=30^\circ\): \(2\cos30^\circ=\sqrt3>1\), imposible para un coseno, mientras \(\cos^2 30^\circ-\sin^2 30^\circ=\frac34-\frac14=\frac12=\cos60^\circ\). La propuesta 2 es correcta; la 1 se refuta con el contraejemplo.</p><p><b>Por qué corresponde a la competencia:</b> Debe validar una identidad y refutar otra mediante un contraejemplo numérico, sustentando matemáticamente cuál es válida.</p><p><b>Distractores:</b> (A) supone proporcionalidad entre ángulo y razón. (C) una verificación en un solo caso no valida (además, \(2\cos0^\circ=2\) y \(\cos^20^\circ-\sin^20^\circ=1\) no coinciden). (D) confunde la identidad de \(\cos2\theta\) con la de \(\sin2\theta\).</p></div>
+<div class="sol" id="sol7"><h4>Pregunta 7 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">D. Emparejamiento</span></h4><p><b>Respuesta:</b> 1-C, 2-A, 3-D, 4-B (sobran E y F)</p><p><b>Procedimiento:</b> 1) \(1-\sin^2x=\cos^2x\) (C). 2) \(\frac{\sin x}{\cos x}=\tan x\) (A). 3) \(1+\tan^2x=\sec^2x\) (D). 4) \(2\sin x\cos x=\sin2x\) (B). Sobran \(\cot x\) y \(\csc^2x\).</p><p><b>Por qué corresponde a la competencia:</b> Debe reconocer la misma relación en distintas representaciones algebraicas, sin resolverse por descarte evidente.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pts por relación correcta.</p></div>
+<div class="sol" id="sol8"><h4>Pregunta 8 <span class="etq">Argumentación</span><span class="etq">Medio</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Falso: es válida para todo ángulo</p><p><b>Procedimiento:</b> Falso. La identidad \(\sin^2x+\cos^2x=1\) se deduce del teorema de Pitágoras en la circunferencia unitaria y es válida para cualquier ángulo. Ejemplo: \(x=210^\circ\): \((-\frac12)^2+(-\frac{\sqrt3}{2})^2=\frac14+\frac34=1\).</p><p><b>Por qué corresponde a la competencia:</b> Debe evaluar la validez de una afirmación y justificarla con la definición de seno y coseno como coordenadas del punto en la circunferencia.</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Justificación (todo punto de la circunferencia unitaria cumple \(x^2+y^2=1\), o un ejemplo en otro cuadrante): 1 pt.</p></div>
+<div class="sol" id="sol9"><h4>Pregunta 9 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. \(\csc=-\frac{13}{12},\ \sec=-\frac{13}{5},\ \cot=\frac{5}{12}\)</p><p><b>Procedimiento:</b> \(\sin\theta=-\frac{12}{13}\), \(\cos\theta=-\frac5{13}\). \(\csc\theta=-\frac{13}{12}\); \(\sec\theta=-\frac{13}{5}\); \(\cot\theta=\frac{\cos}{\sin}=\frac{5}{12}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar las coordenadas del punto como coseno y seno y transformarlas en las razones recíprocas.</p><p><b>Distractores:</b> (A) pierde el signo negativo en csc y sec. (B) invierte la cotangente (calcula \(\tan\theta\)). (C) no invierte: da seno y coseno en lugar de sus recíprocas.</p></div>
+<div class="sol" id="sol10"><h4>Pregunta 10 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> \(\frac{1-\cos^2x}{\cos x}=\frac{\sin^2x}{\cos x}=\sin x\tan x\)</p><p><b>Procedimiento:</b> \(\sec x-\cos x=\frac{1}{\cos x}-\cos x=\frac{1-\cos^2x}{\cos x}=\frac{\sin^2x}{\cos x}=\sin x\cdot\frac{\sin x}{\cos x}=\sin x\tan x\).</p><p><b>Por qué corresponde a la competencia:</b> Debe formular una estrategia (reescribir en senos y cosenos, común denominador, identidad pitagórica) y ejecutarla de forma completa.</p><p><b>Criterio de valoración (4 pts):</b> Reescribe \(\sec x=\frac1{\cos x}\) y usa común denominador: 1 pt. Aplica \(1-\cos^2x=\sin^2x\): 1 pt. Separa \(\sin x\cdot\frac{\sin x}{\cos x}\) y concluye con \(\tan x\): 1 pt. Justifica los pasos: 1 pt. No se acepta comprobar solo con un valor numérico.</p></div>
+<div class="sol" id="sol11"><h4>Pregunta 11 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> \(\frac{\sqrt6+\sqrt2}{4}\ (\approx0{,}966)\)</p><p><b>Procedimiento:</b> \(\sin(45^\circ+30^\circ)=\sin45^\circ\cos30^\circ+\cos45^\circ\sin30^\circ=\frac{\sqrt2}{2}\cdot\frac{\sqrt3}{2}+\frac{\sqrt2}{2}\cdot\frac12=\frac{\sqrt6+\sqrt2}{4}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe seleccionar la identidad de suma de ángulos y ejecutarla con valores exactos.</p><p><b>Criterio de valoración (1 pts):</b> Valor exacto equivalente: 1 pt. Solo el decimal sin forma exacta: 0 pts.</p></div>
+<div class="sol" id="sol12"><h4>Pregunta 12 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. \(\frac{24}{25}\)</p><p><b>Procedimiento:</b> \(\cos\theta=\frac45\). \(\sin2\theta=2\sin\theta\cos\theta=2\cdot\frac35\cdot\frac45=\frac{24}{25}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear la secuencia: hallar \(\cos\theta\) y aplicar la identidad de ángulo doble.</p><p><b>Distractores:</b> (A) duplica el seno (\(2\sin\theta\)); da un valor mayor que 1. (B) calcula \(2\sin^2\theta\). (D) calcula \(\cos2\theta=\cos^2\theta-\sin^2\theta\).</p></div>
+<div class="sol" id="sol13"><h4>Pregunta 13 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. Ana: \(\csc x\)</p><p><b>Procedimiento:</b> \(1-\cos^2x=\sin^2x\), así que \(\frac{\sin x}{1-\cos^2x}=\frac{\sin x}{\sin^2x}=\frac1{\sin x}=\csc x\). Ana es correcta; Bruno confunde \(1-\cos^2x\) con \(\sin x\).</p><p><b>Por qué corresponde a la competencia:</b> Debe decidir cuál procedimiento es válido y sustentar por qué el otro falla (error en la identidad usada).</p><p><b>Distractores:</b> (B) usa una identidad inexistente (omite el cuadrado). (C) valida con un solo valor; una identidad debe cumplirse para todo \(x\). (D) altera el signo de la identidad.</p></div>
+<div class="sol" id="sol14"><h4>Pregunta 14 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">F. Clasificación</span></h4><p><b>Respuesta:</b> Identidad: a, c, e · No identidad: b, d, f</p><p><b>Procedimiento:</b> Identidades: a) \(\sin^2x+\cos^2x=1\), c) \(1+\tan^2x=\sec^2x\), e) \(\cos(90^\circ-x)=\sin x\). No son identidades: b) \(\sin2x=2\sin x\) (falla en \(x=30^\circ\)), d) \(\sin(x+y)=\sin x+\sin y\) (falla en \(x=y=90^\circ\)), f) \(\tan x=\frac{\cos x}{\sin x}\) (es \(\cot x\); falla en \(x=30^\circ\)).</p><p><b>Por qué corresponde a la competencia:</b> Debe reconocer propiedades en distintas representaciones simbólicas y clasificarlas según criterios matemáticos, no por su apariencia.</p><p><b>Criterio de valoración (2 pts):</b> 1/3 pt por igualdad bien clasificada (máx. 2).</p></div>
+<div class="sol" id="sol15"><h4>Pregunta 15 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. \(\frac{13}{5}\)</p><p><b>Procedimiento:</b> \(\sin\theta=\frac{\text{opuesto}}{\text{hipotenusa}}=\frac5{13}\), por tanto \(\csc\theta=\frac{13}{5}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe extraer los datos de la figura (cateto opuesto e hipotenusa) y transformarlos en la razón recíproca correcta.</p><p><b>Distractores:</b> (A) calcula \(\sec\theta\) (usa el cateto adyacente). (B) calcula \(\cot\theta\). (C) da \(\sin\theta\), no su recíproca.</p></div>
+<div class="sol" id="sol16"><h4>Pregunta 16 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. No es posible: 18/25 ≠ 1</p><p><b>Procedimiento:</b> Si fuera posible, \(\sin^2\theta+\cos^2\theta=\frac{9}{25}+\frac{9}{25}=\frac{18}{25}\neq1\). Los valores contradicen la identidad pitagórica, así que no pueden corresponder al mismo ángulo.</p><p><b>Por qué corresponde a la competencia:</b> Debe refutar una afirmación usando una relación fundamental, no solo comprobar que los valores estén en el rango \([-1,1]\).</p><p><b>Distractores:</b> (A) toma una condición necesaria como si fuera suficiente. (C) falsa: en el cuadrante I ambos son positivos. (D) inventa un criterio que no existe.</p></div>
+<div class="sol" id="sol17"><h4>Pregunta 17 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> \(x=30^\circ\) y \(x=150^\circ\)</p><p><b>Procedimiento:</b> \(\cos2x=\frac12\Rightarrow2x=60^\circ\) o \(2x=300^\circ\) (en \([0^\circ,360^\circ)\)). Entonces \(x=30^\circ\) o \(x=150^\circ\). Comprobación: \(\cos60^\circ=\cos300^\circ=\frac12\).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear el cambio de variable \(u=2x\), resolver en el intervalo ampliado y regresar a \(x\).</p><p><b>Criterio de valoración (1 pts):</b> Ambos valores: 1 pt. Solo uno: 0,5 pts.</p></div>
+<div class="sol" id="sol18"><h4>Pregunta 18 <span class="etq">Argumentación</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> \(\frac{\cos x}{\sin x}\); \(\cos^2x\); \(1\)</p><p><b>Procedimiento:</b> \(\tan x+\cot x=\frac{\sin x}{\cos x}+\frac{\cos x}{\sin x}=\frac{\sin^2x+\cos^2x}{\sin x\cos x}=\frac{1}{\sin x\cos x}=\sec x\csc x\). Los espacios: \(\frac{\cos x}{\sin x}\); \(\cos^2x\); \(1\).</p><p><b>Por qué corresponde a la competencia:</b> Debe justificar cada transformación de la demostración (recíproca, común denominador, identidad pitagórica).</p><p><b>Criterio de valoración (2 pts):</b> Espacio 1: 0,7 pt. Espacio 2: 0,7 pt. Espacio 3: 0,6 pt (identidad pitagórica).</p></div>
+<div class="sol" id="sol19"><h4>Pregunta 19 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. 10 m</p><p><b>Procedimiento:</b> \(\tan\theta=\frac34\Rightarrow\sec^2\theta=1+\frac9{16}=\frac{25}{16}\Rightarrow\cos\theta=\frac45\) y \(\sin\theta=\frac35\). Longitud \(L=\frac{6}{\sin\theta}=\frac{6}{3/5}=10\) m.</p><p><b>Por qué corresponde a la competencia:</b> Debe formular una estrategia que combine una identidad (\(1+\tan^2\theta=\sec^2\theta\)) con una relación trigonométrica para hallar una longitud.</p><p><b>Distractores:</b> (B) calcula la distancia horizontal (\(6\div\frac34\)), no la longitud de la rampa. (C) divide entre \(\cos\theta\) (\(6\div\frac45\)) en lugar de entre \(\sin\theta\). (D) multiplica 6 por la tangente.</p></div>
+<div class="sol" id="sol20"><h4>Pregunta 20 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Verdadero: sec θ = 1/cos θ = 2 en ambos ángulos</p><p><b>Procedimiento:</b> Verdadero. \(\cos60^\circ=\cos300^\circ=\frac12\) (ángulos simétricos respecto al eje \(x\)), así que \(\sec\theta=\frac{1}{\cos\theta}=2\) en ambos. La recíproca depende solo del valor del coseno.</p><p><b>Por qué corresponde a la competencia:</b> Debe sustentar por qué una conclusión es válida aunque corresponda a más de un ángulo, apoyándose en la definición de secante.</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Justificación (recíproca del coseno; \(\cos300^\circ=\cos60^\circ\)): 1 pt.</p></div></div></template>
+<script>
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuf(arr,rng){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var GA=['mc','vf'],BC=['short','open'],DEF=['match','fill','classify'];
+function plan(fmts,k,seed){
+  var rng=mulberry32(seed),idx=fmts.map(function(_,i){return i});
+  var pool=function(set){return idx.filter(function(i){return set.indexOf(fmts[i])>=0})};
+  var pick=[].concat(shuf(pool(GA),rng).slice(0,k===3?1:2),shuf(pool(BC),rng).slice(0,1),shuf(pool(DEF),rng).slice(0,1));
+  if(k===5){var rest=idx.filter(function(i){return pick.indexOf(i)<0});pick.push(shuf(rest,rng)[0]);}
+  var order=shuf(pick,rng),perms={};
+  order.forEach(function(i){if(fmts[i]==='mc')perms[i]=shuf([0,1,2,3],rng)});
+  return {order:order,perms:perms};
+}
+function parseCode(s){var m=/T(\d+)-K([345])-(\d{4,9})/i.exec(s||'');return m?{t:+m[1],k:+m[2],seed:+m[3]}:null}
+
+(function(){
+/* ===== Configuración del artefacto ===== */
+var SCRIPT_URL_VISTAS="https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+var AREA_ARTEFACTO="Matemáticas · Taller Refuerzo 3 · T3 · 10°";
+var VERSION_ARTEFACTO="T3-tr3-v1";
+var PORTAL_URL="https://llerzy.github.io/portal-slg/";
+var TALLER=3;
+var D=[{"n": 1, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "\\(\\sec=-\\sqrt2,\\ \\csc=-\\sqrt2,\\ \\cot=1\\)"}, {"n": 2, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "\\(\\frac{12}{13}\\)"}, {"n": 3, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "\\(\\frac43\\)"}, {"n": 4, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "tan 30° = \\(\\frac{\\sqrt3}{3}\\); sec 30° = \\(\\frac{2\\sqrt3}{3}\\); sec 45° = \\(\\sqrt2\\); cot 45° = 1; cos 60° = \\(\\frac12\\); csc 60° = \\(\\frac{2\\sqrt3}{3}\\)"}, {"n": 5, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "16 m"}, {"n": 6, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "Estudiante 2 (contraejemplo θ = 30° refuta al Estudiante 1)"}, {"n": 7, "f": "match", "t": "D. Emparejamiento", "p": 2, "a": -1, "k": "1-C, 2-A, 3-D, 4-B (sobran E y F)"}, {"n": 8, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Falso: es válida para todo ángulo"}, {"n": 9, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "\\(\\csc=-\\frac{13}{12},\\ \\sec=-\\frac{13}{5},\\ \\cot=\\frac{5}{12}\\)"}, {"n": 10, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "\\(\\frac{1-\\cos^2x}{\\cos x}=\\frac{\\sin^2x}{\\cos x}=\\sin x\\tan x\\)"}, {"n": 11, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "\\(\\frac{\\sqrt6+\\sqrt2}{4}\\ (\\approx0{,}966)\\)"}, {"n": 12, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "\\(\\frac{24}{25}\\)"}, {"n": 13, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "Ana: \\(\\csc x\\)"}, {"n": 14, "f": "classify", "t": "F. Clasificación", "p": 2, "a": -1, "k": "Identidad: a, c, e · No identidad: b, d, f"}, {"n": 15, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "\\(\\frac{13}{5}\\)"}, {"n": 16, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "No es posible: 18/25 ≠ 1"}, {"n": 17, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "\\(x=30^\\circ\\) y \\(x=150^\\circ\\)"}, {"n": 18, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "\\(\\frac{\\cos x}{\\sin x}\\); \\(\\cos^2x\\); \\(1\\)"}, {"n": 19, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "10 m"}, {"n": 20, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Verdadero: sec θ = 1/cos θ = 2 en ambos ángulos"}];
+var $=function(id){return document.getElementById(id)};
+
+/* ===== Sesión y rol ===== */
+var sesion=null;try{sesion=JSON.parse(sessionStorage.getItem('slg_sesion')||'null')}catch(e){}
+var enGithub=/github\.io$/i.test(location.hostname);
+var preview=false,ES_DOCENTE=false;
+if(sesion&&typeof sesion==='object'){ES_DOCENTE=String(sesion.rol||'').toLowerCase().indexOf('docente')===0}
+else{location.replace(PORTAL_URL);return}
+window.ES_DOCENTE=ES_DOCENTE;
+
+/* ===== Registro silencioso de la apertura ===== */
+function registrarVista(){
+  if(preview||!sesion||!sesion.documento)return;
+  if(!SCRIPT_URL_VISTAS||SCRIPT_URL_VISTAS.indexOf('http')!==0)return;
+  try{
+    var q=new URLSearchParams({accion:'registrarVista',doc:String(sesion.documento),nombre:String(sesion.nombre||''),
+      grupo:String(sesion.grupoAsignado||sesion.grupo||''),rol:String(sesion.rol||(ES_DOCENTE?'docente':'estudiante')),
+      origen:'GitHub',tipoVista:'Apertura Artefacto — '+AREA_ARTEFACTO,version:VERSION_ARTEFACTO});
+    fetch(SCRIPT_URL_VISTAS+(SCRIPT_URL_VISTAS.indexOf('?')>=0?'&':'?')+q.toString(),{mode:'no-cors'}).catch(function(){});
+  }catch(e){}
+}
+
+/* ===== Taller y prueba aleatoria ===== */
+var qs=[].slice.call(document.querySelectorAll('#qs .pregunta')),fm=qs.map(function(q){return q.dataset.fmt});
+var state={modo:'completa',k:4,seed:0};
+function newSeed(){return 100000+Math.floor(Math.random()*899999)}
+function reset(){qs.forEach(function(q){q.classList.remove('oculta');q.style.order='';q.querySelector('.qnum').textContent=q.dataset.n;
+  [].slice.call(q.querySelectorAll('.opts > *')).forEach(function(el,i){el.style.order='';el.querySelector('.letra').textContent='ABCD'[i]+'.'})})}
+function typeset(el){try{if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el])}catch(e){}}
+
+function montarDocente(){
+  var slot=$('docente-slot');
+  if(ES_DOCENTE){if(!slot.firstChild){slot.innerHTML=$('tpl-docente').innerHTML}}
+  else{slot.innerHTML=''}
+  $('barra').classList.toggle('oculta',!ES_DOCENTE);
+}
+function claveDocente(pr,p){
+  if(!ES_DOCENTE||!$('panel-docente'))return;
+  $('resumen-completo').classList.toggle('oculta',pr);
+  $('clave-completa').classList.toggle('oculta',pr);
+  $('clave-prueba').classList.toggle('oculta',!pr);
+  var sel={};if(pr)p.order.forEach(function(i){sel[D[i].n]=1});
+  [].slice.call(document.querySelectorAll('#panel-docente .sol')).forEach(function(el){
+    var n=+el.id.replace('sol','');el.classList.toggle('oculta',pr&&!sel[n])});
+  var h2=document.querySelector('#panel-docente h2.saltar');if(h2)h2.textContent=pr?'Solucionario de las preguntas de esta prueba':'Solucionario';
+  if(pr){
+    var tot=0,h='<h2 class="seccion">Clave de esta prueba (código '+('T'+TALLER+'-K'+state.k+'-'+state.seed)+')</h2><table class="tec"><tr><th>Pos.</th><th>N.º original</th><th>Formato</th><th>Pts</th><th>Respuesta esperada (con el orden de opciones de esta prueba)</th></tr>';
+    p.order.forEach(function(i,pos){var q=D[i];tot+=q.p;var ans;
+      if(q.f==='mc'){ans='<b>'+'ABCD'[p.perms[i].indexOf(q.a)]+'</b>. '+q.k}else ans=q.k;
+      h+='<tr><td>'+(pos+1)+'</td><td><a href="#sol'+q.n+'">'+q.n+'</a></td><td>'+q.t+'</td><td>'+q.p+'</td><td>'+ans+'</td></tr>'});
+    h+='</table><p><b>Total: '+tot+' puntos.</b> Nota de la sustentación = 1,0 × (puntos obtenidos / '+tot+'). El taller completo vale 2,0 (refuerzo máximo 3,0).</p>';
+    $('clave-prueba').innerHTML=h;
+  }
+  typeset($('docente-slot'));
+}
+function apply(){
+  if(!ES_DOCENTE)state.modo='completa';
+  var pr=state.modo==='prueba';
+  ['material','instr-completa','tit-taller'].forEach(function(id){$(id).classList.toggle('oculta',pr)});
+  ['instr-prueba','tit-prueba'].forEach(function(id){$(id).classList.toggle('oculta',!pr)});
+  $('b-completa').classList.toggle('act',!pr);$('b-prueba').classList.toggle('act',pr);
+  $('ctl-prueba').classList.toggle('oculta',!pr);
+  $('codigo').classList.toggle('oculta',!pr);
+  $('sub-completa').classList.toggle('oculta',pr);$('sub-prueba').classList.toggle('oculta',!pr);
+  reset();
+  $('qs').classList.toggle('prueba',pr);
+  var p=null;
+  if(pr){
+    if(!state.seed)state.seed=newSeed();
+    p=plan(fm,state.k,state.seed);
+    qs.forEach(function(q){q.classList.add('oculta')});
+    p.order.forEach(function(i,pos){var q=qs[i];q.classList.remove('oculta');q.style.order=pos;q.querySelector('.qnum').textContent=pos+1;
+      if(p.perms[i]){var o=[].slice.call(q.querySelectorAll('.opts > *'));
+        p.perms[i].forEach(function(orig,posOpt){var el=o[orig];el.style.order=posOpt;el.querySelector('.letra').textContent='ABCD'[posOpt]+'.'})}});
+    var code='T'+TALLER+'-K'+state.k+'-'+state.seed;
+    $('codigo').textContent='Código: '+code;$('codigo-imp').textContent='Código de prueba: '+code;
+    $('sel-k').value=String(state.k);
+  }else{$('codigo-imp').textContent=''}
+  claveDocente(pr,p);
+  if(ES_DOCENTE){try{history.replaceState(null,'',pr?'#prueba='+('T'+TALLER+'-K'+state.k+'-'+state.seed):'#completa')}catch(e){}}
+  window.scrollTo(0,0);
+}
+function aplicarRol(){
+  montarDocente();
+  if(!ES_DOCENTE)state.modo='completa';
+  apply();
+}
+
+$('b-completa').onclick=function(){state.modo='completa';apply()};
+$('b-prueba').onclick=function(){state.modo='prueba';state.seed=newSeed();apply()};
+$('b-nueva').onclick=function(){state.seed=newSeed();apply()};
+$('sel-k').onchange=function(){state.k=+this.value;apply()};
+$('b-sol').onclick=function(){var sl=$('docente-slot'),oc=sl.classList.toggle('oculta');
+  this.textContent=oc?'📋 Mostrar solucionario':'📋 Ocultar solucionario';
+  if(!oc){var t=state.modo==='prueba'&&$('clave-prueba')?$('clave-prueba'):sl;sl.scrollIntoView({behavior:'smooth',block:'start'})}};
+$('b-imp').onclick=function(){window.print()};
+$('b-imp-sol').onclick=function(){document.body.classList.add('print-clave');window.print()};
+window.addEventListener('afterprint',function(){document.body.classList.remove('print-clave')});
+$('b-cargar').onclick=function(){var c=parseCode($('in-cod').value);if(!c||c.t!==TALLER){alert('Código no válido para este taller.');return}
+  state.modo='prueba';state.k=c.k;state.seed=c.seed;apply()};
+
+if(ES_DOCENTE&&location.hash.indexOf('#prueba=')===0){
+  var c0=parseCode(location.hash.replace('#prueba=',''));
+  if(c0&&c0.t===TALLER){state.modo='prueba';state.k=c0.k;state.seed=c0.seed}
+}
+aplicarRol();
+registrarVista();
+})();
+</script>
+</div>
+</body>
+</html>

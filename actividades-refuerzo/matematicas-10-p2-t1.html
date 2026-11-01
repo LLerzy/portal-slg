@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Taller T1 · Refuerzo Olimpiadas de Matemáticas · Matemáticas 10°</title>
+<script>
+window.MathJax = {tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--rojo:#B31217;--rosa:#fbeaec;--borde:#d9d9d9;--fondo:#f3f4f6;--txt:#222;--ambar:#fff7e8}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;padding:14px;background:var(--fondo);font-family:Arial,Helvetica,sans-serif;color:var(--txt);font-size:15px;line-height:1.42}
+.hoja{max-width:900px;margin:0 auto;background:#fff;padding:20px 26px 28px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.encabezado{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--rojo);color:#fff;border-radius:12px;padding:9px 16px}
+.logo-box{width:80px;min-width:80px;text-align:center}
+.logo-box img{max-height:60px;max-width:74px;object-fit:contain}
+.titulo-box{flex:1;text-align:center}
+.titulo-box h1{margin:0 0 3px;font-size:21px;line-height:1.15}
+.titulo-box p{margin:0;font-size:13.5px;font-weight:600}
+.ie-txt{font-size:12px;font-weight:700;line-height:1.15}
+.datos-est{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0 4px;font-size:14px}
+.datos-est span{flex:1 1 220px;border-bottom:1.5px solid #333;padding-bottom:2px;min-height:22px}
+.datos-est span.corto{flex:0 1 150px}
+.instr{margin:10px 0;padding:9px 12px;background:var(--rosa);border-left:5px solid var(--rojo);border-radius:8px;font-size:14px}
+.instr ul{margin:4px 0 0 18px;padding:0}
+h2.seccion{margin:22px 0 8px;padding-bottom:4px;border-bottom:3px solid var(--rojo);color:var(--rojo);font-size:18px}
+h3.sub{margin:14px 0 4px;color:var(--rojo);font-size:15.5px}
+.repaso p,.repaso li{font-size:14.5px}
+.caja{margin:8px 0;padding:9px 12px;border:1px solid #e2b3b6;border-radius:8px;background:#fffafa}
+.ejemplo{margin:10px 0;padding:10px 14px;border:1px solid var(--borde);border-left:5px solid #2e7d32;border-radius:8px;background:#fbfffb}
+.ejemplo h4{margin:0 0 4px;color:#2e7d32;font-size:14.5px}
+.pregunta{margin:14px 0;padding:11px 14px 12px;border:1px solid var(--borde);border-radius:10px;break-inside:avoid;page-break-inside:avoid;background:#fff}
+.pregunta .cab{font-weight:700;color:var(--rojo);margin-bottom:5px;font-size:15px}
+.ctx{margin:0 0 6px}
+.enun{margin:6px 0;padding:8px 11px;background:var(--ambar);border:1px solid #efd6a3;border-left:5px solid #d69a21;border-radius:8px;font-weight:700}
+.opcion{display:flex;gap:8px;align-items:flex-start;margin:5px 0;padding:6px 10px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.letra{min-width:20px;font-weight:700;color:var(--rojo)}
+.figura{margin:8px auto;padding:6px;border:1px solid var(--borde);border-radius:8px;text-align:center;background:#fff;max-width:560px}
+.figura .grafico-svg{display:block;width:100%;height:auto;margin:0 auto}
+.nota{font-size:12px;color:#555;margin-top:3px;text-align:center}
+.opciones-graficas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.opcion-grafica{position:relative;padding:6px 8px 6px 30px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.opcion-grafica .letra{position:absolute;left:9px;top:7px}
+.opcion-grafica .grafico-svg{display:block;width:100%;height:auto}
+table.t{border-collapse:collapse;margin:8px auto;font-size:14px}
+table.t th,table.t td{border:1px solid #bbb;padding:6px 10px;text-align:center}
+table.t th{background:#f7eeee}
+.blank{display:inline-block;min-width:62px;height:1.25em;border-bottom:1.6px solid #333;vertical-align:-3px;margin:0 3px}
+.blank.l{min-width:110px}
+.resp{margin-top:8px}
+.lineas{height:var(--h,110px);margin-top:6px;border:1px dashed #bbb;border-radius:6px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#d0d0d0 27px,#d0d0d0 28px)}
+.vf-box{display:flex;gap:22px;margin:6px 0 2px;font-weight:700}
+.vf-box span::before{content:"";display:inline-block;width:14px;height:14px;border:1.8px solid #333;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin:8px 0}
+.match .col{border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa}
+.match .it{display:flex;align-items:center;gap:6px;margin:5px 0}
+.match .it b{color:var(--rojo)}
+.clasif td.cat{text-align:left;font-weight:700;width:46%}
+.foot{margin-top:18px;font-size:11.5px;color:#666;text-align:center}
+.docente-box{margin-top:8px;padding:6px 10px;background:#f8f8f8;border:1px solid var(--borde);border-radius:8px;font-size:13px;font-weight:600}
+/* docente */
+.tec{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
+.tec th,.tec td{border:1px solid #bbb;padding:4px 6px;vertical-align:top;text-align:left}
+.tec th{background:#f7eeee}
+.sol{margin:10px 0;padding:9px 13px;border:1px solid var(--borde);border-left:5px solid var(--rojo);border-radius:8px;break-inside:avoid;page-break-inside:avoid;font-size:13.5px}
+.sol h4{margin:0 0 4px;color:var(--rojo);font-size:14.5px}
+.sol .etq{display:inline-block;font-size:11.5px;background:var(--rosa);color:#7a0d11;border-radius:10px;padding:1px 8px;margin-right:4px}
+.sol p{margin:3px 0}
+.resumen{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.resumen div{flex:1 1 170px;border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa;font-size:13px}
+.aviso{margin:8px 0;padding:8px 12px;background:#fff3cd;border:1px solid #e6c96b;border-radius:8px;font-size:13px}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}
+.fr>span{display:block;padding:0 5px}
+.fr>span:first-child{border-bottom:1.6px solid #333}
+mjx-container[jax="SVG"]{margin:0 .05em!important}
+#qs.prueba{display:flex;flex-direction:column}
+#qs.prueba .opts:not(.opciones-graficas){display:flex;flex-direction:column}
+.oculta{display:none!important}
+.barra{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:-20px -26px 14px;padding:10px 26px;background:#2b2b2b;color:#fff;border-radius:14px 14px 0 0;font-size:13.5px}
+.barra b{margin-right:4px}
+.barra button,.barra select,.barra input{font:inherit;padding:5px 10px;border-radius:7px;border:1px solid #888;background:#fff;color:#222;cursor:pointer}
+.barra input{cursor:text;width:150px}
+.barra button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+.barra .cod{margin-left:auto;font-weight:700;background:#fff3cd;color:#5a4300;padding:3px 10px;border-radius:7px}
+.verif{margin:10px 0;padding:10px 14px;border:2px solid #2b2b2b;border-radius:10px;background:#fafafa}
+.verif input{font:inherit;padding:5px 9px;width:200px;border:1px solid #888;border-radius:7px}
+.verif button{font:inherit;padding:5px 12px;border-radius:7px;border:1px solid var(--rojo);background:var(--rojo);color:#fff;cursor:pointer}
+@media (max-width:700px){.opciones-graficas,.match{grid-template-columns:1fr}.hoja{padding:14px}}
+@media print{
+ @page{size:A4 portrait;margin:11mm 12mm}
+ body{background:#fff;padding:0;font-size:13.2px}
+ .hoja{box-shadow:none;max-width:none;padding:0;border-radius:0}
+ h2.seccion{break-after:avoid;page-break-after:avoid}
+ .pregunta,.ejemplo,.sol,.caja,.opcion,.figura,.opcion-grafica{break-inside:avoid;page-break-inside:avoid}
+ .saltar{break-before:page;page-break-before:always}
+ .noprint{display:none!important}
+}
+
+#vp{background:#fff3cd;color:#5a4300;border-bottom:1px solid #e6c96b;padding:7px 12px;font-size:13px;text-align:center}
+#vp button{font:inherit;padding:3px 10px;border-radius:7px;border:1px solid #888;background:#fff;cursor:pointer;margin-left:6px}
+#vp button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+#panel-docente{margin-top:22px;padding-top:6px;border-top:4px double var(--rojo)}
+.barra button.sec{background:#444;color:#fff;border-color:#888}
+@media screen and (max-width:700px){table.t{display:block;overflow-x:auto;max-width:100%}}
+@media print{
+ #vp{display:none!important}
+ #docente-slot{display:none!important}
+ body.print-clave .hoja>*:not(#docente-slot):not(.encabezado){display:none!important}
+ body.print-clave #docente-slot{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="hoja">
+<div class="barra noprint oculta" id="barra"><b>Modalidad:</b><button id="b-completa" class="act">1 · Taller completo (20 preguntas)</button><button id="b-prueba">2 · Prueba aleatoria (sustentación)</button><span id="ctl-prueba" class="oculta"><label>Preguntas: <select id="sel-k"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label> <button id="b-nueva">Generar nueva</button> <input id="in-cod" placeholder="Código (T3-K4-123456)"/><button id="b-cargar">Cargar</button> <button id="b-imp">Imprimir</button></span><button id="b-sol" class="sec">📋 Mostrar solucionario</button><button id="b-imp-sol" class="sec">🖨 Imprimir clave y solucionario</button><span id="codigo" class="cod oculta"></span></div>
+<header class="encabezado">
+<div class="logo-box"><img alt="Logo IE San Luis Gonzaga" src="https://i.imgur.com/Ld5BbX3.png" onerror="this.style.display='none'"/><div class="ie-txt">I.E. San Luis Gonzaga</div></div>
+<div class="titulo-box"><h1>Taller de refuerzo · Olimpiadas de Matemáticas 1</h1><p><span id="sub-completa">Matemáticas · Grados Noveno y Décimo · Refuerzo Olimpiadas de Matemáticas (grados 9.º y 10.º)</span><span id="sub-prueba" class="oculta">Prueba de sustentación · Matemáticas · Grados Noveno y Décimo · Refuerzo Olimpiadas de Matemáticas (grados 9.º y 10.º)</span></p></div>
+<div class="logo-box"><img alt="Logo FACIMATE" src="https://i.imgur.com/Os2RUbW.png" onerror="this.style.display='none'"/><div class="ie-txt">FACIMATE</div></div>
+</header>
+<div class="docente-box">Docente: Llerzy Esneider Torres Ome Ph.D. · Segundo periodo · Refuerzo máximo 3,0<span id="codigo-imp" style="float:right"></span></div>
+<div class="datos-est"><span>Nombre:</span><span class="corto">Grupo:</span><span class="corto">Fecha:</span></div>
+<div id="instr-completa"><div class="instr"><b>Instrucciones</b>
+<ul>
+<li>Lee con atención cada situación antes de responder. Trabaja con orden y muestra tus procedimientos.</li>
+<li>En las preguntas de <b>selección múltiple</b> marca <b>una sola</b> opción (A, B, C o D).</li>
+<li>En las preguntas <b>abiertas</b>, <b>completar</b>, <b>emparejar</b>, <b>clasificar</b> y <b>verdadero/falso</b> escribe tu respuesta en el espacio dispuesto y justifica cuando se pida.</li>
+<li>Usa calculadora científica. Cuando trabajes con ángulos en grados, verifica que esté en modo <b>DEG</b>.</li>
+<li>Este taller es una oportunidad de refuerzo: estudia primero el <b>repaso</b> y los <b>ejemplos resueltos</b>.</li>
+<li><b>Valoración (máximo 3,0):</b> 2,0 por el taller completo y 1,0 por la sustentación (escrita u oral, según indique tu docente).</li>
+</ul></div></div>
+<div class="instr oculta" id="instr-prueba"><b>Instrucciones de la prueba de sustentación</b>
+<ul>
+<li>Esta prueba corta toma ejercicios del taller para verificar que comprendes tus procedimientos. Resuélvela por escrito y prepárate para explicarla oralmente.</li>
+<li>En <b>selección múltiple</b> marca una sola opción. En las demás preguntas escribe tu respuesta y justifica cuando se pida.</li>
+<li>Usa calculadora científica en modo <b>DEG</b>. Tu docente puede pedirte que expliques cualquier paso.</li>
+<li>La sustentación vale <b>1,0</b> de la nota de refuerzo (el taller completo vale 2,0).</li>
+</ul></div>
+<div id="material"><h2 class="seccion">Parte 1. Repaso conceptual</h2><div class="repaso">
+<p>Las Olimpiadas de Matemáticas premian el <b>ingenio</b> más que la memoria. Antes de calcular, entiende la situación y escoge una estrategia.</p>
+<h3 class="sub">1. Estrategias para resolver problemas</h3>
+<ul>
+<li><b>Hacer un dibujo, una tabla o un esquema</b> con los datos.</li>
+<li><b>Probar casos pequeños</b> y buscar un patrón antes de generalizar.</li>
+<li><b>Plantear ecuaciones</b>: nombrar las incógnitas y traducir cada condición.</li>
+<li><b>Trabajar hacia atrás</b> o por descarte; <b>contar con orden</b> (sin repetir ni olvidar casos).</li>
+<li><b>Verificar</b> la respuesta con las condiciones del enunciado.</li>
+</ul>
+<h3 class="sub">2. Herramientas útiles (noveno y décimo)</h3>
+<table class="t" style="width:100%"><tr><th>Tema</th><th>Idea clave</th></tr>
+<tr><td>Divisibilidad</td><td>mcm para eventos que coinciden; mcd para repartos iguales. Primo: solo divisible por 1 y por sí mismo.</td></tr>
+<tr><td>Álgebra</td><td>\(a^2-b^2=(a+b)(a-b)\); \((a\pm b)^2=a^2\pm2ab+b^2\). Sistemas de ecuaciones 2×2.</td></tr>
+<tr><td>Porcentajes</td><td>Aumento de \(p\,\%\): factor \(1+\frac{p}{100}\). Los factores se <b>multiplican</b>, no se suman.</td></tr>
+<tr><td>Geometría</td><td>Pitágoras; áreas; polígono de \(n\) lados: suma de ángulos \((n-2)180^\circ\); regular: ángulo exterior \(=\frac{360^\circ}{n}\).</td></tr>
+<tr><td>Plano cartesiano</td><td>Punto medio \(\left(\frac{x_1+x_2}{2},\frac{y_1+y_2}{2}\right)\); distancia \(\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}\).</td></tr>
+<tr><td>Conteo y probabilidad</td><td>\(n!\) ordenaciones; parejas: \(\frac{n(n-1)}{2}\); \(P=\frac{\text{casos favorables}}{\text{casos posibles}}\).</td></tr>
+<tr><td>Sucesiones</td><td>Aritmética: \(a_n=a_1+(n-1)d\). Geométrica: \(a_n=a_1r^{n-1}\). Suma \(1+2+\dots+n=\frac{n(n+1)}{2}\).</td></tr>
+<tr><td>Estadística</td><td>La media se afecta por los datos extremos; la mediana, menos.</td></tr></table>
+</div>
+<h2 class="seccion">Parte 2. Ejemplos resueltos</h2>
+<div class="ejemplo"><h4>Ejemplo 1 · Coincidencias con el mcm</h4><p><b>Problema:</b> dos luces parpadean cada 8 s y cada 12 s. Si coinciden en \(t=0\), ¿cuándo vuelven a coincidir?</p>
+<p>Hay que hallar el mínimo común múltiplo: \(8=2^3\), \(12=2^2\cdot3\Rightarrow\text{mcm}=2^3\cdot3=24\) s.</p></div>
+<div class="ejemplo"><h4>Ejemplo 2 · Sistema de ecuaciones</h4><p><b>Problema:</b> en una caja hay monedas de $200 y de $500: 13 monedas en total y $3 500. ¿Cuántas hay de cada una?</p>
+<p>\(x+y=13\) y \(200x+500y=3500\). Con \(x=13-y\): \(2600+300y=3500\Rightarrow y=3\) y \(x=10\). Comprobación: \(2000+1500=3500\).</p></div>
+<div class="ejemplo"><h4>Ejemplo 3 · Contar sin repetir</h4><p><b>Problema:</b> ¿cuántos números de dos cifras distintas se pueden formar con 1, 2, 3 y 4?</p>
+<p>4 opciones para la decena y 3 para la unidad: \(4\cdot3=12\).</p></div>
+</div>
+<h2 class="seccion saltar" id="tit-taller">Parte 3. Taller (20 preguntas)</h2><h2 class="seccion oculta" id="tit-prueba">Prueba de sustentación</h2>
+<div id="qs"><section class="pregunta" id="p1" data-n="1" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">1</span></div><div class="ctx">Tres semáforos de una avenida cambian a verde cada 12 s, 18 s y 30 s, respectivamente.</div><div class="enun">Si coinciden en verde a las 8:00:00, ¿cuántos segundos después volverán a coincidir por primera vez?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>60 s</div></div><div class="opcion"><div class="letra">B.</div><div>180 s</div></div><div class="opcion"><div class="letra">C.</div><div>90 s</div></div><div class="opcion"><div class="letra">D.</div><div>360 s</div></div></div></section><section class="pregunta" id="p2" data-n="2" data-fmt="short"><div class="cab">Pregunta <span class="qnum">2</span></div><div class="ctx">Una sucesión de figuras con cuadros tiene: figura 1 → 2 cuadros; figura 2 → 5; figura 3 → 10; figura 4 → 17; figura 5 → 26.</div><div class="enun">¿Cuántos cuadros tendrá la figura 12?</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p3" data-n="3" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">3</span></div><div class="ctx">En un corral hay gallinas y conejos. Se cuentan 35 cabezas y 94 patas.</div><div class="enun">¿Cuántas gallinas y cuántos conejos hay?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>23 gallinas y 12 conejos</div></div><div class="opcion"><div class="letra">B.</div><div>12 gallinas y 23 conejos</div></div><div class="opcion"><div class="letra">C.</div><div>24 gallinas y 11 conejos</div></div><div class="opcion"><div class="letra">D.</div><div>22 gallinas y 13 conejos</div></div></div></section><section class="pregunta" id="p4" data-n="4" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">4</span></div><div class="ctx">Un grupo de estudiantes busca calcular \(51^2-49^2\) sin calculadora.</div><div class="enun">¿Cuál argumento es correcto para calcular \(51^2-49^2\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>El resultado es 4, porque \(51^2-49^2=(51-49)^2=2^2\).</div></div><div class="opcion"><div class="letra">B.</div><div>El resultado es 2, porque al restar los cuadrados queda \(51-49\).</div></div><div class="opcion"><div class="letra">C.</div><div>El resultado es 200, porque \(a^2-b^2=(a+b)(a-b)\) y entonces \(51^2-49^2=(100)(2)\).</div></div><div class="opcion"><div class="letra">D.</div><div>El resultado es 5 002, porque \(51^2-49^2=51^2+49^2\).</div></div></div></section><section class="pregunta" id="p5" data-n="5" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">5</span></div><div class="ctx">Un almacén sube el precio de un artículo un 20 % y, una semana después, lo rebaja un 20 % sobre el nuevo precio.</div><div class="enun">Al final, comparado con el precio original, el precio:</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>quedó igual, porque +20 % y −20 % se compensan.</div></div><div class="opcion"><div class="letra">B.</div><div>aumentó un 4 %.</div></div><div class="opcion"><div class="letra">C.</div><div>disminuyó un 2 %.</div></div><div class="opcion"><div class="letra">D.</div><div>disminuyó un 4 %.</div></div></div></section><section class="pregunta" id="p6" data-n="6" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">6</span></div><div class="ctx">Un círculo está inscrito en un cuadrado de lado 8 cm. Se sombrea la región del cuadrado que queda fuera del círculo.</div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Cuadrado de lado 8 cm con un círculo inscrito; la región fuera del círculo está sombreada" viewBox="0 0 320 250" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+<rect width="320" height="250" fill="#fff"/>
+<defs><mask id="m6"><rect x="60" y="20" width="200" height="200" fill="#fff"/><circle cx="160" cy="120" r="100" fill="#000"/></mask></defs>
+<rect x="60" y="20" width="200" height="200" fill="#f2b8bb" mask="url(#m6)"/>
+<rect x="60" y="20" width="200" height="200" fill="none" stroke="#444" stroke-width="2.4"/>
+<circle cx="160" cy="120" r="100" fill="none" stroke="#444" stroke-width="2.4"/>
+<text x="160" y="240" font-size="13" font-weight="bold" fill="#1f4e99" text-anchor="middle">8 cm</text>
+<text x="160" y="125" font-size="13" text-anchor="middle" fill="#555">círculo</text></svg><div class="nota">Cuadrado de lado 8 cm con un círculo tangente a los cuatro lados.</div></div><div class="enun">¿Cuál es el área aproximada de la región sombreada?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>38,9 cm²</div></div><div class="opcion"><div class="letra">B.</div><div>13,7 cm²</div></div><div class="opcion"><div class="letra">C.</div><div>48,0 cm²</div></div><div class="opcion"><div class="letra">D.</div><div>50,3 cm²</div></div></div></section><section class="pregunta" id="p7" data-n="7" data-fmt="short"><div class="cab">Pregunta <span class="qnum">7</span></div><div class="ctx">Un cuadrado está inscrito en una circunferencia de radio 5 cm (sus cuatro vértices están sobre la circunferencia).</div><div class="enun">¿Cuál es el área del cuadrado, en cm²?</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p8" data-n="8" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">8</span></div><div class="ctx">Cinco personas se sientan en una fila de cinco sillas.</div><div class="enun">¿De cuántas formas pueden sentarse las 5 personas, si Ana y Bruno deben quedar juntos?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>120</div></div><div class="opcion"><div class="letra">B.</div><div>48</div></div><div class="opcion"><div class="letra">C.</div><div>24</div></div><div class="opcion"><div class="letra">D.</div><div>96</div></div></div></section><section class="pregunta" id="p9" data-n="9" data-fmt="short"><div class="cab">Pregunta <span class="qnum">9</span></div><div class="ctx">Se lanzan dos dados justos de seis caras y se suman los resultados.</div><div class="enun">¿Cuál es la probabilidad de que la suma sea 8 o un múltiplo de 5? Escribe una fracción simplificada.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p10" data-n="10" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">10</span></div><div class="ctx">Seis empleados de una empresa ganan (en millones de pesos): 2, 2, 3, 3, 4 y 36.</div><div class="enun">¿Cuál argumento sustenta mejor cuál medida describe el salario «típico» del grupo?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>La mediana (3 millones), porque el dato extremo 36 aumenta la media (≈ 8,3 millones) y la hace poco representativa.</div></div><div class="opcion"><div class="letra">B.</div><div>La media (≈ 8,3 millones), porque usa todos los datos y por eso siempre es la mejor medida.</div></div><div class="opcion"><div class="letra">C.</div><div>La moda (2 millones), porque aparece primero en la lista.</div></div><div class="opcion"><div class="letra">D.</div><div>Ninguna medida, porque el dato 36 debe ignorarse siempre.</div></div></div></section><section class="pregunta" id="p11" data-n="11" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">11</span></div><div class="ctx">Un estudiante razona: «Todo múltiplo de 6 es múltiplo de 3. Por tanto, todo múltiplo de 3 es múltiplo de 6».</div><div class="enun">¿Es verdadera la conclusión del estudiante? Marca Verdadero o Falso y justifica con un ejemplo o razonamiento.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:100px"></div></section><section class="pregunta" id="p12" data-n="12" data-fmt="match"><div class="cab">Pregunta <span class="qnum">12</span></div><div class="enun">Relaciona cada sucesión con la expresión de su término general \(a_n\). Una opción no se usa.</div><div class="match"><div class="col"><div class="it"><b>1.</b> <span>\(3,\,7,\,11,\,15,\dots\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>2.</b> <span>\(2,\,6,\,18,\,54,\dots\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>3.</b> <span>\(1,\,4,\,9,\,16,\dots\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>4.</b> <span>\(1,\,3,\,6,\,10,\dots\)</span> <span class="blank" style="min-width:40px"></span></div></div><div class="col"><div class="it"><b>A.</b> <span>\(a_n=4n-1\)</span></div><div class="it"><b>B.</b> <span>\(a_n=2\cdot3^{n-1}\)</span></div><div class="it"><b>C.</b> <span>\(a_n=n^2\)</span></div><div class="it"><b>D.</b> <span>\(a_n=\dfrac{n(n+1)}{2}\)</span></div><div class="it"><b>E.</b> <span>\(a_n=2n+1\)</span></div></div></div><div class="nota" style="text-align:left">Escribe en cada línea la letra de la columna derecha que corresponda. Sobra una opción.</div></section><section class="pregunta" id="p13" data-n="13" data-fmt="classify"><div class="cab">Pregunta <span class="qnum">13</span></div><div class="enun">Clasifica cada número como primo, cuadrado perfecto o compuesto que no es cuadrado perfecto. Escribe las letras en cada categoría.</div><div class="match"><div class="col"><div class="it"><b>a)</b> <span>49</span></div><div class="it"><b>b)</b> <span>53</span></div><div class="it"><b>c)</b> <span>91</span></div><div class="it"><b>d)</b> <span>64</span></div><div class="it"><b>e)</b> <span>97</span></div><div class="it"><b>f)</b> <span>51</span></div></div><div class="col"><table class="t clasif" style="width:100%"><tr><th>Categoría</th><th>Letras</th></tr><tr><td class="cat">Primo</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">Cuadrado perfecto</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">Compuesto, no cuadrado</td><td><span class="blank" style="min-width:150px"></span></td></tr></table></div></div></section><section class="pregunta" id="p14" data-n="14" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">14</span></div><table class="t"><tr><td>2</td><td><span class="blank" style="min-width:36px"></span></td><td>6</td></tr>
+<tr><td><span class="blank" style="min-width:36px"></span></td><td>5</td><td>1</td></tr>
+<tr><td>4</td><td><span class="blank" style="min-width:36px"></span></td><td>8</td></tr></table>
+<div class="nota">En un cuadrado mágico, todas las filas, columnas y las dos diagonales suman lo mismo.</div><div class="enun">Completa los tres espacios para que el cuadrado sea mágico.</div></section><section class="pregunta" id="p15" data-n="15" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">15</span></div><div class="ctx">Un polígono regular tiene ángulos exteriores de \(30^\circ\).</div><div class="enun">¿Cuál argumento determina correctamente el número de lados y la suma de los ángulos interiores?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Tiene 6 lados, porque \(180^\circ/30^\circ=6\), y la suma interior es \((6-2)180^\circ=720^\circ\).</div></div><div class="opcion"><div class="letra">B.</div><div>Tiene 12 lados, pero la suma interior es \(12\cdot30^\circ=360^\circ\).</div></div><div class="opcion"><div class="letra">C.</div><div>Tiene 10 lados, porque \((n-2)180^\circ=30^\circ n\) se cumple para \(n=10\).</div></div><div class="opcion"><div class="letra">D.</div><div>Tiene 12 lados, porque \(360^\circ/30^\circ=12\), y la suma interior es \((12-2)180^\circ=1800^\circ\).</div></div></div></section><section class="pregunta" id="p16" data-n="16" data-fmt="short"><div class="cab">Pregunta <span class="qnum">16</span></div><div class="ctx">Ana sale de su casa caminando a 6 km/h por un camino recto. Media hora después, Beto sale del mismo punto, por el mismo camino, a 9 km/h.</div><div class="enun">¿Cuánto tiempo, en horas, tarda Beto en alcanzar a Ana desde que él sale?</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p17" data-n="17" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">17</span></div><div class="ctx">Se quiere saber cuántos números de tres cifras (del 100 al 999) son divisibles por 7.</div><div class="enun">¿Cuántos números naturales de tres cifras son múltiplos de 7?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>129</div></div><div class="opcion"><div class="letra">B.</div><div>142</div></div><div class="opcion"><div class="letra">C.</div><div>128</div></div><div class="opcion"><div class="letra">D.</div><div>127</div></div></div></section><section class="pregunta" id="p18" data-n="18" data-fmt="open"><div class="cab">Pregunta <span class="qnum">18</span></div><div class="enun">(a) Calcula \(1+2+3+\dots+100\) emparejando extremos y explica por qué funciona. (b) Escribe una fórmula para \(1+2+\dots+n\). (c) Usa la fórmula para calcular \(3+6+9+\dots+99\).</div><div class="lineas" style="--h:230px"></div></section><section class="pregunta" id="p19" data-n="19" data-fmt="rep"><div class="cab">Pregunta <span class="qnum">19</span></div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Plano cartesiano con los puntos A(1,2) y B(7,10)" viewBox="0 0 326 384" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="100%" height="100%" fill="#fff"/><line x1="40" y1="350" x2="40" y2="20" stroke="#e3e3e3"/><text x="40" y="366" font-size="11" text-anchor="middle">0</text><line x1="70" y1="350" x2="70" y2="20" stroke="#e3e3e3"/><text x="70" y="366" font-size="11" text-anchor="middle">1</text><line x1="100" y1="350" x2="100" y2="20" stroke="#e3e3e3"/><text x="100" y="366" font-size="11" text-anchor="middle">2</text><line x1="130" y1="350" x2="130" y2="20" stroke="#e3e3e3"/><text x="130" y="366" font-size="11" text-anchor="middle">3</text><line x1="160" y1="350" x2="160" y2="20" stroke="#e3e3e3"/><text x="160" y="366" font-size="11" text-anchor="middle">4</text><line x1="190" y1="350" x2="190" y2="20" stroke="#e3e3e3"/><text x="190" y="366" font-size="11" text-anchor="middle">5</text><line x1="220" y1="350" x2="220" y2="20" stroke="#e3e3e3"/><text x="220" y="366" font-size="11" text-anchor="middle">6</text><line x1="250" y1="350" x2="250" y2="20" stroke="#e3e3e3"/><text x="250" y="366" font-size="11" text-anchor="middle">7</text><line x1="280" y1="350" x2="280" y2="20" stroke="#e3e3e3"/><text x="280" y="366" font-size="11" text-anchor="middle">8</text><line x1="40" y1="350" x2="280" y2="350" stroke="#e3e3e3"/><text x="33" y="354" font-size="11" text-anchor="end">0</text><line x1="40" y1="320" x2="280" y2="320" stroke="#e3e3e3"/><text x="33" y="324" font-size="11" text-anchor="end">1</text><line x1="40" y1="290" x2="280" y2="290" stroke="#e3e3e3"/><text x="33" y="294" font-size="11" text-anchor="end">2</text><line x1="40" y1="260" x2="280" y2="260" stroke="#e3e3e3"/><text x="33" y="264" font-size="11" text-anchor="end">3</text><line x1="40" y1="230" x2="280" y2="230" stroke="#e3e3e3"/><text x="33" y="234" font-size="11" text-anchor="end">4</text><line x1="40" y1="200" x2="280" y2="200" stroke="#e3e3e3"/><text x="33" y="204" font-size="11" text-anchor="end">5</text><line x1="40" y1="170" x2="280" y2="170" stroke="#e3e3e3"/><text x="33" y="174" font-size="11" text-anchor="end">6</text><line x1="40" y1="140" x2="280" y2="140" stroke="#e3e3e3"/><text x="33" y="144" font-size="11" text-anchor="end">7</text><line x1="40" y1="110" x2="280" y2="110" stroke="#e3e3e3"/><text x="33" y="114" font-size="11" text-anchor="end">8</text><line x1="40" y1="80" x2="280" y2="80" stroke="#e3e3e3"/><text x="33" y="84" font-size="11" text-anchor="end">9</text><line x1="40" y1="50" x2="280" y2="50" stroke="#e3e3e3"/><text x="33" y="54" font-size="11" text-anchor="end">10</text><line x1="40" y1="20" x2="280" y2="20" stroke="#e3e3e3"/><text x="33" y="24" font-size="11" text-anchor="end">11</text><line x1="40" y1="350" x2="289.0" y2="350" stroke="#333" stroke-width="1.8"/><line x1="40" y1="350" x2="40" y2="11.0" stroke="#333" stroke-width="1.8"/><circle cx="70" cy="290" r="4.4" fill="#B31217"/><text x="78" y="306" font-size="13" font-weight="bold">A(1, 2)</text><circle cx="250" cy="50" r="4.4" fill="#B31217"/><text x="186" y="44" font-size="13" font-weight="bold">B(7, 10)</text></svg><div class="nota">Cada cuadro mide una unidad.</div></div><div class="enun">Sobre el plano: (a) ubica y rotula el punto medio \(M\) del segmento \(AB\); (b) calcula la distancia \(AB\); (c) traza el punto \(C(7,2)\) y explica por qué el triángulo \(ABC\) es rectángulo.</div><div class="lineas" style="--h:190px"></div></section><section class="pregunta" id="p20" data-n="20" data-fmt="open"><div class="cab">Pregunta <span class="qnum">20</span></div><div class="enun">(a) En un torneo todos juegan una vez contra todos. Con 8 equipos, ¿cuántos partidos hay? Explica tu razonamiento. (b) Si en total se juegan 45 partidos, ¿cuántos equipos participan? Justifica.</div><div class="lineas" style="--h:200px"></div></section></div>
+<div id="docente-slot" class="oculta"></div>
+<div class="foot">Institución Educativa San Luis Gonzaga · FACIMATE — Formando Actitudes y Capacidades para Interpretar las Matemáticas</div><template id="tpl-docente"><div id="panel-docente"><div class="aviso"><b>Uso exclusivo del docente.</b> No entregar a los estudiantes. Contiene competencia, pensamiento, nivel, respuestas y soluciones.</div>
+<div id="resumen-completo"><div class="resumen"><div><b>Competencias</b><br>Interpretación y representación: 5<br>Formulación y ejecución: 9<br>Argumentación: 6</div><div><b>Niveles</b><br>Básico: 3<br>Medio: 10<br>Alto: 7</div><div><b>Formatos</b><br>A. Selección múltiple con única respuesta: 9<br>B. Respuesta abierta corta: 4<br>C. Pregunta abierta de procedimiento: 2<br>D. Emparejamiento: 1<br>E. Completar información: 1<br>F. Clasificación: 1<br>G. Verdadero o falso con justificación: 1<br>H. Intervención sobre una representación: 1</div><div><b>Puntaje</b><br>Total: 32 puntos<br>Taller (2,0) = 2,0 × (puntos / 32); sustentación (1,0) = 1,0 × (puntos de las preguntas sorteadas / su total). Refuerzo máximo: 3,0</div></div>
+</div><div id="clave-prueba" class="oculta"></div><div id="clave-completa"><h2 class="seccion">Matriz técnica y clave de valoración</h2>
+<table class="tec"><tr><th>N.º</th><th>Tema</th><th>Pensamiento</th><th>Competencia</th><th>Tipo de pregunta</th><th>Nivel</th><th>Pts</th><th>Respuesta esperada</th></tr><tr><td>1</td><td>Mínimo común múltiplo en una situación</td><td>Numérico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Básico</td><td>1</td><td><b>B</b>. 180 s</td></tr><tr><td>2</td><td>Patrones numéricos en figuras</td><td>Variacional</td><td>Interpretación y representación</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>145 cuadros</td></tr><tr><td>3</td><td>Sistema de ecuaciones lineales</td><td>Variacional</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>A</b>. 23 gallinas y 12 conejos</td></tr><tr><td>4</td><td>Diferencia de cuadrados</td><td>Variacional</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>C</b>. 200</td></tr><tr><td>5</td><td>Porcentajes sucesivos</td><td>Numérico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>D</b>. Disminuyó 4 % (factor 0,96)</td></tr><tr><td>6</td><td>Área de una región compuesta</td><td>Métrico</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>B</b>. 13,7 cm²</td></tr><tr><td>7</td><td>Cuadrado inscrito en una circunferencia</td><td>Espacial</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Básico</td><td>1</td><td>50 cm²</td></tr><tr><td>8</td><td>Conteo con restricciones</td><td>Aleatorio</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>B</b>. 48</td></tr><tr><td>9</td><td>Probabilidad con dos dados</td><td>Aleatorio</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>\(\frac13\)</td></tr><tr><td>10</td><td>Medidas de tendencia central</td><td>Aleatorio</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>A</b>. La mediana (3 millones)</td></tr><tr><td>11</td><td>Lógica: la afirmación recíproca</td><td>Numérico</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Alto</td><td>2</td><td>Falso: contraejemplo 9 (múltiplo de 3 que no lo es de 6).</td></tr><tr><td>12</td><td>Reglas de sucesiones</td><td>Variacional</td><td>Interpretación y representación</td><td>D. Emparejamiento</td><td>Medio</td><td>2</td><td>1-A, 2-B, 3-C, 4-D (E no se usa)</td></tr><tr><td>13</td><td>Primos, cuadrados perfectos y compuestos</td><td>Numérico</td><td>Interpretación y representación</td><td>F. Clasificación</td><td>Medio</td><td>2</td><td>Primo: b, e · Cuadrado: a, d · Compuesto no cuadrado: c, f</td></tr><tr><td>14</td><td>Cuadrado mágico</td><td>Numérico</td><td>Formulación y ejecución</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>7; 9; 3 (fila 1 columna 2; fila 2 columna 1; fila 3 columna 2)</td></tr><tr><td>15</td><td>Ángulos de un polígono regular</td><td>Espacial</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>D</b>. 12 lados; suma interior \(1800^\circ\)</td></tr><tr><td>16</td><td>Problema de movimiento (alcance)</td><td>Métrico</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Básico</td><td>1</td><td>1 hora</td></tr><tr><td>17</td><td>Conteo de múltiplos</td><td>Numérico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>C</b>. 128</td></tr><tr><td>18</td><td>Suma de Gauss y generalización</td><td>Numérico</td><td>Argumentación</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>5050; \(\frac{n(n+1)}{2}\); 1683</td></tr><tr><td>19</td><td>Plano cartesiano: punto medio y distancia</td><td>Espacial</td><td>Interpretación y representación</td><td>H. Sobre una representación</td><td>Alto</td><td>3</td><td>\(M(4,6)\); \(AB=10\); recto en \(C\) (\(6^2+8^2=10^2\))</td></tr><tr><td>20</td><td>Torneo: conteo de partidos</td><td>Aleatorio</td><td>Argumentación</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>28 partidos; 10 equipos</td></tr></table>
+</div><h2 class="seccion saltar">Solucionario</h2>
+<div class="sol" id="sol1"><h4>Pregunta 1 <span class="etq">Formulación y ejecución</span><span class="etq">Básico</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. 180 s</p><p><b>Procedimiento:</b> Hay que hallar \(\text{mcm}(12,18,30)\): \(12=2^2\cdot3\), \(18=2\cdot3^2\), \(30=2\cdot3\cdot5\Rightarrow2^2\cdot3^2\cdot5=180\) s.</p><p><b>Por qué corresponde a la competencia:</b> Debe seleccionar la estrategia (mcm) y ejecutarla con tres números.</p><p><b>Distractores:</b> (A) halla el mcm solo de 12 y 30. (C) halla el mcm solo de 18 y 30. (D) toma un múltiplo común que no es el mínimo.</p></div>
+<div class="sol" id="sol2"><h4>Pregunta 2 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 145 cuadros</p><p><b>Procedimiento:</b> Las figuras tienen \(2,5,10,17,26\): \(n^2+1\). Para \(n=12\): \(144+1=145\) cuadros.</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar la sucesión representada en la tabla y transformarla en una expresión general.</p><p><b>Criterio de valoración (1 pts):</b> 145: 1 pt (se acepta la regla \(n^2+1\) si la usa).</p></div>
+<div class="sol" id="sol3"><h4>Pregunta 3 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. 23 gallinas y 12 conejos</p><p><b>Procedimiento:</b> \(g+c=35\) y \(2g+4c=94\). De la primera \(g=35-c\): \(70-2c+4c=94\Rightarrow c=12\), \(g=23\).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear el sistema de ecuaciones y ejecutar un procedimiento de solución.</p><p><b>Distractores:</b> (B) intercambia las incógnitas (daría \(12\cdot2+23\cdot4=116\) patas). (C) cumple las 35 cabezas pero tiene 92 patas. (D) cumple las 35 cabezas pero tiene 96 patas.</p></div>
+<div class="sol" id="sol4"><h4>Pregunta 4 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. 200</p><p><b>Procedimiento:</b> \(a^2-b^2=(a+b)(a-b)\): \(51^2-49^2=(100)(2)=200\). Comprobación: \(2601-2401=200\).</p><p><b>Por qué corresponde a la competencia:</b> Debe validar un procedimiento algebraico y descartar los que confunden las propiedades.</p><p><b>Distractores:</b> (A) confunde la diferencia de cuadrados con el cuadrado de la diferencia. (B) «cancela» los exponentes. (D) cambia el signo de la resta por una suma.</p></div>
+<div class="sol" id="sol5"><h4>Pregunta 5 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. Disminuyó 4 % (factor 0,96)</p><p><b>Procedimiento:</b> Factor total: \(1{,}2\cdot0{,}8=0{,}96\). El precio final es el 96 % del original: baja 4 %.</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear la composición de factores porcentuales (no sumar los porcentajes).</p><p><b>Distractores:</b> (A) suma los porcentajes aunque se aplican sobre bases distintas. (B) invierte el sentido del cambio. (C) divide entre 2 el efecto.</p></div>
+<div class="sol" id="sol6"><h4>Pregunta 6 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. 13,7 cm²</p><p><b>Procedimiento:</b> Radio del círculo \(=4\) cm. Área sombreada \(=8^2-\pi(4)^2=64-16\pi\approx13{,}7\) cm².</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar la figura (el diámetro coincide con el lado) y representar el área como diferencia de áreas.</p><p><b>Distractores:</b> (A) usa \(2\pi r\) (longitud) en lugar de \(\pi r^2\) (área). (C) resta \(r^2\) sin multiplicar por \(\pi\). (D) calcula el área del círculo, no de la región sombreada.</p></div>
+<div class="sol" id="sol7"><h4>Pregunta 7 <span class="etq">Formulación y ejecución</span><span class="etq">Básico</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 50 cm²</p><p><b>Procedimiento:</b> La diagonal es el diámetro: \(d=10\). Con lado \(\ell\): \(\ell^2+\ell^2=10^2\Rightarrow\ell^2=50\). El área del cuadrado es 50 cm².</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear el uso de Pitágoras identificando la diagonal con el diámetro.</p><p><b>Criterio de valoración (1 pts):</b> 50 cm² con unidad: 1 pt.</p></div>
+<div class="sol" id="sol8"><h4>Pregunta 8 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. 48</p><p><b>Procedimiento:</b> Se toma «Ana–Bruno» como un bloque: 4 elementos se ordenan de \(4!=24\) formas y el bloque admite 2 órdenes: \(24\cdot2=48\).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear una estrategia de conteo (agrupar el bloque) y ejecutarla.</p><p><b>Distractores:</b> (A) cuenta todas las ordenaciones \(5!\) sin la restricción. (C) trata el bloque como un solo elemento, pero olvida que Ana y Bruno pueden intercambiarse. (D) multiplica por 2 dos veces.</p></div>
+<div class="sol" id="sol9"><h4>Pregunta 9 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> \(\frac13\)</p><p><b>Procedimiento:</b> Suma 8: 5 casos; suma 5: 4 casos; suma 10: 3 casos. Son sucesos distintos: \(\frac{5+4+3}{36}=\frac{12}{36}=\frac13\).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear el conteo de casos favorables sobre 36 casos posibles y ejecutarlo.</p><p><b>Criterio de valoración (1 pts):</b> 1/3 (o equivalente): 1 pt.</p></div>
+<div class="sol" id="sol10"><h4>Pregunta 10 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. La mediana (3 millones)</p><p><b>Procedimiento:</b> Media \(=\frac{50}{6}\approx8{,}3\) millones; mediana \(=3\) millones. El dato 36 es extremo y «jala» la media hacia arriba; la mediana representa mejor al grupo.</p><p><b>Por qué corresponde a la competencia:</b> Debe evaluar la pertinencia de una medida estadística para sustentar una conclusión.</p><p><b>Distractores:</b> (B) ignora el efecto de los valores extremos. (C) la moda es 2 y 3 (dos modas) y no depende del orden de la lista. (D) descarta datos sin justificación.</p></div>
+<div class="sol" id="sol11"><h4>Pregunta 11 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Falso: contraejemplo 9 (múltiplo de 3 que no lo es de 6).</p><p><b>Procedimiento:</b> Falso. La afirmación original es cierta, pero su recíproca no: 9 es múltiplo de 3 y no es múltiplo de 6 (\(9=6\cdot1{,}5\)). Un solo contraejemplo basta para refutarla.</p><p><b>Por qué corresponde a la competencia:</b> Debe refutar una conclusión mediante un contraejemplo, distinguiendo una afirmación de su recíproca.</p><p><b>Criterio de valoración (2 pts):</b> Falso: 0,5 pt. Contraejemplo válido (9, 15, 21…) y la explicación: 1,5 pts.</p></div>
+<div class="sol" id="sol12"><h4>Pregunta 12 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">D. Emparejamiento</span></h4><p><b>Respuesta:</b> 1-A, 2-B, 3-C, 4-D (E no se usa)</p><p><b>Procedimiento:</b> 1) \(3,7,11,15\): aumenta 4 y \(a_1=3\Rightarrow4n-1\). 2) \(2,6,18,54\): multiplica por 3: \(2\cdot3^{n-1}\). 3) \(1,4,9,16\): \(n^2\). 4) \(1,3,6,10\): números triangulares \(\frac{n(n+1)}{2}\). Sobra \(2n+1\).</p><p><b>Por qué corresponde a la competencia:</b> Debe relacionar la forma de una sucesión con su representación algebraica.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pt por relación correcta.</p></div>
+<div class="sol" id="sol13"><h4>Pregunta 13 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">F. Clasificación</span></h4><p><b>Respuesta:</b> Primo: b, e · Cuadrado: a, d · Compuesto no cuadrado: c, f</p><p><b>Procedimiento:</b> a) \(49=7^2\) cuadrado. b) 53 primo. c) \(91=7\cdot13\) compuesto. d) \(64=8^2\) cuadrado. e) 97 primo. f) \(51=3\cdot17\) compuesto (no es primo aunque lo parezca).</p><p><b>Por qué corresponde a la competencia:</b> Debe reconocer propiedades de los números (divisores) y no solo apariencias.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pt por categoría correcta; 0,5 pt si no hay letras repetidas ni ausentes.</p></div>
+<div class="sol" id="sol14"><h4>Pregunta 14 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> 7; 9; 3 (fila 1 columna 2; fila 2 columna 1; fila 3 columna 2)</p><p><b>Procedimiento:</b> Diagonal: \(2+5+8=15\). Fila 1: \(2+x+6=15\Rightarrow x=7\). Fila 2: \(z+5+1=15\Rightarrow z=9\). Fila 3: \(4+y+8=15\Rightarrow y=3\). Comprobación de columnas: \(2+9+4=15\), \(7+5+3=15\), \(6+1+8=15\).</p><p><b>Por qué corresponde a la competencia:</b> Debe usar una diagonal completa para hallar la suma mágica y ejecutar los cálculos fila por fila.</p><p><b>Criterio de valoración (2 pts):</b> 0,7 pt por cada espacio correcto; 2,0 pts si los tres son correctos.</p></div>
+<div class="sol" id="sol15"><h4>Pregunta 15 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. 12 lados; suma interior \(1800^\circ\)</p><p><b>Procedimiento:</b> Ángulo exterior \(=\frac{360^\circ}{n}=30^\circ\Rightarrow n=12\). Suma interior \(=(12-2)180^\circ=1800^\circ\) (cada interior mide \(150^\circ\)).</p><p><b>Por qué corresponde a la competencia:</b> Debe validar la relación entre ángulo exterior y número de lados y justificar la suma de ángulos interiores.</p><p><b>Distractores:</b> (A) usa \(180^\circ\) en lugar de \(360^\circ\) (suma de exteriores). (B) confunde la suma de los exteriores con la de los interiores. (C) plantea mal la ecuación; para \(n=10\) no se cumple.</p></div>
+<div class="sol" id="sol16"><h4>Pregunta 16 <span class="etq">Formulación y ejecución</span><span class="etq">Básico</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 1 hora</p><p><b>Procedimiento:</b> Ventaja de Ana: \(6\cdot0{,}5=3\) km. Beto gana \(9-6=3\) km cada hora: \(3\div3=1\) h.</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear la ventaja inicial y la rapidez relativa para ejecutar el cálculo.</p><p><b>Criterio de valoración (1 pts):</b> 1 h con unidad: 1 pt.</p></div>
+<div class="sol" id="sol17"><h4>Pregunta 17 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. 128</p><p><b>Procedimiento:</b> Primer múltiplo de tres cifras: \(105=7\cdot15\). Último: \(994=7\cdot142\). Cantidad: \(142-15+1=128\).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear el conteo de múltiplos entre dos límites y ejecutarlo sin errores de extremos.</p><p><b>Distractores:</b> (A) cuenta de más un extremo (error de «poste»). (B) cuenta todos los múltiplos de 7 hasta 999, incluidos los de una y dos cifras. (D) descuenta un extremo que sí cumple.</p></div>
+<div class="sol" id="sol18"><h4>Pregunta 18 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> 5050; \(\frac{n(n+1)}{2}\); 1683</p><p><b>Procedimiento:</b> (a) Se forman 50 parejas \((1+100),(2+99),\dots\) que suman 101 cada una: \(50\cdot101=5050\). (b) \(\frac{n(n+1)}{2}\). (c) \(3(1+2+\dots+33)=3\cdot\frac{33\cdot34}{2}=3\cdot561=1683\).</p><p><b>Por qué corresponde a la competencia:</b> Debe justificar un procedimiento general (parejas) y aplicarlo a un caso nuevo.</p><p><b>Criterio de valoración (4 pts):</b> (a) 5050 y explicación de las parejas: 1,5 pts. (b) Fórmula: 1 pt. (c) Factoriza el 3 y aplica la fórmula con \(n=33\): 1,5 pts.</p></div>
+<div class="sol" id="sol19"><h4>Pregunta 19 <span class="etq">Interpretación y representación</span><span class="etq">Alto</span><span class="etq">H. Intervención sobre una representación</span></h4><p><b>Respuesta:</b> \(M(4,6)\); \(AB=10\); recto en \(C\) (\(6^2+8^2=10^2\))</p><p><b>Procedimiento:</b> (a) \(M=\left(\frac{1+7}{2},\frac{2+10}{2}\right)=(4,6)\). (b) \(AB=\sqrt{6^2+8^2}=10\). (c) \(AC=6\) (horizontal) y \(BC=8\) (vertical) son perpendiculares y \(6^2+8^2=10^2\): el ángulo recto está en \(C\).</p><p><b>Por qué corresponde a la competencia:</b> Debe intervenir sobre una representación gráfica y transformar la información a cálculos y argumentos.</p><p><b>Criterio de valoración (3 pts):</b> (a) 1 pt. (b) 1 pt. (c) Ubica \(C\) y justifica con catetos perpendiculares o con Pitágoras: 1 pt.</p></div>
+<div class="sol" id="sol20"><h4>Pregunta 20 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> 28 partidos; 10 equipos</p><p><b>Procedimiento:</b> (a) Cada equipo juega 7 partidos; \(8\cdot7=56\) cuenta cada partido dos veces: \(56\div2=28\). (b) \(\frac{n(n-1)}{2}=45\Rightarrow n(n-1)=90\Rightarrow n=10\) (\(10\cdot9=90\)); la solución \(n=-9\) se descarta.</p><p><b>Por qué corresponde a la competencia:</b> Debe justificar la fórmula de conteo (evitando contar dos veces) y usarla en sentido inverso.</p><p><b>Criterio de valoración (4 pts):</b> (a) 28 con la explicación de dividir entre 2: 2 pts. (b) Plantea \(n(n-1)/2=45\) y halla \(n=10\): 2 pts.</p></div></div></template>
+<script>
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuf(arr,rng){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var GA=['mc','vf'],BC=['short','open'],DEF=['match','fill','classify'];
+function plan(fmts,k,seed){
+  var rng=mulberry32(seed),idx=fmts.map(function(_,i){return i});
+  var pool=function(set){return idx.filter(function(i){return set.indexOf(fmts[i])>=0})};
+  var pick=[].concat(shuf(pool(GA),rng).slice(0,k===3?1:2),shuf(pool(BC),rng).slice(0,1),shuf(pool(DEF),rng).slice(0,1));
+  if(k===5){var rest=idx.filter(function(i){return pick.indexOf(i)<0});pick.push(shuf(rest,rng)[0]);}
+  var order=shuf(pick,rng),perms={};
+  order.forEach(function(i){if(fmts[i]==='mc')perms[i]=shuf([0,1,2,3],rng)});
+  return {order:order,perms:perms};
+}
+function parseCode(s){var m=/T(\d+)-K([345])-(\d{4,9})/i.exec(s||'');return m?{t:+m[1],k:+m[2],seed:+m[3]}:null}
+
+(function(){
+/* ===== Configuración del artefacto ===== */
+var SCRIPT_URL_VISTAS="https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+var AREA_ARTEFACTO="Matemáticas · Taller Refuerzo Olimpiadas 1 · T1 · 10°";
+var VERSION_ARTEFACTO="T1-tro1-v1";
+var PORTAL_URL="https://llerzy.github.io/portal-slg/";
+var TALLER=1;
+var D=[{"n": 1, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "180 s"}, {"n": 2, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "145 cuadros"}, {"n": 3, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "23 gallinas y 12 conejos"}, {"n": 4, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "200"}, {"n": 5, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "Disminuyó 4 % (factor 0,96)"}, {"n": 6, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "13,7 cm²"}, {"n": 7, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "50 cm²"}, {"n": 8, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "48"}, {"n": 9, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "\\(\\frac13\\)"}, {"n": 10, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "La mediana (3 millones)"}, {"n": 11, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Falso: contraejemplo 9 (múltiplo de 3 que no lo es de 6)."}, {"n": 12, "f": "match", "t": "D. Emparejamiento", "p": 2, "a": -1, "k": "1-A, 2-B, 3-C, 4-D (E no se usa)"}, {"n": 13, "f": "classify", "t": "F. Clasificación", "p": 2, "a": -1, "k": "Primo: b, e · Cuadrado: a, d · Compuesto no cuadrado: c, f"}, {"n": 14, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "7; 9; 3 (fila 1 columna 2; fila 2 columna 1; fila 3 columna 2)"}, {"n": 15, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "12 lados; suma interior \\(1800^\\circ\\)"}, {"n": 16, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "1 hora"}, {"n": 17, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "128"}, {"n": 18, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "5050; \\(\\frac{n(n+1)}{2}\\); 1683"}, {"n": 19, "f": "rep", "t": "H. Sobre una representación", "p": 3, "a": -1, "k": "\\(M(4,6)\\); \\(AB=10\\); recto en \\(C\\) (\\(6^2+8^2=10^2\\))"}, {"n": 20, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "28 partidos; 10 equipos"}];
+var $=function(id){return document.getElementById(id)};
+
+/* ===== Sesión y rol ===== */
+var sesion=null;try{sesion=JSON.parse(sessionStorage.getItem('slg_sesion')||'null')}catch(e){}
+var enGithub=/github\.io$/i.test(location.hostname);
+var preview=false,ES_DOCENTE=false;
+if(sesion&&typeof sesion==='object'){ES_DOCENTE=String(sesion.rol||'').toLowerCase().indexOf('docente')===0}
+else{location.replace(PORTAL_URL);return}
+window.ES_DOCENTE=ES_DOCENTE;
+
+/* ===== Registro silencioso de la apertura ===== */
+function registrarVista(){
+  if(preview||!sesion||!sesion.documento)return;
+  if(!SCRIPT_URL_VISTAS||SCRIPT_URL_VISTAS.indexOf('http')!==0)return;
+  try{
+    var q=new URLSearchParams({accion:'registrarVista',doc:String(sesion.documento),nombre:String(sesion.nombre||''),
+      grupo:String(sesion.grupoAsignado||sesion.grupo||''),rol:String(sesion.rol||(ES_DOCENTE?'docente':'estudiante')),
+      origen:'GitHub',tipoVista:'Apertura Artefacto — '+AREA_ARTEFACTO,version:VERSION_ARTEFACTO});
+    fetch(SCRIPT_URL_VISTAS+(SCRIPT_URL_VISTAS.indexOf('?')>=0?'&':'?')+q.toString(),{mode:'no-cors'}).catch(function(){});
+  }catch(e){}
+}
+
+/* ===== Taller y prueba aleatoria ===== */
+var qs=[].slice.call(document.querySelectorAll('#qs .pregunta')),fm=qs.map(function(q){return q.dataset.fmt});
+var state={modo:'completa',k:4,seed:0};
+function newSeed(){return 100000+Math.floor(Math.random()*899999)}
+function reset(){qs.forEach(function(q){q.classList.remove('oculta');q.style.order='';q.querySelector('.qnum').textContent=q.dataset.n;
+  [].slice.call(q.querySelectorAll('.opts > *')).forEach(function(el,i){el.style.order='';el.querySelector('.letra').textContent='ABCD'[i]+'.'})})}
+function typeset(el){try{if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el])}catch(e){}}
+
+function montarDocente(){
+  var slot=$('docente-slot');
+  if(ES_DOCENTE){if(!slot.firstChild){slot.innerHTML=$('tpl-docente').innerHTML}}
+  else{slot.innerHTML=''}
+  $('barra').classList.toggle('oculta',!ES_DOCENTE);
+}
+function claveDocente(pr,p){
+  if(!ES_DOCENTE||!$('panel-docente'))return;
+  $('resumen-completo').classList.toggle('oculta',pr);
+  $('clave-completa').classList.toggle('oculta',pr);
+  $('clave-prueba').classList.toggle('oculta',!pr);
+  var sel={};if(pr)p.order.forEach(function(i){sel[D[i].n]=1});
+  [].slice.call(document.querySelectorAll('#panel-docente .sol')).forEach(function(el){
+    var n=+el.id.replace('sol','');el.classList.toggle('oculta',pr&&!sel[n])});
+  var h2=document.querySelector('#panel-docente h2.saltar');if(h2)h2.textContent=pr?'Solucionario de las preguntas de esta prueba':'Solucionario';
+  if(pr){
+    var tot=0,h='<h2 class="seccion">Clave de esta prueba (código '+('T'+TALLER+'-K'+state.k+'-'+state.seed)+')</h2><table class="tec"><tr><th>Pos.</th><th>N.º original</th><th>Formato</th><th>Pts</th><th>Respuesta esperada (con el orden de opciones de esta prueba)</th></tr>';
+    p.order.forEach(function(i,pos){var q=D[i];tot+=q.p;var ans;
+      if(q.f==='mc'){ans='<b>'+'ABCD'[p.perms[i].indexOf(q.a)]+'</b>. '+q.k}else ans=q.k;
+      h+='<tr><td>'+(pos+1)+'</td><td><a href="#sol'+q.n+'">'+q.n+'</a></td><td>'+q.t+'</td><td>'+q.p+'</td><td>'+ans+'</td></tr>'});
+    h+='</table><p><b>Total: '+tot+' puntos.</b> Nota de la sustentación = 1,0 × (puntos obtenidos / '+tot+'). El taller completo vale 2,0 (refuerzo máximo 3,0).</p>';
+    $('clave-prueba').innerHTML=h;
+  }
+  typeset($('docente-slot'));
+}
+function apply(){
+  if(!ES_DOCENTE)state.modo='completa';
+  var pr=state.modo==='prueba';
+  ['material','instr-completa','tit-taller'].forEach(function(id){$(id).classList.toggle('oculta',pr)});
+  ['instr-prueba','tit-prueba'].forEach(function(id){$(id).classList.toggle('oculta',!pr)});
+  $('b-completa').classList.toggle('act',!pr);$('b-prueba').classList.toggle('act',pr);
+  $('ctl-prueba').classList.toggle('oculta',!pr);
+  $('codigo').classList.toggle('oculta',!pr);
+  $('sub-completa').classList.toggle('oculta',pr);$('sub-prueba').classList.toggle('oculta',!pr);
+  reset();
+  $('qs').classList.toggle('prueba',pr);
+  var p=null;
+  if(pr){
+    if(!state.seed)state.seed=newSeed();
+    p=plan(fm,state.k,state.seed);
+    qs.forEach(function(q){q.classList.add('oculta')});
+    p.order.forEach(function(i,pos){var q=qs[i];q.classList.remove('oculta');q.style.order=pos;q.querySelector('.qnum').textContent=pos+1;
+      if(p.perms[i]){var o=[].slice.call(q.querySelectorAll('.opts > *'));
+        p.perms[i].forEach(function(orig,posOpt){var el=o[orig];el.style.order=posOpt;el.querySelector('.letra').textContent='ABCD'[posOpt]+'.'})}});
+    var code='T'+TALLER+'-K'+state.k+'-'+state.seed;
+    $('codigo').textContent='Código: '+code;$('codigo-imp').textContent='Código de prueba: '+code;
+    $('sel-k').value=String(state.k);
+  }else{$('codigo-imp').textContent=''}
+  claveDocente(pr,p);
+  if(ES_DOCENTE){try{history.replaceState(null,'',pr?'#prueba='+('T'+TALLER+'-K'+state.k+'-'+state.seed):'#completa')}catch(e){}}
+  window.scrollTo(0,0);
+}
+function aplicarRol(){
+  montarDocente();
+  if(!ES_DOCENTE)state.modo='completa';
+  apply();
+}
+
+$('b-completa').onclick=function(){state.modo='completa';apply()};
+$('b-prueba').onclick=function(){state.modo='prueba';state.seed=newSeed();apply()};
+$('b-nueva').onclick=function(){state.seed=newSeed();apply()};
+$('sel-k').onchange=function(){state.k=+this.value;apply()};
+$('b-sol').onclick=function(){var sl=$('docente-slot'),oc=sl.classList.toggle('oculta');
+  this.textContent=oc?'📋 Mostrar solucionario':'📋 Ocultar solucionario';
+  if(!oc){var t=state.modo==='prueba'&&$('clave-prueba')?$('clave-prueba'):sl;sl.scrollIntoView({behavior:'smooth',block:'start'})}};
+$('b-imp').onclick=function(){window.print()};
+$('b-imp-sol').onclick=function(){document.body.classList.add('print-clave');window.print()};
+window.addEventListener('afterprint',function(){document.body.classList.remove('print-clave')});
+$('b-cargar').onclick=function(){var c=parseCode($('in-cod').value);if(!c||c.t!==TALLER){alert('Código no válido para este taller.');return}
+  state.modo='prueba';state.k=c.k;state.seed=c.seed;apply()};
+
+if(ES_DOCENTE&&location.hash.indexOf('#prueba=')===0){
+  var c0=parseCode(location.hash.replace('#prueba=',''));
+  if(c0&&c0.t===TALLER){state.modo='prueba';state.k=c0.k;state.seed=c0.seed}
+}
+aplicarRol();
+registrarVista();
+})();
+</script>
+</div>
+</body>
+</html>

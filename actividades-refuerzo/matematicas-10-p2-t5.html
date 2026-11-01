@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Taller T5 · Ley del Coseno · Matemáticas 10°</title>
+<script>
+window.MathJax = {tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--rojo:#B31217;--rosa:#fbeaec;--borde:#d9d9d9;--fondo:#f3f4f6;--txt:#222;--ambar:#fff7e8}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;padding:14px;background:var(--fondo);font-family:Arial,Helvetica,sans-serif;color:var(--txt);font-size:15px;line-height:1.42}
+.hoja{max-width:900px;margin:0 auto;background:#fff;padding:20px 26px 28px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.encabezado{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--rojo);color:#fff;border-radius:12px;padding:9px 16px}
+.logo-box{width:80px;min-width:80px;text-align:center}
+.logo-box img{max-height:60px;max-width:74px;object-fit:contain}
+.titulo-box{flex:1;text-align:center}
+.titulo-box h1{margin:0 0 3px;font-size:21px;line-height:1.15}
+.titulo-box p{margin:0;font-size:13.5px;font-weight:600}
+.ie-txt{font-size:12px;font-weight:700;line-height:1.15}
+.datos-est{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0 4px;font-size:14px}
+.datos-est span{flex:1 1 220px;border-bottom:1.5px solid #333;padding-bottom:2px;min-height:22px}
+.datos-est span.corto{flex:0 1 150px}
+.instr{margin:10px 0;padding:9px 12px;background:var(--rosa);border-left:5px solid var(--rojo);border-radius:8px;font-size:14px}
+.instr ul{margin:4px 0 0 18px;padding:0}
+h2.seccion{margin:22px 0 8px;padding-bottom:4px;border-bottom:3px solid var(--rojo);color:var(--rojo);font-size:18px}
+h3.sub{margin:14px 0 4px;color:var(--rojo);font-size:15.5px}
+.repaso p,.repaso li{font-size:14.5px}
+.caja{margin:8px 0;padding:9px 12px;border:1px solid #e2b3b6;border-radius:8px;background:#fffafa}
+.ejemplo{margin:10px 0;padding:10px 14px;border:1px solid var(--borde);border-left:5px solid #2e7d32;border-radius:8px;background:#fbfffb}
+.ejemplo h4{margin:0 0 4px;color:#2e7d32;font-size:14.5px}
+.pregunta{margin:14px 0;padding:11px 14px 12px;border:1px solid var(--borde);border-radius:10px;break-inside:avoid;page-break-inside:avoid;background:#fff}
+.pregunta .cab{font-weight:700;color:var(--rojo);margin-bottom:5px;font-size:15px}
+.ctx{margin:0 0 6px}
+.enun{margin:6px 0;padding:8px 11px;background:var(--ambar);border:1px solid #efd6a3;border-left:5px solid #d69a21;border-radius:8px;font-weight:700}
+.opcion{display:flex;gap:8px;align-items:flex-start;margin:5px 0;padding:6px 10px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.letra{min-width:20px;font-weight:700;color:var(--rojo)}
+.figura{margin:8px auto;padding:6px;border:1px solid var(--borde);border-radius:8px;text-align:center;background:#fff;max-width:560px}
+.figura .grafico-svg{display:block;width:100%;height:auto;margin:0 auto}
+.nota{font-size:12px;color:#555;margin-top:3px;text-align:center}
+.opciones-graficas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.opcion-grafica{position:relative;padding:6px 8px 6px 30px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.opcion-grafica .letra{position:absolute;left:9px;top:7px}
+.opcion-grafica .grafico-svg{display:block;width:100%;height:auto}
+table.t{border-collapse:collapse;margin:8px auto;font-size:14px}
+table.t th,table.t td{border:1px solid #bbb;padding:6px 10px;text-align:center}
+table.t th{background:#f7eeee}
+.blank{display:inline-block;min-width:62px;height:1.25em;border-bottom:1.6px solid #333;vertical-align:-3px;margin:0 3px}
+.blank.l{min-width:110px}
+.resp{margin-top:8px}
+.lineas{height:var(--h,110px);margin-top:6px;border:1px dashed #bbb;border-radius:6px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#d0d0d0 27px,#d0d0d0 28px)}
+.vf-box{display:flex;gap:22px;margin:6px 0 2px;font-weight:700}
+.vf-box span::before{content:"";display:inline-block;width:14px;height:14px;border:1.8px solid #333;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin:8px 0}
+.match .col{border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa}
+.match .it{display:flex;align-items:center;gap:6px;margin:5px 0}
+.match .it b{color:var(--rojo)}
+.clasif td.cat{text-align:left;font-weight:700;width:46%}
+.foot{margin-top:18px;font-size:11.5px;color:#666;text-align:center}
+.docente-box{margin-top:8px;padding:6px 10px;background:#f8f8f8;border:1px solid var(--borde);border-radius:8px;font-size:13px;font-weight:600}
+/* docente */
+.tec{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
+.tec th,.tec td{border:1px solid #bbb;padding:4px 6px;vertical-align:top;text-align:left}
+.tec th{background:#f7eeee}
+.sol{margin:10px 0;padding:9px 13px;border:1px solid var(--borde);border-left:5px solid var(--rojo);border-radius:8px;break-inside:avoid;page-break-inside:avoid;font-size:13.5px}
+.sol h4{margin:0 0 4px;color:var(--rojo);font-size:14.5px}
+.sol .etq{display:inline-block;font-size:11.5px;background:var(--rosa);color:#7a0d11;border-radius:10px;padding:1px 8px;margin-right:4px}
+.sol p{margin:3px 0}
+.resumen{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.resumen div{flex:1 1 170px;border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa;font-size:13px}
+.aviso{margin:8px 0;padding:8px 12px;background:#fff3cd;border:1px solid #e6c96b;border-radius:8px;font-size:13px}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}
+.fr>span{display:block;padding:0 5px}
+.fr>span:first-child{border-bottom:1.6px solid #333}
+mjx-container[jax="SVG"]{margin:0 .05em!important}
+#qs.prueba{display:flex;flex-direction:column}
+#qs.prueba .opts:not(.opciones-graficas){display:flex;flex-direction:column}
+.oculta{display:none!important}
+.barra{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:-20px -26px 14px;padding:10px 26px;background:#2b2b2b;color:#fff;border-radius:14px 14px 0 0;font-size:13.5px}
+.barra b{margin-right:4px}
+.barra button,.barra select,.barra input{font:inherit;padding:5px 10px;border-radius:7px;border:1px solid #888;background:#fff;color:#222;cursor:pointer}
+.barra input{cursor:text;width:150px}
+.barra button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+.barra .cod{margin-left:auto;font-weight:700;background:#fff3cd;color:#5a4300;padding:3px 10px;border-radius:7px}
+.verif{margin:10px 0;padding:10px 14px;border:2px solid #2b2b2b;border-radius:10px;background:#fafafa}
+.verif input{font:inherit;padding:5px 9px;width:200px;border:1px solid #888;border-radius:7px}
+.verif button{font:inherit;padding:5px 12px;border-radius:7px;border:1px solid var(--rojo);background:var(--rojo);color:#fff;cursor:pointer}
+@media (max-width:700px){.opciones-graficas,.match{grid-template-columns:1fr}.hoja{padding:14px}}
+@media print{
+ @page{size:A4 portrait;margin:11mm 12mm}
+ body{background:#fff;padding:0;font-size:13.2px}
+ .hoja{box-shadow:none;max-width:none;padding:0;border-radius:0}
+ h2.seccion{break-after:avoid;page-break-after:avoid}
+ .pregunta,.ejemplo,.sol,.caja,.opcion,.figura,.opcion-grafica{break-inside:avoid;page-break-inside:avoid}
+ .saltar{break-before:page;page-break-before:always}
+ .noprint{display:none!important}
+}
+
+#vp{background:#fff3cd;color:#5a4300;border-bottom:1px solid #e6c96b;padding:7px 12px;font-size:13px;text-align:center}
+#vp button{font:inherit;padding:3px 10px;border-radius:7px;border:1px solid #888;background:#fff;cursor:pointer;margin-left:6px}
+#vp button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+#panel-docente{margin-top:22px;padding-top:6px;border-top:4px double var(--rojo)}
+.barra button.sec{background:#444;color:#fff;border-color:#888}
+@media screen and (max-width:700px){table.t{display:block;overflow-x:auto;max-width:100%}}
+@media print{
+ #vp{display:none!important}
+ #docente-slot{display:none!important}
+ body.print-clave .hoja>*:not(#docente-slot):not(.encabezado){display:none!important}
+ body.print-clave #docente-slot{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="hoja">
+<div class="barra noprint oculta" id="barra"><b>Modalidad:</b><button id="b-completa" class="act">1 · Taller completo (20 preguntas)</button><button id="b-prueba">2 · Prueba aleatoria (sustentación)</button><span id="ctl-prueba" class="oculta"><label>Preguntas: <select id="sel-k"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label> <button id="b-nueva">Generar nueva</button> <input id="in-cod" placeholder="Código (T3-K4-123456)"/><button id="b-cargar">Cargar</button> <button id="b-imp">Imprimir</button></span><button id="b-sol" class="sec">📋 Mostrar solucionario</button><button id="b-imp-sol" class="sec">🖨 Imprimir clave y solucionario</button><span id="codigo" class="cod oculta"></span></div>
+<header class="encabezado">
+<div class="logo-box"><img alt="Logo IE San Luis Gonzaga" src="https://i.imgur.com/Ld5BbX3.png" onerror="this.style.display='none'"/><div class="ie-txt">I.E. San Luis Gonzaga</div></div>
+<div class="titulo-box"><h1>Taller de recuperación 5</h1><p><span id="sub-completa">Matemáticas · Grado Décimo · Ley del Coseno</span><span id="sub-prueba" class="oculta">Prueba de sustentación · Matemáticas · Grado Décimo · Ley del Coseno</span></p></div>
+<div class="logo-box"><img alt="Logo FACIMATE" src="https://i.imgur.com/Os2RUbW.png" onerror="this.style.display='none'"/><div class="ie-txt">FACIMATE</div></div>
+</header>
+<div class="docente-box">Docente: Llerzy Esneider Torres Ome Ph.D. · Segundo periodo<span id="codigo-imp" style="float:right"></span></div>
+<div class="datos-est"><span>Nombre:</span><span class="corto">Grupo:</span><span class="corto">Fecha:</span></div>
+<div id="instr-completa"><div class="instr"><b>Instrucciones</b>
+<ul>
+<li>Lee con atención cada situación antes de responder. Trabaja con orden y muestra tus procedimientos.</li>
+<li>En las preguntas de <b>selección múltiple</b> marca <b>una sola</b> opción (A, B, C o D).</li>
+<li>En las preguntas <b>abiertas</b>, <b>completar</b>, <b>emparejar</b>, <b>clasificar</b> y <b>verdadero/falso</b> escribe tu respuesta en el espacio dispuesto y justifica cuando se pida.</li>
+<li>Usa calculadora científica. Cuando trabajes con ángulos en grados, verifica que esté en modo <b>DEG</b>.</li>
+<li>Este taller es una oportunidad de refuerzo: estudia primero el <b>repaso</b> y los <b>ejemplos resueltos</b>.</li>
+<li><b>Valoración (máximo 3,0):</b> 2,0 por el taller completo y 1,0 por la sustentación (escrita u oral, según indique tu docente).</li>
+</ul></div></div>
+<div class="instr oculta" id="instr-prueba"><b>Instrucciones de la prueba de sustentación</b>
+<ul>
+<li>Esta prueba corta toma ejercicios del taller para verificar que comprendes tus procedimientos. Resuélvela por escrito y prepárate para explicarla oralmente.</li>
+<li>En <b>selección múltiple</b> marca una sola opción. En las demás preguntas escribe tu respuesta y justifica cuando se pida.</li>
+<li>Usa calculadora científica en modo <b>DEG</b>. Tu docente puede pedirte que expliques cualquier paso.</li>
+<li>La sustentación vale <b>1,0</b> de la nota de refuerzo (el taller completo vale 2,0).</li>
+</ul></div>
+<div id="material"><h2 class="seccion">Parte 1. Repaso conceptual</h2><div class="repaso">
+<h3 class="sub">1. Ley del Coseno</h3>
+<div class="caja">\(c^2=a^2+b^2-2ab\cos C\) &nbsp;·&nbsp; \(a^2=b^2+c^2-2bc\cos A\) &nbsp;·&nbsp; \(b^2=a^2+c^2-2ac\cos B\)<br>
+Para hallar un ángulo: \(\cos C=\dfrac{a^2+b^2-c^2}{2ab}\)</div>
+<ul>
+<li>Se usa cuando se conocen <b>dos lados y el ángulo comprendido entre ellos</b> (LAL) o <b>los tres lados</b> (LLL).</li>
+<li>Si \(C=90^\circ\), \(\cos C=0\) y se obtiene el teorema de Pitágoras: la ley del coseno lo generaliza.</li>
+<li>El ángulo mayor se opone al lado mayor. La suma de dos lados siempre es mayor que el tercero.</li>
+</ul>
+<h3 class="sub">2. Clasificar un triángulo según sus lados</h3>
+<p>Sea \(c\) el lado mayor. Si \(c^2\lt a^2+b^2\) el triángulo es <b>acutángulo</b>; si \(c^2=a^2+b^2\), <b>rectángulo</b>; si \(c^2>a^2+b^2\), <b>obtusángulo</b> (\(\cos C<0\)).</p>
+<h3 class="sub">3. Cuidado con la calculadora</h3>
+<p>Con ángulos en grados, usa modo <b>DEG</b>. El radical \(\sqrt{\ }\) debe cubrir toda la expresión \(a^2+b^2-2ab\cos C\). Para un ángulo obtuso, \(\cos C\) es negativo y el término \(-2ab\cos C\) se suma.</p>
+</div>
+<h2 class="seccion">Parte 2. Ejemplos resueltos</h2>
+<div class="ejemplo"><h4>Ejemplo 1 · Hallar un lado (LAL)</h4><p><b>Problema:</b> \(a=7\), \(b=9\) y \(C=50^\circ\). Halle \(c\).</p>
+<p>\(c^2=7^2+9^2-2(7)(9)\cos50^\circ=130-126(0{,}6428)\approx49{,}0\) &nbsp;⇒&nbsp; \(c\approx7{,}0\).</p></div>
+<div class="ejemplo"><h4>Ejemplo 2 · Hallar un ángulo (LLL)</h4><p><b>Problema:</b> los lados de un triángulo miden 5, 6 y 7. Halle el ángulo opuesto al lado de 7.</p>
+<p>\(\cos C=\dfrac{5^2+6^2-7^2}{2(5)(6)}=\dfrac{12}{60}=0{,}2\Rightarrow C\approx78{,}5^\circ\).</p></div>
+</div>
+<h2 class="seccion saltar" id="tit-taller">Parte 3. Taller (20 preguntas)</h2><h2 class="seccion oculta" id="tit-prueba">Prueba de sustentación</h2>
+<div id="qs"><section class="pregunta" id="p1" data-n="1" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">1</span></div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Triángulo con lados de 8 y 11 centímetros y ángulo de 40 grados entre ellos" viewBox="0 0 420 210" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="420" height="210" fill="#fff"/><polygon points="224.4,46.0 336.2,164.0 83.8,164.0" fill="#fff4f4" stroke="#444" stroke-width="2.2" stroke-linejoin="round"/><text x="226.4" y="35.1" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">A</text><text x="351.4" y="173.9" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">B</text><text x="68.5" y="173.6" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">C</text><text x="112.5" y="159.4" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">40°</text><text x="208.2" y="182.9" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">11 cm</text><text x="139.8" y="104.4" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">8 cm</text><text x="294.7" y="104.7" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">x</text></svg><div class="nota">\(x\) es el lado opuesto al ángulo de \(40^\circ\).</div></div><div class="enun">¿Qué expresión permite calcular \(x\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(x^2=8^2+11^2-2(8)(11)\cos40^\circ\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(x^2=8^2+11^2+2(8)(11)\cos40^\circ\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(x^2=8^2+11^2-2(8)(11)\sin40^\circ\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(x^2=8^2+11^2-(8)(11)\cos40^\circ\)</div></div></div></section><section class="pregunta" id="p2" data-n="2" data-fmt="short"><div class="cab">Pregunta <span class="qnum">2</span></div><div class="ctx">En un triángulo \(ABC\), \(a=9\) cm, \(b=12\) cm y el ángulo comprendido es \(C=60^\circ\).</div><div class="enun">¿Cuánto mide el lado \(c\)? Aproxima a una cifra decimal.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p3" data-n="3" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">3</span></div><div class="ctx">Dos senderos parten del mismo punto \(P\) hacia los miradores \(Q\) y \(R\). El sendero \(PQ\) mide 5 km, \(PR\) mide 8 km y entre ellos hay un ángulo de \(70^\circ\). Se quiere construir un camino directo entre \(Q\) y \(R\).</div><div class="enun">¿Cuál es aproximadamente la longitud del camino directo \(QR\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>10,8 km</div></div><div class="opcion"><div class="letra">B.</div><div>9,4 km</div></div><div class="opcion"><div class="letra">C.</div><div>6,2 km</div></div><div class="opcion"><div class="letra">D.</div><div>7,9 km</div></div></div></section><section class="pregunta" id="p4" data-n="4" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">4</span></div><table class="t"><tr><th>\(a\)</th><th>\(b\)</th><th>Ángulo \(C\)</th><th>\(c\)</th></tr>
+<tr><td>6</td><td>8</td><td>\(90^\circ\)</td><td><span class="blank" style="min-width:60px"></span></td></tr>
+<tr><td>4</td><td>5</td><td><span class="blank" style="min-width:60px"></span>°</td><td>6</td></tr>
+<tr><td>7</td><td>10</td><td>\(120^\circ\)</td><td><span class="blank" style="min-width:60px"></span></td></tr>
+<tr><td>5</td><td>5</td><td><span class="blank" style="min-width:60px"></span>°</td><td>5</td></tr></table>
+<div class="nota">\(c\) es el lado opuesto al ángulo \(C\). Redondea a una cifra decimal.</div><div class="enun">Completa la tabla con el lado o el ángulo que falta en cada triángulo.</div></section><section class="pregunta" id="p5" data-n="5" data-fmt="match"><div class="cab">Pregunta <span class="qnum">5</span></div><div class="enun">Sea \(c\) el lado mayor de un triángulo. Relaciona cada condición con lo que implica sobre el ángulo \(C\). Una opción no se usa.</div><div class="match"><div class="col"><div class="it"><b>1.</b> <span>\(c^2>a^2+b^2\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>2.</b> <span>\(c^2=a^2+b^2\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>3.</b> <span>\(c^2\lt a^2+b^2\)</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>4.</b> <span>\(\cos C=-\dfrac12\)</span> <span class="blank" style="min-width:40px"></span></div></div><div class="col"><div class="it"><b>A.</b> <span>El ángulo \(C\) es agudo</span></div><div class="it"><b>B.</b> <span>El ángulo \(C\) es obtuso</span></div><div class="it"><b>C.</b> <span>El ángulo \(C\) es recto</span></div><div class="it"><b>D.</b> <span>\(C=120^\circ\)</span></div><div class="it"><b>E.</b> <span>\(C=30^\circ\)</span></div></div></div><div class="nota" style="text-align:left">Escribe en cada línea la letra de la columna derecha que corresponda. Sobra una opción.</div></section><section class="pregunta" id="p6" data-n="6" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">6</span></div><div class="ctx">En un triángulo, \(a=6\) y \(b=8\) permanecen fijos, y el ángulo \(C\) entre ellos se abre de \(40^\circ\) a \(100^\circ\). Se analiza el lado \(c\) opuesto a \(C\).</div><div class="enun">¿Cuál argumento describe correctamente qué ocurre con \(c\) cuando \(C\) aumenta de \(40^\circ\) a \(100^\circ\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(c\) disminuye: al abrirse el ángulo, los extremos de los lados \(a\) y \(b\) se acercan.</div></div><div class="opcion"><div class="letra">B.</div><div>\(c\) permanece constante porque \(a\) y \(b\) no cambian.</div></div><div class="opcion"><div class="letra">C.</div><div>\(c\) aumenta: \(c^2=100-96\cos C\) y, al crecer \(C\) entre \(0^\circ\) y \(180^\circ\), \(\cos C\) disminuye, por lo que \(-96\cos C\) aumenta.</div></div><div class="opcion"><div class="letra">D.</div><div>\(c\) es directamente proporcional a \(C\): si \(C\) se multiplica por 2,5, \(c\) también.</div></div></div></section><section class="pregunta" id="p7" data-n="7" data-fmt="short"><div class="cab">Pregunta <span class="qnum">7</span></div><div class="ctx">Un triángulo tiene lados de 7 cm, 9 cm y 12 cm.</div><div class="enun">¿Cuánto mide el ángulo mayor del triángulo? Aproxima a una cifra decimal.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p8" data-n="8" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">8</span></div><div class="ctx">Un estudiante afirma: “Existe un triángulo cuyos lados miden 5 cm, 6 cm y 12 cm”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p9" data-n="9" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">9</span></div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Triángulo con lados de 9, 12 y 15 centímetros" viewBox="0 0 420 230" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="420" height="230" fill="#fff"/><polygon points="66.2,184.0 353.8,184.0 250.3,46.0" fill="#fff4f4" stroke="#444" stroke-width="2.2" stroke-linejoin="round"/><text x="50.9" y="193.5" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">A</text><text x="368.8" y="194.3" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">B</text><text x="254.7" y="35.6" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">C</text><text x="316.4" y="114.8" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">9 cm</text><text x="144.1" y="114.0" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">12 cm</text><text x="205.8" y="202.4" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">15 cm</text></svg><div class="nota">Medidas en centímetros.</div></div><div class="enun">¿Qué se puede afirmar del ángulo \(C\), opuesto al lado de 15 cm?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Es agudo: todos los ángulos de un triángulo con lados enteros son menores que \(90^\circ\).</div></div><div class="opcion"><div class="letra">B.</div><div>Es recto: \(\cos C=0\) porque \(15^2=9^2+12^2\).</div></div><div class="opcion"><div class="letra">C.</div><div>Es obtuso: el lado de 15 cm es el mayor y por eso su ángulo supera \(90^\circ\).</div></div><div class="opcion"><div class="letra">D.</div><div>No puede determinarse sin conocer los otros dos ángulos.</div></div></div></section><section class="pregunta" id="p10" data-n="10" data-fmt="open"><div class="cab">Pregunta <span class="qnum">10</span></div><div class="ctx">Un parque triangular tiene lados de 120 m, 150 m y 200 m.</div><div class="enun">Calcula la medida de los tres ángulos del terreno (una cifra decimal) y verifica que su suma es \(180^\circ\).</div><div class="lineas" style="--h:230px"></div></section><section class="pregunta" id="p11" data-n="11" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">11</span></div><div class="ctx">Dos barcos salen al mismo tiempo del mismo puerto. Uno navega a 20 km/h y el otro a 15 km/h, siguiendo rutas rectas que forman un ángulo de \(50^\circ\).</div><div class="enun">¿A qué distancia aproximada están los barcos después de 2 horas?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>70 km</div></div><div class="opcion"><div class="letra">B.</div><div>50 km</div></div><div class="opcion"><div class="letra">C.</div><div>30,9 km</div></div><div class="opcion"><div class="letra">D.</div><div>63,6 km</div></div></div></section><section class="pregunta" id="p12" data-n="12" data-fmt="classify"><div class="cab">Pregunta <span class="qnum">12</span></div><div class="enun">Clasifica cada triángulo (dado por sus lados, en cm) según sus ángulos. Compara el cuadrado del lado mayor con la suma de los cuadrados de los otros dos.</div><div class="match"><div class="col"><div class="it"><b>a)</b> <span>Lados 5, 12 y 13</span></div><div class="it"><b>b)</b> <span>Lados 6, 7 y 9</span></div><div class="it"><b>c)</b> <span>Lados 4, 5 y 8</span></div><div class="it"><b>d)</b> <span>Lados 7, 8 y 9</span></div><div class="it"><b>e)</b> <span>Lados 8, 15 y 17</span></div><div class="it"><b>f)</b> <span>Lados 5, 6 y 10</span></div></div><div class="col"><table class="t clasif" style="width:100%"><tr><th>Categoría</th><th>Letras</th></tr><tr><td class="cat">Acutángulo</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">Rectángulo</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">Obtusángulo</td><td><span class="blank" style="min-width:150px"></span></td></tr></table></div></div></section><section class="pregunta" id="p13" data-n="13" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">13</span></div><div class="ctx">Con \(a=5\), \(b=7\) y \(C=50^\circ\), <b>Luis</b> calcula \(c^2=5^2+7^2-2(5)(7)\cos50^\circ\) y <b>Marta</b> calcula \(c^2=(5+7)^2-2(5)(7)\cos50^\circ\).</div><div class="enun">¿Cuál argumento permite decidir qué procedimiento es válido?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>El de Luis: la ley del coseno usa \(a^2+b^2\); \((a+b)^2\) añade el término \(2ab\), que no corresponde.</div></div><div class="opcion"><div class="letra">B.</div><div>El de Marta: \((a+b)^2\) tiene en cuenta la longitud total de los dos lados.</div></div><div class="opcion"><div class="letra">C.</div><div>Ambos, porque \((a+b)^2-2ab\cos50^\circ\) y \(a^2+b^2-2ab\cos50^\circ\) son equivalentes para ángulos agudos.</div></div><div class="opcion"><div class="letra">D.</div><div>Ninguno, porque con un ángulo de \(50^\circ\) solo puede usarse la ley del seno.</div></div></div></section><section class="pregunta" id="p14" data-n="14" data-fmt="short"><div class="cab">Pregunta <span class="qnum">14</span></div><div class="ctx">Dos lados de un triángulo miden 6 cm y 7 cm, y el ángulo comprendido entre ellos es \(120^\circ\).</div><div class="enun">¿Cuánto mide el tercer lado? Aproxima a una cifra decimal.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p15" data-n="15" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">15</span></div><div class="enun">¿Cuánto mide el ángulo menor de un triángulo con lados de 13 cm, 14 cm y 15 cm?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>59,5°</div></div><div class="opcion"><div class="letra">B.</div><div>67,4°</div></div><div class="opcion"><div class="letra">C.</div><div>36,9°</div></div><div class="opcion"><div class="letra">D.</div><div>53,1°</div></div></div></section><section class="pregunta" id="p16" data-n="16" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">16</span></div><div class="ctx">Un estudiante afirma: “Si en un triángulo \(a=b\) y el ángulo \(C=60^\circ\), entonces \(c=a\) y el triángulo es equilátero”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p17" data-n="17" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">17</span></div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Triángulo PQR en el plano cartesiano" viewBox="0 0 380 270" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="380" height="270" fill="#fff"/><line x1="40" y1="240" x2="40" y2="12" stroke="#e3e3e3"/><text x="40" y="255" font-size="11" text-anchor="middle">0</text><line x1="78" y1="240" x2="78" y2="12" stroke="#e3e3e3"/><text x="78" y="255" font-size="11" text-anchor="middle">1</text><line x1="116" y1="240" x2="116" y2="12" stroke="#e3e3e3"/><text x="116" y="255" font-size="11" text-anchor="middle">2</text><line x1="154" y1="240" x2="154" y2="12" stroke="#e3e3e3"/><text x="154" y="255" font-size="11" text-anchor="middle">3</text><line x1="192" y1="240" x2="192" y2="12" stroke="#e3e3e3"/><text x="192" y="255" font-size="11" text-anchor="middle">4</text><line x1="230" y1="240" x2="230" y2="12" stroke="#e3e3e3"/><text x="230" y="255" font-size="11" text-anchor="middle">5</text><line x1="268" y1="240" x2="268" y2="12" stroke="#e3e3e3"/><text x="268" y="255" font-size="11" text-anchor="middle">6</text><line x1="306" y1="240" x2="306" y2="12" stroke="#e3e3e3"/><text x="306" y="255" font-size="11" text-anchor="middle">7</text><line x1="344" y1="240" x2="344" y2="12" stroke="#e3e3e3"/><text x="344" y="255" font-size="11" text-anchor="middle">8</text><line x1="40" y1="240" x2="344" y2="240" stroke="#e3e3e3"/><text x="32" y="244" font-size="11" text-anchor="end">0</text><line x1="40" y1="202" x2="344" y2="202" stroke="#e3e3e3"/><text x="32" y="206" font-size="11" text-anchor="end">1</text><line x1="40" y1="164" x2="344" y2="164" stroke="#e3e3e3"/><text x="32" y="168" font-size="11" text-anchor="end">2</text><line x1="40" y1="126" x2="344" y2="126" stroke="#e3e3e3"/><text x="32" y="130" font-size="11" text-anchor="end">3</text><line x1="40" y1="88" x2="344" y2="88" stroke="#e3e3e3"/><text x="32" y="92" font-size="11" text-anchor="end">4</text><line x1="40" y1="50" x2="344" y2="50" stroke="#e3e3e3"/><text x="32" y="54" font-size="11" text-anchor="end">5</text><line x1="40" y1="12" x2="344" y2="12" stroke="#e3e3e3"/><text x="32" y="16" font-size="11" text-anchor="end">6</text><line x1="40" y1="240" x2="355.40000000000003" y2="240" stroke="#333" stroke-width="1.8"/><line x1="40" y1="240" x2="40" y2="0.5999999999999943" stroke="#333" stroke-width="1.8"/><polygon points="78,202 306,202 192,50" fill="#fff4f4" stroke="#444" stroke-width="2.2"/><circle cx="78" cy="202" r="4" fill="#B31217"/><text x="68" y="220" font-size="13" font-weight="bold">P(1, 1)</text><circle cx="306" cy="202" r="4" fill="#B31217"/><text x="314" y="220" font-size="13" font-weight="bold">Q(7, 1)</text><circle cx="192" cy="50" r="4" fill="#B31217"/><text x="200" y="44" font-size="13" font-weight="bold">R(4, 5)</text></svg><div class="nota">Triángulo con vértices \(P(1,1)\), \(Q(7,1)\) y \(R(4,5)\).</div></div><div class="enun">¿Cuál es aproximadamente la medida del ángulo en \(R\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>53,1°</div></div><div class="opcion"><div class="letra">B.</div><div>73,7°</div></div><div class="opcion"><div class="letra">C.</div><div>106,3°</div></div><div class="opcion"><div class="letra">D.</div><div>36,9°</div></div></div></section><section class="pregunta" id="p18" data-n="18" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">18</span></div><div class="ctx">Un triángulo tiene \(a=8\) cm, \(b=11\) cm y \(C=35^\circ\).</div><div class="caja" style="line-height:2.5">
+\(c^2=8^2+11^2-2(8)(11)\cos35^\circ=\) <span class="blank" style="min-width:48px"></span> \(+\) <span class="blank" style="min-width:48px"></span> \(-\) <span class="blank" style="min-width:56px"></span> \(\approx\) <span class="blank" style="min-width:56px"></span><br>
+\(c\approx\) <span class="blank" style="min-width:56px"></span> cm</div><div class="enun">Completa los espacios del procedimiento (usa dos decimales en los productos intermedios y una cifra decimal en el resultado final).</div></section><section class="pregunta" id="p19" data-n="19" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">19</span></div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Paralelogramo de lados 6 y 9 con ángulo de 60 grados y sus dos diagonales" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+<rect width="360" height="220" fill="#fff"/>
+<polygon points="30.0,190.0 246.0,190.0 318.0,65.3 102.0,65.3" fill="#fff4f4" stroke="#444" stroke-width="2.2"/>
+<line x1="30.0" y1="190.0" x2="318.0" y2="65.3" stroke="#1f4e99" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="246.0" y1="190.0" x2="102.0" y2="65.3" stroke="#B31217" stroke-width="1.8" stroke-dasharray="6,4"/>
+<text x="16.0" y="206.0" font-size="15" font-weight="bold">A</text><text x="244.0" y="207.0" font-size="15" font-weight="bold">B</text>
+<text x="324.0" y="61.3" font-size="15" font-weight="bold">C</text><text x="88.0" y="59.3" font-size="15" font-weight="bold">D</text>
+<text x="138.0" y="207.0" font-size="12.5" fill="#1f4e99" font-weight="bold" text-anchor="middle">9 cm</text>
+<text x="40.0" y="127.6" font-size="12.5" fill="#1f4e99" font-weight="bold">6 cm</text>
+<text x="56.0" y="182.0" font-size="12.5" fill="#B31217" font-weight="bold">60°</text>
+</svg><div class="nota">Paralelogramo \(ABCD\) con \(AB=9\) cm, \(AD=6\) cm y \(\angle A=60^\circ\).</div></div><div class="enun">¿Cuál es la longitud de la diagonal menor \(BD\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>7,9 cm</div></div><div class="opcion"><div class="letra">B.</div><div>13,1 cm</div></div><div class="opcion"><div class="letra">C.</div><div>10,8 cm</div></div><div class="opcion"><div class="letra">D.</div><div>15,0 cm</div></div></div></section><section class="pregunta" id="p20" data-n="20" data-fmt="open"><div class="cab">Pregunta <span class="qnum">20</span></div><div class="ctx">En el triángulo \(ABC\): \(a=10\), \(b=14\) y \(C=40^\circ\).</div><div class="enun">(a) Explica por qué este triángulo no puede empezar a resolverse con la Ley del Seno. (b) Calcula el lado \(c\). (c) Calcula los ángulos \(A\) y \(B\) (una cifra decimal) y comprueba que la suma de los tres ángulos es \(180^\circ\).</div><div class="lineas" style="--h:270px"></div></section></div>
+<div id="docente-slot" class="oculta"></div>
+<div class="foot">Institución Educativa San Luis Gonzaga · FACIMATE — Formando Actitudes y Capacidades para Interpretar las Matemáticas</div><template id="tpl-docente"><div id="panel-docente"><div class="aviso"><b>Uso exclusivo del docente.</b> No entregar a los estudiantes. Contiene competencia, pensamiento, nivel, respuestas y soluciones.</div>
+<div id="resumen-completo"><div class="resumen"><div><b>Competencias</b><br>Interpretación y representación: 7<br>Formulación y ejecución: 8<br>Argumentación: 5</div><div><b>Niveles</b><br>Básico: 2<br>Medio: 10<br>Alto: 8</div><div><b>Formatos</b><br>A. Selección múltiple con única respuesta: 9<br>B. Respuesta abierta corta: 3<br>C. Pregunta abierta de procedimiento: 2<br>D. Emparejamiento: 1<br>E. Completar información: 2<br>F. Clasificación: 1<br>G. Verdadero o falso con justificación: 2</div><div><b>Puntaje</b><br>Total: 32 puntos<br>Taller (2,0) = 2,0 × (puntos / 32); sustentación (1,0) = 1,0 × (puntos de las preguntas sorteadas / su total). Refuerzo máximo: 3,0</div></div>
+</div><div id="clave-prueba" class="oculta"></div><div id="clave-completa"><h2 class="seccion">Matriz técnica y clave de valoración</h2>
+<table class="tec"><tr><th>N.º</th><th>Tema</th><th>Pensamiento</th><th>Competencia</th><th>Tipo de pregunta</th><th>Nivel</th><th>Pts</th><th>Respuesta esperada</th></tr><tr><td>1</td><td>Planteamiento de la Ley del Coseno (LAL)</td><td>Espacial</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Básico</td><td>1</td><td><b>A</b>. \(x^2=8^2+11^2-2(8)(11)\cos40^\circ\)</td></tr><tr><td>2</td><td>Cálculo de un lado (LAL)</td><td>Espacial</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Básico</td><td>1</td><td>10,8 cm</td></tr><tr><td>3</td><td>Distancia directa entre dos puntos</td><td>Métrico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>D</b>. 7,9 km</td></tr><tr><td>4</td><td>Completar datos con la Ley del Coseno</td><td>Espacial</td><td>Interpretación y representación</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>10; 82,8°; 14,8; 60°</td></tr><tr><td>5</td><td>Condición sobre los lados y tipo de ángulo</td><td>Espacial</td><td>Interpretación y representación</td><td>D. Emparejamiento</td><td>Medio</td><td>2</td><td>1-B, 2-C, 3-A, 4-D (E no se usa)</td></tr><tr><td>6</td><td>Cómo cambia el lado opuesto</td><td>Espacial</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>C</b>. c aumenta (cos C decrece)</td></tr><tr><td>7</td><td>Ángulo mayor de un triángulo (LLL)</td><td>Espacial</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>96,4°</td></tr><tr><td>8</td><td>Existencia de un triángulo</td><td>Espacial</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Medio</td><td>2</td><td>Falso (5 + 6 < 12; cos C ≈ −1,38)</td></tr><tr><td>9</td><td>Identificar el tipo de ángulo con la Ley del Coseno</td><td>Espacial</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>B</b>. Es recto (cos C = 0)</td></tr><tr><td>10</td><td>Ángulos de un terreno triangular (LLL)</td><td>Espacial</td><td>Formulación y ejecución</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>≈ 36,7°, 48,3° y 94,9° (suma 180°)</td></tr><tr><td>11</td><td>Separación entre dos barcos</td><td>Métrico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>C</b>. 30,9 km</td></tr><tr><td>12</td><td>Clasificar triángulos por sus lados</td><td>Espacial</td><td>Interpretación y representación</td><td>F. Clasificación</td><td>Medio</td><td>2</td><td>Acutángulo: b, d · Rectángulo: a, e · Obtusángulo: c, f</td></tr><tr><td>13</td><td>Identificar un error en el procedimiento</td><td>Espacial</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>A</b>. Luis</td></tr><tr><td>14</td><td>Ángulo obtuso en la Ley del Coseno</td><td>Espacial</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>11,3 cm</td></tr><tr><td>15</td><td>Ángulo menor de un triángulo (LLL)</td><td>Espacial</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>D</b>. 53,1°</td></tr><tr><td>16</td><td>Triángulo isósceles con ángulo de 60°</td><td>Espacial</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Alto</td><td>2</td><td>Verdadero (c² = a²)</td></tr><tr><td>17</td><td>Ángulo en el plano cartesiano</td><td>Espacial</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>B</b>. 73,7°</td></tr><tr><td>18</td><td>Completar un cálculo con la Ley del Coseno</td><td>Espacial</td><td>Formulación y ejecución</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>64; 121; 144,2; 40,8; 6,4</td></tr><tr><td>19</td><td>Diagonales de un paralelogramo</td><td>Espacial</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>A</b>. 7,9 cm</td></tr><tr><td>20</td><td>Resolver un triángulo LAL completo</td><td>Espacial</td><td>Argumentación</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>c ≈ 9,0; A ≈ 45,4°; B ≈ 94,6°</td></tr></table>
+</div><h2 class="seccion saltar">Solucionario</h2>
+<div class="sol" id="sol1"><h4>Pregunta 1 <span class="etq">Interpretación y representación</span><span class="etq">Básico</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. \(x^2=8^2+11^2-2(8)(11)\cos40^\circ\)</p><p><b>Procedimiento:</b> \(x\) es el lado opuesto al ángulo de \(40^\circ\) entre los lados 8 y 11: \(x^2=8^2+11^2-2(8)(11)\cos40^\circ\).</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar la figura (qué lado se opone al ángulo dado) y representarla con la expresión algebraica correcta.</p><p><b>Distractores:</b> (B) cambia el signo del término del coseno. (C) usa el seno en lugar del coseno. (D) olvida el factor 2.</p></div>
+<div class="sol" id="sol2"><h4>Pregunta 2 <span class="etq">Formulación y ejecución</span><span class="etq">Básico</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 10,8 cm</p><p><b>Procedimiento:</b> \(c^2=9^2+12^2-2(9)(12)\cos60^\circ=81+144-108=117\Rightarrow c\approx10{,}8\) cm.</p><p><b>Por qué corresponde a la competencia:</b> Debe seleccionar y ejecutar la ley del coseno con los datos LAL.</p><p><b>Criterio de valoración (1 pts):</b> Entre 10,8 y 10,9 cm con unidad: 1 pt.</p></div>
+<div class="sol" id="sol3"><h4>Pregunta 3 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. 7,9 km</p><p><b>Procedimiento:</b> \(QR^2=5^2+8^2-2(5)(8)\cos70^\circ=89-80(0{,}342)\approx61{,}6\Rightarrow QR\approx7{,}9\) km.</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear y ejecutar una estrategia con la ley del coseno en una situación real, controlando la calculadora.</p><p><b>Distractores:</b> (A) suma el término \(2ab\cos C\) en lugar de restarlo. (B) ignora el ángulo (\(\sqrt{5^2+8^2}\)). (C) calculadora en modo radianes: evalúa \(\cos70\) como 70 rad.</p></div>
+<div class="sol" id="sol4"><h4>Pregunta 4 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> 10; 82,8°; 14,8; 60°</p><p><b>Procedimiento:</b> Fila 1: \(c=\sqrt{36+64}=10\). Fila 2: \(\cos C=\frac{16+25-36}{40}=0{,}125\Rightarrow C\approx82{,}8^\circ\). Fila 3: \(c^2=49+100-140\cos120^\circ=219\Rightarrow c\approx14{,}8\). Fila 4: \(\cos C=\frac{25+25-25}{50}=\frac12\Rightarrow C=60^\circ\).</p><p><b>Por qué corresponde a la competencia:</b> Debe pasar de datos tabulados a la forma de la ley del coseno adecuada (lado o ángulo) según qué dato falta.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pts por espacio correcto (±0,1).</p></div>
+<div class="sol" id="sol5"><h4>Pregunta 5 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">D. Emparejamiento</span></h4><p><b>Respuesta:</b> 1-B, 2-C, 3-A, 4-D (E no se usa)</p><p><b>Procedimiento:</b> \(c^2>a^2+b^2\Rightarrow\cos C<0\Rightarrow C\) obtuso (B). \(c^2=a^2+b^2\Rightarrow C\) recto (C). \(c^2\lt a^2+b^2\Rightarrow\cos C>0\Rightarrow C\) agudo (A). \(\cos C=-\frac12\Rightarrow C=120^\circ\) (D). \(C=30^\circ\) (E) no corresponde a ninguna condición.</p><p><b>Por qué corresponde a la competencia:</b> Debe relacionar dos representaciones del mismo hecho (relación entre cuadrados de lados y tipo de ángulo) a partir de la ley del coseno.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pts por relación correcta.</p></div>
+<div class="sol" id="sol6"><h4>Pregunta 6 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. c aumenta (cos C decrece)</p><p><b>Procedimiento:</b> \(c^2=100-96\cos C\). Al crecer \(C\) en \([0^\circ,180^\circ]\), \(\cos C\) disminuye y \(-96\cos C\) aumenta, así que \(c\) crece: \(c(40^\circ)\approx5{,}1\) y \(c(100^\circ)\approx10{,}8\). No es proporcional al ángulo.</p><p><b>Por qué corresponde a la competencia:</b> Debe justificar una conclusión sobre el comportamiento de una expresión a partir de la monotonía del coseno, no solo calcular dos valores.</p><p><b>Distractores:</b> (A) intuición geométrica errada: al abrir el ángulo los extremos se alejan. (B) ignora que el ángulo entre ellos determina \(c\). (D) supone proporcionalidad entre ángulo y lado.</p></div>
+<div class="sol" id="sol7"><h4>Pregunta 7 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 96,4°</p><p><b>Procedimiento:</b> El ángulo mayor se opone al lado mayor (12). \(\cos\theta=\frac{7^2+9^2-12^2}{2(7)(9)}=-\frac{14}{126}\approx-0{,}111\Rightarrow\theta\approx96{,}4^\circ\) (obtuso).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear la estrategia: identificar el lado mayor y despejar el coseno del ángulo opuesto.</p><p><b>Criterio de valoración (1 pts):</b> Entre 96,3° y 96,4°: 1 pt.</p></div>
+<div class="sol" id="sol8"><h4>Pregunta 8 <span class="etq">Argumentación</span><span class="etq">Medio</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Falso (5 + 6 < 12; cos C ≈ −1,38)</p><p><b>Procedimiento:</b> Falso. \(\cos C=\frac{5^2+6^2-12^2}{2(5)(6)}=\frac{-83}{60}\approx-1{,}38<-1\), imposible. También: \(5+6=11<12\), no se cumple la desigualdad triangular.</p><p><b>Por qué corresponde a la competencia:</b> Debe refutar una afirmación y justificarla con la ley del coseno (valor fuera del rango del coseno) o con la desigualdad triangular.</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Justificación válida (desigualdad triangular o coseno fuera de \([-1,1]\)): 1 pt.</p></div>
+<div class="sol" id="sol9"><h4>Pregunta 9 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. Es recto (cos C = 0)</p><p><b>Procedimiento:</b> \(\cos C=\frac{9^2+12^2-15^2}{2(9)(12)}=\frac{81+144-225}{216}=0\Rightarrow C=90^\circ\). Es el triángulo 9-12-15, semejante al 3-4-5.</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar los datos de la figura y transformarlos en información sobre el ángulo mediante la ley del coseno.</p><p><b>Distractores:</b> (A) generaliza sin fundamento. (C) confunde ser el ángulo mayor con ser obtuso. (D) con tres lados el triángulo queda completamente determinado.</p></div>
+<div class="sol" id="sol10"><h4>Pregunta 10 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> ≈ 36,7°, 48,3° y 94,9° (suma 180°)</p><p><b>Procedimiento:</b> Ángulo opuesto a 120 m: \(\cos A=\frac{150^2+200^2-120^2}{2(150)(200)}\approx0{,}802\Rightarrow A\approx36{,}7^\circ\). Opuesto a 150 m: \(B\approx48{,}3^\circ\). Opuesto a 200 m: \(\cos C\approx-0{,}086\Rightarrow C\approx94{,}9^\circ\). Suma: \(36{,}7+48{,}3+94{,}9\approx180^\circ\).</p><p><b>Por qué corresponde a la competencia:</b> Debe formular y ejecutar el plan completo (tres aplicaciones de la ley del coseno y verificación con la suma de ángulos).</p><p><b>Criterio de valoración (4 pts):</b> Plantea \(\cos\) del ángulo con los tres lados: 1 pt. Calcula correctamente cada ángulo: 0,75 pts c/u (2,25). Verifica la suma: 0,75 pts. Puntaje parcial si hay error aritmético con procedimiento correcto.</p></div>
+<div class="sol" id="sol11"><h4>Pregunta 11 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. 30,9 km</p><p><b>Procedimiento:</b> Distancias recorridas: \(20\times2=40\) km y \(15\times2=30\) km. \(d^2=40^2+30^2-2(40)(30)\cos50^\circ=2500-1542{,}7\Rightarrow d\approx30{,}9\) km.</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear la estrategia: convertir velocidad y tiempo en distancias y luego aplicar la ley del coseno.</p><p><b>Distractores:</b> (A) suma las distancias recorridas (40 + 30). (B) ignora el ángulo: \(\sqrt{40^2+30^2}\). (D) usa \(+2ab\cos C\) en lugar de \(-2ab\cos C\).</p></div>
+<div class="sol" id="sol12"><h4>Pregunta 12 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">F. Clasificación</span></h4><p><b>Respuesta:</b> Acutángulo: b, d · Rectángulo: a, e · Obtusángulo: c, f</p><p><b>Procedimiento:</b> a) \(13^2=12^2+5^2\): rectángulo. b) \(9^2=81<6^2+7^2=85\): acutángulo. c) \(8^2=64>4^2+5^2=41\): obtusángulo. d) \(9^2=81<113\): acutángulo. e) \(17^2=15^2+8^2\): rectángulo. f) \(10^2=100>5^2+6^2=61\): obtusángulo.</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar numéricamente la relación entre lados y clasificar usando una propiedad matemática, no la apariencia.</p><p><b>Criterio de valoración (2 pts):</b> 1/3 pt por triángulo bien clasificado (máx. 2).</p></div>
+<div class="sol" id="sol13"><h4>Pregunta 13 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. Luis</p><p><b>Procedimiento:</b> La ley del coseno usa \(a^2+b^2\): \(c^2=25+49-70\cos50^\circ\approx29{,}0\Rightarrow c\approx5{,}4\). Marta usa \((a+b)^2=a^2+2ab+b^2\), que añade \(2ab\) y da \(c\approx10{,}0\), valor incorrecto.</p><p><b>Por qué corresponde a la competencia:</b> Debe identificar el error en un procedimiento ajeno y sustentar por qué el otro es matemáticamente válido.</p><p><b>Distractores:</b> (B) confunde la ley del coseno con la suma de longitudes. (C) afirmación falsa: difieren en \(2ab\). (D) con LAL no puede iniciarse con la ley del seno.</p></div>
+<div class="sol" id="sol14"><h4>Pregunta 14 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 11,3 cm</p><p><b>Procedimiento:</b> \(c^2=6^2+7^2-2(6)(7)\cos120^\circ=36+49+42=127\Rightarrow c\approx11{,}3\) cm (el coseno negativo hace que el término se sume).</p><p><b>Por qué corresponde a la competencia:</b> Debe ejecutar el procedimiento controlando el signo del coseno en un ángulo obtuso.</p><p><b>Criterio de valoración (1 pts):</b> Entre 11,2 y 11,3 cm: 1 pt. Si resta el término (obtiene 6,1…): 0 pts.</p></div>
+<div class="sol" id="sol15"><h4>Pregunta 15 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. 53,1°</p><p><b>Procedimiento:</b> El ángulo menor se opone al lado menor (13). \(\cos A=\frac{14^2+15^2-13^2}{2(14)(15)}=\frac{252}{420}=0{,}6\Rightarrow A\approx53{,}1^\circ\).</p><p><b>Por qué corresponde a la competencia:</b> Debe formular la estrategia (identificar el lado menor y su ángulo opuesto) y ejecutarla con la ley del coseno.</p><p><b>Distractores:</b> (A) calcula el ángulo opuesto al lado de 14 cm. (B) calcula el ángulo opuesto al lado de 15 cm (el mayor). (C) toma \(90^\circ\) menos el ángulo, creyendo que se pide el complemento.</p></div>
+<div class="sol" id="sol16"><h4>Pregunta 16 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Verdadero (c² = a²)</p><p><b>Procedimiento:</b> Verdadero. \(c^2=a^2+a^2-2a^2\cos60^\circ=2a^2-a^2=a^2\Rightarrow c=a\). Los tres lados son iguales.</p><p><b>Por qué corresponde a la competencia:</b> Debe sustentar una generalización con un desarrollo algebraico (no solo un caso numérico).</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Justificación general con \(\cos60^\circ=\frac12\) (no solo un ejemplo): 1 pt.</p></div>
+<div class="sol" id="sol17"><h4>Pregunta 17 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. 73,7°</p><p><b>Procedimiento:</b> \(PQ=6\), \(PR=\sqrt{3^2+4^2}=5\), \(QR=5\). \(\cos R=\frac{5^2+5^2-6^2}{2(5)(5)}=0{,}28\Rightarrow R\approx73{,}7^\circ\).</p><p><b>Por qué corresponde a la competencia:</b> Debe extraer las medidas de los lados a partir de las coordenadas (representación en el plano) y usarlas en la ley del coseno.</p><p><b>Distractores:</b> (A) calcula uno de los ángulos de la base (\(P\) o \(Q\)). (C) toma el suplemento del ángulo. (D) calcula solo la mitad del ángulo (\(\sin\frac{R}{2}=\frac35\)) y olvida duplicarla.</p></div>
+<div class="sol" id="sol18"><h4>Pregunta 18 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> 64; 121; 144,2; 40,8; 6,4</p><p><b>Procedimiento:</b> \(c^2=64+121-176\cos35^\circ=185-144{,}2\approx40{,}8\Rightarrow c\approx6{,}4\) cm.</p><p><b>Por qué corresponde a la competencia:</b> Debe completar la ejecución paso a paso (cuadrados, producto con el coseno, resta y raíz).</p><p><b>Criterio de valoración (2 pts):</b> 0,4 pts por espacio correcto (±0,1 en los decimales).</p></div>
+<div class="sol" id="sol19"><h4>Pregunta 19 <span class="etq">Interpretación y representación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. 7,9 cm</p><p><b>Procedimiento:</b> En el triángulo \(ABD\), el ángulo \(A=60^\circ\) está entre los lados 9 y 6: \(BD^2=9^2+6^2-2(9)(6)\cos60^\circ=117-54=63\Rightarrow BD\approx7{,}9\) cm. (La otra diagonal: \(AC^2=117+54\Rightarrow AC\approx13{,}1\) cm).</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar la figura (qué triángulo contiene la diagonal y qué ángulo la acompaña) y representar el problema con la ley del coseno.</p><p><b>Distractores:</b> (B) calcula la diagonal mayor \(AC\) (suma el término del coseno). (C) ignora el término del coseno: \(\sqrt{9^2+6^2}\). (D) suma los lados (9 + 6).</p></div>
+<div class="sol" id="sol20"><h4>Pregunta 20 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> c ≈ 9,0; A ≈ 45,4°; B ≈ 94,6°</p><p><b>Procedimiento:</b> (a) Conocemos \(a\), \(b\) y \(C\): ningún par lado–ángulo opuesto está completo. (b) \(c^2=100+196-280\cos40^\circ\approx81{,}5\Rightarrow c\approx9{,}0\). (c) \(\sin A=\frac{10\sin40^\circ}{c}\approx0{,}712\Rightarrow A\approx45{,}4^\circ\) (agudo, porque \(a\) no es el lado mayor); \(B=180^\circ-40^\circ-A\approx94{,}6^\circ\). Comprobación con la ley del coseno: \(\cos B\approx-0{,}080\Rightarrow B\approx94{,}6^\circ\).</p><p><b>Por qué corresponde a la competencia:</b> Debe argumentar por qué elegir la ley del coseno como primer paso y justificar el resto del procedimiento, además de ejecutarlo.</p><p><b>Criterio de valoración (4 pts):</b> (a) Explica que no hay un par lado–ángulo opuesto conocido: 1 pt. (b) Plantea y calcula \(c\): 1,5 pts. (c) Halla \(A\) y \(B\) con un método válido y comprueba la suma: 1,5 pts.</p></div></div></template>
+<script>
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuf(arr,rng){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var GA=['mc','vf'],BC=['short','open'],DEF=['match','fill','classify'];
+function plan(fmts,k,seed){
+  var rng=mulberry32(seed),idx=fmts.map(function(_,i){return i});
+  var pool=function(set){return idx.filter(function(i){return set.indexOf(fmts[i])>=0})};
+  var pick=[].concat(shuf(pool(GA),rng).slice(0,k===3?1:2),shuf(pool(BC),rng).slice(0,1),shuf(pool(DEF),rng).slice(0,1));
+  if(k===5){var rest=idx.filter(function(i){return pick.indexOf(i)<0});pick.push(shuf(rest,rng)[0]);}
+  var order=shuf(pick,rng),perms={};
+  order.forEach(function(i){if(fmts[i]==='mc')perms[i]=shuf([0,1,2,3],rng)});
+  return {order:order,perms:perms};
+}
+function parseCode(s){var m=/T(\d+)-K([345])-(\d{4,9})/i.exec(s||'');return m?{t:+m[1],k:+m[2],seed:+m[3]}:null}
+
+(function(){
+/* ===== Configuración del artefacto ===== */
+var SCRIPT_URL_VISTAS="https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+var AREA_ARTEFACTO="Matemáticas · Taller Refuerzo 5 · T5 · 10°";
+var VERSION_ARTEFACTO="T5-tr5-v1";
+var PORTAL_URL="https://llerzy.github.io/portal-slg/";
+var TALLER=5;
+var D=[{"n": 1, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "\\(x^2=8^2+11^2-2(8)(11)\\cos40^\\circ\\)"}, {"n": 2, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "10,8 cm"}, {"n": 3, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "7,9 km"}, {"n": 4, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "10; 82,8°; 14,8; 60°"}, {"n": 5, "f": "match", "t": "D. Emparejamiento", "p": 2, "a": -1, "k": "1-B, 2-C, 3-A, 4-D (E no se usa)"}, {"n": 6, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "c aumenta (cos C decrece)"}, {"n": 7, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "96,4°"}, {"n": 8, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Falso (5 + 6 < 12; cos C ≈ −1,38)"}, {"n": 9, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "Es recto (cos C = 0)"}, {"n": 10, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "≈ 36,7°, 48,3° y 94,9° (suma 180°)"}, {"n": 11, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "30,9 km"}, {"n": 12, "f": "classify", "t": "F. Clasificación", "p": 2, "a": -1, "k": "Acutángulo: b, d · Rectángulo: a, e · Obtusángulo: c, f"}, {"n": 13, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "Luis"}, {"n": 14, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "11,3 cm"}, {"n": 15, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "53,1°"}, {"n": 16, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Verdadero (c² = a²)"}, {"n": 17, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "73,7°"}, {"n": 18, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "64; 121; 144,2; 40,8; 6,4"}, {"n": 19, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "7,9 cm"}, {"n": 20, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "c ≈ 9,0; A ≈ 45,4°; B ≈ 94,6°"}];
+var $=function(id){return document.getElementById(id)};
+
+/* ===== Sesión y rol ===== */
+var sesion=null;try{sesion=JSON.parse(sessionStorage.getItem('slg_sesion')||'null')}catch(e){}
+var enGithub=/github\.io$/i.test(location.hostname);
+var preview=false,ES_DOCENTE=false;
+if(sesion&&typeof sesion==='object'){ES_DOCENTE=String(sesion.rol||'').toLowerCase().indexOf('docente')===0}
+else{location.replace(PORTAL_URL);return}
+window.ES_DOCENTE=ES_DOCENTE;
+
+/* ===== Registro silencioso de la apertura ===== */
+function registrarVista(){
+  if(preview||!sesion||!sesion.documento)return;
+  if(!SCRIPT_URL_VISTAS||SCRIPT_URL_VISTAS.indexOf('http')!==0)return;
+  try{
+    var q=new URLSearchParams({accion:'registrarVista',doc:String(sesion.documento),nombre:String(sesion.nombre||''),
+      grupo:String(sesion.grupoAsignado||sesion.grupo||''),rol:String(sesion.rol||(ES_DOCENTE?'docente':'estudiante')),
+      origen:'GitHub',tipoVista:'Apertura Artefacto — '+AREA_ARTEFACTO,version:VERSION_ARTEFACTO});
+    fetch(SCRIPT_URL_VISTAS+(SCRIPT_URL_VISTAS.indexOf('?')>=0?'&':'?')+q.toString(),{mode:'no-cors'}).catch(function(){});
+  }catch(e){}
+}
+
+/* ===== Taller y prueba aleatoria ===== */
+var qs=[].slice.call(document.querySelectorAll('#qs .pregunta')),fm=qs.map(function(q){return q.dataset.fmt});
+var state={modo:'completa',k:4,seed:0};
+function newSeed(){return 100000+Math.floor(Math.random()*899999)}
+function reset(){qs.forEach(function(q){q.classList.remove('oculta');q.style.order='';q.querySelector('.qnum').textContent=q.dataset.n;
+  [].slice.call(q.querySelectorAll('.opts > *')).forEach(function(el,i){el.style.order='';el.querySelector('.letra').textContent='ABCD'[i]+'.'})})}
+function typeset(el){try{if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el])}catch(e){}}
+
+function montarDocente(){
+  var slot=$('docente-slot');
+  if(ES_DOCENTE){if(!slot.firstChild){slot.innerHTML=$('tpl-docente').innerHTML}}
+  else{slot.innerHTML=''}
+  $('barra').classList.toggle('oculta',!ES_DOCENTE);
+}
+function claveDocente(pr,p){
+  if(!ES_DOCENTE||!$('panel-docente'))return;
+  $('resumen-completo').classList.toggle('oculta',pr);
+  $('clave-completa').classList.toggle('oculta',pr);
+  $('clave-prueba').classList.toggle('oculta',!pr);
+  var sel={};if(pr)p.order.forEach(function(i){sel[D[i].n]=1});
+  [].slice.call(document.querySelectorAll('#panel-docente .sol')).forEach(function(el){
+    var n=+el.id.replace('sol','');el.classList.toggle('oculta',pr&&!sel[n])});
+  var h2=document.querySelector('#panel-docente h2.saltar');if(h2)h2.textContent=pr?'Solucionario de las preguntas de esta prueba':'Solucionario';
+  if(pr){
+    var tot=0,h='<h2 class="seccion">Clave de esta prueba (código '+('T'+TALLER+'-K'+state.k+'-'+state.seed)+')</h2><table class="tec"><tr><th>Pos.</th><th>N.º original</th><th>Formato</th><th>Pts</th><th>Respuesta esperada (con el orden de opciones de esta prueba)</th></tr>';
+    p.order.forEach(function(i,pos){var q=D[i];tot+=q.p;var ans;
+      if(q.f==='mc'){ans='<b>'+'ABCD'[p.perms[i].indexOf(q.a)]+'</b>. '+q.k}else ans=q.k;
+      h+='<tr><td>'+(pos+1)+'</td><td><a href="#sol'+q.n+'">'+q.n+'</a></td><td>'+q.t+'</td><td>'+q.p+'</td><td>'+ans+'</td></tr>'});
+    h+='</table><p><b>Total: '+tot+' puntos.</b> Nota de la sustentación = 1,0 × (puntos obtenidos / '+tot+'). El taller completo vale 2,0 (refuerzo máximo 3,0).</p>';
+    $('clave-prueba').innerHTML=h;
+  }
+  typeset($('docente-slot'));
+}
+function apply(){
+  if(!ES_DOCENTE)state.modo='completa';
+  var pr=state.modo==='prueba';
+  ['material','instr-completa','tit-taller'].forEach(function(id){$(id).classList.toggle('oculta',pr)});
+  ['instr-prueba','tit-prueba'].forEach(function(id){$(id).classList.toggle('oculta',!pr)});
+  $('b-completa').classList.toggle('act',!pr);$('b-prueba').classList.toggle('act',pr);
+  $('ctl-prueba').classList.toggle('oculta',!pr);
+  $('codigo').classList.toggle('oculta',!pr);
+  $('sub-completa').classList.toggle('oculta',pr);$('sub-prueba').classList.toggle('oculta',!pr);
+  reset();
+  $('qs').classList.toggle('prueba',pr);
+  var p=null;
+  if(pr){
+    if(!state.seed)state.seed=newSeed();
+    p=plan(fm,state.k,state.seed);
+    qs.forEach(function(q){q.classList.add('oculta')});
+    p.order.forEach(function(i,pos){var q=qs[i];q.classList.remove('oculta');q.style.order=pos;q.querySelector('.qnum').textContent=pos+1;
+      if(p.perms[i]){var o=[].slice.call(q.querySelectorAll('.opts > *'));
+        p.perms[i].forEach(function(orig,posOpt){var el=o[orig];el.style.order=posOpt;el.querySelector('.letra').textContent='ABCD'[posOpt]+'.'})}});
+    var code='T'+TALLER+'-K'+state.k+'-'+state.seed;
+    $('codigo').textContent='Código: '+code;$('codigo-imp').textContent='Código de prueba: '+code;
+    $('sel-k').value=String(state.k);
+  }else{$('codigo-imp').textContent=''}
+  claveDocente(pr,p);
+  if(ES_DOCENTE){try{history.replaceState(null,'',pr?'#prueba='+('T'+TALLER+'-K'+state.k+'-'+state.seed):'#completa')}catch(e){}}
+  window.scrollTo(0,0);
+}
+function aplicarRol(){
+  montarDocente();
+  if(!ES_DOCENTE)state.modo='completa';
+  apply();
+}
+
+$('b-completa').onclick=function(){state.modo='completa';apply()};
+$('b-prueba').onclick=function(){state.modo='prueba';state.seed=newSeed();apply()};
+$('b-nueva').onclick=function(){state.seed=newSeed();apply()};
+$('sel-k').onchange=function(){state.k=+this.value;apply()};
+$('b-sol').onclick=function(){var sl=$('docente-slot'),oc=sl.classList.toggle('oculta');
+  this.textContent=oc?'📋 Mostrar solucionario':'📋 Ocultar solucionario';
+  if(!oc){var t=state.modo==='prueba'&&$('clave-prueba')?$('clave-prueba'):sl;sl.scrollIntoView({behavior:'smooth',block:'start'})}};
+$('b-imp').onclick=function(){window.print()};
+$('b-imp-sol').onclick=function(){document.body.classList.add('print-clave');window.print()};
+window.addEventListener('afterprint',function(){document.body.classList.remove('print-clave')});
+$('b-cargar').onclick=function(){var c=parseCode($('in-cod').value);if(!c||c.t!==TALLER){alert('Código no válido para este taller.');return}
+  state.modo='prueba';state.k=c.k;state.seed=c.seed;apply()};
+
+if(ES_DOCENTE&&location.hash.indexOf('#prueba=')===0){
+  var c0=parseCode(location.hash.replace('#prueba=',''));
+  if(c0&&c0.t===TALLER){state.modo='prueba';state.k=c0.k;state.seed=c0.seed}
+}
+aplicarRol();
+registrarVista();
+})();
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Taller T6 · Plan Lector: razonamiento · Matemáticas 10°</title>
+<script>
+window.MathJax = {tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--rojo:#B31217;--rosa:#fbeaec;--borde:#d9d9d9;--fondo:#f3f4f6;--txt:#222;--ambar:#fff7e8}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;padding:14px;background:var(--fondo);font-family:Arial,Helvetica,sans-serif;color:var(--txt);font-size:15px;line-height:1.42}
+.hoja{max-width:900px;margin:0 auto;background:#fff;padding:20px 26px 28px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.encabezado{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--rojo);color:#fff;border-radius:12px;padding:9px 16px}
+.logo-box{width:80px;min-width:80px;text-align:center}
+.logo-box img{max-height:60px;max-width:74px;object-fit:contain}
+.titulo-box{flex:1;text-align:center}
+.titulo-box h1{margin:0 0 3px;font-size:21px;line-height:1.15}
+.titulo-box p{margin:0;font-size:13.5px;font-weight:600}
+.ie-txt{font-size:12px;font-weight:700;line-height:1.15}
+.datos-est{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0 4px;font-size:14px}
+.datos-est span{flex:1 1 220px;border-bottom:1.5px solid #333;padding-bottom:2px;min-height:22px}
+.datos-est span.corto{flex:0 1 150px}
+.instr{margin:10px 0;padding:9px 12px;background:var(--rosa);border-left:5px solid var(--rojo);border-radius:8px;font-size:14px}
+.instr ul{margin:4px 0 0 18px;padding:0}
+h2.seccion{margin:22px 0 8px;padding-bottom:4px;border-bottom:3px solid var(--rojo);color:var(--rojo);font-size:18px}
+h3.sub{margin:14px 0 4px;color:var(--rojo);font-size:15.5px}
+.repaso p,.repaso li{font-size:14.5px}
+.caja{margin:8px 0;padding:9px 12px;border:1px solid #e2b3b6;border-radius:8px;background:#fffafa}
+.ejemplo{margin:10px 0;padding:10px 14px;border:1px solid var(--borde);border-left:5px solid #2e7d32;border-radius:8px;background:#fbfffb}
+.ejemplo h4{margin:0 0 4px;color:#2e7d32;font-size:14.5px}
+.pregunta{margin:14px 0;padding:11px 14px 12px;border:1px solid var(--borde);border-radius:10px;break-inside:avoid;page-break-inside:avoid;background:#fff}
+.pregunta .cab{font-weight:700;color:var(--rojo);margin-bottom:5px;font-size:15px}
+.ctx{margin:0 0 6px}
+.enun{margin:6px 0;padding:8px 11px;background:var(--ambar);border:1px solid #efd6a3;border-left:5px solid #d69a21;border-radius:8px;font-weight:700}
+.opcion{display:flex;gap:8px;align-items:flex-start;margin:5px 0;padding:6px 10px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.letra{min-width:20px;font-weight:700;color:var(--rojo)}
+.figura{margin:8px auto;padding:6px;border:1px solid var(--borde);border-radius:8px;text-align:center;background:#fff;max-width:560px}
+.figura .grafico-svg{display:block;width:100%;height:auto;margin:0 auto}
+.nota{font-size:12px;color:#555;margin-top:3px;text-align:center}
+.opciones-graficas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.opcion-grafica{position:relative;padding:6px 8px 6px 30px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.opcion-grafica .letra{position:absolute;left:9px;top:7px}
+.opcion-grafica .grafico-svg{display:block;width:100%;height:auto}
+table.t{border-collapse:collapse;margin:8px auto;font-size:14px}
+table.t th,table.t td{border:1px solid #bbb;padding:6px 10px;text-align:center}
+table.t th{background:#f7eeee}
+.blank{display:inline-block;min-width:62px;height:1.25em;border-bottom:1.6px solid #333;vertical-align:-3px;margin:0 3px}
+.blank.l{min-width:110px}
+.resp{margin-top:8px}
+.lineas{height:var(--h,110px);margin-top:6px;border:1px dashed #bbb;border-radius:6px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#d0d0d0 27px,#d0d0d0 28px)}
+.vf-box{display:flex;gap:22px;margin:6px 0 2px;font-weight:700}
+.vf-box span::before{content:"";display:inline-block;width:14px;height:14px;border:1.8px solid #333;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin:8px 0}
+.match .col{border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa}
+.match .it{display:flex;align-items:center;gap:6px;margin:5px 0}
+.match .it b{color:var(--rojo)}
+.clasif td.cat{text-align:left;font-weight:700;width:46%}
+.foot{margin-top:18px;font-size:11.5px;color:#666;text-align:center}
+.docente-box{margin-top:8px;padding:6px 10px;background:#f8f8f8;border:1px solid var(--borde);border-radius:8px;font-size:13px;font-weight:600}
+/* docente */
+.tec{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
+.tec th,.tec td{border:1px solid #bbb;padding:4px 6px;vertical-align:top;text-align:left}
+.tec th{background:#f7eeee}
+.sol{margin:10px 0;padding:9px 13px;border:1px solid var(--borde);border-left:5px solid var(--rojo);border-radius:8px;break-inside:avoid;page-break-inside:avoid;font-size:13.5px}
+.sol h4{margin:0 0 4px;color:var(--rojo);font-size:14.5px}
+.sol .etq{display:inline-block;font-size:11.5px;background:var(--rosa);color:#7a0d11;border-radius:10px;padding:1px 8px;margin-right:4px}
+.sol p{margin:3px 0}
+.resumen{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.resumen div{flex:1 1 170px;border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa;font-size:13px}
+.aviso{margin:8px 0;padding:8px 12px;background:#fff3cd;border:1px solid #e6c96b;border-radius:8px;font-size:13px}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}
+.fr>span{display:block;padding:0 5px}
+.fr>span:first-child{border-bottom:1.6px solid #333}
+mjx-container[jax="SVG"]{margin:0 .05em!important}
+#qs.prueba{display:flex;flex-direction:column}
+#qs.prueba .opts:not(.opciones-graficas){display:flex;flex-direction:column}
+.oculta{display:none!important}
+.barra{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:-20px -26px 14px;padding:10px 26px;background:#2b2b2b;color:#fff;border-radius:14px 14px 0 0;font-size:13.5px}
+.barra b{margin-right:4px}
+.barra button,.barra select,.barra input{font:inherit;padding:5px 10px;border-radius:7px;border:1px solid #888;background:#fff;color:#222;cursor:pointer}
+.barra input{cursor:text;width:150px}
+.barra button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+.barra .cod{margin-left:auto;font-weight:700;background:#fff3cd;color:#5a4300;padding:3px 10px;border-radius:7px}
+.verif{margin:10px 0;padding:10px 14px;border:2px solid #2b2b2b;border-radius:10px;background:#fafafa}
+.verif input{font:inherit;padding:5px 9px;width:200px;border:1px solid #888;border-radius:7px}
+.verif button{font:inherit;padding:5px 12px;border-radius:7px;border:1px solid var(--rojo);background:var(--rojo);color:#fff;cursor:pointer}
+@media (max-width:700px){.opciones-graficas,.match{grid-template-columns:1fr}.hoja{padding:14px}}
+@media print{
+ @page{size:A4 portrait;margin:11mm 12mm}
+ body{background:#fff;padding:0;font-size:13.2px}
+ .hoja{box-shadow:none;max-width:none;padding:0;border-radius:0}
+ h2.seccion{break-after:avoid;page-break-after:avoid}
+ .pregunta,.ejemplo,.sol,.caja,.opcion,.figura,.opcion-grafica{break-inside:avoid;page-break-inside:avoid}
+ .saltar{break-before:page;page-break-before:always}
+ .noprint{display:none!important}
+}
+
+#vp{background:#fff3cd;color:#5a4300;border-bottom:1px solid #e6c96b;padding:7px 12px;font-size:13px;text-align:center}
+#vp button{font:inherit;padding:3px 10px;border-radius:7px;border:1px solid #888;background:#fff;cursor:pointer;margin-left:6px}
+#vp button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+#panel-docente{margin-top:22px;padding-top:6px;border-top:4px double var(--rojo)}
+.barra button.sec{background:#444;color:#fff;border-color:#888}
+@media screen and (max-width:700px){table.t{display:block;overflow-x:auto;max-width:100%}}
+@media print{
+ #vp{display:none!important}
+ #docente-slot{display:none!important}
+ body.print-clave .hoja>*:not(#docente-slot):not(.encabezado){display:none!important}
+ body.print-clave #docente-slot{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="hoja">
+<div class="barra noprint oculta" id="barra"><b>Modalidad:</b><button id="b-completa" class="act">1 · Taller completo (20 preguntas)</button><button id="b-prueba">2 · Prueba aleatoria (sustentación)</button><span id="ctl-prueba" class="oculta"><label>Preguntas: <select id="sel-k"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label> <button id="b-nueva">Generar nueva</button> <input id="in-cod" placeholder="Código (T3-K4-123456)"/><button id="b-cargar">Cargar</button> <button id="b-imp">Imprimir</button></span><button id="b-sol" class="sec">📋 Mostrar solucionario</button><button id="b-imp-sol" class="sec">🖨 Imprimir clave y solucionario</button><span id="codigo" class="cod oculta"></span></div>
+<header class="encabezado">
+<div class="logo-box"><img alt="Logo IE San Luis Gonzaga" src="https://i.imgur.com/Ld5BbX3.png" onerror="this.style.display='none'"/><div class="ie-txt">I.E. San Luis Gonzaga</div></div>
+<div class="titulo-box"><h1>Taller de recuperación 6</h1><p><span id="sub-completa">Matemáticas · Grado Décimo · Plan Lector · «El hombre que calculaba»: razonamiento y argumentación</span><span id="sub-prueba" class="oculta">Prueba de sustentación · Matemáticas · Grado Décimo · Plan Lector · «El hombre que calculaba»: razonamiento y argumentación</span></p></div>
+<div class="logo-box"><img alt="Logo FACIMATE" src="https://i.imgur.com/Os2RUbW.png" onerror="this.style.display='none'"/><div class="ie-txt">FACIMATE</div></div>
+</header>
+<div class="docente-box">Docente: Llerzy Esneider Torres Ome Ph.D. · Segundo periodo<span id="codigo-imp" style="float:right"></span></div>
+<div class="datos-est"><span>Nombre:</span><span class="corto">Grupo:</span><span class="corto">Fecha:</span></div>
+<div id="instr-completa"><div class="instr"><b>Instrucciones</b>
+<ul>
+<li>Lee con atención cada situación antes de responder. Trabaja con orden y muestra tus procedimientos.</li>
+<li>En las preguntas de <b>selección múltiple</b> marca <b>una sola</b> opción (A, B, C o D).</li>
+<li>En las preguntas <b>abiertas</b>, <b>completar</b>, <b>emparejar</b>, <b>clasificar</b> y <b>verdadero/falso</b> escribe tu respuesta en el espacio dispuesto y justifica cuando se pida.</li>
+<li>Usa calculadora científica. Cuando trabajes con ángulos en grados, verifica que esté en modo <b>DEG</b>.</li>
+<li>Este taller es una oportunidad de refuerzo: estudia primero el <b>repaso</b> y los <b>ejemplos resueltos</b>.</li>
+<li><b>Valoración (máximo 3,0):</b> 2,0 por el taller completo y 1,0 por la sustentación (escrita u oral, según indique tu docente).</li>
+</ul></div></div>
+<div class="instr oculta" id="instr-prueba"><b>Instrucciones de la prueba de sustentación</b>
+<ul>
+<li>Esta prueba corta toma ejercicios del taller para verificar que comprendes tus procedimientos. Resuélvela por escrito y prepárate para explicarla oralmente.</li>
+<li>En <b>selección múltiple</b> marca una sola opción. En las demás preguntas escribe tu respuesta y justifica cuando se pida.</li>
+<li>Usa calculadora científica en modo <b>DEG</b>. Tu docente puede pedirte que expliques cualquier paso.</li>
+<li>La sustentación vale <b>1,0</b> de la nota de refuerzo (el taller completo vale 2,0).</li>
+</ul></div>
+<div id="material"><h2 class="seccion">Parte 1. Repaso conceptual</h2><div class="repaso">
+<p>Los episodios de los <b>camellos</b> y de los <b>panes</b> se inspiran en el libro <i>El hombre que calculaba</i> (Malba Tahan), donde Beremiz Samir resuelve situaciones con ingenio matemático. Aquí se usan con datos adaptados para practicar el <b>razonamiento</b>: no basta con obtener resultados, hay que poder justificarlos.</p>
+<h3 class="sub">1. Ejemplo, contraejemplo y demostración</h3>
+<table class="t">
+<tr><th>Término</th><th>Qué es</th><th>Qué permite</th></tr>
+<tr><td><b>Conjetura</b></td><td>Afirmación que parece cierta a partir de algunos casos</td><td>Plantear una hipótesis</td></tr>
+<tr><td><b>Ejemplos</b></td><td>Casos particulares que cumplen la afirmación</td><td>Apoyar la conjetura, pero <b>no demostrarla</b></td></tr>
+<tr><td><b>Contraejemplo</b></td><td>Un solo caso que no cumple la afirmación</td><td><b>Refutarla</b> definitivamente</td></tr>
+<tr><td><b>Demostración</b></td><td>Argumento válido para <b>todos</b> los casos (con letras o con una propiedad general)</td><td>Asegurar que la afirmación es verdadera</td></tr>
+</table>
+<h3 class="sub">2. Herramientas para demostrar</h3>
+<div class="caja">Par: \(2k\) &nbsp;·&nbsp; Impar: \(2k+1\) &nbsp;·&nbsp; Tres enteros consecutivos: \(n,\ n+1,\ n+2\)<br>
+Entre dos enteros consecutivos siempre hay uno par. Un número es múltiplo de 3 si se puede escribir como \(3\cdot(\text{entero})\).</div>
+<h3 class="sub">3. Fracciones de una cantidad</h3>
+<p>Para hallar una fracción de una cantidad se multiplica: \(\frac13\) de 36 es \(\frac13\cdot36=12\). Las fracciones de un reparto se suman con común denominador: \(\frac12+\frac13+\frac19=\frac{9}{18}+\frac{6}{18}+\frac{2}{18}=\frac{17}{18}\).</p>
+</div>
+<h2 class="seccion">Parte 2. Ejemplos resueltos</h2>
+<div class="ejemplo"><h4>Ejemplo 1 · Demostrar una afirmación</h4><p><b>Afirmación:</b> la suma de tres enteros consecutivos es siempre múltiplo de 3.</p>
+<p>Sean \(n,\ n+1,\ n+2\) tres enteros consecutivos. Su suma es \(n+(n+1)+(n+2)=3n+3=3(n+1)\), que es 3 por un entero. Por tanto, es múltiplo de 3 <b>para cualquier \(n\)</b>. (Probar con \(1,2,3\), \(4,5,6\)… daría evidencia, pero no una demostración.)</p></div>
+<div class="ejemplo"><h4>Ejemplo 2 · Refutar con un contraejemplo</h4><p><b>Afirmación:</b> “si \(n\) es primo, entonces \(2^n-1\) es primo”.</p>
+<p>Para \(n=2,3,5,7\) se obtiene \(3,\ 7,\ 31,\ 127\), todos primos: ¡parece cierta! Pero para \(n=11\) (primo), \(2^{11}-1=2047=23\cdot89\) <b>no es primo</b>. Este único caso es un contraejemplo y basta para declarar falsa la afirmación.</p></div>
+</div>
+<h2 class="seccion saltar" id="tit-taller">Parte 3. Taller (20 preguntas)</h2><h2 class="seccion oculta" id="tit-prueba">Prueba de sustentación</h2>
+<div id="qs"><section class="pregunta" id="p1" data-n="1" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">1</span></div><div class="ctx">Un padre deja 35 camellos a sus tres hijos con esta condición: el mayor recibe \(\frac12\) de los camellos, el segundo \(\frac13\) y el menor \(\frac19\).</div><div class="enun">¿Qué fracción de la herencia queda sin asignar?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(\dfrac{17}{18}\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\dfrac16\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\dfrac1{18}\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(\dfrac19\)</div></div></div></section><section class="pregunta" id="p2" data-n="2" data-fmt="short"><div class="cab">Pregunta <span class="qnum">2</span></div><div class="ctx">En el reparto de los 35 camellos, el segundo hijo debe recibir \(\frac13\) de la herencia.</div><div class="enun">¿Cuántos camellos le corresponden exactamente al segundo hijo? Escribe la respuesta como número mixto.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p3" data-n="3" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">3</span></div><div class="ctx">Para repartir los 35 camellos, un sabio agrega su propio camello (36 en total) y entrega \(\frac12\) de 36 \(=18\), \(\frac13\) de 36 \(=12\) y \(\frac19\) de 36 \(=4\). Los tres hijos quedan satisfechos.</div><div class="enun">¿Cuál argumento explica correctamente por qué los tres hijos quedan conformes?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Cada uno recibe más de lo que le correspondía (18 > 17,5; 12 > 11,67; 4 > 3,89), porque las fracciones suman \(\frac{17}{18}<1\).</div></div><div class="opcion"><div class="letra">B.</div><div>Porque 18, 12 y 4 son exactamente \(\frac12\), \(\frac13\) y \(\frac19\) de 35.</div></div><div class="opcion"><div class="letra">C.</div><div>Porque \(\frac12+\frac13+\frac19=1\), de modo que la herencia se reparte completa.</div></div><div class="opcion"><div class="letra">D.</div><div>Porque agregar un camello no cambia lo que recibe cada hijo; solo ayuda a contar.</div></div></div></section><section class="pregunta" id="p4" data-n="4" data-fmt="match"><div class="cab">Pregunta <span class="qnum">4</span></div><div class="enun">Relaciona cada texto con el tipo de razonamiento que representa. Una opción no se usa.</div><div class="match"><div class="col"><div class="it"><b>1.</b> <span>“Como \(3+5=8\), \(7+9=16\) y \(11+13=24\) son pares, la suma de dos impares siempre es par.”</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>2.</b> <span>“Sean \(2k+1\) y \(2m+1\) dos impares; su suma es \(2(k+m+1)\), que es par.”</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>3.</b> <span>“Con \(n=40\), \(n^2+n+41=1681=41^2\), que no es primo; la afirmación ‘siempre es primo’ es falsa.”</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>4.</b> <span>“Compruebo que con \(n=2\), \(2^2+2+41=47\), que es primo.”</span> <span class="blank" style="min-width:40px"></span></div></div><div class="col"><div class="it"><b>A.</b> <span>Contraejemplo</span></div><div class="it"><b>B.</b> <span>Demostración general</span></div><div class="it"><b>C.</b> <span>Generalización a partir de casos (no demuestra)</span></div><div class="it"><b>D.</b> <span>Verificación de un caso particular</span></div><div class="it"><b>E.</b> <span>Definición de número primo</span></div></div></div><div class="nota" style="text-align:left">Escribe en cada línea la letra de la columna derecha que corresponda. Sobra una opción.</div></section><section class="pregunta" id="p5" data-n="5" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">5</span></div><div class="ctx">Un estudiante evalúa la expresión \(n^2+n+41\) para algunos valores de \(n\) y registra los resultados.</div><table class="t"><tr><th>\(n\)</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+<tr><th>\(n^2+n+41\)</th><td>41</td><td>43</td><td>47</td><td>53</td><td>61</td></tr></table>
+<div class="nota">Todos los valores de la tabla son números primos.</div><div class="enun">¿Qué se puede concluir correctamente de la información de la tabla?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Que \(n^2+n+41\) es primo para todo número natural \(n\).</div></div><div class="opcion"><div class="letra">B.</div><div>Que la expresión dio primos en esos cinco casos, pero la tabla no demuestra que lo haga para todo \(n\).</div></div><div class="opcion"><div class="letra">C.</div><div>Que \(n^2+n+41\) es primo únicamente cuando \(n\) es par.</div></div><div class="opcion"><div class="letra">D.</div><div>Que es primo para todo \(n\leq100\), porque la tabla muestra una regularidad.</div></div></div></section><section class="pregunta" id="p6" data-n="6" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">6</span></div><div class="enun">Se afirma que \(n^2+n+41\) es primo para todo entero \(n\geq0\). ¿Cuál de estos valores de \(n\) sirve como contraejemplo?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(n=10\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(n=20\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(n=39\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(n=40\)</div></div></div></section><section class="pregunta" id="p7" data-n="7" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">7</span></div><div class="ctx">Un estudiante afirma: “La suma de tres números enteros consecutivos es siempre un múltiplo de 3”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica con un argumento que valga para cualquier caso.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p8" data-n="8" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">8</span></div><div class="ctx">Un estudiante afirma: “La suma de dos números primos siempre es un número par”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p9" data-n="9" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">9</span></div><div class="ctx">Dos viajeros, uno con 5 panes y otro con 3 panes, comparten todos los panes por igual con un tercer viajero que no lleva comida. Al final, el tercero paga 8 monedas por lo que comió. Las monedas deben repartirse en proporción a lo que cada viajero <b>le cedió</b> al tercero.</div><div class="enun">¿Cuántas monedas debe recibir el viajero que llevaba 5 panes?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>7 monedas</div></div><div class="opcion"><div class="letra">B.</div><div>5 monedas</div></div><div class="opcion"><div class="letra">C.</div><div>4 monedas</div></div><div class="opcion"><div class="letra">D.</div><div>6 monedas</div></div></div></section><section class="pregunta" id="p10" data-n="10" data-fmt="open"><div class="cab">Pregunta <span class="qnum">10</span></div><div class="ctx">Un padre deja 17 camellos a sus tres hijos: \(\frac12\) al mayor, \(\frac13\) al segundo y \(\frac19\) al menor. Un sabio agrega su camello al grupo para repartir.</div><div class="enun">(a) ¿Cuántos camellos recibe cada hijo si se agrega un camello (18 en total)? (b) ¿Cuántos camellos se entregan en total y qué ocurre con el camello agregado? (c) Explica, usando la suma de fracciones, por qué en este caso el reparto cierra exactamente.</div><div class="lineas" style="--h:240px"></div></section><section class="pregunta" id="p11" data-n="11" data-fmt="short"><div class="cab">Pregunta <span class="qnum">11</span></div><div class="ctx">Se afirma: “si \(n\) es un número primo, entonces \(n+2\) también es primo”.</div><div class="enun">Escribe un valor de \(n\) que sirva como contraejemplo y muestra la comprobación.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p12" data-n="12" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">12</span></div><div class="ctx">Para justificar que “la suma de dos números pares es par”, <b>Camilo</b> escribe: “\(2+4=6\), \(10+20=30\) y \(8+12=20\): siempre da par”. <b>Valentina</b> escribe: “Si \(a=2k\) y \(b=2m\), entonces \(a+b=2k+2m=2(k+m)\), que es par”.</div><div class="enun">¿Cuál argumento compara correctamente los razonamientos de Camilo y Valentina?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Camilo, porque tres ejemplos con números distintos bastan para asegurar la regla.</div></div><div class="opcion"><div class="letra">B.</div><div>Valentina justifica para cualquier par con letras; los ejemplos de Camilo solo verifican casos particulares.</div></div><div class="opcion"><div class="letra">C.</div><div>Ambos justifican igual de bien, porque los dos llegan a un resultado par.</div></div><div class="opcion"><div class="letra">D.</div><div>Valentina, pero solo si además prueba con ejemplos, porque el álgebra por sí sola no demuestra nada.</div></div></div></section><section class="pregunta" id="p13" data-n="13" data-fmt="classify"><div class="cab">Pregunta <span class="qnum">13</span></div><div class="enun">Clasifica cada texto según el tipo de razonamiento. Escribe las letras en la categoría que corresponde.</div><div class="match"><div class="col"><div class="it"><b>a)</b> <span>“\(2+3=5\) muestra que la suma de dos primos no siempre es par.”</span></div><div class="it"><b>b)</b> <span>“Probé con 6 números y siempre obtuve un múltiplo de 3; por tanto siempre lo es.”</span></div><div class="it"><b>c)</b> <span>“Sea \(n\) un entero: \(n(n+1)\) es par, porque uno de los dos factores consecutivos es par.”</span></div><div class="it"><b>d)</b> <span>“Con \(n=11\), \(2^{11}-1=2047=23\cdot89\); entonces ‘si \(n\) es primo, \(2^n-1\) es primo’ es falsa.”</span></div><div class="it"><b>e)</b> <span>“Si \(n=2k\), \(n^2=4k^2=2(2k^2)\); por tanto el cuadrado de un par es par.”</span></div><div class="it"><b>f)</b> <span>“Con \(1,2,3\) y \(4\) la fórmula coincide; por tanto la fórmula es verdadera.”</span></div></div><div class="col"><table class="t clasif" style="width:100%"><tr><th>Categoría</th><th>Letras</th></tr><tr><td class="cat">Demostración (vale en general)</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">Contraejemplo</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">Generalización sin demostración</td><td><span class="blank" style="min-width:150px"></span></td></tr></table></div></div></section><section class="pregunta" id="p14" data-n="14" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">14</span></div><div class="ctx">Un estudiante suma los primeros números impares y obtiene la tabla.</div><table class="t"><tr><th>\(n\)</th><th>Suma de los primeros \(n\) impares</th><th>Resultado</th></tr>
+<tr><td>1</td><td>\(1\)</td><td>\(1=1^2\)</td></tr>
+<tr><td>2</td><td>\(1+3\)</td><td>\(4=2^2\)</td></tr>
+<tr><td>3</td><td>\(1+3+5\)</td><td>\(9=3^2\)</td></tr>
+<tr><td>4</td><td>\(1+3+5+7\)</td><td>\(16=4^2\)</td></tr></table><div class="enun">¿Cuál afirmación describe correctamente el estado de la regla “la suma de los primeros \(n\) impares es \(n^2\)”?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Ya está demostrada, porque se cumple para \(n=1,2,3\) y \(4\).</div></div><div class="opcion"><div class="letra">B.</div><div>Es falsa, porque la tabla solo contiene cuatro casos.</div></div><div class="opcion"><div class="letra">C.</div><div>Es una conjetura apoyada en cuatro casos; para asegurarla para todo \(n\) hace falta una demostración.</div></div><div class="opcion"><div class="letra">D.</div><div>Es verdadera solo cuando \(n\) es par.</div></div></div></section><section class="pregunta" id="p15" data-n="15" data-fmt="short"><div class="cab">Pregunta <span class="qnum">15</span></div><div class="ctx">La regla “la suma de los primeros \(n\) números impares es \(n^2\)” ya fue demostrada.</div><div class="enun">Usa la regla para calcular \(1+3+5+7+\dots+49\).</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p16" data-n="16" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">16</span></div><div class="ctx">Un padre deja 19 camellos: \(\frac12\) para el mayor, \(\frac14\) para el segundo y \(\frac15\) para el menor. Un sabio agrega su camello (20 en total) y reparte.</div><div class="enun">¿Cuántos camellos recibe cada hijo y qué ocurre con el camello agregado?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>10, 5 y 4 camellos; faltan camellos para completar el reparto.</div></div><div class="opcion"><div class="letra">B.</div><div>9,5; 4,75 y 3,8 camellos; el camello agregado no se utiliza.</div></div><div class="opcion"><div class="letra">C.</div><div>10, 5 y 4 camellos; sobran 2 camellos.</div></div><div class="opcion"><div class="letra">D.</div><div>10, 5 y 4 camellos; sobra exactamente 1 camello, el agregado.</div></div></div></section><section class="pregunta" id="p17" data-n="17" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">17</span></div><div class="ctx">Un estudiante afirma: “Con cualquier reparto por fracciones, agregar un camello hace que el reparto cierre sin sobrantes, aparte del camello agregado”.</div><div class="enun">¿Cuál argumento evalúa correctamente la afirmación?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Es verdadera: en ambos casos sobra solo el camello agregado.</div></div><div class="opcion"><div class="letra">B.</div><div>Es falsa: con 35 camellos y \(\frac12,\frac13,\frac19\) se entregan 34 de 36 y quedan 2 camellos; con 17 sí queda solo el agregado.</div></div><div class="opcion"><div class="letra">C.</div><div>Es verdadera, porque \(\frac12+\frac13+\frac19=1\) y por eso siempre se entrega todo.</div></div><div class="opcion"><div class="letra">D.</div><div>Es falsa, porque agregar un camello nunca modifica el reparto.</div></div></div></section><section class="pregunta" id="p18" data-n="18" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">18</span></div><div class="ctx">Sea \(n\) un entero cualquiera.</div><div class="caja" style="line-height:2.4">
+Si \(n\) es <span class="blank"></span>, entonces \(n(n+1)\) tiene un factor par y, por tanto, es par.<br>
+Si \(n\) es <span class="blank"></span>, entonces \(n+1\) es <span class="blank"></span> y \(n(n+1)\) tiene un factor par: es <span class="blank"></span>.</div><div class="enun">Completa los espacios para demostrar que el producto de dos enteros consecutivos es par.</div></section><section class="pregunta" id="p19" data-n="19" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">19</span></div><div class="ctx">Un estudiante observa que \(1+2+3=6\) y \(1\cdot2\cdot3=6\), y concluye: “la suma y el producto de tres enteros positivos consecutivos siempre son iguales”.</div><div class="enun">¿Es verdadera la conclusión del estudiante? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p20" data-n="20" data-fmt="open"><div class="cab">Pregunta <span class="qnum">20</span></div><div class="enun">(a) Demuestra que, para todo entero \(n\), el número \(n^2-n\) es par. (b) Explica por qué comprobar los casos \(n=1,2,3,4,5\) no sería suficiente.</div><div class="lineas" style="--h:260px"></div></section></div>
+<div id="docente-slot" class="oculta"></div>
+<div class="foot">Institución Educativa San Luis Gonzaga · FACIMATE — Formando Actitudes y Capacidades para Interpretar las Matemáticas</div><template id="tpl-docente"><div id="panel-docente"><div class="aviso"><b>Uso exclusivo del docente.</b> No entregar a los estudiantes. Contiene competencia, pensamiento, nivel, respuestas y soluciones.</div>
+<div id="resumen-completo"><div class="resumen"><div><b>Competencias</b><br>Interpretación y representación: 5<br>Formulación y ejecución: 7<br>Argumentación: 8</div><div><b>Niveles</b><br>Básico: 2<br>Medio: 11<br>Alto: 7</div><div><b>Formatos</b><br>A. Selección múltiple con única respuesta: 9<br>B. Respuesta abierta corta: 3<br>C. Pregunta abierta de procedimiento: 2<br>D. Emparejamiento: 1<br>E. Completar información: 1<br>F. Clasificación: 1<br>G. Verdadero o falso con justificación: 3</div><div><b>Puntaje</b><br>Total: 32 puntos<br>Taller (2,0) = 2,0 × (puntos / 32); sustentación (1,0) = 1,0 × (puntos de las preguntas sorteadas / su total). Refuerzo máximo: 3,0</div></div>
+</div><div id="clave-prueba" class="oculta"></div><div id="clave-completa"><h2 class="seccion">Matriz técnica y clave de valoración</h2>
+<table class="tec"><tr><th>N.º</th><th>Tema</th><th>Pensamiento</th><th>Competencia</th><th>Tipo de pregunta</th><th>Nivel</th><th>Pts</th><th>Respuesta esperada</th></tr><tr><td>1</td><td>Fracciones de un reparto: parte no asignada</td><td>Numérico</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Básico</td><td>1</td><td><b>C</b>. \(\frac1{18}\)</td></tr><tr><td>2</td><td>Fracción de una cantidad</td><td>Numérico</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Básico</td><td>1</td><td>\(11\frac23\) camellos (\(=\frac{35}{3}\))</td></tr><tr><td>3</td><td>Por qué el reparto con un camello extra parece justo</td><td>Numérico</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>A</b>. Cada hijo recibe más de su parte exacta (suma de fracciones 17/18 < 1)</td></tr><tr><td>4</td><td>Tipos de razonamiento</td><td>Variacional</td><td>Interpretación y representación</td><td>D. Emparejamiento</td><td>Medio</td><td>2</td><td>1-C, 2-B, 3-A, 4-D (E no se usa)</td></tr><tr><td>5</td><td>Alcance de la evidencia numérica</td><td>Variacional</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>B</b>. Es evidencia de 5 casos, no demostración</td></tr><tr><td>6</td><td>Búsqueda de un contraejemplo</td><td>Numérico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>D</b>. \(n=40\) (\(1681=41^2\))</td></tr><tr><td>7</td><td>Suma de tres enteros consecutivos</td><td>Variacional</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Medio</td><td>2</td><td>Verdadero: n + (n+1) + (n+2) = 3(n+1)</td></tr><tr><td>8</td><td>Refutar con un contraejemplo</td><td>Numérico</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Medio</td><td>2</td><td>Falso: 2 + 3 = 5 (impar)</td></tr><tr><td>9</td><td>Reparto proporcional a lo aportado</td><td>Numérico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>A</b>. 7 monedas</td></tr><tr><td>10</td><td>Reparto de 17 camellos</td><td>Numérico</td><td>Formulación y ejecución</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>(a) 9, 6 y 2; (b) 17 camellos; el camello agregado se devuelve; (c) 1/2 + 1/3 + 1/9 = 17/18 y 17/18 de 18 = 17</td></tr><tr><td>11</td><td>Un contraejemplo</td><td>Numérico</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>Por ejemplo n = 7 (7 + 2 = 9 = 3×3); también 2, 13, 19, 23…</td></tr><tr><td>12</td><td>Ejemplos o demostración</td><td>Variacional</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>B</b>. Valentina (argumento general)</td></tr><tr><td>13</td><td>Clasificar razonamientos</td><td>Variacional</td><td>Interpretación y representación</td><td>F. Clasificación</td><td>Medio</td><td>2</td><td>Demostración: c, e · Contraejemplo: a, d · Generalización: b, f</td></tr><tr><td>14</td><td>Estatus de una conjetura</td><td>Variacional</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>C</b>. Conjetura apoyada en casos; falta demostración</td></tr><tr><td>15</td><td>Usar una regla demostrada</td><td>Numérico</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>625</td></tr><tr><td>16</td><td>Reparto de 19 camellos</td><td>Numérico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>D</b>. 10, 5 y 4; sobra el camello agregado</td></tr><tr><td>17</td><td>Validez general de una estrategia</td><td>Numérico</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>B</b>. Falsa: con 35 quedan 2; con 17 queda 1</td></tr><tr><td>18</td><td>Completar una demostración</td><td>Variacional</td><td>Argumentación</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>par; impar; par; par</td></tr><tr><td>19</td><td>Un solo caso no demuestra</td><td>Numérico</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Alto</td><td>2</td><td>Falso: 2 + 3 + 4 = 9 y 2·3·4 = 24</td></tr><tr><td>20</td><td>Demostrar que n² − n es par</td><td>Variacional</td><td>Argumentación</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>n² − n = n(n − 1): producto de dos consecutivos, uno es par</td></tr></table>
+</div><h2 class="seccion saltar">Solucionario</h2>
+<div class="sol" id="sol1"><h4>Pregunta 1 <span class="etq">Interpretación y representación</span><span class="etq">Básico</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. \(\frac1{18}\)</p><p><b>Procedimiento:</b> Fracción asignada: \(\frac12+\frac13+\frac19=\frac{17}{18}\). Queda sin asignar \(1-\frac{17}{18}=\frac1{18}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe transformar la información verbal del reparto en una representación fraccionaria y operar con ella para interpretar el sobrante.</p><p><b>Distractores:</b> (A) da la fracción asignada, no la que sobra. (B) calcula \(1-\frac12-\frac13\): olvida la fracción \(\frac19\). (D) toma la última fracción como si fuera lo que sobra.</p></div>
+<div class="sol" id="sol2"><h4>Pregunta 2 <span class="etq">Formulación y ejecución</span><span class="etq">Básico</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> \(11\frac23\) camellos (\(=\frac{35}{3}\))</p><p><b>Procedimiento:</b> \(\frac13\) de 35 es \(\frac{35}{3}=11\frac23\) camellos. No es un número entero: por eso el reparto con camellos completos parece imposible.</p><p><b>Por qué corresponde a la competencia:</b> Debe ejecutar el cálculo de una fracción de una cantidad y expresarla de forma adecuada.</p><p><b>Criterio de valoración (1 pts):</b> \(11\frac23\), \(\frac{35}{3}\) o 11,67 con aproximación: 1 pt.</p></div>
+<div class="sol" id="sol3"><h4>Pregunta 3 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. Cada hijo recibe más de su parte exacta (suma de fracciones 17/18 < 1)</p><p><b>Procedimiento:</b> Con 36 camellos reciben \(18,\ 12\) y \(4\) (en total 34). Sus partes exactas eran \(17{,}5;\ 11{,}\overline{6};\ 3{,}\overline{8}\). Cada uno recibe más de lo que le correspondía, porque las fracciones suman \(\frac{17}{18}<1\) y al repartir sobre 36 se reparte menos de la herencia total; sobran 2 camellos.</p><p><b>Por qué corresponde a la competencia:</b> Debe validar una estrategia (completar con un camello) comparando lo recibido con lo debido, y justificar con la suma de fracciones.</p><p><b>Distractores:</b> (B) falso: esas fracciones de 35 no son enteras. (C) la suma es \(\frac{17}{18}\), no 1. (D) sí cambia: se calcula sobre 36, no sobre 35.</p></div>
+<div class="sol" id="sol4"><h4>Pregunta 4 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">D. Emparejamiento</span></h4><p><b>Respuesta:</b> 1-C, 2-B, 3-A, 4-D (E no se usa)</p><p><b>Procedimiento:</b> 1) Varios casos y salto a la regla general: generalización (C). 2) Letras \(2k+1\) y \(2m+1\): demostración general (B). 3) \(n=40\) rompe la regla: contraejemplo (A). 4) Un solo caso que funciona: verificación particular (D). Sobra E.</p><p><b>Por qué corresponde a la competencia:</b> Debe reconocer el tipo de representación y de razonamiento presente en cada texto (casos, letras, caso que falla) sin resolverse por descarte evidente.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pts por relación correcta.</p></div>
+<div class="sol" id="sol5"><h4>Pregunta 5 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. Es evidencia de 5 casos, no demostración</p><p><b>Procedimiento:</b> La tabla muestra que, en \(n=0,\dots,4\), la expresión da números primos. Esto es evidencia, no demostración: nada garantiza que ocurra para todo \(n\).</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar la información de una tabla y distinguir lo que ella muestra de lo que no puede asegurar.</p><p><b>Distractores:</b> (A) generaliza a partir de casos particulares. (C) inventa una condición que la tabla no sustenta. (D) extrapola un patrón más allá de los datos.</p></div>
+<div class="sol" id="sol6"><h4>Pregunta 6 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. \(n=40\) (\(1681=41^2\))</p><p><b>Procedimiento:</b> \(n=40\): \(40^2+40+41=1681=41\cdot41\), no es primo. Para \(n=10,\ 20\) y \(39\) los resultados (151, 461 y 1601) son primos y no refutan la afirmación.</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear una estrategia de búsqueda y ejecutar los cálculos para decidir cuál valor refuta la afirmación.</p><p><b>Distractores:</b> (A) \(10^2+10+41=151\) es primo: no refuta. (B) \(20^2+20+41=461\) es primo: no refuta. (C) \(39^2+39+41=1601\) es primo: no refuta.</p></div>
+<div class="sol" id="sol7"><h4>Pregunta 7 <span class="etq">Argumentación</span><span class="etq">Medio</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Verdadero: n + (n+1) + (n+2) = 3(n+1)</p><p><b>Procedimiento:</b> Verdadero. Con enteros \(n,\ n+1,\ n+2\): suma \(=3n+3=3(n+1)\), múltiplo de 3 para todo \(n\).</p><p><b>Por qué corresponde a la competencia:</b> Debe sustentar una afirmación general con una demostración algebraica, no solo con ejemplos.</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Justificación general con letras (no solo ejemplos): 1 pt. Si solo da ejemplos: 0,5 pts.</p></div>
+<div class="sol" id="sol8"><h4>Pregunta 8 <span class="etq">Argumentación</span><span class="etq">Medio</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Falso: 2 + 3 = 5 (impar)</p><p><b>Procedimiento:</b> Falso. Contraejemplo: \(2+3=5\), y 5 es impar (2 y 3 son primos). Basta un caso para refutarla.</p><p><b>Por qué corresponde a la competencia:</b> Debe refutar una afirmación general mediante un contraejemplo válido.</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Contraejemplo válido (por ejemplo 2 + 3, 2 + 5, 2 + 7): 1 pt.</p></div>
+<div class="sol" id="sol9"><h4>Pregunta 9 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. 7 monedas</p><p><b>Procedimiento:</b> Los 3 viajeros comieron \(\frac83\) de pan cada uno. El de 5 panes cedió \(5-\frac83=\frac73\); el de 3 panes cedió \(3-\frac83=\frac13\). Proporción \(7:1\): de 8 monedas, 7 para el de 5 panes y 1 para el de 3.</p><p><b>Por qué corresponde a la competencia:</b> Debe formular una estrategia de reparto proporcional a lo cedido (no a lo que cada uno llevaba) y ejecutarla con fracciones.</p><p><b>Distractores:</b> (B) reparte en proporción a los panes que llevaba cada uno (5 y 3), no a los que cedió. (C) reparte por igual, sin considerar los aportes. (D) redondea \(\frac83\) a 2 panes por persona (ceden 3 y 1) y reparte 3 : 1.</p></div>
+<div class="sol" id="sol10"><h4>Pregunta 10 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> (a) 9, 6 y 2; (b) 17 camellos; el camello agregado se devuelve; (c) 1/2 + 1/3 + 1/9 = 17/18 y 17/18 de 18 = 17</p><p><b>Procedimiento:</b> (a) \(\frac12\) de 18 \(=9\); \(\frac13\) de 18 \(=6\); \(\frac19\) de 18 \(=2\). (b) \(9+6+2=17\): se entregan los 17 camellos y sobra exactamente el camello agregado, que se devuelve. (c) \(\frac12+\frac13+\frac19=\frac{17}{18}\) y \(\frac{17}{18}\) de 18 camellos son 17: las fracciones suman \(\frac{17}{18}\), es decir, \(\frac{N}{N+1}\) con \(N=17\).</p><p><b>Por qué corresponde a la competencia:</b> Debe formular y ejecutar un plan completo (cálculo de fracciones, comprobación de totales) y relacionarlo con la suma de las fracciones.</p><p><b>Criterio de valoración (4 pts):</b> (a) 1 pt. (b) 1 pt (total y destino del camello agregado). (c) 2 pts: suma 17/18 (1 pt) y relación con 17 = (17/18)·18 (1 pt).</p></div>
+<div class="sol" id="sol11"><h4>Pregunta 11 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> Por ejemplo n = 7 (7 + 2 = 9 = 3×3); también 2, 13, 19, 23…</p><p><b>Procedimiento:</b> Por ejemplo, \(n=7\): es primo y \(7+2=9=3\cdot3\) no lo es. También sirven \(n=2\) (\(4\)), \(13\) (\(15\)), \(19\) (\(21\)), \(23\) (\(25\)).</p><p><b>Por qué corresponde a la competencia:</b> Debe seleccionar y ejecutar una estrategia de búsqueda de un caso que cumpla la hipótesis pero no la conclusión.</p><p><b>Criterio de valoración (1 pts):</b> Un valor primo \(n\) con \(n+2\) compuesto y la comprobación: 1 pt. Valor sin comprobación: 0,5 pts. Un \(n\) no primo: 0 pts.</p></div>
+<div class="sol" id="sol12"><h4>Pregunta 12 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. Valentina (argumento general)</p><p><b>Procedimiento:</b> Valentina escribe pares como \(2a\) y \(2b\) y obtiene \(2(a+b)\), que es par para cualquier par. Camilo solo comprueba casos particulares, que no cubren todos los casos.</p><p><b>Por qué corresponde a la competencia:</b> Debe evaluar la validez de dos razonamientos y sustentar por qué uno es una demostración y el otro solo evidencia.</p><p><b>Distractores:</b> (A) confunde evidencia con demostración. (C) el resultado coincide, pero el alcance del argumento no. (D) el álgebra general sí demuestra.</p></div>
+<div class="sol" id="sol13"><h4>Pregunta 13 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">F. Clasificación</span></h4><p><b>Respuesta:</b> Demostración: c, e · Contraejemplo: a, d · Generalización: b, f</p><p><b>Procedimiento:</b> Demostración: c) y e) (argumentos generales). Contraejemplo: a) y d) (un caso que refuta). Generalización sin demostración: b) y f) (casos particulares que se extienden a todos).</p><p><b>Por qué corresponde a la competencia:</b> Debe reconocer en cada texto el tipo de razonamiento (general, caso que refuta, caso que se generaliza) y clasificar por su estructura lógica.</p><p><b>Criterio de valoración (2 pts):</b> 1/3 pt por texto bien clasificado (máx. 2).</p></div>
+<div class="sol" id="sol14"><h4>Pregunta 14 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. Conjetura apoyada en casos; falta demostración</p><p><b>Procedimiento:</b> La tabla verifica la regla para \(n=1,2,3,4\): es una conjetura apoyada en casos. Para afirmarla para todo \(n\) se necesita una demostración (por ejemplo, escribiendo la suma al derecho y al revés: cada pareja suma \(2n\) y hay \(n\) parejas, así que \(2S=n\cdot2n\) y \(S=n^2\)).</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar una tabla y juzgar el alcance de la información que contiene (evidencia frente a demostración).</p><p><b>Distractores:</b> (A) confunde verificar casos con demostrar. (B) que haya pocos casos no la hace falsa. (D) la tabla muestra que se cumple también para \(n=1\) y \(n=3\).</p></div>
+<div class="sol" id="sol15"><h4>Pregunta 15 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 625</p><p><b>Procedimiento:</b> \(49\) es el \(25.º\) impar (\(2\cdot25-1=49\)). Suma \(=25^2=625\).</p><p><b>Por qué corresponde a la competencia:</b> Debe ejecutar la regla: identificar cuántos sumandos hay y aplicarla.</p><p><b>Criterio de valoración (1 pts):</b> 625 con la identificación de \(n=25\): 1 pt. 625 sin procedimiento: 0,5 pts.</p></div>
+<div class="sol" id="sol16"><h4>Pregunta 16 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. 10, 5 y 4; sobra el camello agregado</p><p><b>Procedimiento:</b> Con 20 camellos: \(\frac12\cdot20=10\), \(\frac14\cdot20=5\), \(\frac15\cdot20=4\). Se entregan \(10+5+4=19\) y sobra exactamente 1: el camello agregado.</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear la estrategia (repartir sobre 20), ejecutarla con tres fracciones y verificar el total entregado.</p><p><b>Distractores:</b> (A) no verifica que \(10+5+4=19<20\). (B) calcula sobre 19 en lugar de sobre 20. (C) resta mal: confunde \(20-18\) con \(20-19\).</p></div>
+<div class="sol" id="sol17"><h4>Pregunta 17 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. Falsa: con 35 quedan 2; con 17 queda 1</p><p><b>Procedimiento:</b> Con 35 camellos y \(\frac12,\frac13,\frac19\): sobre 36 se entregan \(18+12+4=34\), y quedan 2 camellos (el agregado y uno más). Con 17 camellos y las mismas fracciones: sobre 18 se entregan \(9+6+2=17\) y solo queda el agregado. La estrategia no siempre cierra igual: depende de lo que suman las fracciones.</p><p><b>Por qué corresponde a la competencia:</b> Debe validar o refutar una generalización contrastando dos casos, y justificar con la suma de las fracciones.</p><p><b>Distractores:</b> (A) con 35 camellos quedan 2, no 1. (C) la suma es \(\frac{17}{18}\), no 1. (D) sí modifica: cambia la cantidad sobre la que se calculan las fracciones.</p></div>
+<div class="sol" id="sol18"><h4>Pregunta 18 <span class="etq">Argumentación</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> par; impar; par; par</p><p><b>Procedimiento:</b> Si \(n\) es par, \(n(n+1)\) tiene un factor par: es par. Si \(n\) es impar, \(n+1\) es par y \(n(n+1)\) tiene un factor par: es par. En ambos casos el producto es par.</p><p><b>Por qué corresponde a la competencia:</b> Debe justificar cada tramo de una demostración por casos (par/impar), es decir, sustentar la validez del argumento.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pts por espacio correcto.</p></div>
+<div class="sol" id="sol19"><h4>Pregunta 19 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Falso: 2 + 3 + 4 = 9 y 2·3·4 = 24</p><p><b>Procedimiento:</b> Falso. Contraejemplo: \(2,3,4\) tienen suma \(9\) y producto \(24\), que no coinciden. El caso \(1,2,3\) es una coincidencia.</p><p><b>Por qué corresponde a la competencia:</b> Debe refutar una generalización hecha a partir de un solo caso, con un contraejemplo.</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Contraejemplo válido (por ejemplo 2, 3, 4): 1 pt.</p></div>
+<div class="sol" id="sol20"><h4>Pregunta 20 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> n² − n = n(n − 1): producto de dos consecutivos, uno es par</p><p><b>Procedimiento:</b> (a) \(n^2-n=n(n-1)\) es el producto de dos enteros consecutivos; uno de ellos es par, así que el producto es par. (Alternativa por casos: si \(n=2k\), \(n^2-n=2k(2k-1)\); si \(n=2k+1\), \(n^2-n=(2k+1)(2k)\).) (b) Cinco casos no cubren la infinidad de enteros; la demostración debe valer para cualquier \(n\).</p><p><b>Por qué corresponde a la competencia:</b> Debe construir una demostración general y justificar por qué los ejemplos no bastan, es decir, sustentar matemáticamente la validez de una afirmación.</p><p><b>Criterio de valoración (4 pts):</b> (a) Factoriza \(n(n-1)\) o plantea casos con letras: 1,5 pts. Concluye que hay un factor par: 1,5 pts. (b) Explica que los casos no cubren todos los enteros: 1 pt.</p></div></div></template>
+<script>
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuf(arr,rng){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var GA=['mc','vf'],BC=['short','open'],DEF=['match','fill','classify'];
+function plan(fmts,k,seed){
+  var rng=mulberry32(seed),idx=fmts.map(function(_,i){return i});
+  var pool=function(set){return idx.filter(function(i){return set.indexOf(fmts[i])>=0})};
+  var pick=[].concat(shuf(pool(GA),rng).slice(0,k===3?1:2),shuf(pool(BC),rng).slice(0,1),shuf(pool(DEF),rng).slice(0,1));
+  if(k===5){var rest=idx.filter(function(i){return pick.indexOf(i)<0});pick.push(shuf(rest,rng)[0]);}
+  var order=shuf(pick,rng),perms={};
+  order.forEach(function(i){if(fmts[i]==='mc')perms[i]=shuf([0,1,2,3],rng)});
+  return {order:order,perms:perms};
+}
+function parseCode(s){var m=/T(\d+)-K([345])-(\d{4,9})/i.exec(s||'');return m?{t:+m[1],k:+m[2],seed:+m[3]}:null}
+
+(function(){
+/* ===== Configuración del artefacto ===== */
+var SCRIPT_URL_VISTAS="https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+var AREA_ARTEFACTO="Matemáticas · Taller Refuerzo 6 · T6 · 10°";
+var VERSION_ARTEFACTO="T6-tr6-v1";
+var PORTAL_URL="https://llerzy.github.io/portal-slg/";
+var TALLER=6;
+var D=[{"n": 1, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "\\(\\frac1{18}\\)"}, {"n": 2, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "\\(11\\frac23\\) camellos (\\(=\\frac{35}{3}\\))"}, {"n": 3, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "Cada hijo recibe más de su parte exacta (suma de fracciones 17/18 < 1)"}, {"n": 4, "f": "match", "t": "D. Emparejamiento", "p": 2, "a": -1, "k": "1-C, 2-B, 3-A, 4-D (E no se usa)"}, {"n": 5, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "Es evidencia de 5 casos, no demostración"}, {"n": 6, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "\\(n=40\\) (\\(1681=41^2\\))"}, {"n": 7, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Verdadero: n + (n+1) + (n+2) = 3(n+1)"}, {"n": 8, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Falso: 2 + 3 = 5 (impar)"}, {"n": 9, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "7 monedas"}, {"n": 10, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "(a) 9, 6 y 2; (b) 17 camellos; el camello agregado se devuelve; (c) 1/2 + 1/3 + 1/9 = 17/18 y 17/18 de 18 = 17"}, {"n": 11, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "Por ejemplo n = 7 (7 + 2 = 9 = 3×3); también 2, 13, 19, 23…"}, {"n": 12, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "Valentina (argumento general)"}, {"n": 13, "f": "classify", "t": "F. Clasificación", "p": 2, "a": -1, "k": "Demostración: c, e · Contraejemplo: a, d · Generalización: b, f"}, {"n": 14, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "Conjetura apoyada en casos; falta demostración"}, {"n": 15, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "625"}, {"n": 16, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "10, 5 y 4; sobra el camello agregado"}, {"n": 17, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "Falsa: con 35 quedan 2; con 17 queda 1"}, {"n": 18, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "par; impar; par; par"}, {"n": 19, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Falso: 2 + 3 + 4 = 9 y 2·3·4 = 24"}, {"n": 20, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "n² − n = n(n − 1): producto de dos consecutivos, uno es par"}];
+var $=function(id){return document.getElementById(id)};
+
+/* ===== Sesión y rol ===== */
+var sesion=null;try{sesion=JSON.parse(sessionStorage.getItem('slg_sesion')||'null')}catch(e){}
+var enGithub=/github\.io$/i.test(location.hostname);
+var preview=false,ES_DOCENTE=false;
+if(sesion&&typeof sesion==='object'){ES_DOCENTE=String(sesion.rol||'').toLowerCase().indexOf('docente')===0}
+else{location.replace(PORTAL_URL);return}
+window.ES_DOCENTE=ES_DOCENTE;
+
+/* ===== Registro silencioso de la apertura ===== */
+function registrarVista(){
+  if(preview||!sesion||!sesion.documento)return;
+  if(!SCRIPT_URL_VISTAS||SCRIPT_URL_VISTAS.indexOf('http')!==0)return;
+  try{
+    var q=new URLSearchParams({accion:'registrarVista',doc:String(sesion.documento),nombre:String(sesion.nombre||''),
+      grupo:String(sesion.grupoAsignado||sesion.grupo||''),rol:String(sesion.rol||(ES_DOCENTE?'docente':'estudiante')),
+      origen:'GitHub',tipoVista:'Apertura Artefacto — '+AREA_ARTEFACTO,version:VERSION_ARTEFACTO});
+    fetch(SCRIPT_URL_VISTAS+(SCRIPT_URL_VISTAS.indexOf('?')>=0?'&':'?')+q.toString(),{mode:'no-cors'}).catch(function(){});
+  }catch(e){}
+}
+
+/* ===== Taller y prueba aleatoria ===== */
+var qs=[].slice.call(document.querySelectorAll('#qs .pregunta')),fm=qs.map(function(q){return q.dataset.fmt});
+var state={modo:'completa',k:4,seed:0};
+function newSeed(){return 100000+Math.floor(Math.random()*899999)}
+function reset(){qs.forEach(function(q){q.classList.remove('oculta');q.style.order='';q.querySelector('.qnum').textContent=q.dataset.n;
+  [].slice.call(q.querySelectorAll('.opts > *')).forEach(function(el,i){el.style.order='';el.querySelector('.letra').textContent='ABCD'[i]+'.'})})}
+function typeset(el){try{if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el])}catch(e){}}
+
+function montarDocente(){
+  var slot=$('docente-slot');
+  if(ES_DOCENTE){if(!slot.firstChild){slot.innerHTML=$('tpl-docente').innerHTML}}
+  else{slot.innerHTML=''}
+  $('barra').classList.toggle('oculta',!ES_DOCENTE);
+}
+function claveDocente(pr,p){
+  if(!ES_DOCENTE||!$('panel-docente'))return;
+  $('resumen-completo').classList.toggle('oculta',pr);
+  $('clave-completa').classList.toggle('oculta',pr);
+  $('clave-prueba').classList.toggle('oculta',!pr);
+  var sel={};if(pr)p.order.forEach(function(i){sel[D[i].n]=1});
+  [].slice.call(document.querySelectorAll('#panel-docente .sol')).forEach(function(el){
+    var n=+el.id.replace('sol','');el.classList.toggle('oculta',pr&&!sel[n])});
+  var h2=document.querySelector('#panel-docente h2.saltar');if(h2)h2.textContent=pr?'Solucionario de las preguntas de esta prueba':'Solucionario';
+  if(pr){
+    var tot=0,h='<h2 class="seccion">Clave de esta prueba (código '+('T'+TALLER+'-K'+state.k+'-'+state.seed)+')</h2><table class="tec"><tr><th>Pos.</th><th>N.º original</th><th>Formato</th><th>Pts</th><th>Respuesta esperada (con el orden de opciones de esta prueba)</th></tr>';
+    p.order.forEach(function(i,pos){var q=D[i];tot+=q.p;var ans;
+      if(q.f==='mc'){ans='<b>'+'ABCD'[p.perms[i].indexOf(q.a)]+'</b>. '+q.k}else ans=q.k;
+      h+='<tr><td>'+(pos+1)+'</td><td><a href="#sol'+q.n+'">'+q.n+'</a></td><td>'+q.t+'</td><td>'+q.p+'</td><td>'+ans+'</td></tr>'});
+    h+='</table><p><b>Total: '+tot+' puntos.</b> Nota de la sustentación = 1,0 × (puntos obtenidos / '+tot+'). El taller completo vale 2,0 (refuerzo máximo 3,0).</p>';
+    $('clave-prueba').innerHTML=h;
+  }
+  typeset($('docente-slot'));
+}
+function apply(){
+  if(!ES_DOCENTE)state.modo='completa';
+  var pr=state.modo==='prueba';
+  ['material','instr-completa','tit-taller'].forEach(function(id){$(id).classList.toggle('oculta',pr)});
+  ['instr-prueba','tit-prueba'].forEach(function(id){$(id).classList.toggle('oculta',!pr)});
+  $('b-completa').classList.toggle('act',!pr);$('b-prueba').classList.toggle('act',pr);
+  $('ctl-prueba').classList.toggle('oculta',!pr);
+  $('codigo').classList.toggle('oculta',!pr);
+  $('sub-completa').classList.toggle('oculta',pr);$('sub-prueba').classList.toggle('oculta',!pr);
+  reset();
+  $('qs').classList.toggle('prueba',pr);
+  var p=null;
+  if(pr){
+    if(!state.seed)state.seed=newSeed();
+    p=plan(fm,state.k,state.seed);
+    qs.forEach(function(q){q.classList.add('oculta')});
+    p.order.forEach(function(i,pos){var q=qs[i];q.classList.remove('oculta');q.style.order=pos;q.querySelector('.qnum').textContent=pos+1;
+      if(p.perms[i]){var o=[].slice.call(q.querySelectorAll('.opts > *'));
+        p.perms[i].forEach(function(orig,posOpt){var el=o[orig];el.style.order=posOpt;el.querySelector('.letra').textContent='ABCD'[posOpt]+'.'})}});
+    var code='T'+TALLER+'-K'+state.k+'-'+state.seed;
+    $('codigo').textContent='Código: '+code;$('codigo-imp').textContent='Código de prueba: '+code;
+    $('sel-k').value=String(state.k);
+  }else{$('codigo-imp').textContent=''}
+  claveDocente(pr,p);
+  if(ES_DOCENTE){try{history.replaceState(null,'',pr?'#prueba='+('T'+TALLER+'-K'+state.k+'-'+state.seed):'#completa')}catch(e){}}
+  window.scrollTo(0,0);
+}
+function aplicarRol(){
+  montarDocente();
+  if(!ES_DOCENTE)state.modo='completa';
+  apply();
+}
+
+$('b-completa').onclick=function(){state.modo='completa';apply()};
+$('b-prueba').onclick=function(){state.modo='prueba';state.seed=newSeed();apply()};
+$('b-nueva').onclick=function(){state.seed=newSeed();apply()};
+$('sel-k').onchange=function(){state.k=+this.value;apply()};
+$('b-sol').onclick=function(){var sl=$('docente-slot'),oc=sl.classList.toggle('oculta');
+  this.textContent=oc?'📋 Mostrar solucionario':'📋 Ocultar solucionario';
+  if(!oc){var t=state.modo==='prueba'&&$('clave-prueba')?$('clave-prueba'):sl;sl.scrollIntoView({behavior:'smooth',block:'start'})}};
+$('b-imp').onclick=function(){window.print()};
+$('b-imp-sol').onclick=function(){document.body.classList.add('print-clave');window.print()};
+window.addEventListener('afterprint',function(){document.body.classList.remove('print-clave')});
+$('b-cargar').onclick=function(){var c=parseCode($('in-cod').value);if(!c||c.t!==TALLER){alert('Código no válido para este taller.');return}
+  state.modo='prueba';state.k=c.k;state.seed=c.seed;apply()};
+
+if(ES_DOCENTE&&location.hash.indexOf('#prueba=')===0){
+  var c0=parseCode(location.hash.replace('#prueba=',''));
+  if(c0&&c0.t===TALLER){state.modo='prueba';state.k=c0.k;state.seed=c0.seed}
+}
+aplicarRol();
+registrarVista();
+})();
+</script>
+</div>
+</body>
+</html>

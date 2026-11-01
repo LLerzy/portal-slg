@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Taller T4 · Ley del Seno · Matemáticas 10°</title>
+<script>
+window.MathJax = {tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--rojo:#B31217;--rosa:#fbeaec;--borde:#d9d9d9;--fondo:#f3f4f6;--txt:#222;--ambar:#fff7e8}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;padding:14px;background:var(--fondo);font-family:Arial,Helvetica,sans-serif;color:var(--txt);font-size:15px;line-height:1.42}
+.hoja{max-width:900px;margin:0 auto;background:#fff;padding:20px 26px 28px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.encabezado{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--rojo);color:#fff;border-radius:12px;padding:9px 16px}
+.logo-box{width:80px;min-width:80px;text-align:center}
+.logo-box img{max-height:60px;max-width:74px;object-fit:contain}
+.titulo-box{flex:1;text-align:center}
+.titulo-box h1{margin:0 0 3px;font-size:21px;line-height:1.15}
+.titulo-box p{margin:0;font-size:13.5px;font-weight:600}
+.ie-txt{font-size:12px;font-weight:700;line-height:1.15}
+.datos-est{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0 4px;font-size:14px}
+.datos-est span{flex:1 1 220px;border-bottom:1.5px solid #333;padding-bottom:2px;min-height:22px}
+.datos-est span.corto{flex:0 1 150px}
+.instr{margin:10px 0;padding:9px 12px;background:var(--rosa);border-left:5px solid var(--rojo);border-radius:8px;font-size:14px}
+.instr ul{margin:4px 0 0 18px;padding:0}
+h2.seccion{margin:22px 0 8px;padding-bottom:4px;border-bottom:3px solid var(--rojo);color:var(--rojo);font-size:18px}
+h3.sub{margin:14px 0 4px;color:var(--rojo);font-size:15.5px}
+.repaso p,.repaso li{font-size:14.5px}
+.caja{margin:8px 0;padding:9px 12px;border:1px solid #e2b3b6;border-radius:8px;background:#fffafa}
+.ejemplo{margin:10px 0;padding:10px 14px;border:1px solid var(--borde);border-left:5px solid #2e7d32;border-radius:8px;background:#fbfffb}
+.ejemplo h4{margin:0 0 4px;color:#2e7d32;font-size:14.5px}
+.pregunta{margin:14px 0;padding:11px 14px 12px;border:1px solid var(--borde);border-radius:10px;break-inside:avoid;page-break-inside:avoid;background:#fff}
+.pregunta .cab{font-weight:700;color:var(--rojo);margin-bottom:5px;font-size:15px}
+.ctx{margin:0 0 6px}
+.enun{margin:6px 0;padding:8px 11px;background:var(--ambar);border:1px solid #efd6a3;border-left:5px solid #d69a21;border-radius:8px;font-weight:700}
+.opcion{display:flex;gap:8px;align-items:flex-start;margin:5px 0;padding:6px 10px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.letra{min-width:20px;font-weight:700;color:var(--rojo)}
+.figura{margin:8px auto;padding:6px;border:1px solid var(--borde);border-radius:8px;text-align:center;background:#fff;max-width:560px}
+.figura .grafico-svg{display:block;width:100%;height:auto;margin:0 auto}
+.nota{font-size:12px;color:#555;margin-top:3px;text-align:center}
+.opciones-graficas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.opcion-grafica{position:relative;padding:6px 8px 6px 30px;border:1px solid var(--borde);border-radius:8px;background:#fafafa;break-inside:avoid}
+.opcion-grafica .letra{position:absolute;left:9px;top:7px}
+.opcion-grafica .grafico-svg{display:block;width:100%;height:auto}
+table.t{border-collapse:collapse;margin:8px auto;font-size:14px}
+table.t th,table.t td{border:1px solid #bbb;padding:6px 10px;text-align:center}
+table.t th{background:#f7eeee}
+.blank{display:inline-block;min-width:62px;height:1.25em;border-bottom:1.6px solid #333;vertical-align:-3px;margin:0 3px}
+.blank.l{min-width:110px}
+.resp{margin-top:8px}
+.lineas{height:var(--h,110px);margin-top:6px;border:1px dashed #bbb;border-radius:6px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#d0d0d0 27px,#d0d0d0 28px)}
+.vf-box{display:flex;gap:22px;margin:6px 0 2px;font-weight:700}
+.vf-box span::before{content:"";display:inline-block;width:14px;height:14px;border:1.8px solid #333;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin:8px 0}
+.match .col{border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa}
+.match .it{display:flex;align-items:center;gap:6px;margin:5px 0}
+.match .it b{color:var(--rojo)}
+.clasif td.cat{text-align:left;font-weight:700;width:46%}
+.foot{margin-top:18px;font-size:11.5px;color:#666;text-align:center}
+.docente-box{margin-top:8px;padding:6px 10px;background:#f8f8f8;border:1px solid var(--borde);border-radius:8px;font-size:13px;font-weight:600}
+/* docente */
+.tec{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
+.tec th,.tec td{border:1px solid #bbb;padding:4px 6px;vertical-align:top;text-align:left}
+.tec th{background:#f7eeee}
+.sol{margin:10px 0;padding:9px 13px;border:1px solid var(--borde);border-left:5px solid var(--rojo);border-radius:8px;break-inside:avoid;page-break-inside:avoid;font-size:13.5px}
+.sol h4{margin:0 0 4px;color:var(--rojo);font-size:14.5px}
+.sol .etq{display:inline-block;font-size:11.5px;background:var(--rosa);color:#7a0d11;border-radius:10px;padding:1px 8px;margin-right:4px}
+.sol p{margin:3px 0}
+.resumen{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.resumen div{flex:1 1 170px;border:1px solid var(--borde);border-radius:8px;padding:6px 10px;background:#fafafa;font-size:13px}
+.aviso{margin:8px 0;padding:8px 12px;background:#fff3cd;border:1px solid #e6c96b;border-radius:8px;font-size:13px}
+.fr{display:inline-block;vertical-align:middle;text-align:center;margin:0 4px}
+.fr>span{display:block;padding:0 5px}
+.fr>span:first-child{border-bottom:1.6px solid #333}
+mjx-container[jax="SVG"]{margin:0 .05em!important}
+#qs.prueba{display:flex;flex-direction:column}
+#qs.prueba .opts:not(.opciones-graficas){display:flex;flex-direction:column}
+.oculta{display:none!important}
+.barra{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:-20px -26px 14px;padding:10px 26px;background:#2b2b2b;color:#fff;border-radius:14px 14px 0 0;font-size:13.5px}
+.barra b{margin-right:4px}
+.barra button,.barra select,.barra input{font:inherit;padding:5px 10px;border-radius:7px;border:1px solid #888;background:#fff;color:#222;cursor:pointer}
+.barra input{cursor:text;width:150px}
+.barra button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+.barra .cod{margin-left:auto;font-weight:700;background:#fff3cd;color:#5a4300;padding:3px 10px;border-radius:7px}
+.verif{margin:10px 0;padding:10px 14px;border:2px solid #2b2b2b;border-radius:10px;background:#fafafa}
+.verif input{font:inherit;padding:5px 9px;width:200px;border:1px solid #888;border-radius:7px}
+.verif button{font:inherit;padding:5px 12px;border-radius:7px;border:1px solid var(--rojo);background:var(--rojo);color:#fff;cursor:pointer}
+@media (max-width:700px){.opciones-graficas,.match{grid-template-columns:1fr}.hoja{padding:14px}}
+@media print{
+ @page{size:A4 portrait;margin:11mm 12mm}
+ body{background:#fff;padding:0;font-size:13.2px}
+ .hoja{box-shadow:none;max-width:none;padding:0;border-radius:0}
+ h2.seccion{break-after:avoid;page-break-after:avoid}
+ .pregunta,.ejemplo,.sol,.caja,.opcion,.figura,.opcion-grafica{break-inside:avoid;page-break-inside:avoid}
+ .saltar{break-before:page;page-break-before:always}
+ .noprint{display:none!important}
+}
+
+#vp{background:#fff3cd;color:#5a4300;border-bottom:1px solid #e6c96b;padding:7px 12px;font-size:13px;text-align:center}
+#vp button{font:inherit;padding:3px 10px;border-radius:7px;border:1px solid #888;background:#fff;cursor:pointer;margin-left:6px}
+#vp button.act{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+#panel-docente{margin-top:22px;padding-top:6px;border-top:4px double var(--rojo)}
+.barra button.sec{background:#444;color:#fff;border-color:#888}
+@media screen and (max-width:700px){table.t{display:block;overflow-x:auto;max-width:100%}}
+@media print{
+ #vp{display:none!important}
+ #docente-slot{display:none!important}
+ body.print-clave .hoja>*:not(#docente-slot):not(.encabezado){display:none!important}
+ body.print-clave #docente-slot{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="hoja">
+<div class="barra noprint oculta" id="barra"><b>Modalidad:</b><button id="b-completa" class="act">1 · Taller completo (20 preguntas)</button><button id="b-prueba">2 · Prueba aleatoria (sustentación)</button><span id="ctl-prueba" class="oculta"><label>Preguntas: <select id="sel-k"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label> <button id="b-nueva">Generar nueva</button> <input id="in-cod" placeholder="Código (T3-K4-123456)"/><button id="b-cargar">Cargar</button> <button id="b-imp">Imprimir</button></span><button id="b-sol" class="sec">📋 Mostrar solucionario</button><button id="b-imp-sol" class="sec">🖨 Imprimir clave y solucionario</button><span id="codigo" class="cod oculta"></span></div>
+<header class="encabezado">
+<div class="logo-box"><img alt="Logo IE San Luis Gonzaga" src="https://i.imgur.com/Ld5BbX3.png" onerror="this.style.display='none'"/><div class="ie-txt">I.E. San Luis Gonzaga</div></div>
+<div class="titulo-box"><h1>Taller de recuperación 4</h1><p><span id="sub-completa">Matemáticas · Grado Décimo · Ley del Seno</span><span id="sub-prueba" class="oculta">Prueba de sustentación · Matemáticas · Grado Décimo · Ley del Seno</span></p></div>
+<div class="logo-box"><img alt="Logo FACIMATE" src="https://i.imgur.com/Os2RUbW.png" onerror="this.style.display='none'"/><div class="ie-txt">FACIMATE</div></div>
+</header>
+<div class="docente-box">Docente: Llerzy Esneider Torres Ome Ph.D. · Segundo periodo<span id="codigo-imp" style="float:right"></span></div>
+<div class="datos-est"><span>Nombre:</span><span class="corto">Grupo:</span><span class="corto">Fecha:</span></div>
+<div id="instr-completa"><div class="instr"><b>Instrucciones</b>
+<ul>
+<li>Lee con atención cada situación antes de responder. Trabaja con orden y muestra tus procedimientos.</li>
+<li>En las preguntas de <b>selección múltiple</b> marca <b>una sola</b> opción (A, B, C o D).</li>
+<li>En las preguntas <b>abiertas</b>, <b>completar</b>, <b>emparejar</b>, <b>clasificar</b> y <b>verdadero/falso</b> escribe tu respuesta en el espacio dispuesto y justifica cuando se pida.</li>
+<li>Usa calculadora científica. Cuando trabajes con ángulos en grados, verifica que esté en modo <b>DEG</b>.</li>
+<li>Este taller es una oportunidad de refuerzo: estudia primero el <b>repaso</b> y los <b>ejemplos resueltos</b>.</li>
+<li><b>Valoración (máximo 3,0):</b> 2,0 por el taller completo y 1,0 por la sustentación (escrita u oral, según indique tu docente).</li>
+</ul></div></div>
+<div class="instr oculta" id="instr-prueba"><b>Instrucciones de la prueba de sustentación</b>
+<ul>
+<li>Esta prueba corta toma ejercicios del taller para verificar que comprendes tus procedimientos. Resuélvela por escrito y prepárate para explicarla oralmente.</li>
+<li>En <b>selección múltiple</b> marca una sola opción. En las demás preguntas escribe tu respuesta y justifica cuando se pida.</li>
+<li>Usa calculadora científica en modo <b>DEG</b>. Tu docente puede pedirte que expliques cualquier paso.</li>
+<li>La sustentación vale <b>1,0</b> de la nota de refuerzo (el taller completo vale 2,0).</li>
+</ul></div>
+<div id="material"><h2 class="seccion">Parte 1. Repaso conceptual</h2><div class="repaso">
+<h3 class="sub">1. Ley del Seno</h3>
+<div class="caja">En todo triángulo \(ABC\) con lados \(a,b,c\) opuestos a los ángulos \(A,B,C\):<br>
+\(\dfrac{a}{\sin A}=\dfrac{b}{\sin B}=\dfrac{c}{\sin C}=2R\)  &nbsp;(\(R\): radio de la circunferencia circunscrita)</div>
+<ul>
+<li>Cada lado es proporcional al seno de su <b>ángulo opuesto</b>. El lado mayor se opone al ángulo mayor.</li>
+<li>Los ángulos interiores suman \(180^\circ\): \(A+B+C=180^\circ\).</li>
+</ul>
+<h3 class="sub">2. ¿Cuándo usar la Ley del Seno?</h3>
+<table class="t">
+<tr><th>Datos conocidos</th><th>Caso</th><th>¿Cómo empezar?</th></tr>
+<tr><td>Dos ángulos y un lado opuesto a uno de ellos</td><td>AAL</td><td>Ley del seno directa</td></tr>
+<tr><td>Dos ángulos y el lado entre ellos</td><td>ALA</td><td>Hallar el tercer ángulo y luego la ley del seno</td></tr>
+<tr><td>Dos lados y un ángulo opuesto a uno de ellos</td><td>LLA</td><td>Ley del seno; <b>caso ambiguo</b> (0, 1 o 2 triángulos)</td></tr>
+<tr><td>Dos lados y el ángulo entre ellos / tres lados</td><td>LAL / LLL</td><td>No se puede iniciar con el seno: se usa la Ley del Coseno</td></tr>
+</table>
+<h3 class="sub">3. Caso ambiguo (LLA)</h3>
+<p>Al despejar \(\sin B=\frac{b\sin A}{a}\): si el resultado es mayor que 1 no existe triángulo; si es igual a 1, \(B=90^\circ\) (un triángulo rectángulo); si es menor que 1, hay dos ángulos posibles, \(B\) y \(180^\circ-B\), y se debe comprobar cuál(es) deja(n) una suma de ángulos menor que \(180^\circ\).</p>
+</div>
+<h2 class="seccion">Parte 2. Ejemplos resueltos</h2>
+<div class="ejemplo"><h4>Ejemplo 1 · Hallar un lado (AAL)</h4><p><b>Problema:</b> en un triángulo \(A=40^\circ\), \(B=75^\circ\) y \(a=12\) cm. Halle \(b\).</p>
+<p>1) \(\dfrac{b}{\sin75^\circ}=\dfrac{12}{\sin40^\circ}\).<br>
+2) \(b=\dfrac{12\sin75^\circ}{\sin40^\circ}=\dfrac{12(0{,}9659)}{0{,}6428}\approx18{,}0\) cm.<br>
+Comprobación: \(B>A\), por tanto \(b>a\) \(\checkmark\).</p></div>
+<div class="ejemplo"><h4>Ejemplo 2 · Hallar un ángulo (LLA con una sola solución)</h4><p><b>Problema:</b> \(a=15\), \(b=12\) y \(A=50^\circ\). Halle \(B\).</p>
+<p>1) \(\sin B=\dfrac{b\sin A}{a}=\dfrac{12\sin50^\circ}{15}\approx0{,}613\Rightarrow B\approx37{,}8^\circ\) o \(B\approx142{,}2^\circ\).<br>
+2) Como \(142{,}2^\circ+50^\circ>180^\circ\), solo sirve \(B\approx37{,}8^\circ\) (además, \(b\lt a\) implica \(B\lt A\)).</p></div>
+</div>
+<h2 class="seccion saltar" id="tit-taller">Parte 3. Taller (20 preguntas)</h2><h2 class="seccion oculta" id="tit-prueba">Prueba de sustentación</h2>
+<div id="qs"><section class="pregunta" id="p1" data-n="1" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">1</span></div><div class="ctx">En el triángulo \(ABC\), \(A=50^\circ\), \(B=70^\circ\) y el lado \(a=BC=8\) cm. Se quiere hallar el lado \(c=AB\).</div><div class="enun">¿Cuál expresión permite calcular el lado \(c\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(c=\dfrac{8\sin50^\circ}{\sin60^\circ}\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(c=\dfrac{8\sin60^\circ}{\sin50^\circ}\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(c=\dfrac{8\sin70^\circ}{\sin50^\circ}\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(c=\dfrac{8\cos60^\circ}{\cos50^\circ}\)</div></div></div></section><section class="pregunta" id="p2" data-n="2" data-fmt="short"><div class="cab">Pregunta <span class="qnum">2</span></div><div class="ctx">En un triángulo \(ABC\), \(A=35^\circ\), \(B=65^\circ\) y el lado \(b\), opuesto a \(B\), mide 20 m.</div><div class="enun">¿Cuánto mide el lado \(a\)? Aproxima a una cifra decimal.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p3" data-n="3" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">3</span></div><div class="ctx">Para hallar la distancia hasta un árbol \(C\) en la otra orilla de un río, dos estudiantes miden desde la orilla: \(AB=100\) m, \(\angle A=62^\circ\) y \(\angle B=48^\circ\).</div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Triángulo ABC con base AB de 100 m y ángulos de 62 grados en A y 48 grados en B" viewBox="0 0 420 230" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="420" height="230" fill="#fff"/><polygon points="111.2,184.0 308.8,184.0 184.6,46.0" fill="#fff4f4" stroke="#444" stroke-width="2.2" stroke-linejoin="round"/><text x="96.9" y="196.3" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">A</text><text x="137.9" y="174.4" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">62°</text><text x="323.5" y="195.3" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">B</text><text x="281.2" y="176.2" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">48°</text><text x="181.7" y="35.3" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">C</text><text x="134.1" y="113.1" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">?</text><text x="212.7" y="202.8" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">100 m</text></svg><div class="nota">El punto \(C\) está en la orilla opuesta del río.</div></div><div class="enun">¿Cuál es aproximadamente la distancia \(AC\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>94,0 m</div></div><div class="opcion"><div class="letra">B.</div><div>84,2 m</div></div><div class="opcion"><div class="letra">C.</div><div>79,1 m</div></div><div class="opcion"><div class="letra">D.</div><div>126,4 m</div></div></div></section><section class="pregunta" id="p4" data-n="4" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">4</span></div><table class="t"><tr><th>Lado \(a\)</th><th>Ángulo \(A\)</th><th>Lado \(b\)</th><th>Ángulo \(B\)</th></tr>
+<tr><td>10 cm</td><td>\(30^\circ\)</td><td><span class="blank" style="min-width:60px"></span> cm</td><td>\(45^\circ\)</td></tr>
+<tr><td>15 cm</td><td>\(50^\circ\)</td><td>12 cm</td><td><span class="blank" style="min-width:60px"></span>°</td></tr>
+<tr><td><span class="blank" style="min-width:60px"></span> cm</td><td>\(60^\circ\)</td><td>8 cm</td><td>\(40^\circ\)</td></tr></table>
+<div class="nota">Redondea a una cifra decimal. En la segunda fila el ángulo \(B\) es agudo.</div><div class="enun">Completa la tabla con los datos que faltan en cada triángulo.</div></section><section class="pregunta" id="p5" data-n="5" data-fmt="match"><div class="cab">Pregunta <span class="qnum">5</span></div><div class="enun">Relaciona cada conjunto de datos con la descripción de cómo se resuelve. Una descripción no se usa.</div><div class="match"><div class="col"><div class="it"><b>1.</b> <span>Dos ángulos y el lado opuesto a uno de ellos</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>2.</b> <span>Dos ángulos y el lado comprendido entre ellos</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>3.</b> <span>Dos lados y un ángulo opuesto a uno de esos lados</span> <span class="blank" style="min-width:40px"></span></div><div class="it"><b>4.</b> <span>Dos lados y el ángulo comprendido entre ellos</span> <span class="blank" style="min-width:40px"></span></div></div><div class="col"><div class="it"><b>A.</b> <span>Ley del seno directa: ya hay un par lado–ángulo opuesto conocido.</span></div><div class="it"><b>B.</b> <span>Se calcula primero el tercer ángulo y luego se aplica la ley del seno.</span></div><div class="it"><b>C.</b> <span>Puede haber 0, 1 o 2 triángulos (caso ambiguo).</span></div><div class="it"><b>D.</b> <span>La ley del seno no puede iniciarse; se empieza con la ley del coseno.</span></div><div class="it"><b>E.</b> <span>Los tres ángulos permiten calcular de manera única el tamaño de los lados.</span></div></div></div><div class="nota" style="text-align:left">Escribe en cada línea la letra de la columna derecha que corresponda. Sobra una opción.</div></section><section class="pregunta" id="p6" data-n="6" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">6</span></div><div class="ctx">En un triángulo \(A=40^\circ\), \(B=70^\circ\) y \(a=10\). Para hallar \(b\), <b>Ana</b> plantea \(b=\dfrac{10\sin70^\circ}{\sin40^\circ}\) y <b>Bruno</b> plantea \(b=\dfrac{10\sin40^\circ}{\sin70^\circ}\).</div><div class="enun">¿Cuál argumento permite decidir cuál procedimiento es válido?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Ana: cada lado es proporcional al seno de su ángulo opuesto, \(\frac{b}{\sin70^\circ}=\frac{a}{\sin40^\circ}\); además \(b\) debe ser mayor que \(a\) porque \(70^\circ>40^\circ\).</div></div><div class="opcion"><div class="letra">B.</div><div>Bruno: el seno menor debe ir en el numerador para obtener un lado más corto.</div></div><div class="opcion"><div class="letra">C.</div><div>Ambos, porque los dos resultados son recíprocos y la ley del seno admite cualquiera de los dos.</div></div><div class="opcion"><div class="letra">D.</div><div>Ninguno, porque con solo dos ángulos y un lado no se puede aplicar la ley del seno.</div></div></div></section><section class="pregunta" id="p7" data-n="7" data-fmt="short"><div class="cab">Pregunta <span class="qnum">7</span></div><div class="ctx">En un triángulo \(a=15\) cm, \(b=12\) cm y \(A=40^\circ\).</div><div class="enun">Calcula el ángulo \(B\), aproximado a una cifra decimal.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p8" data-n="8" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">8</span></div><div class="ctx">Un observador en \(O\), a 40 m de la base de un edificio, mide el ángulo de elevación de la parte alta del edificio (\(T_1\)): \(35^\circ\), y de la punta de la antena instalada sobre él (\(T_2\)): \(50^\circ\).</div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Observador a 40 m de un edificio con una antena" viewBox="0 0 410 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+<rect width="360" height="300" fill="#fff"/>
+<line x1="20" y1="270" x2="340" y2="270" stroke="#333" stroke-width="2"/>
+<rect x="256.0" y="118.8" width="46" height="151.2" fill="#f3e3e4" stroke="#555" stroke-width="2"/>
+<line x1="256.0" y1="118.8" x2="256.0" y2="12.6" stroke="#B31217" stroke-width="4"/>
+<line x1="40.0" y1="270" x2="256.0" y2="118.8" stroke="#444" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="40.0" y1="270" x2="256.0" y2="12.6" stroke="#444" stroke-width="1.6" stroke-dasharray="6,4"/>
+<circle cx="40.0" cy="270" r="4" fill="#222"/>
+<text x="32.0" y="288" font-size="14" font-weight="bold">O</text>
+<text x="252.0" y="132.8" font-size="13" text-anchor="end" fill="#333">T₁</text>
+<text x="250.0" y="16.6" font-size="13" text-anchor="end" fill="#333">T₂</text>
+<text x="148.0" y="288" font-size="13" text-anchor="middle" fill="#1f4e99" font-weight="bold">40 m</text>
+<text x="102.0" y="264" font-size="12.5" fill="#B31217" font-weight="bold">35°</text>
+<text x="94.0" y="240" font-size="12.5" fill="#B31217" font-weight="bold">50°</text>
+<text x="308.0" y="69.7" font-size="13" fill="#B31217" font-weight="bold">antena = x</text>
+<text x="266.0" y="156.8" font-size="12" fill="#555">edificio</text>
+</svg><div class="nota">Esquema sin escala.</div></div><div class="enun">¿Cuál es la longitud aproximada de la antena?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>47,7 m</div></div><div class="opcion"><div class="letra">B.</div><div>10,7 m</div></div><div class="opcion"><div class="letra">C.</div><div>15,4 m</div></div><div class="opcion"><div class="letra">D.</div><div>19,7 m</div></div></div></section><section class="pregunta" id="p9" data-n="9" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">9</span></div><div class="ctx">Un estudiante afirma: “Si conozco los lados \(a\) y \(c\) y el ángulo \(B\) comprendido entre ellos, puedo hallar \(b\) directamente con la Ley del Seno”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p10" data-n="10" data-fmt="open"><div class="cab">Pregunta <span class="qnum">10</span></div><div class="ctx">En el triángulo \(ABC\): \(A=30^\circ\), \(a=6\) cm y \(b=10\) cm.</div><div class="enun">Determina cuántos triángulos cumplen los datos. Para cada triángulo posible halla el ángulo \(B\), el ángulo \(C\) y el lado \(c\) (una cifra decimal).</div><div class="lineas" style="--h:230px"></div></section><section class="pregunta" id="p11" data-n="11" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">11</span></div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Triángulo PQR con ángulo P de 48 grados, ángulo R de 61 grados y lado QR de 14 cm" viewBox="0 0 420 230" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="420" height="230" fill="#fff"/><polygon points="109.6,184.0 310.4,184.0 233.9,46.0" fill="#fff4f4" stroke="#444" stroke-width="2.2" stroke-linejoin="round"/><text x="94.9" y="195.3" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">P</text><text x="137.2" y="176.3" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">48°</text><text x="324.7" y="196.1" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">R</text><text x="283.5" y="174.6" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">61°</text><text x="236.6" y="35.2" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">Q</text><text x="285.9" y="113.1" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">14 cm</text><text x="158.3" y="112.3" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">x</text></svg><div class="nota">\(x\) es la longitud del lado \(PQ\).</div></div><div class="enun">¿Qué proporción de la Ley del Seno permite calcular \(x\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(\dfrac{x}{\sin61^\circ}=\dfrac{14}{\sin48^\circ}\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\dfrac{x}{\sin48^\circ}=\dfrac{14}{\sin61^\circ}\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\dfrac{x}{\sin71^\circ}=\dfrac{14}{\sin48^\circ}\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(\dfrac{x}{\sin61^\circ}=\dfrac{14}{\sin71^\circ}\)</div></div></div></section><section class="pregunta" id="p12" data-n="12" data-fmt="classify"><div class="cab">Pregunta <span class="qnum">12</span></div><div class="enun">Clasifica cada situación según la ley con la que debe iniciarse su solución. Escribe las letras en la categoría correspondiente.</div><div class="match"><div class="col"><div class="it"><b>a)</b> <span>Dos lados de 7 cm y 9 cm con \(50^\circ\) entre ellos</span></div><div class="it"><b>b)</b> <span>Ángulos de \(40^\circ\) y \(65^\circ\) y el lado de 12 cm opuesto al de \(40^\circ\)</span></div><div class="it"><b>c)</b> <span>Los tres lados: 5 cm, 6 cm y 7 cm</span></div><div class="it"><b>d)</b> <span>Ángulos de \(35^\circ\) y \(80^\circ\) y el lado de 9 cm comprendido entre ellos</span></div><div class="it"><b>e)</b> <span>Lados de 8 cm y 11 cm y ángulo de \(35^\circ\) opuesto al lado de 8 cm</span></div><div class="it"><b>f)</b> <span>Lados de 10 cm y 13 cm con \(75^\circ\) entre ellos</span></div></div><div class="col"><table class="t clasif" style="width:100%"><tr><th>Categoría</th><th>Letras</th></tr><tr><td class="cat">Se puede iniciar con la Ley del Seno</td><td><span class="blank" style="min-width:150px"></span></td></tr><tr><td class="cat">Debe iniciarse con la Ley del Coseno</td><td><span class="blank" style="min-width:150px"></span></td></tr></table></div></div></section><section class="pregunta" id="p13" data-n="13" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">13</span></div><div class="ctx">En un triángulo \(ABC\), el lado \(a=15\) cm es opuesto al ángulo \(A=150^\circ\).</div><div class="enun">¿Cuál es el radio de la circunferencia circunscrita al triángulo?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>30 cm</div></div><div class="opcion"><div class="letra">B.</div><div>15 cm</div></div><div class="opcion"><div class="letra">C.</div><div>7,5 cm</div></div><div class="opcion"><div class="letra">D.</div><div>13,0 cm</div></div></div></section><section class="pregunta" id="p14" data-n="14" data-fmt="short"><div class="cab">Pregunta <span class="qnum">14</span></div><div class="ctx">Un triángulo tiene ángulos de \(35^\circ\), \(50^\circ\) y \(95^\circ\). El lado opuesto al ángulo de \(50^\circ\) mide 20 cm.</div><div class="enun">¿Cuánto mide el lado más largo del triángulo? Aproxima a una cifra decimal.</div><div class="resp"><b>Respuesta:</b> <span class="blank l" style="min-width:230px"></span></div></section><section class="pregunta" id="p15" data-n="15" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">15</span></div><div class="ctx">Un estudiante afirma que existe un triángulo con \(A=100^\circ\), \(a=5\) cm y \(b=8\) cm.</div><div class="enun">¿Cuál argumento evalúa correctamente la afirmación?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>Existe: con dos lados y un ángulo siempre se puede construir un triángulo.</div></div><div class="opcion"><div class="letra">B.</div><div>No existe: un triángulo no puede tener un ángulo obtuso.</div></div><div class="opcion"><div class="letra">C.</div><div>No existe: \(\sin B=\frac{8\sin100^\circ}{5}\approx1{,}58>1\), y además el lado opuesto al ángulo obtuso debería ser el mayor.</div></div><div class="opcion"><div class="letra">D.</div><div>Existe: \(\sin B=\frac{5\sin100^\circ}{8}\approx0{,}62\) y \(B\approx38^\circ\).</div></div></div></section><section class="pregunta" id="p16" data-n="16" data-fmt="vf"><div class="cab">Pregunta <span class="qnum">16</span></div><div class="ctx">Un estudiante afirma: “Si \(A=30^\circ\), \(b=10\) y \(a=5\), existe exactamente un triángulo”.</div><div class="enun">¿Es verdadera la afirmación? Marca Verdadero o Falso y justifica.</div><div class="vf-box"><span>Verdadero</span><span>Falso</span></div><div><b>Justificación:</b></div><div class="lineas" style="--h:84px"></div></section><section class="pregunta" id="p17" data-n="17" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">17</span></div><div class="ctx">Desde un punto \(A\) en el suelo se ve la cima \(C\) de una colina con un ángulo de elevación de \(38^\circ\). Después de caminar 150 m hacia la colina, hasta \(B\), el ángulo de elevación es \(52^\circ\).</div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Dos puntos de observación frente a una colina" viewBox="0 0 400 290" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+<rect width="400" height="290" fill="#fff"/>
+<line x1="12" y1="255" x2="385" y2="255" stroke="#333" stroke-width="2"/>
+<line x1="263.7" y1="255" x2="263.7" y2="68.5" stroke="#1f4e99" stroke-width="2" stroke-dasharray="6,4"/>
+<line x1="25.0" y1="255" x2="263.7" y2="68.5" stroke="#444" stroke-width="2"/>
+<line x1="118.0" y1="255" x2="263.7" y2="68.5" stroke="#444" stroke-width="2"/>
+<circle cx="25.0" cy="255" r="4" fill="#222"/><circle cx="118.0" cy="255" r="4" fill="#222"/><circle cx="263.7" cy="68.5" r="4.5" fill="#B31217"/>
+<text x="21.0" y="273" font-size="14" font-weight="bold">A</text>
+<text x="114.0" y="273" font-size="14" font-weight="bold">B</text>
+<text x="271.7" y="72.5" font-size="14" font-weight="bold">C (cima)</text>
+<text x="269.7" y="273" font-size="14" font-weight="bold">D</text>
+<text x="59.0" y="249" font-size="12.5" fill="#B31217" font-weight="bold">38°</text>
+<text x="78.0" y="249" font-size="12.5" fill="#B31217" font-weight="bold">52°</text>
+<text x="71.5" y="273" font-size="13" fill="#1f4e99" font-weight="bold" text-anchor="middle">150 m</text>
+<text x="255.7" y="161.8" font-size="13" fill="#1f4e99" font-weight="bold" text-anchor="end">h</text>
+</svg><div class="nota">Esquema sin escala. \(D\) es el pie de la altura \(h\).</div></div><div class="enun">¿Cuál es la altura aproximada \(h\) de la colina?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>381,7 m</div></div><div class="opcion"><div class="letra">B.</div><div>235,0 m</div></div><div class="opcion"><div class="letra">C.</div><div>72,8 m</div></div><div class="opcion"><div class="letra">D.</div><div>300,8 m</div></div></div></section><section class="pregunta" id="p18" data-n="18" data-fmt="fill"><div class="cab">Pregunta <span class="qnum">18</span></div><div class="ctx">En el triángulo \(ABC\), \(A=42^\circ\), \(B=61^\circ\) y \(a=15\) cm. Se desea hallar el lado \(c\).</div><div class="caja" style="line-height:3">
+\(C=180^\circ-42^\circ-61^\circ=\) <span class="blank" style="min-width:50px"></span>°<br>
+<span class="fr"><span>\(c\)</span><span>\(\sin\) <span class="blank" style="min-width:50px"></span>°</span></span> \(=\) <span class="fr"><span>\(15\)</span><span>\(\sin\) <span class="blank" style="min-width:50px"></span>°</span></span> \(\Rightarrow\ c\approx\) <span class="blank" style="min-width:60px"></span> cm
+</div><div class="enun">Completa los espacios para resolver el problema.</div></section><section class="pregunta" id="p19" data-n="19" data-fmt="mc"><div class="cab">Pregunta <span class="qnum">19</span></div><div class="ctx">Al trazar la altura \(h\) desde \(C\) hasta el lado \(AB\), se forman dos triángulos rectángulos y se obtiene \(h=b\sin A\) y también \(h=a\sin B\).</div><div class="figura"><svg class="grafico-svg" role="img" aria-label="Triángulo ABC con la altura h trazada desde C" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" font-family="Arial"><rect width="420" height="240" fill="#fff"/><polygon points="105.2,194.0 314.8,194.0 229.4,46.0" fill="#fff4f4" stroke="#444" stroke-width="2.2" stroke-linejoin="round"/><text x="90.6" y="205.5" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">A</text><text x="132.6" y="185.8" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">α</text><text x="329.1" y="206.2" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">B</text><text x="288.0" y="184.6" font-size="12.5" text-anchor="middle" fill="#B31217" font-weight="bold">β</text><text x="231.4" y="35.1" font-size="16" font-weight="bold" text-anchor="middle" fill="#222">C</text><text x="285.8" y="117.9" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">a</text><text x="153.9" y="117.3" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">b</text><text x="208.1" y="212.9" font-size="12.5" text-anchor="middle" fill="#1f4e99" font-weight="bold">c</text><line x1="229.4" y1="46.0" x2="229.4" y2="194.0" stroke="#1f4e99" stroke-width="1.8" stroke-dasharray="6,4"/><circle cx="229.4" cy="194.0" r="2.6" fill="#1f4e99"/><text x="237.4" y="124.0" font-size="13" font-weight="bold" fill="#1f4e99">h</text></svg><div class="nota">La altura \(h\) es perpendicular al lado \(AB\).</div></div><div class="enun">¿Qué relación se deduce correctamente de las dos expresiones para \(h\)?</div><div class="opts"><div class="opcion"><div class="letra">A.</div><div>\(a\sin A=b\sin B\)</div></div><div class="opcion"><div class="letra">B.</div><div>\(\dfrac{a}{\sin A}=\dfrac{b}{\sin B}\)</div></div><div class="opcion"><div class="letra">C.</div><div>\(\dfrac{a}{\sin B}=\dfrac{b}{\sin A}\)</div></div><div class="opcion"><div class="letra">D.</div><div>\(a+b=\sin A+\sin B\)</div></div></div></section><section class="pregunta" id="p20" data-n="20" data-fmt="open"><div class="cab">Pregunta <span class="qnum">20</span></div><div class="ctx">Dos puntos \(A\) y \(B\) en la orilla de un río están separados 80 m. Desde ellos se observa un árbol \(C\) en la otra orilla: \(\angle CAB=70^\circ\) y \(\angle CBA=60^\circ\).</div><div class="enun">Muestra el procedimiento y calcula: (a) la distancia \(AC\); (b) el ancho del río, es decir, la distancia perpendicular desde \(C\) hasta la recta \(AB\).</div><div class="lineas" style="--h:240px"></div></section></div>
+<div id="docente-slot" class="oculta"></div>
+<div class="foot">Institución Educativa San Luis Gonzaga · FACIMATE — Formando Actitudes y Capacidades para Interpretar las Matemáticas</div><template id="tpl-docente"><div id="panel-docente"><div class="aviso"><b>Uso exclusivo del docente.</b> No entregar a los estudiantes. Contiene competencia, pensamiento, nivel, respuestas y soluciones.</div>
+<div id="resumen-completo"><div class="resumen"><div><b>Competencias</b><br>Interpretación y representación: 6<br>Formulación y ejecución: 9<br>Argumentación: 5</div><div><b>Niveles</b><br>Básico: 2<br>Medio: 10<br>Alto: 8</div><div><b>Formatos</b><br>A. Selección múltiple con única respuesta: 9<br>B. Respuesta abierta corta: 3<br>C. Pregunta abierta de procedimiento: 2<br>D. Emparejamiento: 1<br>E. Completar información: 2<br>F. Clasificación: 1<br>G. Verdadero o falso con justificación: 2</div><div><b>Puntaje</b><br>Total: 32 puntos<br>Taller (2,0) = 2,0 × (puntos / 32); sustentación (1,0) = 1,0 × (puntos de las preguntas sorteadas / su total). Refuerzo máximo: 3,0</div></div>
+</div><div id="clave-prueba" class="oculta"></div><div id="clave-completa"><h2 class="seccion">Matriz técnica y clave de valoración</h2>
+<table class="tec"><tr><th>N.º</th><th>Tema</th><th>Pensamiento</th><th>Competencia</th><th>Tipo de pregunta</th><th>Nivel</th><th>Pts</th><th>Respuesta esperada</th></tr><tr><td>1</td><td>Planteamiento de la Ley del Seno (AAL)</td><td>Espacial</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Básico</td><td>1</td><td><b>B</b>. \(c=\frac{8\sin60^\circ}{\sin50^\circ}\)</td></tr><tr><td>2</td><td>Cálculo de un lado con la Ley del Seno</td><td>Espacial</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Básico</td><td>1</td><td>12,7 m</td></tr><tr><td>3</td><td>Medición indirecta de una distancia</td><td>Métrico</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>C</b>. 79,1 m</td></tr><tr><td>4</td><td>Completar datos de triángulos</td><td>Espacial</td><td>Interpretación y representación</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>14,1 cm; 37,8°; 10,8 cm</td></tr><tr><td>5</td><td>Casos de resolución de triángulos</td><td>Espacial</td><td>Interpretación y representación</td><td>D. Emparejamiento</td><td>Medio</td><td>2</td><td>1-A, 2-B, 3-C, 4-D (E no se usa)</td></tr><tr><td>6</td><td>Validar dos procedimientos</td><td>Espacial</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>A</b>. Ana (b ≈ 14,6)</td></tr><tr><td>7</td><td>Cálculo de un ángulo con la Ley del Seno</td><td>Espacial</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>30,9° (se acepta 31°)</td></tr><tr><td>8</td><td>Altura de una antena con dos ángulos de elevación</td><td>Métrico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>D</b>. 19,7 m</td></tr><tr><td>9</td><td>Alcance de la Ley del Seno</td><td>Espacial</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Medio</td><td>2</td><td>Falso (caso LAL: se requiere la ley del coseno)</td></tr><tr><td>10</td><td>Caso ambiguo (LLA)</td><td>Espacial</td><td>Formulación y ejecución</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>Dos triángulos: (B≈56,4°, C≈93,6°, c≈12,0 cm) y (B≈123,6°, C≈26,4°, c≈5,3 cm)</td></tr><tr><td>11</td><td>Proporción adecuada a partir de una figura</td><td>Espacial</td><td>Interpretación y representación</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>A</b>. \(\frac{x}{\sin61^\circ}=\frac{14}{\sin48^\circ}\)</td></tr><tr><td>12</td><td>¿Cuándo se inicia con la Ley del Seno?</td><td>Espacial</td><td>Interpretación y representación</td><td>F. Clasificación</td><td>Medio</td><td>2</td><td>Seno: b, d, e · Coseno: a, c, f</td></tr><tr><td>13</td><td>Radio de la circunferencia circunscrita</td><td>Espacial</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Medio</td><td>1</td><td><b>B</b>. 15 cm</td></tr><tr><td>14</td><td>Lado mayor de un triángulo</td><td>Espacial</td><td>Formulación y ejecución</td><td>B. Respuesta corta</td><td>Medio</td><td>1</td><td>26,0 cm</td></tr><tr><td>15</td><td>Existencia de un triángulo</td><td>Espacial</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>C</b>. No existe (sen B ≈ 1,58 > 1)</td></tr><tr><td>16</td><td>Caso límite del caso ambiguo</td><td>Espacial</td><td>Argumentación</td><td>G. V/F con justificación</td><td>Alto</td><td>2</td><td>Verdadero (sen B = 1, B = 90°)</td></tr><tr><td>17</td><td>Altura de una colina con dos observaciones</td><td>Métrico</td><td>Formulación y ejecución</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>D</b>. 300,8 m</td></tr><tr><td>18</td><td>Completar una solución con la Ley del Seno</td><td>Espacial</td><td>Formulación y ejecución</td><td>E. Completar información</td><td>Medio</td><td>2</td><td>77°; 77°; 42°; 21,8 cm</td></tr><tr><td>19</td><td>Deducción de la Ley del Seno</td><td>Espacial</td><td>Argumentación</td><td>A. Selección múltiple</td><td>Alto</td><td>1</td><td><b>B</b>. \(\frac{a}{\sin A}=\frac{b}{\sin B}\)</td></tr><tr><td>20</td><td>Ancho de un río</td><td>Métrico</td><td>Formulación y ejecución</td><td>C. Abierta de procedimiento</td><td>Alto</td><td>4</td><td>(a) ≈ 90,4 m; (b) ≈ 85,0 m</td></tr></table>
+</div><h2 class="seccion saltar">Solucionario</h2>
+<div class="sol" id="sol1"><h4>Pregunta 1 <span class="etq">Interpretación y representación</span><span class="etq">Básico</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. \(c=\frac{8\sin60^\circ}{\sin50^\circ}\)</p><p><b>Procedimiento:</b> \(C=180^\circ-50^\circ-70^\circ=60^\circ\). Por la ley del seno \(\frac{c}{\sin60^\circ}=\frac{8}{\sin50^\circ}\), de donde \(c=\frac{8\sin60^\circ}{\sin50^\circ}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe interpretar los datos (ángulos y lado opuesto) y representarlos en la proporción adecuada, incluida la obtención del tercer ángulo.</p><p><b>Distractores:</b> (A) invierte la proporción (pone el seno del ángulo conocido en el numerador). (C) usa el ángulo \(B\) en lugar de \(C\): olvida calcular el tercer ángulo. (D) cambia el seno por el coseno.</p></div>
+<div class="sol" id="sol2"><h4>Pregunta 2 <span class="etq">Formulación y ejecución</span><span class="etq">Básico</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 12,7 m</p><p><b>Procedimiento:</b> \(\frac{a}{\sin35^\circ}=\frac{20}{\sin65^\circ}\Rightarrow a=\frac{20\sin35^\circ}{\sin65^\circ}\approx12{,}7\) m.</p><p><b>Por qué corresponde a la competencia:</b> Debe ejecutar el procedimiento: plantear la proporción, despejar y calcular con calculadora en modo grados.</p><p><b>Criterio de valoración (1 pts):</b> Valor entre 12,6 y 12,7 con unidad: 1 pt.</p></div>
+<div class="sol" id="sol3"><h4>Pregunta 3 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. 79,1 m</p><p><b>Procedimiento:</b> \(C=180^\circ-62^\circ-48^\circ=70^\circ\). \(AC\) se opone a \(B=48^\circ\): \(\frac{AC}{\sin48^\circ}=\frac{100}{\sin70^\circ}\Rightarrow AC\approx79{,}1\) m.</p><p><b>Por qué corresponde a la competencia:</b> Debe leer la figura (ángulos conocidos y lado base), identificar qué ángulo se opone a \(AC\) y representar la situación con la proporción correcta.</p><p><b>Distractores:</b> (A) calcula \(BC\) (usa el ángulo \(A\) como opuesto). (B) usa el ángulo \(A=62^\circ\) en el denominador en vez de \(C=70^\circ\): olvida el tercer ángulo. (D) invierte la proporción.</p></div>
+<div class="sol" id="sol4"><h4>Pregunta 4 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> 14,1 cm; 37,8°; 10,8 cm</p><p><b>Procedimiento:</b> Fila 1: \(b=\frac{10\sin45^\circ}{\sin30^\circ}\approx14{,}1\). Fila 2: \(\sin B=\frac{12\sin50^\circ}{15}\approx0{,}613\Rightarrow B\approx37{,}8^\circ\). Fila 3: \(a=\frac{8\sin60^\circ}{\sin40^\circ}\approx10{,}8\).</p><p><b>Por qué corresponde a la competencia:</b> Debe usar la relación lado–ángulo opuesto para completar una representación tabular en tres situaciones distintas (lado y ángulo).</p><p><b>Criterio de valoración (2 pts):</b> 1/3 pt aprox. por espacio (máx. 2). Se acepta ±0,1 por redondeo.</p></div>
+<div class="sol" id="sol5"><h4>Pregunta 5 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">D. Emparejamiento</span></h4><p><b>Respuesta:</b> 1-A, 2-B, 3-C, 4-D (E no se usa)</p><p><b>Procedimiento:</b> 1) AAL → A. 2) ALA → B. 3) LLA → C (caso ambiguo). 4) LAL → D (se empieza con la ley del coseno). La opción E es falsa: tres ángulos no determinan el tamaño.</p><p><b>Por qué corresponde a la competencia:</b> Debe reconocer el tipo de información disponible (representación de los datos) y asociarla con la estrategia adecuada.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pts por relación correcta.</p></div>
+<div class="sol" id="sol6"><h4>Pregunta 6 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. Ana (b ≈ 14,6)</p><p><b>Procedimiento:</b> Ley del seno: \(\frac{b}{\sin70^\circ}=\frac{a}{\sin40^\circ}\Rightarrow b=\frac{10\sin70^\circ}{\sin40^\circ}\approx14{,}6\). Como \(70^\circ>40^\circ\), \(b\) debe ser mayor que \(a=10\); Ana lo cumple y Bruno obtiene \(6{,}8<10\).</p><p><b>Por qué corresponde a la competencia:</b> Debe evaluar la validez de dos estrategias y justificar la elección con la relación de proporcionalidad y la relación entre ángulos y lados.</p><p><b>Distractores:</b> (B) criterio sin fundamento: confunde el resultado con una regla de colocación. (C) ignora que la proporción fija qué seno acompaña a cada lado. (D) falso: es el caso AAL, directamente resoluble.</p></div>
+<div class="sol" id="sol7"><h4>Pregunta 7 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 30,9° (se acepta 31°)</p><p><b>Procedimiento:</b> \(\sin B=\frac{12\sin40^\circ}{15}\approx0{,}514\Rightarrow B\approx30{,}9^\circ\). La otra solución, \(149{,}1^\circ\), no es válida: sumada con \(A=40^\circ\) supera \(180^\circ\); además \(b\lt a\) implica \(B\lt A\).</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear y ejecutar la estrategia de despejar \(\sin B\), hallar el ángulo y verificar que la solución es válida.</p><p><b>Criterio de valoración (1 pts):</b> Valor de 30,9° a 31,0°: 1 pt.</p></div>
+<div class="sol" id="sol8"><h4>Pregunta 8 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. 19,7 m</p><p><b>Procedimiento:</b> En el triángulo \(OT_1T_2\): \(\angle O=50^\circ-35^\circ=15^\circ\); \(\angle T_1=90^\circ+35^\circ=125^\circ\); \(\angle T_2=40^\circ\). \(OT_1=\frac{40}{\cos35^\circ}\approx48{,}8\). Ley del seno: \(x=\frac{48{,}8\sin15^\circ}{\sin40^\circ}\approx19{,}7\) m. (Comprobación: \(40(\tan50^\circ-\tan35^\circ)\approx19{,}7\)).</p><p><b>Por qué corresponde a la competencia:</b> Debe formular una estrategia de varios pasos: construir el triángulo auxiliar, hallar sus ángulos y aplicar la ley del seno.</p><p><b>Distractores:</b> (A) calcula la altura total hasta la punta (\(40\tan50^\circ\)), no la longitud de la antena. (B) usa \(40\tan15^\circ\): trata el ángulo entre las visuales como ángulo de elevación. (C) divide entre \(\sin125^\circ\): toma el ángulo equivocado como opuesto a la antena.</p></div>
+<div class="sol" id="sol9"><h4>Pregunta 9 <span class="etq">Argumentación</span><span class="etq">Medio</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Falso (caso LAL: se requiere la ley del coseno)</p><p><b>Procedimiento:</b> Falso. Con dos lados \(a, c\) y el ángulo \(B\) comprendido entre ellos no se conoce ningún par lado–ángulo opuesto (\(\frac{a}{\sin A}\) o \(\frac{c}{\sin C}\)). Se debe usar la ley del coseno: \(b^2=a^2+c^2-2ac\cos B\).</p><p><b>Por qué corresponde a la competencia:</b> Debe evaluar si una estrategia es aplicable y justificar su límite con la estructura de la proporción.</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Justificación (falta un par lado–ángulo opuesto; es caso LAL): 1 pt.</p></div>
+<div class="sol" id="sol10"><h4>Pregunta 10 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> Dos triángulos: (B≈56,4°, C≈93,6°, c≈12,0 cm) y (B≈123,6°, C≈26,4°, c≈5,3 cm)</p><p><b>Procedimiento:</b> \(\sin B=\frac{10\sin30^\circ}{6}\approx0{,}833\Rightarrow B_1\approx56{,}4^\circ\) o \(B_2\approx123{,}6^\circ\). Ambas cumplen \(A+B<180^\circ\): hay <b>dos triángulos</b>. Triángulo 1: \(C_1\approx93{,}6^\circ\), \(c_1=\frac{6\sin C_1}{\sin30^\circ}\approx12{,}0\) cm. Triángulo 2: \(C_2\approx26{,}4^\circ\), \(c_2\approx5{,}3\) cm.</p><p><b>Por qué corresponde a la competencia:</b> Debe formular y ejecutar una estrategia que incluye analizar las dos soluciones posibles del seno y verificar su validez.</p><p><b>Criterio de valoración (4 pts):</b> Plantea \(\sin B=\frac{b\sin A}{a}\): 1 pt. Reconoce los dos ángulos \(B\) y verifica la suma de ángulos: 1 pt. Concluye que hay dos triángulos: 1 pt. Calcula \(C\) y \(c\) en ambos: 1 pt.</p></div>
+<div class="sol" id="sol11"><h4>Pregunta 11 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>A</b>. \(\frac{x}{\sin61^\circ}=\frac{14}{\sin48^\circ}\)</p><p><b>Procedimiento:</b> \(Q=180^\circ-48^\circ-61^\circ=71^\circ\). \(x=PQ\) se opone a \(R=61^\circ\) y 14 cm es \(QR\), opuesto a \(P=48^\circ\): \(\frac{x}{\sin61^\circ}=\frac{14}{\sin48^\circ}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe extraer de la figura qué lado se opone a cada ángulo y representarlo correctamente en la proporción.</p><p><b>Distractores:</b> (B) intercambia los ángulos opuestos. (C) usa el ángulo \(Q\) como opuesto a \(x\). (D) asocia 14 cm con el ángulo \(Q\), que no es su opuesto.</p></div>
+<div class="sol" id="sol12"><h4>Pregunta 12 <span class="etq">Interpretación y representación</span><span class="etq">Medio</span><span class="etq">F. Clasificación</span></h4><p><b>Respuesta:</b> Seno: b, d, e · Coseno: a, c, f</p><p><b>Procedimiento:</b> Seno: b) AAL; d) ALA (tercer ángulo = \(65^\circ\) y luego seno); e) LLA. Coseno: a) LAL; c) LLL; f) LAL.</p><p><b>Por qué corresponde a la competencia:</b> Debe leer la información de cada situación e interpretar qué datos de pares lado–ángulo opuesto están disponibles.</p><p><b>Criterio de valoración (2 pts):</b> 1/3 pt por situación bien clasificada (máx. 2).</p></div>
+<div class="sol" id="sol13"><h4>Pregunta 13 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. 15 cm</p><p><b>Procedimiento:</b> \(\frac{a}{\sin A}=2R\Rightarrow2R=\frac{15}{\sin150^\circ}=\frac{15}{0{,}5}=30\Rightarrow R=15\) cm.</p><p><b>Por qué corresponde a la competencia:</b> Debe seleccionar y ejecutar la forma extendida de la ley del seno, controlando la diferencia entre diámetro y radio.</p><p><b>Distractores:</b> (A) entrega el diámetro (\(2R\)) en vez del radio. (C) multiplica \(a\cdot\sin A\) en lugar de dividir. (D) usa \(a\cos30^\circ\): mezcla ángulo y coseno.</p></div>
+<div class="sol" id="sol14"><h4>Pregunta 14 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">B. Respuesta abierta corta</span></h4><p><b>Respuesta:</b> 26,0 cm</p><p><b>Procedimiento:</b> El lado mayor se opone al ángulo mayor (\(95^\circ\)). \(\frac{x}{\sin95^\circ}=\frac{20}{\sin50^\circ}\Rightarrow x\approx26{,}0\) cm.</p><p><b>Por qué corresponde a la competencia:</b> Debe plantear una estrategia que combine la relación entre ángulos y lados con la ley del seno.</p><p><b>Criterio de valoración (1 pts):</b> Identifica que el lado mayor se opone a 95° y obtiene 26,0 cm: 1 pt.</p></div>
+<div class="sol" id="sol15"><h4>Pregunta 15 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>C</b>. No existe (sen B ≈ 1,58 > 1)</p><p><b>Procedimiento:</b> \(\sin B=\frac{8\sin100^\circ}{5}\approx1{,}58>1\): imposible. Además, el lado opuesto al ángulo obtuso debe ser el mayor, y \(a=5\lt b=8\).</p><p><b>Por qué corresponde a la competencia:</b> Debe refutar una afirmación con evidencia matemática (valor del seno fuera de rango y relación entre ángulos y lados).</p><p><b>Distractores:</b> (A) generaliza sin verificar la condición del caso LLA. (B) falso: puede tener un ángulo obtuso. (D) invierte la proporción y llega a un valor posible.</p></div>
+<div class="sol" id="sol16"><h4>Pregunta 16 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">G. Verdadero o falso con justificación</span></h4><p><b>Respuesta:</b> Verdadero (sen B = 1, B = 90°)</p><p><b>Procedimiento:</b> Verdadero. \(\sin B=\frac{b\sin A}{a}=\frac{10(0{,}5)}{5}=1\Rightarrow B=90^\circ\), y solo hay esa solución (\(180^\circ-90^\circ=90^\circ\) es el mismo ángulo). El triángulo es rectángulo en \(B\).</p><p><b>Por qué corresponde a la competencia:</b> Debe sustentar por qué una condición particular produce exactamente una solución, interpretando el valor límite \(\sin B=1\).</p><p><b>Criterio de valoración (2 pts):</b> Veredicto: 1 pt. Justificación (\(\sin B=1\), \(B=90^\circ\), única solución): 1 pt.</p></div>
+<div class="sol" id="sol17"><h4>Pregunta 17 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>D</b>. 300,8 m</p><p><b>Procedimiento:</b> En el triángulo \(ABC\): \(\angle A=38^\circ\), \(\angle ABC=180^\circ-52^\circ=128^\circ\), \(\angle C=14^\circ\). \(BC=\frac{150\sin38^\circ}{\sin14^\circ}\approx381{,}7\) m. En el triángulo rectángulo \(BDC\): \(h=BC\sin52^\circ\approx300{,}8\) m.</p><p><b>Por qué corresponde a la competencia:</b> Debe formular un plan en dos fases (ley del seno en un triángulo y razón trigonométrica en el rectángulo) y ejecutarlo.</p><p><b>Distractores:</b> (A) se detiene en \(BC\) y no calcula la altura. (B) usa \(BC\sin38^\circ\): toma el ángulo de la primera observación. (C) toma \(\angle ABC=52^\circ\) en vez de \(128^\circ\): trata el ángulo exterior como interior.</p></div>
+<div class="sol" id="sol18"><h4>Pregunta 18 <span class="etq">Formulación y ejecución</span><span class="etq">Medio</span><span class="etq">E. Completar información</span></h4><p><b>Respuesta:</b> 77°; 77°; 42°; 21,8 cm</p><p><b>Procedimiento:</b> \(C=180^\circ-42^\circ-61^\circ=77^\circ\). \(c\) se opone a \(C=77^\circ\) y \(a=15\) a \(A=42^\circ\): \(\frac{c}{\sin77^\circ}=\frac{15}{\sin42^\circ}\Rightarrow c\approx21{,}8\) cm.</p><p><b>Por qué corresponde a la competencia:</b> Debe completar la secuencia de ejecución: tercer ángulo, proporción con ángulos opuestos y cálculo del lado.</p><p><b>Criterio de valoración (2 pts):</b> 0,5 pts por espacio correcto.</p></div>
+<div class="sol" id="sol19"><h4>Pregunta 19 <span class="etq">Argumentación</span><span class="etq">Alto</span><span class="etq">A. Selección múltiple con única respuesta</span></h4><p><b>Respuesta:</b> <b>B</b>. \(\frac{a}{\sin A}=\frac{b}{\sin B}\)</p><p><b>Procedimiento:</b> \(h=b\sin A\) y \(h=a\sin B\). Igualando: \(b\sin A=a\sin B\). Dividiendo entre \(\sin A\sin B\): \(\frac{b}{\sin B}=\frac{a}{\sin A}\), es decir \(\frac{a}{\sin A}=\frac{b}{\sin B}\).</p><p><b>Por qué corresponde a la competencia:</b> Debe justificar de dónde proviene una propiedad (la ley del seno) a partir de relaciones en un triángulo rectángulo, es decir, sustentar la validez de una relación.</p><p><b>Distractores:</b> (A) multiplica en lugar de dividir al despejar. (C) cruza los lados con los ángulos que no son opuestos. (D) suma ambas igualdades sin justificación.</p></div>
+<div class="sol" id="sol20"><h4>Pregunta 20 <span class="etq">Formulación y ejecución</span><span class="etq">Alto</span><span class="etq">C. Pregunta abierta de procedimiento</span></h4><p><b>Respuesta:</b> (a) ≈ 90,4 m; (b) ≈ 85,0 m</p><p><b>Procedimiento:</b> (a) \(\angle C=50^\circ\). \(AC=\frac{80\sin60^\circ}{\sin50^\circ}\approx90{,}4\) m. (b) Ancho \(=AC\sin70^\circ\approx85{,}0\) m (también \(BC\sin60^\circ\)).</p><p><b>Por qué corresponde a la competencia:</b> Debe formular y ejecutar una estrategia en dos pasos (ley del seno y razón trigonométrica para la distancia perpendicular).</p><p><b>Criterio de valoración (4 pts):</b> Tercer ángulo \(50^\circ\): 0,5 pts. Proporción correcta para \(AC\): 1 pt. \(AC\approx90{,}4\): 0,5 pts. Plantea el ancho como \(AC\sin70^\circ\): 1 pt. Resultado \(\approx85{,}0\): 1 pt.</p></div></div></template>
+<script>
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuf(arr,rng){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var GA=['mc','vf'],BC=['short','open'],DEF=['match','fill','classify'];
+function plan(fmts,k,seed){
+  var rng=mulberry32(seed),idx=fmts.map(function(_,i){return i});
+  var pool=function(set){return idx.filter(function(i){return set.indexOf(fmts[i])>=0})};
+  var pick=[].concat(shuf(pool(GA),rng).slice(0,k===3?1:2),shuf(pool(BC),rng).slice(0,1),shuf(pool(DEF),rng).slice(0,1));
+  if(k===5){var rest=idx.filter(function(i){return pick.indexOf(i)<0});pick.push(shuf(rest,rng)[0]);}
+  var order=shuf(pick,rng),perms={};
+  order.forEach(function(i){if(fmts[i]==='mc')perms[i]=shuf([0,1,2,3],rng)});
+  return {order:order,perms:perms};
+}
+function parseCode(s){var m=/T(\d+)-K([345])-(\d{4,9})/i.exec(s||'');return m?{t:+m[1],k:+m[2],seed:+m[3]}:null}
+
+(function(){
+/* ===== Configuración del artefacto ===== */
+var SCRIPT_URL_VISTAS="https://script.google.com/macros/s/AKfycbxoCeRiCUMpBs2l_efxNswBP3gKa9EtUSiQoji2jQBXspJRTSBY3VMKwa4ubV3eFToN/exec";
+var AREA_ARTEFACTO="Matemáticas · Taller Refuerzo 4 · T4 · 10°";
+var VERSION_ARTEFACTO="T4-tr4-v1";
+var PORTAL_URL="https://llerzy.github.io/portal-slg/";
+var TALLER=4;
+var D=[{"n": 1, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "\\(c=\\frac{8\\sin60^\\circ}{\\sin50^\\circ}\\)"}, {"n": 2, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "12,7 m"}, {"n": 3, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "79,1 m"}, {"n": 4, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "14,1 cm; 37,8°; 10,8 cm"}, {"n": 5, "f": "match", "t": "D. Emparejamiento", "p": 2, "a": -1, "k": "1-A, 2-B, 3-C, 4-D (E no se usa)"}, {"n": 6, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "Ana (b ≈ 14,6)"}, {"n": 7, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "30,9° (se acepta 31°)"}, {"n": 8, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "19,7 m"}, {"n": 9, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Falso (caso LAL: se requiere la ley del coseno)"}, {"n": 10, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "Dos triángulos: (B≈56,4°, C≈93,6°, c≈12,0 cm) y (B≈123,6°, C≈26,4°, c≈5,3 cm)"}, {"n": 11, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 0, "k": "\\(\\frac{x}{\\sin61^\\circ}=\\frac{14}{\\sin48^\\circ}\\)"}, {"n": 12, "f": "classify", "t": "F. Clasificación", "p": 2, "a": -1, "k": "Seno: b, d, e · Coseno: a, c, f"}, {"n": 13, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "15 cm"}, {"n": 14, "f": "short", "t": "B. Respuesta corta", "p": 1, "a": -1, "k": "26,0 cm"}, {"n": 15, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 2, "k": "No existe (sen B ≈ 1,58 > 1)"}, {"n": 16, "f": "vf", "t": "G. V/F con justificación", "p": 2, "a": -1, "k": "Verdadero (sen B = 1, B = 90°)"}, {"n": 17, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 3, "k": "300,8 m"}, {"n": 18, "f": "fill", "t": "E. Completar información", "p": 2, "a": -1, "k": "77°; 77°; 42°; 21,8 cm"}, {"n": 19, "f": "mc", "t": "A. Selección múltiple", "p": 1, "a": 1, "k": "\\(\\frac{a}{\\sin A}=\\frac{b}{\\sin B}\\)"}, {"n": 20, "f": "open", "t": "C. Abierta de procedimiento", "p": 4, "a": -1, "k": "(a) ≈ 90,4 m; (b) ≈ 85,0 m"}];
+var $=function(id){return document.getElementById(id)};
+
+/* ===== Sesión y rol ===== */
+var sesion=null;try{sesion=JSON.parse(sessionStorage.getItem('slg_sesion')||'null')}catch(e){}
+var enGithub=/github\.io$/i.test(location.hostname);
+var preview=false,ES_DOCENTE=false;
+if(sesion&&typeof sesion==='object'){ES_DOCENTE=String(sesion.rol||'').toLowerCase().indexOf('docente')===0}
+else{location.replace(PORTAL_URL);return}
+window.ES_DOCENTE=ES_DOCENTE;
+
+/* ===== Registro silencioso de la apertura ===== */
+function registrarVista(){
+  if(preview||!sesion||!sesion.documento)return;
+  if(!SCRIPT_URL_VISTAS||SCRIPT_URL_VISTAS.indexOf('http')!==0)return;
+  try{
+    var q=new URLSearchParams({accion:'registrarVista',doc:String(sesion.documento),nombre:String(sesion.nombre||''),
+      grupo:String(sesion.grupoAsignado||sesion.grupo||''),rol:String(sesion.rol||(ES_DOCENTE?'docente':'estudiante')),
+      origen:'GitHub',tipoVista:'Apertura Artefacto — '+AREA_ARTEFACTO,version:VERSION_ARTEFACTO});
+    fetch(SCRIPT_URL_VISTAS+(SCRIPT_URL_VISTAS.indexOf('?')>=0?'&':'?')+q.toString(),{mode:'no-cors'}).catch(function(){});
+  }catch(e){}
+}
+
+/* ===== Taller y prueba aleatoria ===== */
+var qs=[].slice.call(document.querySelectorAll('#qs .pregunta')),fm=qs.map(function(q){return q.dataset.fmt});
+var state={modo:'completa',k:4,seed:0};
+function newSeed(){return 100000+Math.floor(Math.random()*899999)}
+function reset(){qs.forEach(function(q){q.classList.remove('oculta');q.style.order='';q.querySelector('.qnum').textContent=q.dataset.n;
+  [].slice.call(q.querySelectorAll('.opts > *')).forEach(function(el,i){el.style.order='';el.querySelector('.letra').textContent='ABCD'[i]+'.'})})}
+function typeset(el){try{if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el])}catch(e){}}
+
+function montarDocente(){
+  var slot=$('docente-slot');
+  if(ES_DOCENTE){if(!slot.firstChild){slot.innerHTML=$('tpl-docente').innerHTML}}
+  else{slot.innerHTML=''}
+  $('barra').classList.toggle('oculta',!ES_DOCENTE);
+}
+function claveDocente(pr,p){
+  if(!ES_DOCENTE||!$('panel-docente'))return;
+  $('resumen-completo').classList.toggle('oculta',pr);
+  $('clave-completa').classList.toggle('oculta',pr);
+  $('clave-prueba').classList.toggle('oculta',!pr);
+  var sel={};if(pr)p.order.forEach(function(i){sel[D[i].n]=1});
+  [].slice.call(document.querySelectorAll('#panel-docente .sol')).forEach(function(el){
+    var n=+el.id.replace('sol','');el.classList.toggle('oculta',pr&&!sel[n])});
+  var h2=document.querySelector('#panel-docente h2.saltar');if(h2)h2.textContent=pr?'Solucionario de las preguntas de esta prueba':'Solucionario';
+  if(pr){
+    var tot=0,h='<h2 class="seccion">Clave de esta prueba (código '+('T'+TALLER+'-K'+state.k+'-'+state.seed)+')</h2><table class="tec"><tr><th>Pos.</th><th>N.º original</th><th>Formato</th><th>Pts</th><th>Respuesta esperada (con el orden de opciones de esta prueba)</th></tr>';
+    p.order.forEach(function(i,pos){var q=D[i];tot+=q.p;var ans;
+      if(q.f==='mc'){ans='<b>'+'ABCD'[p.perms[i].indexOf(q.a)]+'</b>. '+q.k}else ans=q.k;
+      h+='<tr><td>'+(pos+1)+'</td><td><a href="#sol'+q.n+'">'+q.n+'</a></td><td>'+q.t+'</td><td>'+q.p+'</td><td>'+ans+'</td></tr>'});
+    h+='</table><p><b>Total: '+tot+' puntos.</b> Nota de la sustentación = 1,0 × (puntos obtenidos / '+tot+'). El taller completo vale 2,0 (refuerzo máximo 3,0).</p>';
+    $('clave-prueba').innerHTML=h;
+  }
+  typeset($('docente-slot'));
+}
+function apply(){
+  if(!ES_DOCENTE)state.modo='completa';
+  var pr=state.modo==='prueba';
+  ['material','instr-completa','tit-taller'].forEach(function(id){$(id).classList.toggle('oculta',pr)});
+  ['instr-prueba','tit-prueba'].forEach(function(id){$(id).classList.toggle('oculta',!pr)});
+  $('b-completa').classList.toggle('act',!pr);$('b-prueba').classList.toggle('act',pr);
+  $('ctl-prueba').classList.toggle('oculta',!pr);
+  $('codigo').classList.toggle('oculta',!pr);
+  $('sub-completa').classList.toggle('oculta',pr);$('sub-prueba').classList.toggle('oculta',!pr);
+  reset();
+  $('qs').classList.toggle('prueba',pr);
+  var p=null;
+  if(pr){
+    if(!state.seed)state.seed=newSeed();
+    p=plan(fm,state.k,state.seed);
+    qs.forEach(function(q){q.classList.add('oculta')});
+    p.order.forEach(function(i,pos){var q=qs[i];q.classList.remove('oculta');q.style.order=pos;q.querySelector('.qnum').textContent=pos+1;
+      if(p.perms[i]){var o=[].slice.call(q.querySelectorAll('.opts > *'));
+        p.perms[i].forEach(function(orig,posOpt){var el=o[orig];el.style.order=posOpt;el.querySelector('.letra').textContent='ABCD'[posOpt]+'.'})}});
+    var code='T'+TALLER+'-K'+state.k+'-'+state.seed;
+    $('codigo').textContent='Código: '+code;$('codigo-imp').textContent='Código de prueba: '+code;
+    $('sel-k').value=String(state.k);
+  }else{$('codigo-imp').textContent=''}
+  claveDocente(pr,p);
+  if(ES_DOCENTE){try{history.replaceState(null,'',pr?'#prueba='+('T'+TALLER+'-K'+state.k+'-'+state.seed):'#completa')}catch(e){}}
+  window.scrollTo(0,0);
+}
+function aplicarRol(){
+  montarDocente();
+  if(!ES_DOCENTE)state.modo='completa';
+  apply();
+}
+
+$('b-completa').onclick=function(){state.modo='completa';apply()};
+$('b-prueba').onclick=function(){state.modo='prueba';state.seed=newSeed();apply()};
+$('b-nueva').onclick=function(){state.seed=newSeed();apply()};
+$('sel-k').onchange=function(){state.k=+this.value;apply()};
+$('b-sol').onclick=function(){var sl=$('docente-slot'),oc=sl.classList.toggle('oculta');
+  this.textContent=oc?'📋 Mostrar solucionario':'📋 Ocultar solucionario';
+  if(!oc){var t=state.modo==='prueba'&&$('clave-prueba')?$('clave-prueba'):sl;sl.scrollIntoView({behavior:'smooth',block:'start'})}};
+$('b-imp').onclick=function(){window.print()};
+$('b-imp-sol').onclick=function(){document.body.classList.add('print-clave');window.print()};
+window.addEventListener('afterprint',function(){document.body.classList.remove('print-clave')});
+$('b-cargar').onclick=function(){var c=parseCode($('in-cod').value);if(!c||c.t!==TALLER){alert('Código no válido para este taller.');return}
+  state.modo='prueba';state.k=c.k;state.seed=c.seed;apply()};
+
+if(ES_DOCENTE&&location.hash.indexOf('#prueba=')===0){
+  var c0=parseCode(location.hash.replace('#prueba=',''));
+  if(c0&&c0.t===TALLER){state.modo='prueba';state.k=c0.k;state.seed=c0.seed}
+}
+aplicarRol();
+registrarVista();
+})();
+</script>
+</div>
+</body>
+</html>
