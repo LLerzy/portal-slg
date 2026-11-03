@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-01T15:31:37-05:00",
+  "generado": "2026-11-03T07:01:38-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
@@ -27,8 +27,52 @@
     },
     {
       "ficha": "notasParciales",
-      "opcion": "",
+      "opcion": "PrimerReporte",
       "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "notasParciales",
+      "opcion": "SegundoReporte",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "notasParciales",
+      "opcion": "Reporte Final Periodo 1",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "notasParciales",
+      "opcion": "TercerReporte",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "notasParciales",
+      "opcion": "CuartoReporte",
+      "activo": true,
       "grados": [
         "11"
       ],
