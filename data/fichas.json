@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-03T07:16:07-05:00",
+  "generado": "2026-11-03T07:20:00-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
@@ -136,6 +136,17 @@
       "hasta": null
     },
     {
+      "ficha": "simulacros",
+      "opcion": "Comparativo",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
       "ficha": "boletinesPeriodo",
       "opcion": "",
       "activo": false,
@@ -236,6 +247,72 @@
     },
     {
       "ficha": "artefactosPeriodo",
+      "opcion": "economia_periodo1_11",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
+      "opcion": "economia_periodo2_11",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
+      "opcion": "matematicas_periodo1",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
+      "opcion": "matematicas_periodo2",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
+      "opcion": "economia_periodo1_10",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
+      "opcion": "economia_periodo2",
+      "activo": false,
+      "grados": [
+        "11"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "artefactosPeriodo",
       "opcion": "matematicas_periodo1",
       "activo": false,
       "grados": [
@@ -279,28 +356,6 @@
       "grupos": [
         "1001"
       ],
-      "desde": null,
-      "hasta": null
-    },
-    {
-      "ficha": "artefactosPeriodo",
-      "opcion": "economia_periodo1_11",
-      "activo": false,
-      "grados": [
-        "11"
-      ],
-      "grupos": [],
-      "desde": null,
-      "hasta": null
-    },
-    {
-      "ficha": "artefactosPeriodo",
-      "opcion": "economia_periodo2_11",
-      "activo": false,
-      "grados": [
-        "11"
-      ],
-      "grupos": [],
       "desde": null,
       "hasta": null
     },
