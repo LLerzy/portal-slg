@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-03T07:20:00-05:00",
+  "generado": "2026-11-03T15:07:20-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
@@ -8,9 +8,7 @@
       "grados": [
         "10"
       ],
-      "grupos": [
-        "1001"
-      ],
+      "grupos": [],
       "desde": null,
       "hasta": null
     },
@@ -340,9 +338,7 @@
       "grados": [
         "10"
       ],
-      "grupos": [
-        "1001"
-      ],
+      "grupos": [],
       "desde": null,
       "hasta": null
     },
@@ -353,9 +349,7 @@
       "grados": [
         "10"
       ],
-      "grupos": [
-        "1001"
-      ],
+      "grupos": [],
       "desde": null,
       "hasta": null
     },
