@@ -1,5 +1,5 @@
 {
-  "generado": "2026-11-13T07:44:52-05:00",
+  "generado": "2026-11-26T09:24:17-05:00",
   "reglas": [
     {
       "ficha": "cuentasFiestas",
@@ -70,7 +70,7 @@
     {
       "ficha": "notasParciales",
       "opcion": "CuartoReporte",
-      "activo": true,
+      "activo": false,
       "grados": [
         "11"
       ],
@@ -168,7 +168,29 @@
     },
     {
       "ficha": "boletinesPeriodo",
-      "opcion": "",
+      "opcion": "BoletinPeriodo1",
+      "activo": true,
+      "grados": [
+        "10"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "boletinesPeriodo",
+      "opcion": "BoletinPeriodo2",
+      "activo": true,
+      "grados": [
+        "10"
+      ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "boletinSena",
+      "opcion": "BoletinSENA1",
       "activo": false,
       "grados": [
         "10"
@@ -179,7 +201,7 @@
     },
     {
       "ficha": "boletinSena",
-      "opcion": "",
+      "opcion": "BoletinSENA2",
       "activo": false,
       "grados": [
         "10"
@@ -279,10 +301,19 @@
     {
       "ficha": "notasParciales",
       "opcion": "SextoReporte",
-      "activo": true,
+      "activo": false,
       "grados": [
         "10"
       ],
+      "grupos": [],
+      "desde": null,
+      "hasta": null
+    },
+    {
+      "ficha": "refuerzo",
+      "opcion": "",
+      "activo": false,
+      "grados": [],
       "grupos": [],
       "desde": null,
       "hasta": null
